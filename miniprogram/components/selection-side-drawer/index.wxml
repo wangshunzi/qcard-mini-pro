@@ -1,0 +1,54 @@
+<view wx:if="{{open}}" class="selection-root">
+  <view class="selection-backdrop" bindtap="close"></view>
+  <view class="selection-panel safe-bottom" catchtap="preventClose">
+    <view class="selection-header" style="padding-top:{{safeTopPx}}px;">
+      <view class="selection-mark">
+        <ui-icon name="{{triggerIcon}}" size="{{40}}" color="#529917" />
+      </view>
+      <view class="selection-copy">
+        <text class="selection-title">{{title}}</text>
+        <text class="selection-subtitle">{{subtitle}}</text>
+      </view>
+      <button class="selection-close" bindtap="close" aria-label="关闭选择面板">
+        <ui-icon name="close" size="{{35}}" color="#687169" />
+      </button>
+    </view>
+
+    <scroll-view class="selection-list" scroll-y enhanced show-scrollbar="{{false}}">
+      <button
+        wx:if="{{showAll}}"
+        class="selection-item {{!selectedId ? 'selected' : ''}}"
+        data-id=""
+        bindtap="selectItem"
+        hover-class="selection-hover"
+      >
+        <view class="selection-item-icon">
+          <ui-icon name="view-grid-outline" size="{{31}}" color="{{!selectedId ? '#529917' : '#687169'}}" />
+        </view>
+        <text class="selection-item-label">{{allLabel}}</text>
+        <view class="selection-check {{!selectedId ? 'selected' : ''}}">
+          <ui-icon wx:if="{{!selectedId}}" name="check" size="{{24}}" color="#ffffff" />
+        </view>
+      </button>
+
+      <button
+        wx:for="{{items}}"
+        wx:key="id"
+        class="selection-item {{selectedId === item.id ? 'selected' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="selectItem"
+        hover-class="selection-hover"
+      >
+        <view class="selection-item-icon">
+          <image wx:if="{{item.icon}}" class="selection-item-image" src="{{item.icon}}" mode="aspectFit" />
+          <ui-icon wx:else name="{{triggerIcon}}" size="{{29}}" color="{{selectedId === item.id ? '#529917' : '#687169'}}" />
+        </view>
+        <text class="selection-item-label">{{item.name}}</text>
+        <view class="selection-check {{selectedId === item.id ? 'selected' : ''}}">
+          <ui-icon wx:if="{{selectedId === item.id}}" name="check" size="{{24}}" color="#ffffff" />
+        </view>
+      </button>
+      <view class="selection-bottom-space"></view>
+    </scroll-view>
+  </view>
+</view>

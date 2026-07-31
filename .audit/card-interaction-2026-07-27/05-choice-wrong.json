@@ -1,0 +1,82 @@
+{
+  "selected": "",
+  "phase": "idle",
+  "correctOption": {
+    "id": "a",
+    "mode": "text",
+    "text": "西瓜",
+    "isCorrect": true,
+    "explanation": "西瓜清甜多汁。"
+  },
+  "displayOptions": [
+    {
+      "id": "a",
+      "mode": "text",
+      "text": "西瓜",
+      "isCorrect": true,
+      "explanation": "西瓜清甜多汁。"
+    },
+    {
+      "id": "b",
+      "mode": "text",
+      "text": "石头",
+      "isCorrect": false
+    },
+    {
+      "id": "c",
+      "mode": "text",
+      "text": "雨伞",
+      "isCorrect": false
+    },
+    {
+      "id": "d",
+      "mode": "text",
+      "text": "风筝",
+      "isCorrect": false
+    }
+  ],
+  "primary": "#4F8FEC",
+  "panelBackground": "rgba(247,251,255,0.95)",
+  "panelTitle": "#14345c",
+  "panelText": "#31506f",
+  "optionBackground": "rgba(255,255,255,0.9)",
+  "optionText": "#1f3f5f",
+  "questionPlaying": false,
+  "data": {
+    "backgroundImage": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-0-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370210&Signature=EiXWhVPyeulCb9rmMs%2B8gio9Mhk%3D",
+    "question": {
+      "mode": "text",
+      "text": "哪个是夏天常见的水果？"
+    },
+    "options": [
+      {
+        "id": "a",
+        "mode": "text",
+        "text": "西瓜",
+        "isCorrect": true,
+        "explanation": "西瓜清甜多汁。"
+      },
+      {
+        "id": "b",
+        "mode": "text",
+        "text": "石头",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "mode": "text",
+        "text": "雨伞",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "mode": "text",
+        "text": "风筝",
+        "isCorrect": false
+      }
+    ]
+  },
+  "preview": false,
+  "readOnly": false,
+  "isVisible": true
+}

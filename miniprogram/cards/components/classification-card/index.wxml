@@ -1,0 +1,84 @@
+<view class="qcard classification" style="background-image:url('{{data.backgroundImage}}')">
+  <view class="scrim"></view>
+  <view class="{{preview ? 'preview-content' : 'classification-content'}}">
+    <view wx:if="{{rules.length > 1 && !preview}}" class="rule-tabs" style="background:{{panelBackground}}">
+      <view
+        wx:for="{{rules}}"
+        wx:key="id"
+        data-index="{{index}}"
+        bindtap="switchRule"
+        class="rule-tab {{index === currentRuleIndex ? 'selected' : ''}}"
+        style="{{index === currentRuleIndex ? 'background:' + primary + ';color:#fff' : (correctByRule[item.id] ? 'color:' + primary : 'color:' + panelTitle)}}"
+      >{{item.title}}</view>
+    </view>
+    <view wx:if="{{preview}}" class="preview-rule" style="color:{{panelText}}">{{currentRule.title}}</view>
+
+    <view
+      class="classification-board"
+      catchtouchstart="touchStart"
+      catchtouchmove="touchMove"
+      catchtouchend="touchEnd"
+      catchtouchcancel="touchCancel"
+    >
+      <view
+        wx:if="{{poolFrame}}"
+        class="pool"
+        catchtap="poolTap"
+        style="left:{{poolFrame.x}}px;top:{{poolFrame.y}}px;width:{{poolFrame.width}}px;height:{{poolFrame.height}}px"
+      >
+        <text class="pool-title" style="color:{{panelText}}">物品池</text>
+      </view>
+
+      <view
+        wx:for="{{bucketFrames}}"
+        wx:key="id"
+        data-bucket-id="{{item.id}}"
+        catchtap="bucketTap"
+        class="bucket {{selectedItemId ? 'ready' : ''}} {{hasChecked && incorrectBucketMap[item.id] ? 'incorrect' : ''}}"
+        style="left:{{item.x}}px;top:{{item.y}}px;width:{{item.width}}px;height:{{item.height}}px;background:{{bucketBackground}};border-color:{{incorrectBucketMap[item.id] ? '#E04F5F' : primary}}"
+      >
+        <view class="bucket-mouth" style="border-color:{{incorrectBucketMap[item.id] ? '#E04F5F' : primary}};background:{{bucketBackground}}"></view>
+        <view class="bucket-shade"></view>
+        <text class="bucket-title" style="background:{{incorrectBucketMap[item.id] ? '#E04F5F' : primary}}">{{item.bucket.title}}</text>
+      </view>
+
+      <view
+        wx:for="{{itemFrames}}"
+        wx:key="itemId"
+        data-item-id="{{item.itemId}}"
+        catchtap="itemTap"
+        class="class-item {{selectedItemId === item.itemId ? 'selected' : ''}} {{incorrectMap[item.itemId] ? 'incorrect' : ''}}"
+        style="left:{{item.x}}px;top:{{item.y}}px;width:{{item.width}}px;height:{{item.height}}px;background:{{itemBackground}};color:{{panelText}};border-color:{{incorrectMap[item.itemId] ? '#E04F5F' : 'rgba(255,255,255,.8)'}}"
+      >
+        <image wx:if="{{item.item.mode === 'image' && item.item.image}}" class="item-image" src="{{item.item.image}}" mode="aspectFit"></image>
+        <text wx:else class="item-text">{{item.item.text}}</text>
+        <text wx:if="{{item.item.mode === 'image' && item.item.text}}" class="item-label">{{item.item.text}}</text>
+      </view>
+
+      <view
+        wx:if="{{activeItem}}"
+        class="class-item dragging"
+        style="{{activeStyle}};background:{{itemBackground}};color:{{panelText}};border-color:{{primary}}"
+      >
+        <image wx:if="{{activeItem.mode === 'image' && activeItem.image}}" class="item-image" src="{{activeItem.image}}" mode="aspectFit"></image>
+        <text wx:else class="item-text">{{activeItem.text}}</text>
+        <text wx:if="{{activeItem.mode === 'image' && activeItem.text}}" class="item-label">{{activeItem.text}}</text>
+      </view>
+    </view>
+
+    <view
+      wx:if="{{!preview}}"
+      class="status-panel {{!statusTitle ? 'compact' : ''}}"
+      style="background:{{panelBackground}};border-color:{{cardComplete || correctByRule[currentRule.id] ? primary : (hasChecked ? '#E04F5F' : 'rgba(255,255,255,.72)')}}"
+    >
+      <view class="status-copy">
+        <view wx:if="{{statusTitle}}" class="status-title" style="color:{{panelTitle}}">{{statusTitle}}</view>
+        <view class="status-text" style="color:{{panelText}}">{{statusText}}</view>
+      </view>
+      <ui-icon wx:if="{{cardComplete}}" name="check" size="{{38}}" color="{{primary}}"></ui-icon>
+      <view wx:elif="{{!readOnly}}" class="reset-button" catchtap="reset">
+        <ui-icon name="refresh" size="{{32}}" color="{{primary}}"></ui-icon>
+      </view>
+    </view>
+  </view>
+</view>

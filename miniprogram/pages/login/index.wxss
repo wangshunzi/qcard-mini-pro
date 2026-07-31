@@ -1,0 +1,160 @@
+.login-page {
+  position: relative;
+  min-height: 100vh;
+  padding: 0 0 48rpx;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #fff;
+}
+
+.login-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 410rpx;
+}
+
+.login-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 410rpx;
+  background: rgba(0, 0, 0, .18);
+}
+
+.brand {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 410rpx;
+  padding-top: calc(92rpx + env(safe-area-inset-top));
+  box-sizing: border-box;
+}
+
+.brand-mark {
+  width: 136rpx;
+  height: 136rpx;
+  border-radius: 34rpx;
+  box-shadow: 0 14rpx 30rpx rgba(0, 0, 0, .14);
+}
+
+.brand-name { margin-top: 18rpx; color:#fff; font-size: 48rpx; font-weight: 800; line-height:1.2; }
+.brand-subtitle { margin-top: 6rpx; color: rgba(255,255,255,.86); font-size: 24rpx; }
+
+.login-panel {
+  position: relative;
+  z-index: 2;
+  min-height: calc(100vh - 360rpx);
+  margin-top: -28rpx;
+  padding: 48rpx 32rpx 36rpx;
+  box-sizing: border-box;
+  border-radius: 32rpx 32rpx 0 0;
+  background: #fff;
+}
+
+.field {
+  margin-bottom: 28rpx;
+}
+
+.field-label-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 14rpx;
+  color: var(--color-text);
+  font-size: 27rpx;
+  font-weight: 650;
+}
+
+.field-label-row .field-label { margin-bottom: 14rpx; }
+
+.recent-tag {
+  margin-bottom: 14rpx;
+  padding: 2rpx 16rpx;
+  border: 1rpx solid var(--color-primary);
+  border-radius: 999rpx;
+  color: var(--color-primary);
+  background: var(--color-primary-10);
+  font-size: 20rpx;
+  font-weight: 600;
+  line-height: 28rpx;
+}
+
+.field-control {
+  height: 92rpx;
+  padding: 0 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  border: 0;
+  border-radius: 20rpx;
+  background: var(--color-backdrop);
+}
+
+.field-input { flex: 1; height: 100%; font-size: 29rpx; }
+.code-button { min-width:156rpx; padding: 0 10rpx; border:0; color: var(--color-success); background: transparent; font-size: 23rpx; font-weight:600; line-height: 58rpx; }
+.code-button[disabled] { color:var(--color-muted); background:transparent; }
+.primary-button {
+  height: 92rpx;
+  border-radius: 20rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  line-height: 92rpx;
+}
+.primary-button { margin-top: 12rpx; color: #fff; background: var(--color-primary); }
+.primary-button[disabled] { color:#fff; background:var(--color-disabled); opacity:.58; }
+.primary-button.agreement-disabled:not([disabled]) { color:var(--color-disabled); background:var(--color-tertiary-10); box-shadow:none; }
+.primary-button-hover { opacity:.88; transform:scale(.99); }
+.divider { height: 94rpx; display: flex; align-items: center; justify-content: center; gap:20rpx; color: #9aa69f; font-size: 22rpx; }
+.divider-line { width:140rpx; height:1rpx; background:#eceeec; }
+.agreement-row { margin-top:24rpx; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; color:#98a29c; font-size:21rpx; line-height:38rpx; }
+.agreement-checkbox { width:28rpx; height:28rpx; margin-right:5rpx; display:flex; align-items:center; justify-content:center; box-sizing:border-box; border:3rpx solid var(--color-border); border-radius:7rpx; background:#fff; }
+.agreement-checkbox.checked { border-color:var(--color-success); background:var(--color-success); }
+.agreement-copy,.agreement-link { padding:0 2rpx; }
+.agreement-link { color:var(--color-primary); }
+.error { display: block; margin: -4rpx 4rpx 8rpx; color: var(--color-error); font-size: 24rpx; }
+
+.wechat-login-option {
+  position: relative;
+  width: 92rpx;
+  height: 92rpx;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.wechat-button {
+  position: relative;
+  width: 92rpx;
+  height: 92rpx;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  line-height: 92rpx;
+}
+
+.wechat-button image { width:82rpx; height:82rpx; vertical-align:middle; }
+.wechat-button-hover { opacity:.72; transform:scale(.96); }
+.wechat-button.agreement-disabled { opacity:.5; }
+.social-recent {
+  position:absolute;
+  top:-16rpx;
+  left:50%;
+  z-index:3;
+  margin:0;
+  padding: 1rpx 12rpx;
+  pointer-events:none;
+  white-space:nowrap;
+  font-size: 18rpx;
+  line-height: 24rpx;
+  transform:translateX(-50%);
+}
+.icp { position:relative; z-index:2; display:block; margin-top:24rpx; color:var(--color-muted); font-size:19rpx; text-align:center; }

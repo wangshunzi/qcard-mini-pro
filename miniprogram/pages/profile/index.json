@@ -1,0 +1,16 @@
+{
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+    "coin-history-drawer": "/components/coin-history-drawer/index",
+    "side-drawer-menu": "/components/side-drawer-menu/index",
+    "flip-card": "/cards/FlipCardContainer/index",
+    "immersive-nav": "/components/immersive-nav/index",
+    "private-card-face-item": "/components/private-card-face-item/index",
+    "private-card-status": "/components/private-card-status/index",
+    "unlock-confirm-drawer": "/components/unlock-confirm-drawer/index",
+    "app-purchase-guide": "/components/app-purchase-guide/index",
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

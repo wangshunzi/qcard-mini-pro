@@ -1,0 +1,288 @@
+{
+  "rules": [
+    {
+      "id": "kind",
+      "title": "按类别分",
+      "buckets": [
+        {
+          "id": "fruit",
+          "title": "水果"
+        },
+        {
+          "id": "plant",
+          "title": "植物"
+        }
+      ],
+      "answers": [
+        {
+          "itemId": "apple",
+          "bucketId": "fruit"
+        },
+        {
+          "itemId": "lotus",
+          "bucketId": "plant"
+        },
+        {
+          "itemId": "watermelon",
+          "bucketId": "fruit"
+        },
+        {
+          "itemId": "tree",
+          "bucketId": "plant"
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "apple",
+      "mode": "text",
+      "text": "苹果"
+    },
+    {
+      "id": "lotus",
+      "mode": "text",
+      "text": "荷花"
+    },
+    {
+      "id": "watermelon",
+      "mode": "text",
+      "text": "西瓜"
+    },
+    {
+      "id": "tree",
+      "mode": "text",
+      "text": "大树"
+    }
+  ],
+  "currentRuleIndex": 0,
+  "currentRule": {
+    "id": "kind",
+    "title": "按类别分",
+    "buckets": [
+      {
+        "id": "fruit",
+        "title": "水果"
+      },
+      {
+        "id": "plant",
+        "title": "植物"
+      }
+    ],
+    "answers": [
+      {
+        "itemId": "apple",
+        "bucketId": "fruit"
+      },
+      {
+        "itemId": "lotus",
+        "bucketId": "plant"
+      },
+      {
+        "itemId": "watermelon",
+        "bucketId": "fruit"
+      },
+      {
+        "itemId": "tree",
+        "bucketId": "plant"
+      }
+    ]
+  },
+  "buckets": [
+    {
+      "id": "fruit",
+      "title": "水果"
+    },
+    {
+      "id": "plant",
+      "title": "植物"
+    }
+  ],
+  "assignmentsByRule": {
+    "kind": {
+      "apple": "fruit",
+      "lotus": null,
+      "watermelon": null,
+      "tree": null
+    }
+  },
+  "currentAssignments": {
+    "apple": "fruit",
+    "lotus": null,
+    "watermelon": null,
+    "tree": null
+  },
+  "checkedByRule": {
+    "kind": false
+  },
+  "correctByRule": {
+    "kind": false
+  },
+  "itemFrames": [
+    {
+      "id": "lotus",
+      "itemId": "lotus",
+      "item": {
+        "id": "lotus",
+        "mode": "text",
+        "text": "荷花"
+      },
+      "bucketId": null,
+      "x": 92,
+      "y": 35,
+      "width": 48,
+      "height": 48
+    },
+    {
+      "id": "watermelon",
+      "itemId": "watermelon",
+      "item": {
+        "id": "watermelon",
+        "mode": "text",
+        "text": "西瓜"
+      },
+      "bucketId": null,
+      "x": 147,
+      "y": 35,
+      "width": 48,
+      "height": 48
+    },
+    {
+      "id": "tree",
+      "itemId": "tree",
+      "item": {
+        "id": "tree",
+        "mode": "text",
+        "text": "大树"
+      },
+      "bucketId": null,
+      "x": 202,
+      "y": 35,
+      "width": 48,
+      "height": 48
+    },
+    {
+      "id": "apple",
+      "itemId": "apple",
+      "item": {
+        "id": "apple",
+        "mode": "text",
+        "text": "苹果"
+      },
+      "bucketId": "fruit",
+      "x": 66.25,
+      "y": 254.249765625,
+      "width": 44,
+      "height": 44
+    }
+  ],
+  "bucketFrames": [
+    {
+      "id": "fruit",
+      "bucket": {
+        "id": "fruit",
+        "title": "水果"
+      },
+      "x": 10,
+      "y": 240.249765625,
+      "width": 156.5,
+      "height": 323.523671875
+    },
+    {
+      "id": "plant",
+      "bucket": {
+        "id": "plant",
+        "title": "植物"
+      },
+      "x": 175.5,
+      "y": 240.249765625,
+      "width": 156.5,
+      "height": 323.523671875
+    }
+  ],
+  "poolFrame": {
+    "id": "pool",
+    "x": 10,
+    "y": 15,
+    "width": 322,
+    "height": 177.249765625
+  },
+  "incorrectMap": {},
+  "incorrectBucketMap": {},
+  "activeItem": null,
+  "activeStyle": "",
+  "selectedItemId": "",
+  "assignedCount": 1,
+  "cardComplete": false,
+  "primary": "#4F8FEC",
+  "bucketBackground": "rgba(255,255,255,0.9)",
+  "itemBackground": "rgba(255,255,255,0.94)",
+  "panelBackground": "rgba(247,251,255,0.95)",
+  "panelTitle": "#14345c",
+  "panelText": "#31506f",
+  "statusTitle": "",
+  "statusText": "按类别分：已分类 1/4",
+  "hasChecked": false,
+  "data": {
+    "backgroundImage": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-0-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370210&Signature=EiXWhVPyeulCb9rmMs%2B8gio9Mhk%3D",
+    "items": [
+      {
+        "id": "apple",
+        "mode": "text",
+        "text": "苹果"
+      },
+      {
+        "id": "lotus",
+        "mode": "text",
+        "text": "荷花"
+      },
+      {
+        "id": "watermelon",
+        "mode": "text",
+        "text": "西瓜"
+      },
+      {
+        "id": "tree",
+        "mode": "text",
+        "text": "大树"
+      }
+    ],
+    "rules": [
+      {
+        "id": "kind",
+        "title": "按类别分",
+        "buckets": [
+          {
+            "id": "fruit",
+            "title": "水果"
+          },
+          {
+            "id": "plant",
+            "title": "植物"
+          }
+        ],
+        "answers": [
+          {
+            "itemId": "apple",
+            "bucketId": "fruit"
+          },
+          {
+            "itemId": "lotus",
+            "bucketId": "plant"
+          },
+          {
+            "itemId": "watermelon",
+            "bucketId": "fruit"
+          },
+          {
+            "itemId": "tree",
+            "bucketId": "plant"
+          }
+        ]
+      }
+    ]
+  },
+  "preview": false,
+  "readOnly": false,
+  "isVisible": true
+}

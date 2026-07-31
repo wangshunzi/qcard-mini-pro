@@ -1,0 +1,11 @@
+{
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+    "immersive-nav": "/components/immersive-nav/index",
+    "flip-card": "/cards/FlipCardContainer/index",
+    "private-card-status": "/components/private-card-status/index",
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

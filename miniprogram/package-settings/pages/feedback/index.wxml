@@ -1,0 +1,81 @@
+<view class="page safe-bottom">
+  <immersive-nav title="反馈中心" back="{{true}}" border="{{true}}" />
+
+  <view class="mode-switch">
+    <view class="mode-option {{mode === 'list' ? 'active' : ''}}" data-mode="list" bindtap="switchMode">我的反馈</view>
+    <view class="mode-option {{mode === 'submit' ? 'active' : ''}}" data-mode="submit" bindtap="switchMode">提交反馈</view>
+  </view>
+
+  <view wx:if="{{mode === 'submit'}}" class="submit-panel">
+    <text class="label">问题类型</text>
+    <view class="type-grid">
+      <view wx:for="{{types}}" wx:key="value" class="type-option {{type === item.value ? 'active' : ''}}" data-type="{{item.value}}" bindtap="selectType">{{item.label}}</view>
+    </view>
+
+    <text class="label block-label">问题截图（选填）</text>
+    <view wx:if="{{imagePath}}" class="image-preview-wrap">
+      <image class="image-preview" src="{{imagePath}}" mode="aspectFill" bindtap="previewImage" />
+      <button class="remove-image" bindtap="removeImage" aria-label="移除截图"><ui-icon name="close" size="{{28}}" color="#ffffff" /></button>
+    </view>
+    <view wx:else class="image-picker" bindtap="chooseImage" hover-class="soft-hover">
+      <ui-icon name="file-document-outline" size="{{42}}" color="#6d776f" />
+      <text>添加截图</text>
+    </view>
+
+    <text class="label block-label">反馈内容</text>
+    <view class="textarea-wrap">
+      <textarea class="textarea" value="{{content}}" bindinput="onContent" maxlength="2000" placeholder="请尽量具体地描述遇到的问题或建议" />
+      <text class="counter">{{contentLength}} / 2000</text>
+    </view>
+
+    <text class="label block-label">联系方式（选填）</text>
+    <input class="input" value="{{contact}}" bindinput="onContact" maxlength="255" placeholder="手机号、微信或邮箱" />
+    <button class="submit" loading="{{submitting}}" disabled="{{submitting || !canSubmit}}" bindtap="submit" hover-class="submit-hover">
+      {{submitting ? '提交中...' : '提交反馈'}}
+    </button>
+  </view>
+
+  <view wx:elif="{{selected}}" class="detail-panel">
+    <view class="back-list" bindtap="backToList" hover-class="soft-hover">返回列表</view>
+    <view class="detail-head">
+      <text class="detail-title">{{selected.typeLabel}}</text>
+      <text class="status-badge {{selected.status}}">{{selected.statusLabel}}</text>
+    </view>
+    <text class="detail-content">{{selected.content}}</text>
+    <image wx:if="{{selected.imageUrl}}" class="detail-image" src="{{selected.imageUrl}}" mode="widthFix" bindtap="previewRemoteImage" />
+    <text wx:if="{{selected.contact}}" class="detail-contact">联系方式：{{selected.contact}}</text>
+    <view wx:if="{{selected.adminReply}}" class="reply">
+      <text class="reply-label">官方回复</text>
+      <text class="reply-content">{{selected.adminReply}}</text>
+    </view>
+    <text class="detail-time">{{detailLoading ? '正在同步最新处理状态...' : selected.createdAtText}}</text>
+  </view>
+
+  <view wx:else class="list-panel">
+    <scroll-view scroll-x enhanced class="status-scroll" show-scrollbar="{{false}}">
+      <view class="status-row">
+        <view wx:for="{{statuses}}" wx:key="value" class="status-option {{status === item.value ? 'active' : ''}}" data-status="{{item.value}}" bindtap="switchStatus">{{item.label}}</view>
+      </view>
+    </scroll-view>
+
+    <view wx:if="{{loading}}" class="state"><view class="spinner"></view><text>加载中...</text></view>
+    <view wx:elif="{{items.length}}" class="feedback-list">
+      <view wx:for="{{items}}" wx:key="id" class="feedback-item" data-id="{{item.id}}" bindtap="openDetail" hover-class="item-hover">
+        <view class="feedback-icon"><ui-icon name="message-text-outline" size="{{36}}" color="#529917" /></view>
+        <view class="feedback-copy">
+          <view class="feedback-title-row">
+            <text class="feedback-type">{{item.typeLabel}}</text>
+            <text class="status-badge {{item.status}}">{{item.statusLabel}}</text>
+          </view>
+          <text class="feedback-content">{{item.content}}</text>
+        </view>
+        <ui-icon name="chevron-right" size="{{30}}" color="#a9a9a9" />
+      </view>
+      <button wx:if="{{page < totalPages}}" class="load-more" loading="{{loadingMore}}" bindtap="loadMore">{{loadingMore ? '加载中...' : '加载更多'}}</button>
+    </view>
+    <view wx:else class="state">
+      <ui-icon name="message-text-outline" size="{{76}}" color="#6d776f" />
+      <text>暂无反馈记录</text>
+    </view>
+  </view>
+</view>

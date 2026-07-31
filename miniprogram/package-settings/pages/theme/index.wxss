@@ -1,0 +1,151 @@
+.page {
+  min-height: 100vh;
+  padding: 34rpx 32rpx 48rpx;
+  box-sizing: border-box;
+  background: #f7f8f6;
+}
+
+.current-theme {
+  margin-bottom: 38rpx;
+  padding: 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  border-radius: 18rpx;
+  background: var(--color-backdrop);
+}
+
+.current-icon {
+  width: 64rpx;
+  height: 64rpx;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 17rpx;
+  background: var(--color-primary-10);
+}
+
+.current-copy,
+.theme-copy {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.current-title {
+  color: var(--color-text);
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.current-description,
+.theme-description {
+  margin-top: 6rpx;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-size: 20rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.theme-list {
+  overflow: hidden;
+  border-radius: 18rpx;
+  background: var(--color-backdrop);
+}
+
+.theme-row {
+  width: 100%;
+  min-height: 112rpx;
+  margin: 0;
+  padding: 0 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  border-bottom: 1rpx solid #e1e5e1;
+  border-radius: 0;
+  color: inherit;
+  background: var(--color-backdrop);
+  line-height: 1.4;
+}
+
+.theme-row:last-child {
+  border-bottom: 0;
+}
+
+.theme-row.selected {
+  background: #f4f8f1;
+}
+
+.row-main {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 23rpx;
+}
+
+.theme-name-line {
+  display: flex;
+  align-items: center;
+  gap: 9rpx;
+}
+
+.theme-name {
+  color: var(--color-text);
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.default-tag {
+  padding: 2rpx 9rpx;
+  border-radius: 999rpx;
+  color: var(--color-primary);
+  background: var(--color-primary-10);
+  font-size: 17rpx;
+}
+
+.switching {
+  flex: none;
+  color: var(--color-text-secondary);
+  font-size: 18rpx;
+}
+
+.theme-hover {
+  background: #eef2ed;
+}
+
+.state {
+  min-height: 65vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  color: var(--color-text-secondary);
+  font-size: 22rpx;
+  text-align: center;
+}
+
+.empty-title {
+  color: var(--color-text);
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.state button {
+  width: auto;
+  height: 60rpx;
+  margin-top: 8rpx;
+  padding: 0 28rpx;
+  border: 1rpx solid var(--color-primary);
+  border-radius: 999rpx;
+  color: var(--color-primary);
+  background: #fff;
+  font-size: 22rpx;
+  line-height: 58rpx;
+}

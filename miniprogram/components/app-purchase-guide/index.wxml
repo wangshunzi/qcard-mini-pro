@@ -1,0 +1,56 @@
+<view wx:if="{{open}}" class="purchase-guide {{closing ? 'closing' : ''}}">
+  <view class="purchase-backdrop" bindtap="close"></view>
+  <view class="purchase-panel" catchtap="preventClose">
+    <view class="purchase-handle"></view>
+
+    <view class="purchase-heading">
+      <view class="purchase-heading-icon {{mode === 'recharge' ? 'recharge' : 'vip'}}">
+        <ui-icon wx:if="{{mode === 'recharge'}}" name="wallet" size="{{42}}" color="#529917" />
+        <ui-icon wx:else name="crown" size="{{42}}" color="#b7780b" />
+      </view>
+      <view class="purchase-heading-copy">
+        <text class="purchase-title">{{mode === 'recharge' ? '在叩咔 AI App 充值' : '在叩咔 AI App 开通 VIP'}}</text>
+        <text class="purchase-subtitle">{{mode === 'recharge' ? '充值由 App Store 或应用商店安全处理' : '订阅由 App Store 或应用商店安全处理'}}</text>
+      </view>
+      <button class="purchase-close" bindtap="close" aria-label="关闭">
+        <ui-icon name="close" size="{{31}}" color="#69726b" />
+      </button>
+    </view>
+
+    <view wx:if="{{reason}}" class="purchase-reason">{{reason}}</view>
+
+    <view class="purchase-benefits">
+      <view class="purchase-benefit">
+        <ui-icon wx:if="{{mode === 'recharge'}}" name="lock-open-outline" size="{{31}}" color="#529917" />
+        <ui-icon wx:else name="gift-outline" size="{{31}}" color="#529917" />
+        <text>{{mode === 'recharge' ? '解锁卡包' : '每日咔豆'}}</text>
+      </view>
+      <view class="purchase-benefit">
+        <ui-icon wx:if="{{mode === 'recharge'}}" name="auto-fix" size="{{31}}" color="#529917" />
+        <ui-icon wx:else name="cards-outline" size="{{31}}" color="#529917" />
+        <text>{{mode === 'recharge' ? 'AI 生成' : 'VIP 卡包'}}</text>
+      </view>
+      <view class="purchase-benefit">
+        <ui-icon wx:if="{{mode === 'recharge'}}" name="refresh" size="{{31}}" color="#529917" />
+        <ui-icon wx:else name="star-four-points" size="{{31}}" color="#529917" />
+        <text>{{mode === 'recharge' ? '余额同步' : '专属模板'}}</text>
+      </view>
+    </view>
+
+    <button class="purchase-download" bindtap="downloadApp" hover-class="purchase-download-hover">
+      <ui-icon name="arrow-up-circle-outline" size="{{31}}" color="#ffffff" />
+      <text>下载叩咔 AI App</text>
+    </button>
+    <button
+      class="purchase-contact"
+      open-type="contact"
+      show-message-card="{{true}}"
+      bindcontact="contactOpened"
+      hover-class="purchase-contact-hover"
+    >
+      <ui-icon name="message-text-outline" size="{{30}}" color="#529917" />
+      <text>联系客服</text>
+    </button>
+    <text class="purchase-note">App 与小程序使用同一账号，VIP、咔豆和学习数据自动同步</text>
+  </view>
+</view>

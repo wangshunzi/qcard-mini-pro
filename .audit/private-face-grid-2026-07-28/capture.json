@@ -1,0 +1,12 @@
+{
+  "home": {
+    "path": "/Users/one/Desktop/work/kolka/kaka-app/client-server/QCard-MiniProgram/.audit/private-face-grid-2026-07-28/home-recent-faces.png",
+    "page": "pages/home/index",
+    "itemCount": 0
+  },
+  "myCards": {
+    "path": "/Users/one/Desktop/work/kolka/kaka-app/client-server/QCard-MiniProgram/.audit/private-face-grid-2026-07-28/my-card-faces.png",
+    "page": "package-cards/pages/my-generation/index",
+    "itemCount": 0
+  }
+}

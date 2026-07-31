@@ -1,0 +1,8 @@
+<view class="hanzi-target">
+  <view class="grid horizontal"></view>
+  <view class="grid vertical"></view>
+  <canvas type="2d" id="hanziCanvas" class="canvas"
+    catchtouchstart="touchStart" catchtouchmove="touchMove"
+    catchtouchend="touchEnd" catchtouchcancel="touchEnd" />
+  <view wx:if="{{error}}" class="error">{{error}}</view>
+</view>

@@ -1,0 +1,114 @@
+<view class="qcard story">
+  <block wx:if="{{preview}}">
+    <view class="preview-scene-frame" style="{{previewSceneStyle}}">
+      <view wx:if="{{!previewLayoutReady}}" class="preview-scene-skeleton" aria-label="故事配图加载中"></view>
+      <image wx:if="{{activeImage}}" class="scene preview-scene" src="{{activeImage}}" mode="widthFix"></image>
+      <view wx:else class="preview-scene-empty">故事卡</view>
+    </view>
+    <view class="preview-body">
+      <view wx:if="{{hasPreviewRoles}}" class="preview-roles">
+        <view class="preview-roles-inner">
+          <view
+            wx:for="{{previewRoles}}"
+            wx:key="id"
+            class="preview-role"
+          >
+            <view class="preview-avatar-frame">
+              <image
+                wx:if="{{item.avatar}}"
+                class="preview-avatar"
+                src="{{item.avatar}}"
+                mode="aspectFill"
+                lazy-load="{{false}}"
+              ></image>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="preview-dialogues">
+        <view
+          wx:for="{{paragraphs}}"
+          wx:key="domId"
+          wx:if="{{index < 3}}"
+          class="preview-dialogue-row {{item.role === 0 ? 'narrator' : ''}}"
+        >
+          <image
+            wx:if="{{item.role !== 0 && item.avatar}}"
+            class="preview-dialogue-avatar"
+            src="{{item.avatar}}"
+            mode="aspectFill"
+            lazy-load="{{false}}"
+          ></image>
+          <view class="preview-line">
+            <text wx:if="{{item.role !== 0}}" class="preview-speaker">{{item.roleName}}：</text>{{item.text}}
+          </view>
+        </view>
+      </view>
+      <view class="preview-story">
+        <view wx:for="{{paragraphs}}" wx:key="domId">　　{{item.text}}</view>
+      </view>
+      <view class="preview-fade"></view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <image wx:if="{{activeImage}}" class="scene" src="{{activeImage}}" mode="aspectFill"></image>
+    <scroll-view
+      class="dialogue-list"
+      scroll-y
+      scroll-with-animation
+      scroll-top="{{dialogueScrollTop}}"
+      enhanced
+      show-scrollbar="{{false}}"
+    >
+      <view class="dialogue-content">
+        <view
+          wx:for="{{paragraphs}}"
+          wx:key="domId"
+          id="{{item.domId}}"
+          data-index="{{index}}"
+          bindtap="playParagraph"
+          class="dialogue {{item.side}} {{item.distanceClass}} {{activeIndex === index ? 'active' : ''}}"
+        >
+          <view wx:if="{{item.side === 'narrator'}}" class="narrator-copy">{{item.text}}</view>
+          <block wx:else>
+            <view wx:if="{{item.side === 'left'}}" class="avatar-column">
+              <image class="avatar {{activeIndex === index ? 'focused' : ''}}" src="{{item.avatar}}" mode="aspectFill"></image>
+              <text class="role-label">{{item.roleName || '角色'}}</text>
+            </view>
+            <view class="speech-bubble">{{item.text}}</view>
+            <view wx:if="{{item.side === 'right'}}" class="avatar-column">
+              <image class="avatar {{activeIndex === index ? 'focused' : ''}}" src="{{item.avatar}}" mode="aspectFill"></image>
+              <text class="role-label">{{item.roleName || '角色'}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="audio-player">
+      <view class="progress-row">
+        <text class="time">{{currentTimeText}}</text>
+        <slider
+          class="slider"
+          min="0"
+          max="100"
+          value="{{progress}}"
+          activeColor="#4F8FEC"
+          backgroundColor="#e4e8ee"
+          block-size="12"
+          disabled="{{readOnly}}"
+          bindchange="seek"
+        ></slider>
+        <text class="time">{{durationText}}</text>
+      </view>
+      <view class="player-controls">
+        <view class="rate" bindtap="cycleRate">{{playbackRate}}x</view>
+        <view class="play-button" bindtap="togglePlay">
+          <ui-icon name="{{playing ? 'pause' : 'play'}}" size="{{48}}" color="#ffffff"></ui-icon>
+        </view>
+        <view class="control-spacer"></view>
+      </view>
+    </view>
+  </block>
+</view>

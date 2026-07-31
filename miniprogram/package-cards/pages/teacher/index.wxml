@@ -1,0 +1,62 @@
+<view class="page safe-bottom">
+  <immersive-nav title="{{teacher.name || '老师主页'}}" back="{{true}}" border="{{true}}" />
+  <view wx:if="{{loading}}" class="state">
+    <view class="loading-orbit"></view><text>正在加载老师主页…</text>
+  </view>
+  <view wx:elif="{{error}}" class="state">
+    <ui-icon name="alert-circle-outline" size="{{74}}" color="#eb711b" />
+    <text>{{error}}</text><button bindtap="load">重试</button>
+  </view>
+  <block wx:elif="{{teacher}}">
+    <view class="hero">
+      <image class="avatar" src="{{teacher.avatar || assets.appIcon}}" mode="aspectFill" />
+      <view class="teacher-copy">
+        <view class="name-line">
+          <text class="name">{{teacher.name}}</text>
+          <text wx:if="{{teacher.title}}" class="teacher-title">{{teacher.title}}</text>
+        </view>
+        <view class="rating">
+          <text class="rating-label">评分：</text>
+          <ui-icon wx:for="{{ratingStars}}" wx:key="index" name="star" size="{{23}}" color="{{item.active ? '#f6b831' : '#c8cec9'}}" />
+          <text class="rating-number">{{teacher.rating || 0}}</text>
+        </view>
+        <text class="bio">{{teacher.bio || teacher.detail || '专注于优质学习卡片内容'}}</text>
+      </view>
+    </view>
+    <view class="content">
+      <view class="heading"><text>卡包列表 ({{cardPacks.length}})</text></view>
+      <view wx:if="{{cardPacks.length}}" class="list">
+        <view wx:for="{{cardPacks}}" wx:key="id" class="card" data-id="{{item.id}}" bindtap="openPack" hover-class="card-hover">
+          <image class="cover" src="{{item.cover || assets.appIcon}}" mode="aspectFill" />
+          <view class="card-copy">
+            <text class="title">{{item.title}}</text>
+            <text class="meta">{{item.cardCount || 0}} 张 · {{item.subject.name || '综合'}}</text>
+            <text class="description">{{item.description || item.knowledgePoint.name || '精选学习卡包'}}</text>
+            <view class="card-footer">
+              <text wx:if="{{item.canStudy}}" class="unlocked">{{item.isUnlocked ? '已解锁' : 'VIP 免费'}}</text>
+              <text wx:else class="price">{{item.priceInfo.finalPrice || item.basePrice || 0}} 咔豆</text>
+              <button wx:if="{{item.canStudy}}" class="card-action study" data-id="{{item.id}}" catchtap="startStudy">开始学习</button>
+              <button wx:else class="card-action unlock" loading="{{unlockingId === item.id}}" data-id="{{item.id}}" catchtap="unlock">解锁</button>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="empty">该教师暂无卡包</view>
+    </view>
+  </block>
+  <unlock-confirm-drawer
+    open="{{unlockPanelOpen}}"
+    card-pack-info="{{selectedUnlockPack}}"
+    user-balance="{{userBalance}}"
+    is-loading="{{unlockingId}}"
+    bind:close="closeUnlockPanel"
+    bind:confirm="confirmUnlock"
+    bind:recharge="openUnlockRecharge"
+  />
+  <app-purchase-guide
+    open="{{purchaseGuideOpen}}"
+    mode="{{purchaseGuideMode}}"
+    reason="{{purchaseGuideReason}}"
+    bind:close="closePurchaseGuide"
+  />
+</view>

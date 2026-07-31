@@ -1,0 +1,36 @@
+page {
+  --color-brand-30: #462104;
+  --color-brand-20: #f6b831;
+  --color-brand-10: #fff7d3;
+  --color-primary: #529917;
+  --color-primary-30: #162b08;
+  --color-primary-20: #529917;
+  --color-primary-10: #e5f9ce;
+  --color-primary-soft: #e5f9ce;
+  --color-accent: #f6b831;
+  --color-secondary-30: #072f45;
+  --color-secondary-20: #1ec6f2;
+  --color-secondary-10: #baf4ff;
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-card: #ffffff;
+  --color-text: #0f0f0f;
+  --color-text-secondary: #5d5d5d;
+  --color-border: #d2cfcf;
+  --color-tertiary-10: #f6f6f6;
+  --color-disabled: #808080;
+  --color-success: #64b01f;
+  --color-error: #eb711b;
+  --color-warning: #ffb936;
+  --color-info: #3f3f3f;
+  --color-muted: #a9a9a9;
+  --color-overlay: rgba(15, 15, 15, .5);
+  --color-backdrop: rgba(255, 255, 255, .93);
+  --radius-card: 32rpx;
+  --radius-control: 24rpx;
+  --radius-pill: 999rpx;
+  --shadow-card: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
+  --shadow-floating: 0 14rpx 36rpx rgba(0, 0, 0, .14);
+  --page-padding: 32rpx;
+  --section-gap: 40rpx;
+}

@@ -1,0 +1,73 @@
+<view class="qcard matching" style="background-image:url('{{data.backgroundImage}}')">
+  <view class="scrim"></view>
+  <view class="{{preview ? 'preview-content' : 'qcard-content matching-content'}}">
+    <view class="{{preview ? 'preview-title' : 'matching-title'}}" style="color:{{primary}}">
+      {{data.prompt.title || '连一连'}}
+    </view>
+
+    <view
+      class="board"
+      catchtouchstart="touchStart"
+      catchtouchmove="touchMove"
+      catchtouchend="touchEnd"
+      catchtouchcancel="touchCancel"
+    >
+      <canvas type="2d" id="matchingCanvas" class="line-canvas"></canvas>
+
+      <view class="group-frame" style="{{groupLeftStyle}};border-color:{{primary}}">
+        <view class="group-tag" style="background:{{primary}}">{{data.leftTitle || (leftFrames.length > 3 ? '左列' : '上排')}}</view>
+      </view>
+      <view class="group-frame" style="{{groupRightStyle}};border-color:{{primary}}">
+        <view class="group-tag" style="background:{{primary}}">{{data.rightTitle || (rightFrames.length > 3 ? '右列' : '下排')}}</view>
+      </view>
+
+      <view
+        wx:for="{{leftFrames}}"
+        wx:key="id"
+        data-side="left"
+        data-id="{{item.id}}"
+        catchtap="nodeTap"
+        class="match-node {{matchedMap[item.id] ? 'matched' : ''}} {{incorrectMap[item.id] ? 'incorrect' : ''}} {{activeId === item.id ? 'active' : ''}}"
+        style="left:{{item.x}}px;top:{{item.y}}px;width:{{item.width}}px;height:{{item.height}}px;background:{{itemBackground}};color:{{itemText}};border-color:{{incorrectMap[item.id] ? '#E04F5F' : (matchedMap[item.id] || activeId === item.id ? primary : 'rgba(255,255,255,.82)')}}"
+      >
+        <image wx:if="{{item.item.mode === 'image' && item.item.image}}" class="node-image" src="{{item.item.image}}" mode="aspectFit"></image>
+        <text wx:else class="node-text">{{item.item.text}}</text>
+        <text wx:if="{{preview && item.item.mode === 'image' && item.item.text}}" class="node-label">{{item.item.text}}</text>
+        <view wx:if="{{matchedMap[item.id] && !incorrectMap[item.id] && !preview}}" class="check" style="background:{{primary}}">
+          <ui-icon name="check" size="{{20}}" color="#ffffff"></ui-icon>
+        </view>
+      </view>
+
+      <view
+        wx:for="{{rightFrames}}"
+        wx:key="id"
+        data-side="right"
+        data-id="{{item.id}}"
+        catchtap="nodeTap"
+        class="match-node {{matchedMap[item.id] ? 'matched' : ''}} {{incorrectMap[item.id] ? 'incorrect' : ''}} {{activeId === item.id ? 'active' : ''}}"
+        style="left:{{item.x}}px;top:{{item.y}}px;width:{{item.width}}px;height:{{item.height}}px;background:{{itemBackground}};color:{{itemText}};border-color:{{incorrectMap[item.id] ? '#E04F5F' : (matchedMap[item.id] || activeId === item.id ? primary : 'rgba(255,255,255,.82)')}}"
+      >
+        <image wx:if="{{item.item.mode === 'image' && item.item.image}}" class="node-image" src="{{item.item.image}}" mode="aspectFit"></image>
+        <text wx:else class="node-text">{{item.item.text}}</text>
+        <text wx:if="{{preview && item.item.mode === 'image' && item.item.text}}" class="node-label">{{item.item.text}}</text>
+        <view wx:if="{{matchedMap[item.id] && !incorrectMap[item.id] && !preview}}" class="check" style="background:{{primary}}">
+          <ui-icon name="check" size="{{20}}" color="#ffffff"></ui-icon>
+        </view>
+      </view>
+    </view>
+
+    <view
+      wx:if="{{!preview}}"
+      class="status-panel"
+      style="background:{{panelBackground}};border-color:{{hasChecked && !allCorrect ? '#E04F5F' : (allCorrect ? primary : 'rgba(255,255,255,.72)')}}"
+    >
+      <view class="status-copy">
+        <text class="status-title" style="color:{{hasChecked && !allCorrect ? '#E04F5F' : panelTitle}}">{{statusText}}</text>
+        <text class="status-progress" style="color:{{panelText}}">{{allCorrect ? '做得很好，可以继续学习下一张。' : matches.length + '/' + pairCount + ' 组'}}</text>
+      </view>
+      <view wx:if="{{!readOnly}}" class="reset-button" style="color:{{primary}}" catchtap="reset">
+        <ui-icon name="refresh" size="{{32}}" color="{{primary}}"></ui-icon>
+      </view>
+    </view>
+  </view>
+</view>

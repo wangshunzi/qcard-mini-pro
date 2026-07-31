@@ -1,0 +1,150 @@
+<view class="page safe-bottom">
+  <immersive-nav back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}" />
+
+  <view class="hero" style="{{heroBackground ? 'background-image:url(' + heroBackground + ')' : ''}}">
+    <view class="preview-stage">
+      <view class="slot-card back-slot {{currentSlot === 'back' ? 'slot-active' : ''}}" bindtap="chooseSlot" data-slot="back">
+        <flip-card wx:if="{{backFace}}" class="slot-renderer" front-card-data="{{backFace.cardData}}" back-card-data="{{emptyCardData}}" preview="{{true}}" read-only="{{true}}" hide-flip-button="{{true}}" />
+        <view wx:else class="empty-card">
+          <ui-icon name="cards-outline" size="{{50}}" color="#8b978e" />
+          <text>选择背面</text>
+        </view>
+        <button wx:if="{{cardCount === 2}}" class="remove-back" catchtap="removeBack" aria-label="移除背面">
+          <ui-icon name="close" size="{{26}}" color="#ffffff" />
+        </button>
+      </view>
+
+      <view class="slot-card front-slot {{currentSlot === 'front' ? 'slot-active' : ''}}" bindtap="chooseSlot" data-slot="front">
+        <flip-card wx:if="{{frontFace}}" class="slot-renderer" front-card-data="{{frontFace.cardData}}" back-card-data="{{emptyCardData}}" preview="{{true}}" read-only="{{true}}" hide-flip-button="{{true}}" />
+        <view wx:else class="empty-card">
+          <ui-icon name="cards-outline" size="{{52}}" color="#6f7c72" />
+          <text>选择正面</text>
+        </view>
+        <view class="slot-label">正面</view>
+      </view>
+    </view>
+
+    <view class="hero-actions">
+      <button class="pack-button {{selectedPack ? '' : 'missing'}}" bindtap="openPackPicker" hover-class="soft-hover">
+        <ui-icon name="view-grid-outline" size="{{28}}" color="{{selectedPack ? '#529917' : '#d64f45'}}" />
+        <text>{{selectedPack ? selectedPack.title : '选择归属卡包'}}</text>
+      </button>
+      <button class="round-button" bindtap="openPreview" hover-class="soft-hover" aria-label="预览卡片">
+        <ui-icon name="{{frontFace ? 'eye-outline' : 'eye-off-outline'}}" size="{{29}}" color="{{frontFace ? '#529917' : '#8b978e'}}" />
+      </button>
+      <button class="round-button" bindtap="resetSelection" hover-class="soft-hover" aria-label="重置选择">
+        <ui-icon name="restart" size="{{28}}" color="#529917" />
+      </button>
+    </view>
+  </view>
+
+  <view class="content">
+    <view class="search">
+      <ui-icon name="magnify" size="{{33}}" color="#657065" />
+      <input class="search-input" value="{{query}}" bindinput="onInput" placeholder="搜索卡面名称..." />
+      <button wx:if="{{query}}" class="clear-search" bindtap="clearSearch" aria-label="清除搜索">
+        <ui-icon name="close-circle" size="{{30}}" color="#89928b" />
+      </button>
+    </view>
+
+    <view class="heading">
+      <view class="heading-copy">
+        <text class="title">卡面列表</text>
+        <text class="subtitle">选择卡面，组建卡片</text>
+      </view>
+      <button class="ai-button" bindtap="openAi" hover-class="soft-hover">
+        <ui-icon name="auto-fix" size="{{27}}" color="#ffffff" />
+        <text>生成卡面</text>
+      </button>
+    </view>
+
+    <view wx:if="{{loading}}" class="face-grid">
+      <view wx:for="{{[1,2,3,4]}}" wx:key="*this" class="face-card skeleton"></view>
+    </view>
+    <view wx:elif="{{error}}" class="state">
+      <ui-icon name="alert-circle-outline" size="{{78}}" color="#eb711b" />
+      <text>{{error}}</text>
+      <button class="state-button" bindtap="loadFaces">重新加载</button>
+    </view>
+    <view wx:elif="{{faces.length}}" class="face-grid">
+      <view wx:for="{{faces}}" wx:key="id" class="face-card {{item.selectedAs ? 'selected selected-' + item.selectedAs : ''}} {{item.selectable ? '' : 'disabled'}}"
+        data-id="{{item.id}}" bindtap="selectFace" hover-class="face-card-hover">
+        <view class="face-preview">
+          <private-card-status wx:if="{{item.status !== 'success'}}"
+            class="face-renderer private-status-host" status="{{item.status}}" />
+          <flip-card wx:elif="{{item.selectable}}" class="face-renderer" front-card-data="{{item.cardData}}" back-card-data="{{emptyCardData}}"
+            preview="{{true}}" read-only="{{true}}" hide-flip-button="{{true}}" is-visible="{{true}}" />
+          <image wx:elif="{{item.thumbnailUrl}}" class="face-thumbnail" src="{{item.thumbnailUrl}}" mode="aspectFill" />
+          <view wx:else class="face-fallback">
+            <ui-icon name="alert-circle-outline" size="{{48}}" color="#ffffff" />
+            <text>卡面暂不可用</text>
+          </view>
+          <view wx:if="{{item.selectedAs}}" class="selected-badge">
+            {{item.selectedAs === 'front' ? '正面' : item.selectedAs === 'back' ? '背面' : '正 / 背'}}
+          </view>
+        </view>
+        <view wx:if="{{item.status === 'success'}}" class="face-copy">
+          <text class="face-name">{{item.name}}</text>
+          <text class="face-type">{{item.type}}</text>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="state">
+      <ui-icon name="auto-fix" size="{{80}}" color="#657065" />
+      <text>还没有可用卡面</text>
+      <button class="state-button" bindtap="openAi">立即生成</button>
+    </view>
+    <view wx:if="{{loadingMore}}" class="more">正在加载更多…</view>
+  </view>
+
+  <view class="save-bar">
+    <view class="selection-copy">
+      <text class="selection-title">{{frontFace ? (backFace ? '正反面已选择' : '正面已选择') : '请选择卡面'}}</text>
+      <text class="selection-subtitle">{{selectedPack ? selectedPack.title : '尚未选择归属卡包'}}</text>
+    </view>
+    <button class="save-button {{frontFace && (cardCount === 1 || backFace) && selectedPack ? 'ready' : ''}}" loading="{{saving}}" bindtap="save">保存</button>
+  </view>
+
+  <view wx:if="{{previewOpen}}" class="modal" catchtouchmove="noop">
+    <view class="modal-mask" bindtap="closePreview"></view>
+    <view class="preview-dialog">
+      <button class="modal-close" bindtap="closePreview" aria-label="关闭预览">
+        <ui-icon name="close" size="{{32}}" color="#ffffff" />
+      </button>
+      <flip-card id="full-preview" class="full-preview" front-card-data="{{frontFace.cardData}}"
+        back-card-data="{{cardCount === 2 && backFace ? backFace.cardData : emptyCardData}}"
+        preview="{{false}}" read-only="{{false}}" is-visible="{{previewOpen}}" />
+    </view>
+  </view>
+
+  <view wx:if="{{packPickerOpen}}" class="drawer" catchtouchmove="noop">
+    <view class="drawer-mask" bindtap="closePackPicker"></view>
+    <view class="drawer-panel">
+      <view class="drawer-handle"></view>
+      <view class="drawer-header">
+        <view class="drawer-copy">
+          <text class="drawer-title">选择归属卡包</text>
+          <text class="drawer-subtitle">卡片将保存到所选私有卡包</text>
+        </view>
+        <button class="drawer-close" bindtap="closePackPicker">
+          <ui-icon name="close" size="{{32}}" color="#566058" />
+        </button>
+      </view>
+      <scroll-view class="pack-list" scroll-y="{{true}}">
+        <view wx:for="{{packs}}" wx:key="id" class="pack-row {{selectedPack.id === item.id ? 'pack-selected' : ''}}"
+          data-id="{{item.id}}" bindtap="choosePack" hover-class="soft-hover">
+          <image wx:if="{{item.cover}}" class="pack-cover" src="{{item.cover}}" mode="aspectFill" />
+          <view wx:else class="pack-cover pack-cover-fallback">
+            <ui-icon name="cards-outline" size="{{36}}" color="#529917" />
+          </view>
+          <view class="pack-copy">
+            <text class="pack-title">{{item.title}}</text>
+            <text class="pack-meta">{{item.cardCount || 0}} 张卡片</text>
+          </view>
+          <ui-icon name="{{selectedPack.id === item.id ? 'check-circle' : 'chevron-right'}}" size="{{31}}" color="{{selectedPack.id === item.id ? '#529917' : '#9aa29c'}}" />
+        </view>
+        <view wx:if="{{!packs.length}}" class="empty-packs">暂无私有卡包，请先在“我的卡包”中创建</view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

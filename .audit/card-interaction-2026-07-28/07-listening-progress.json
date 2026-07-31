@@ -1,0 +1,425 @@
+{
+  "content": {
+    "age": "5",
+    "lang": "zh-CN",
+    "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=%2Bs8cJ4EE48O4aXVdVTl0IwM4IvM%3D",
+    "title": "大暑午后的小惊喜",
+    "questions": [
+      {
+        "text": "故事里的小主人公叫什么名字？",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=nOfw8Yig3JkbPAEy5wcGv%2FyRkkQ%3D",
+        "options": [
+          {
+            "text": "小朵朵",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=hovPXNZQWlXATbJFIuouXZmJmxw%3D",
+            "correct": true
+          },
+          {
+            "text": "小月月",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=5unzUuNz%2Fz4xdPJOk%2FaHaD0AJ1o%3D",
+            "correct": false
+          },
+          {
+            "text": "小天天",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=MnW8LQgQ99oDcC%2Fz5K4dFWrkZKA%3D",
+            "correct": false
+          },
+          {
+            "text": "小星星",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-3-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=8XRFmjByqXHG%2BqKKeZCO6BlF5W8%3D",
+            "correct": false
+          }
+        ]
+      },
+      {
+        "text": "小朵朵和小花猫最先做了什么事？",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=OudbO3DZRjaDSxAL4KApVl7TVMY%3D",
+        "options": [
+          {
+            "text": "喝凉白开",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-options-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=L9yEy26KlocvawnZ8%2FSRS%2FG75Sk%3D",
+            "correct": false
+          },
+          {
+            "text": "找阴凉",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-options-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370090&Signature=vMleHjQqA%2BJFGeLTWYPHIBt6q0s%3D",
+            "correct": true
+          },
+          {
+            "text": "听蝉叫",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-options-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370090&Signature=OzQEdh3tk1t7OvMp%2Fw1jmVCEgIc%3D",
+            "correct": false
+          },
+          {
+            "text": "等下雨",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-options-3-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370091&Signature=9KekDgelqnwBiBbWzSvYvVzMyy0%3D",
+            "correct": false
+          }
+        ]
+      },
+      {
+        "text": "傍晚下了什么雨后，空气变得凉快了？",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370091&Signature=yphsBil9iciGI9t%2F08iCM9ftLSo%3D",
+        "options": [
+          {
+            "text": "雷阵雨",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-options-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370091&Signature=7OdPNPBVMZs%2FGG2dsruTcp%2FTfpM%3D",
+            "correct": true
+          },
+          {
+            "text": "小雪",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-options-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370092&Signature=%2FqqJXl9QyqJrcaSDxdR2uM4XNF0%3D",
+            "correct": false
+          },
+          {
+            "text": "冰雹",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-options-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370092&Signature=hV2DsVm5u4N7qBGH85YsSnIrBYE%3D",
+            "correct": false
+          },
+          {
+            "text": "大雾",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-options-3-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370093&Signature=oPuWA9kq17guifieXAvk%2Ffu4u3A%3D",
+            "correct": false
+          }
+        ]
+      }
+    ],
+    "transcript": "大暑的午后，太阳晒得地面发烫。小朵朵抱着她的小花猫阿黄，蹲在院子里直冒汗。她们先跑到大梧桐树下找阴凉，风一吹好舒服呀。奶奶端来两杯凉白开，朵朵和阿黄咕嘟咕嘟喝得饱饱的。树上的蝉“知了知了”唱个不停，朵朵趴在石桌上听入了神。傍晚的时候，忽然下了一阵雷阵雨，风变得凉丝丝的，空气里还飘着青草的香味呢。",
+    "titleText": "大暑午后的小惊喜",
+    "audioSource": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=%2Bs8cJ4EE48O4aXVdVTl0IwM4IvM%3D",
+    "transcriptText": "大暑的午后，太阳晒得地面发烫。小朵朵抱着她的小花猫阿黄，蹲在院子里直冒汗。她们先跑到大梧桐树下找阴凉，风一吹好舒服呀。奶奶端来两杯凉白开，朵朵和阿黄咕嘟咕嘟喝得饱饱的。树上的蝉“知了知了”唱个不停，朵朵趴在石桌上听入了神。傍晚的时候，忽然下了一阵雷阵雨，风变得凉丝丝的，空气里还飘着青草的香味呢。",
+    "transcriptParagraphs": [
+      "大暑的午后，太阳晒得地面发烫。",
+      "小朵朵抱着她的小花猫阿黄，蹲在院子里直冒汗。",
+      "她们先跑到大梧桐树下找阴凉，风一吹好舒服呀。",
+      "奶奶端来两杯凉白开，朵朵和阿黄咕嘟咕嘟喝得饱饱的。",
+      "树上的蝉“知了知了”唱个不停，朵朵趴在石桌上听入了神。",
+      "傍晚的时候，忽然下了一阵雷阵雨，风变得凉丝丝的，空气里还飘着青草的香味呢。"
+    ],
+    "completionText": "全部答对啦！"
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "text": "故事里的小主人公叫什么名字？",
+      "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=nOfw8Yig3JkbPAEy5wcGv%2FyRkkQ%3D",
+      "options": [
+        {
+          "id": "q1-o1",
+          "letter": "A",
+          "text": "小朵朵",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=hovPXNZQWlXATbJFIuouXZmJmxw%3D",
+          "isCorrect": true,
+          "feedback": {
+            "text": "回答正确。",
+            "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-correct.mp3"
+          }
+        },
+        {
+          "id": "q1-o2",
+          "letter": "B",
+          "text": "小月月",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=5unzUuNz%2Fz4xdPJOk%2FaHaD0AJ1o%3D",
+          "isCorrect": false,
+          "feedback": {
+            "text": "再听一遍试试。",
+            "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-wrong.mp3"
+          }
+        },
+        {
+          "id": "q1-o3",
+          "letter": "C",
+          "text": "小天天",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=MnW8LQgQ99oDcC%2Fz5K4dFWrkZKA%3D",
+          "isCorrect": false,
+          "feedback": {
+            "text": "再听一遍试试。",
+            "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-wrong.mp3"
+          }
+        },
+        {
+          "id": "q1-o4",
+          "letter": "D",
+          "text": "小星星",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-3-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=8XRFmjByqXHG%2BqKKeZCO6BlF5W8%3D",
+          "isCorrect": false,
+          "feedback": {
+            "text": "再听一遍试试。",
+            "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-wrong.mp3"
+          }
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "text": "小朵朵和小花猫最先做了什么事？",
+      "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=OudbO3DZRjaDSxAL4KApVl7TVMY%3D",
+      "options": [
+        {
+          "id": "q2-o1",
+          "letter": "A",
+          "text": "喝凉白开",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-options-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=L9yEy26KlocvawnZ8%2FSRS%2FG75Sk%3D",
+          "isCorrect": false,
+          "feedback": {
+            "text": "再听一遍试试。",
+            "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-wrong.mp3"
+          }
+        },
+        {
+          "id": "q2-o2",
+          "letter": "B",
+          "text": "找阴凉",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-options-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370090&Signature=vMleHjQqA%2BJFGeLTWYPHIBt6q0s%3D",
+          "isCorrect": true,
+          "feedback": {
+            "text": "回答正确。",
+            "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-correct.mp3"
+          }
+        },
+        {
+          "id": "q2-o3",
+          "letter": "C",
+          "text": "听蝉叫",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-options-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370090&Signature=OzQEdh3tk1t7OvMp%2Fw1jmVCEgIc%3D",
+          "isCorrect": false,
+          "feedback": {
+            "text": "再听一遍试试。",
+            "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-wrong.mp3"
+          }
+        },
+        {
+          "id": "q2-o4",
+          "letter": "D",
+          "text": "等下雨",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-options-3-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370091&Signature=9KekDgelqnwBiBbWzSvYvVzMyy0%3D",
+          "isCorrect": false,
+          "feedback": {
+            "text": "再听一遍试试。",
+            "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-wrong.mp3"
+          }
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "text": "傍晚下了什么雨后，空气变得凉快了？",
+      "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370091&Signature=yphsBil9iciGI9t%2F08iCM9ftLSo%3D",
+      "options": [
+        {
+          "id": "q3-o1",
+          "letter": "A",
+          "text": "雷阵雨",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-options-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370091&Signature=7OdPNPBVMZs%2FGG2dsruTcp%2FTfpM%3D",
+          "isCorrect": true,
+          "feedback": {
+            "text": "回答正确。",
+            "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-correct.mp3"
+          }
+        },
+        {
+          "id": "q3-o2",
+          "letter": "B",
+          "text": "小雪",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-options-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370092&Signature=%2FqqJXl9QyqJrcaSDxdR2uM4XNF0%3D",
+          "isCorrect": false,
+          "feedback": {
+            "text": "再听一遍试试。",
+            "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-wrong.mp3"
+          }
+        },
+        {
+          "id": "q3-o3",
+          "letter": "C",
+          "text": "冰雹",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-options-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370092&Signature=hV2DsVm5u4N7qBGH85YsSnIrBYE%3D",
+          "isCorrect": false,
+          "feedback": {
+            "text": "再听一遍试试。",
+            "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-wrong.mp3"
+          }
+        },
+        {
+          "id": "q3-o4",
+          "letter": "D",
+          "text": "大雾",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-options-3-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370093&Signature=oPuWA9kq17guifieXAvk%2Ffu4u3A%3D",
+          "isCorrect": false,
+          "feedback": {
+            "text": "再听一遍试试。",
+            "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-wrong.mp3"
+          }
+        }
+      ]
+    }
+  ],
+  "question": {
+    "id": "q1",
+    "text": "故事里的小主人公叫什么名字？",
+    "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=nOfw8Yig3JkbPAEy5wcGv%2FyRkkQ%3D",
+    "options": [
+      {
+        "id": "q1-o1",
+        "letter": "A",
+        "text": "小朵朵",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=hovPXNZQWlXATbJFIuouXZmJmxw%3D",
+        "isCorrect": true,
+        "feedback": {
+          "text": "回答正确。",
+          "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-correct.mp3"
+        }
+      },
+      {
+        "id": "q1-o2",
+        "letter": "B",
+        "text": "小月月",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=5unzUuNz%2Fz4xdPJOk%2FaHaD0AJ1o%3D",
+        "isCorrect": false,
+        "feedback": {
+          "text": "再听一遍试试。",
+          "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-wrong.mp3"
+        }
+      },
+      {
+        "id": "q1-o3",
+        "letter": "C",
+        "text": "小天天",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=MnW8LQgQ99oDcC%2Fz5K4dFWrkZKA%3D",
+        "isCorrect": false,
+        "feedback": {
+          "text": "再听一遍试试。",
+          "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-wrong.mp3"
+        }
+      },
+      {
+        "id": "q1-o4",
+        "letter": "D",
+        "text": "小星星",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-3-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=8XRFmjByqXHG%2BqKKeZCO6BlF5W8%3D",
+        "isCorrect": false,
+        "feedback": {
+          "text": "再听一遍试试。",
+          "audio": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/audio/feedback-wrong.mp3"
+        }
+      }
+    ]
+  },
+  "questionIndex": 0,
+  "cardPhase": "listening",
+  "phase": "idle",
+  "selectedId": "",
+  "answeredMap": {},
+  "hasListenedOnce": false,
+  "transcriptExpanded": false,
+  "passagePlaying": false,
+  "interactionPlayingId": "",
+  "progress": 62,
+  "progressDeg": 223.2,
+  "currentSeconds": 0,
+  "durationSeconds": 0,
+  "currentTimeText": "0:00",
+  "durationText": "0:00",
+  "playbackRate": 1,
+  "transcriptDefaultExpanded": false,
+  "requireListen": false,
+  "allowSkip": true,
+  "autoAdvance": true,
+  "primary": "#6f9b7b",
+  "success": "#5f9e73",
+  "error": "#c96a55",
+  "feedbackText": "",
+  "backgroundImage": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/miniprogram-ui/v1/cards/listening-story-card-bg.png",
+  "questionBubbleImage": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/ListeningComprehensionCard/assets/images/ui/question-bubble.png",
+  "data": {
+    "content": {
+      "age": "5",
+      "lang": "zh-CN",
+      "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=%2Bs8cJ4EE48O4aXVdVTl0IwM4IvM%3D",
+      "title": "大暑午后的小惊喜",
+      "questions": [
+        {
+          "text": "故事里的小主人公叫什么名字？",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=nOfw8Yig3JkbPAEy5wcGv%2FyRkkQ%3D",
+          "options": [
+            {
+              "text": "小朵朵",
+              "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=hovPXNZQWlXATbJFIuouXZmJmxw%3D",
+              "correct": true
+            },
+            {
+              "text": "小月月",
+              "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370088&Signature=5unzUuNz%2Fz4xdPJOk%2FaHaD0AJ1o%3D",
+              "correct": false
+            },
+            {
+              "text": "小天天",
+              "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=MnW8LQgQ99oDcC%2Fz5K4dFWrkZKA%3D",
+              "correct": false
+            },
+            {
+              "text": "小星星",
+              "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-0-options-3-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=8XRFmjByqXHG%2BqKKeZCO6BlF5W8%3D",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "text": "小朵朵和小花猫最先做了什么事？",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=OudbO3DZRjaDSxAL4KApVl7TVMY%3D",
+          "options": [
+            {
+              "text": "喝凉白开",
+              "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-options-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370089&Signature=L9yEy26KlocvawnZ8%2FSRS%2FG75Sk%3D",
+              "correct": false
+            },
+            {
+              "text": "找阴凉",
+              "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-options-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370090&Signature=vMleHjQqA%2BJFGeLTWYPHIBt6q0s%3D",
+              "correct": true
+            },
+            {
+              "text": "听蝉叫",
+              "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-options-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370090&Signature=OzQEdh3tk1t7OvMp%2Fw1jmVCEgIc%3D",
+              "correct": false
+            },
+            {
+              "text": "等下雨",
+              "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-1-options-3-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370091&Signature=9KekDgelqnwBiBbWzSvYvVzMyy0%3D",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "text": "傍晚下了什么雨后，空气变得凉快了？",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370091&Signature=yphsBil9iciGI9t%2F08iCM9ftLSo%3D",
+          "options": [
+            {
+              "text": "雷阵雨",
+              "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-options-0-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370091&Signature=7OdPNPBVMZs%2FGG2dsruTcp%2FTfpM%3D",
+              "correct": true
+            },
+            {
+              "text": "小雪",
+              "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-options-1-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370092&Signature=%2FqqJXl9QyqJrcaSDxdR2uM4XNF0%3D",
+              "correct": false
+            },
+            {
+              "text": "冰雹",
+              "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-options-2-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370092&Signature=hV2DsVm5u4N7qBGH85YsSnIrBYE%3D",
+              "correct": false
+            },
+            {
+              "text": "大雾",
+              "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/33493605-8f60-4326-acbc-74d6d80283db/content-questions-2-options-3-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370093&Signature=oPuWA9kq17guifieXAvk%2Ffu4u3A%3D",
+              "correct": false
+            }
+          ]
+        }
+      ],
+      "transcript": "大暑的午后，太阳晒得地面发烫。小朵朵抱着她的小花猫阿黄，蹲在院子里直冒汗。她们先跑到大梧桐树下找阴凉，风一吹好舒服呀。奶奶端来两杯凉白开，朵朵和阿黄咕嘟咕嘟喝得饱饱的。树上的蝉“知了知了”唱个不停，朵朵趴在石桌上听入了神。傍晚的时候，忽然下了一阵雷阵雨，风变得凉丝丝的，空气里还飘着青草的香味呢。"
+    }
+  },
+  "preview": false,
+  "readOnly": false,
+  "isVisible": true
+}

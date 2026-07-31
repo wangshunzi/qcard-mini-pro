@@ -1,0 +1,123 @@
+<view class="qcard listening {{preview ? 'preview-card' : ''}}" style="--primary:{{primary}};--success:{{success}};--error:{{error}}">
+  <image class="card-background" src="{{backgroundImage}}" mode="aspectFill"></image>
+  <view wx:if="{{cardPhase === 'listening'}}" class="ambient-shade"></view>
+
+  <block wx:if="{{preview}}">
+    <view class="preview-content">
+      <view class="listening-header compact-header">
+        <view class="header-meta">
+          <view class="header-chip"><ui-icon name="headphones" size="{{18}}" color="currentColor" />{{content.mode === 'exam' ? '听力考试' : '听故事'}}</view>
+          <view class="header-chip">{{questions.length || 3}} 题</view>
+        </view>
+        <view class="header-title">{{content.titleText}}</view>
+      </view>
+      <view class="preview-play" style="background:{{primary}}">
+        <ui-icon name="play" size="{{30}}" color="#ffffff" />
+      </view>
+    </view>
+  </block>
+
+  <view wx:elif="{{cardPhase === 'listening'}}" class="listen-content">
+    <view class="listening-header">
+      <view class="header-meta">
+        <view class="header-chip"><ui-icon name="headphones" size="{{22}}" color="currentColor" />{{content.mode === 'exam' ? '听力考试' : '听故事'}}</view>
+        <view class="header-chip">{{questions.length}} 题</view>
+      </view>
+      <view class="header-title">{{content.titleText}}</view>
+    </view>
+
+    <view class="listen-hero">
+      <view
+        class="glass-play {{passagePlaying ? 'audio-pulse' : 'idle-pulse'}}"
+        style="background:conic-gradient({{primary}} {{progressDeg}}deg,rgba(255,255,255,.22) 0deg)"
+        bindtap="togglePassage"
+      >
+        <view class="glass-play-inner">
+          <ui-icon name="{{passagePlaying ? 'pause' : 'play'}}" size="{{60}}" color="#ffffff" />
+        </view>
+      </view>
+      <scroll-view wx:if="{{content.transcriptText}}" class="transcript-overlay {{transcriptExpanded ? 'transcript-visible' : ''}}" scroll-y>
+        <view
+          wx:for="{{content.transcriptParagraphs}}"
+          wx:key="*this"
+          class="transcript-paragraph"
+        >{{item}}</view>
+      </scroll-view>
+    </view>
+
+    <view class="listen-actions">
+      <view class="round-action" bindtap="cycleRate">{{playbackRate}}x</view>
+      <view class="round-action {{transcriptExpanded ? 'action-active' : ''}}" bindtap="toggleTranscript" aria-label="{{transcriptExpanded ? '收起听力文稿' : '展开听力文稿'}}">
+        <ui-icon name="file-document-outline" size="{{34}}" color="#ffffff" />
+      </view>
+      <view class="start-answer {{requireListen && !hasListenedOnce ? '' : 'start-ready'}}" bindtap="startAnswering">
+        <ui-icon name="{{requireListen && !hasListenedOnce ? 'lock' : 'rocket-launch-outline'}}" size="{{30}}" color="currentColor" />
+        <text>{{requireListen && !hasListenedOnce ? '先听完' : '开始答题'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="answer-content">
+    <view class="answer-topbar">
+      <view class="answer-back" bindtap="backToListening">
+        <ui-icon name="chevron-left" size="{{38}}" color="#ffffff" />
+        <text>听力</text>
+      </view>
+      <view class="answer-stepper">
+        <view
+          wx:for="{{questions}}"
+          wx:key="id"
+          data-index="{{index}}"
+          bindtap="selectQuestion"
+          class="answer-step {{index === questionIndex ? 'current' : ''}} {{answeredMap[item.id] ? 'answered' : ''}}"
+          style="{{index === questionIndex || answeredMap[item.id] ? 'background:' + primary : ''}}"
+        >{{answeredMap[item.id] ? '✓' : index + 1}}</view>
+      </view>
+    </view>
+
+    <view class="question-bubble {{phase === 'wrong' ? 'question-wrong' : ''}} {{phase === 'correct' ? 'question-correct' : ''}}">
+      <view class="question-bubble-body">
+        <view wx:if="{{phase === 'completed'}}" class="completion-inline">
+          <ui-icon name="check-circle" size="{{54}}" color="{{success}}" />
+          <text>{{content.completionText}}</text>
+        </view>
+        <block wx:else>
+          <text class="question-copy">{{question.text || '暂无题目'}}</text>
+          <view wx:if="{{question.audio}}" class="question-audio" bindtap="playQuestionAudio">
+            <ui-icon name="volume-high" size="{{28}}" color="#244d3f" />
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="answer-options">
+      <view
+        wx:for="{{question.options}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="answer"
+        class="answer-option {{selectedId === item.id && phase === 'correct' ? 'correct' : ''}} {{selectedId === item.id && phase === 'wrong' ? 'wrong' : ''}}"
+      >
+        <view class="option-letter">{{item.letter}}</view>
+        <text class="option-copy">{{item.text}}</text>
+        <ui-icon wx:if="{{selectedId === item.id && phase === 'correct'}}" name="check-circle" size="{{30}}" color="{{success}}" />
+        <ui-icon wx:if="{{selectedId === item.id && phase === 'wrong'}}" name="close-circle" size="{{30}}" color="{{error}}" />
+      </view>
+    </view>
+
+    <view class="answer-controls">
+      <view class="answer-play" bindtap="togglePassage">
+        <ui-icon name="{{passagePlaying ? 'pause' : 'play'}}" size="{{34}}" color="#ffffff" />
+      </view>
+      <view wx:if="{{phase === 'completed'}}" class="restart-answer" bindtap="restart">
+        <ui-icon name="restart" size="{{30}}" color="#ffffff" />
+        <text>再来一次</text>
+      </view>
+      <view wx:else class="answer-nav">
+        <view data-index="{{questionIndex - 1}}" bindtap="selectQuestion" class="nav-option {{questionIndex <= 0 ? 'disabled' : ''}}">上一题</view>
+        <text class="answer-progress-label">{{interactionPlayingId ? '正在播放反馈' : (questionIndex + 1) + '/' + questions.length}}</text>
+        <view data-index="{{questionIndex + 1}}" bindtap="selectQuestion" class="nav-option {{questionIndex >= questions.length - 1 ? 'disabled' : ''}}">下一题</view>
+      </view>
+    </view>
+  </view>
+</view>

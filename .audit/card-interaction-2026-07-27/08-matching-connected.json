@@ -1,0 +1,164 @@
+{
+  "leftFrames": [
+    {
+      "id": "l1",
+      "side": "left",
+      "x": 15,
+      "y": 85.345625,
+      "width": 96,
+      "height": 74,
+      "item": {
+        "id": "l1",
+        "mode": "text",
+        "text": "西瓜"
+      }
+    },
+    {
+      "id": "l2",
+      "side": "left",
+      "x": 121,
+      "y": 85.345625,
+      "width": 96,
+      "height": 74,
+      "item": {
+        "id": "l2",
+        "mode": "text",
+        "text": "荷花"
+      }
+    },
+    {
+      "id": "l3",
+      "side": "left",
+      "x": 227,
+      "y": 85.345625,
+      "width": 96,
+      "height": 74,
+      "item": {
+        "id": "l3",
+        "mode": "text",
+        "text": "蝉"
+      }
+    }
+  ],
+  "rightFrames": [
+    {
+      "id": "r1",
+      "side": "right",
+      "x": 15,
+      "y": 309.6459375,
+      "width": 96,
+      "height": 74,
+      "item": {
+        "id": "r1",
+        "mode": "text",
+        "text": "水果"
+      }
+    },
+    {
+      "id": "r2",
+      "side": "right",
+      "x": 121,
+      "y": 309.6459375,
+      "width": 96,
+      "height": 74,
+      "item": {
+        "id": "r2",
+        "mode": "text",
+        "text": "植物"
+      }
+    },
+    {
+      "id": "r3",
+      "side": "right",
+      "x": 227,
+      "y": 309.6459375,
+      "width": 96,
+      "height": 74,
+      "item": {
+        "id": "r3",
+        "mode": "text",
+        "text": "昆虫"
+      }
+    }
+  ],
+  "matches": [
+    {
+      "leftId": "l1",
+      "rightId": "r1"
+    }
+  ],
+  "matchedMap": {
+    "l1": true,
+    "r1": true
+  },
+  "incorrectMap": {},
+  "activeId": "",
+  "hasChecked": false,
+  "allCorrect": false,
+  "pairCount": 3,
+  "boardWidth": 338,
+  "boardHeight": 509.7734375,
+  "groupLeftStyle": "left:4px;top:59.345625px;width:330px;height:117.99999999999999px",
+  "groupRightStyle": "left:4px;top:283.6459375px;width:330px;height:118px",
+  "primary": "#4F8FEC",
+  "panelBackground": "rgba(247,251,255,0.95)",
+  "panelTitle": "#14345c",
+  "panelText": "#31506f",
+  "itemBackground": "rgba(255,255,255,0.92)",
+  "itemText": "#1f3f5f",
+  "statusText": "拖动连线完成配对，拖已连选项可取消重连",
+  "data": {
+    "backgroundImage": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-0-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370210&Signature=EiXWhVPyeulCb9rmMs%2B8gio9Mhk%3D",
+    "leftItems": [
+      {
+        "id": "l1",
+        "mode": "text",
+        "text": "西瓜"
+      },
+      {
+        "id": "l2",
+        "mode": "text",
+        "text": "荷花"
+      },
+      {
+        "id": "l3",
+        "mode": "text",
+        "text": "蝉"
+      }
+    ],
+    "rightItems": [
+      {
+        "id": "r1",
+        "mode": "text",
+        "text": "水果"
+      },
+      {
+        "id": "r2",
+        "mode": "text",
+        "text": "植物"
+      },
+      {
+        "id": "r3",
+        "mode": "text",
+        "text": "昆虫"
+      }
+    ],
+    "pairs": [
+      {
+        "leftId": "l1",
+        "rightId": "r1"
+      },
+      {
+        "leftId": "l2",
+        "rightId": "r2"
+      },
+      {
+        "leftId": "l3",
+        "rightId": "r3"
+      }
+    ]
+  },
+  "preview": false,
+  "readOnly": false,
+  "isVisible": true
+}

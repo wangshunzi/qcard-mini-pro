@@ -1,0 +1,72 @@
+@import "/design-system/theme.wxss";
+
+page {
+  min-height: 100%;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  font-size: 28rpx;
+  line-height: 1.5;
+  /*
+   * Overlay navigation does not occupy document flow. Keep hero copy and
+   * floating panels below the native capsule row on notched real devices.
+   */
+  --immersive-content-safe-top: calc(env(safe-area-inset-top) + 192rpx);
+  --immersive-panel-safe-top: calc(env(safe-area-inset-top) + 192rpx);
+  --immersive-control-height: 72rpx;
+  --immersive-control-border: 1rpx solid rgba(255, 255, 255, .82);
+  --immersive-control-background: linear-gradient(145deg, rgba(255, 255, 255, .98), rgba(247, 250, 247, .84));
+  --immersive-control-shadow: 0 7rpx 20rpx rgba(24, 45, 30, .13), inset 0 1rpx 0 rgba(255, 255, 255, .95);
+}
+
+.drawer-selector-trigger { max-width:250rpx; height:var(--immersive-control-height); margin:0; padding:0 21rpx; display:flex; align-items:center; gap:8rpx; box-sizing:border-box; border:var(--immersive-control-border); border-radius:999rpx; color:#3f321f; background:var(--immersive-control-background); box-shadow:var(--immersive-control-shadow); font-size:22rpx; font-weight:700; line-height:var(--immersive-control-height); backdrop-filter:blur(18rpx); transition:opacity .15s ease,transform .15s ease,box-shadow .15s ease; }
+.drawer-selector-trigger-label { min-width:0; max-width:135rpx; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.drawer-selector-trigger-icon { width:29rpx; height:29rpx; flex:none; }
+.drawer-selector-trigger-chevron { flex:none; transition:transform .2s ease; }
+.drawer-selector-trigger.open .drawer-selector-trigger-chevron { transform:rotate(180deg); }
+.drawer-selector-trigger-hover { opacity:.72; transform:scale(.96); }
+
+button::after {
+  border: 0;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  box-sizing: border-box;
+}
+
+.pressable {
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.pressable-hover {
+  opacity: .78;
+  transform: scale(.98);
+}
+
+.page-shell {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: var(--page-padding);
+}
+
+.safe-bottom {
+  padding-bottom: calc(32rpx + env(safe-area-inset-bottom));
+}
+
+.tab-page {
+  padding-bottom: 32rpx;
+}
+
+.screen-reader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}

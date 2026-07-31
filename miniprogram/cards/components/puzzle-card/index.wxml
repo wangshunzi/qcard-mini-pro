@@ -1,0 +1,251 @@
+<view class="qcard puzzle-card">
+  <image
+    wx:if="{{backgroundUrl || objectUrl}}"
+    class="background-image"
+    src="{{backgroundUrl || objectUrl}}"
+    mode="aspectFill"
+  ></image>
+
+  <block wx:if="{{preview}}">
+    <view class="preview-backdrop-layer"></view>
+    <view class="preview-content">
+      <view wx:if="{{objectUrl}}" class="preview-grid-wrapper">
+        <view class="preview-grid" style="grid-template-columns:repeat({{previewLevel}},1fr);grid-template-rows:repeat({{previewLevel}},1fr)">
+          <view
+            wx:for="{{previewSlots}}"
+            wx:key="slotIndex"
+            class="preview-tile"
+          >
+            <image
+              class="preview-tile-image"
+              src="{{objectUrl}}"
+              mode="scaleToFill"
+              style="width:{{previewLevel * 100}}%;height:{{previewLevel * 100}}%;left:-{{item.sourceX * 100}}%;top:-{{item.sourceY * 100}}%"
+            ></image>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="preview-empty">图片加载中…</view>
+    </view>
+    <view class="preview-overlay"></view>
+  </block>
+
+  <block wx:else>
+    <view
+      class="blur-layer"
+      style="opacity:{{blurOpacity}};transition-duration:{{blurTransitionMs}}ms"
+    ></view>
+    <view wx:if="{{!started && !readOnly}}" class="puzzle-header">
+      <view class="mode-tabs">
+        <view data-mode="shuffle" bindtap="toggleMode" class="mode-tab {{mode === 'shuffle' ? 'selected' : ''}}">
+          <ui-icon name="view-grid-outline" size="{{26}}" color="currentColor"></ui-icon>
+          <text>拼图</text>
+        </view>
+        <view data-mode="fill" bindtap="toggleMode" class="mode-tab {{mode === 'fill' ? 'selected' : ''}}">
+          <ui-icon name="puzzle-outline" size="{{26}}" color="currentColor"></ui-icon>
+          <text>匹配</text>
+        </view>
+      </view>
+
+      <view class="level-wrap">
+        <view class="level-button" bindtap="toggleLevelMenu">
+          <text>{{level}}阶</text>
+          <ui-icon name="chevron-down" size="{{24}}" color="currentColor"></ui-icon>
+        </view>
+        <view wx:if="{{levelMenuVisible}}" class="level-menu">
+          <view
+            wx:for="{{levels}}"
+            wx:key="*this"
+            data-level="{{item}}"
+            bindtap="chooseLevel"
+            class="level-option {{level === item ? 'selected' : ''}}"
+          >{{item}}阶</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{started && !completed}}" class="timer-bar">
+      <view class="timer-info">
+        <ui-icon name="clock-outline" size="{{28}}" color="#529917"></ui-icon>
+        <text class="timer-mode-label">{{mode === 'shuffle' ? '拼图模式' : '匹配模式'}}</text>
+        <text class="timer-elapsed">{{elapsedText}}</text>
+      </view>
+      <view class="stop-button" bindtap="stop">结束</view>
+    </view>
+
+    <view
+      wx:if="{{mode === 'fill' && started && !starting && !completed}}"
+      class="outline-toggle {{showOutline ? 'active' : ''}}"
+      bindtap="toggleOutline"
+    >
+      <ui-icon name="{{showOutline ? 'eye-outline' : 'eye-off-outline'}}" size="{{28}}" color="currentColor"></ui-icon>
+      <text>轮廓提示</text>
+    </view>
+
+    <view class="game-section">
+      <view
+        class="grid-wrap"
+        style="transform:scale({{boardScale}});opacity:{{boardOpacity}};transition:transform {{boardTransitionMs}}ms ease-in-out,opacity {{boardOpacityTransitionMs}}ms linear"
+      >
+        <view class="grid {{shuffling ? 'shuffling' : ''}} {{animationPhase === 'dropping' ? 'dropping' : ''}} {{boardSeamless ? 'seamless' : ''}} {{mode === 'shuffle' && started && !completed && !wholeImageVisible ? 'shuffle-playing' : ''}} {{completed ? 'completed' : ''}}" style="width:{{boardSize}}px;height:{{boardSize}}px">
+          <image
+            wx:if="{{(mode !== 'shuffle' || !started || completed || wholeImageVisible) && (backgroundUrl || objectUrl)}}"
+            class="board-backdrop"
+            src="{{backgroundUrl || objectUrl}}"
+            mode="aspectFill"
+          ></image>
+          <image
+            wx:if="{{wholeImageVisible && objectUrl}}"
+            class="whole-image"
+            src="{{objectUrl}}"
+            mode="scaleToFill"
+          ></image>
+          <view
+            wx:if="{{!wholeImageVisible && mode === 'fill' && showOutline && started && !completed}}"
+            class="outline-image"
+          >
+            <image src="{{objectUrl || backgroundUrl}}" mode="scaleToFill"></image>
+          </view>
+          <view
+            wx:if="{{!wholeImageVisible}}"
+            wx:for="{{renderSlots}}"
+            wx:key="renderKey"
+            data-slot="{{item.slotIndex}}"
+            bindtap="slotTap"
+            class="slot {{item.tileIndex === null ? 'missing' : ''}} {{mode === 'shuffle' ? 'shuffle-slot' : ''}} {{mode === 'fill' && showOutline ? 'outline-active' : ''}} {{mode === 'fill' && selectedTileIndex >= 0 && item.tileIndex === null ? 'target' : ''}} {{mode === 'fill' && hoveredSlotIndex === item.slotIndex ? 'hovered' : ''}}"
+            style="width:{{tileSize}}px;height:{{tileSize}}px;left:{{item.slotX * tileSize}}px;top:{{item.slotY * tileSize}}px"
+          >
+            <view
+              wx:if="{{item.tileIndex !== null}}"
+              data-source="slot"
+              data-slot="{{item.slotIndex}}"
+              data-tile="{{item.tileIndex}}"
+              catchtap="slotTap"
+              bindtouchstart="fillTouchStart"
+              catchtouchmove="fillTouchMove"
+              bindtouchend="fillTouchEnd"
+              bindtouchcancel="fillTouchCancel"
+              class="tile {{removingSpare && item.tileIndex === spareTileIndex ? 'spare-removing' : ''}} {{restoringSpare && item.tileIndex === spareTileIndex ? 'spare-restoring' : ''}} {{droppingTileMap[item.tileIndex] ? 'drop-to-pool' : ''}} {{activeTile && activeTile.tileIndex === item.tileIndex ? 'dragging-source' : ''}}"
+              style="--drop-y:{{item.dropY}}px"
+            >
+              <image
+                class="tile-image"
+                src="{{objectUrl}}"
+                mode="scaleToFill"
+                style="width:{{boardSize}}px;height:{{boardSize}}px;left:-{{item.sourceX * tileSize}}px;top:-{{item.sourceY * tileSize}}px"
+              ></image>
+            </view>
+          </view>
+          <view
+            wx:if="{{!wholeImageVisible && mode === 'shuffle' && started && !starting && !completed}}"
+            class="shuffle-hit-layer"
+          >
+            <view
+              wx:for="{{renderSlots}}"
+              wx:key="slotIndex"
+              data-slot="{{item.slotIndex}}"
+              bindtap="moveShuffleTile"
+              class="shuffle-hit-slot"
+              style="width:{{tileSize}}px;height:{{tileSize}}px;left:{{item.slotX * tileSize}}px;top:{{item.slotY * tileSize}}px"
+            ></view>
+          </view>
+        </view>
+
+        <view wx:if="{{!started && showStartButton}}" class="start-overlay">
+          <view class="start-button" bindtap="start">开始</view>
+        </view>
+        <view wx:if="{{starting || shuffling}}" class="shuffle-tip">{{phaseText}}</view>
+      </view>
+
+      <scroll-view
+        wx:if="{{mode === 'fill' && started && !completed && (animationPhase === 'dropping' || animationPhase === 'playing')}}"
+        class="pool-bar"
+        style="height:{{poolTileSize + 4}}px"
+        scroll-x
+        enhanced
+        show-scrollbar="{{false}}"
+      >
+        <view class="pool-content" style="height:{{poolTileSize + 4}}px">
+          <view
+            wx:for="{{poolTiles}}"
+            wx:key="tileIndex"
+            data-source="pool"
+            data-slot="-1"
+            data-tile="{{item.tileIndex}}"
+            catchtap="selectPool"
+            bindtouchstart="fillTouchStart"
+            catchtouchmove="fillTouchMove"
+            bindtouchend="fillTouchEnd"
+            bindtouchcancel="fillTouchCancel"
+            class="pool-tile pool-land {{selectedTileIndex === item.tileIndex ? 'selected' : ''}} {{activeTile && activeTile.tileIndex === item.tileIndex ? 'dragging-source' : ''}}"
+            style="width:{{poolTileSize}}px;height:{{poolTileSize}}px"
+          >
+            <image
+              class="pool-tile-image"
+              src="{{objectUrl}}"
+              mode="scaleToFill"
+              style="width:{{level * poolTileSize}}px;height:{{level * poolTileSize}}px;left:-{{item.sourceX * poolTileSize}}px;top:-{{item.sourceY * poolTileSize}}px"
+            ></image>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <view wx:if="{{activeTile}}" class="active-tile" style="{{activeStyle}}">
+      <image
+        class="active-tile-image"
+        src="{{objectUrl}}"
+        mode="scaleToFill"
+        style="width:{{activeBgSize}}px;height:{{activeBgSize}}px;left:-{{activeBgX}}px;top:-{{activeBgY}}px"
+      ></image>
+    </view>
+
+    <view
+      wx:if="{{completed && videoUrl}}"
+      class="celebration-video-layer"
+      style="opacity:{{videoOpacity}};transition-duration:{{videoTransitionMs}}ms"
+    >
+      <video
+        id="puzzleCelebrationVideo"
+        class="celebration-video"
+        src="{{videoUrl}}"
+        autoplay="{{false}}"
+        muted="{{true}}"
+        object-fit="cover"
+        controls="{{false}}"
+        show-center-play-btn="{{false}}"
+        show-play-btn="{{false}}"
+        enable-progress-gesture="{{false}}"
+        bindended="videoEnd"
+        binderror="videoError"
+      ></video>
+    </view>
+
+    <view
+      wx:if="{{completed && celebrationPhase === 'video' && celebrationVideoPlaying && !videoEnded && !readOnly}}"
+      class="celebration-close-wrap"
+    >
+      <view class="celebration-close" catchtap="restartFromCelebration">
+        <ui-icon name="close" size="{{34}}" color="#ffffff"></ui-icon>
+      </view>
+    </view>
+
+    <view
+      wx:if="{{completed && celebrationPhase === 'result'}}"
+      class="result-overlay"
+    >
+      <view class="result-panel">
+        <view class="success-title">恭喜完成！</view>
+        <view class="success-time">耗时：{{elapsedText}}</view>
+        <view
+          wx:if="{{!readOnly}}"
+          class="restart-button"
+          catchtap="restartFromCelebration"
+        >
+          <text>重新开始</text>
+          <ui-icon name="refresh" size="{{27}}" color="#529917"></ui-icon>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

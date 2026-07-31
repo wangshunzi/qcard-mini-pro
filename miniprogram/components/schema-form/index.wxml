@@ -1,0 +1,134 @@
+<view class="schema-form">
+  <block wx:for="{{fields}}" wx:key="id">
+    <view wx:if="{{item.kind === 'section'}}"
+      class="section {{item.normalizedWidget === 'card' ? 'section-card' : ''}} {{item.normalizedWidget === 'listitem' ? 'list-item-header' : ''}}">
+      <text class="section-title">{{item.title}}</text>
+      <button wx:if="{{item.normalizedWidget === 'listitem' && item.canRemove}}"
+        class="section-remove" data-list-path="{{item.listPathJson}}" data-index="{{item.listIndex}}"
+        bindtap="removeListItem">删除</button>
+    </view>
+
+    <view wx:elif="{{item.kind === 'list'}}" class="list-header">
+      <view>
+        <view class="label">{{item.title}}<text wx:if="{{item.requiredNow}}" class="required">*</text></view>
+        <view wx:if="{{item.description}}" class="description">{{item.description}}</view>
+      </view>
+      <button wx:if="{{item.canAdd}}" class="list-add" data-path="{{item.pathJson}}" bindtap="addListItem">添加</button>
+    </view>
+
+    <view wx:elif="{{item.kind === 'display'}}" class="field display-field">
+      <view wx:if="{{item.title && item.html !== item.title}}" class="void-title">{{item.title}}</view>
+      <rich-text class="html-content" nodes="{{item.html}}"></rich-text>
+    </view>
+
+    <view wx:else class="field {{item.displayType === 'row' ? 'field-row' : ''}}">
+      <view class="field-heading">
+        <view class="label">{{item.title}}<text wx:if="{{item.requiredNow}}" class="required">*</text></view>
+      </view>
+      <view class="field-control">
+        <checkbox-group wx:if="{{item.options.length && item.multiple}}"
+          data-path="{{item.pathJson}}" bindchange="checkboxInput">
+          <label wx:for="{{item.options}}" wx:for-item="option" wx:key="valueKey"
+            class="checkbox-option {{option.selected ? 'selector-option-active' : ''}}">
+            <checkbox value="{{option.valueKey}}" checked="{{option.selected}}"
+              disabled="{{disabled || item.controlDisabled}}" color="#529917" />
+            <text>{{option.label}}</text>
+          </label>
+        </checkbox-group>
+
+        <radio-group wx:elif="{{item.options.length && item.normalizedWidget === 'radio'}}"
+          data-path="{{item.pathJson}}" bindchange="radioInput">
+          <label wx:for="{{item.options}}" wx:for-item="option" wx:key="valueKey" class="radio-option">
+            <radio value="{{option.valueKey}}" checked="{{option.selected}}"
+              disabled="{{disabled || item.controlDisabled}}" color="#529917" />
+            <text>{{option.label}}</text>
+          </label>
+        </radio-group>
+
+        <view wx:elif="{{item.options.length && item.normalizedWidget === 'selector'}}" class="selector-options">
+          <radio-group data-path="{{item.pathJson}}" bindchange="radioInput">
+            <label wx:for="{{item.options}}" wx:for-item="option" wx:key="valueKey"
+              class="selector-option {{option.selected ? 'selector-option-active' : ''}}">
+              <radio class="selector-radio" value="{{option.valueKey}}" checked="{{option.selected}}"
+                disabled="{{disabled || item.controlDisabled}}" />
+              <text>{{option.label}}</text>
+            </label>
+          </radio-group>
+        </view>
+
+        <picker wx:elif="{{item.options.length}}" disabled="{{disabled || item.controlDisabled}}"
+          range="{{item.options}}" range-key="label" data-path="{{item.pathJson}}" bindchange="pickerInput">
+          <view class="control picker">
+            <text class="{{item.selectedLabel ? '' : 'placeholder'}}">{{item.selectedLabel || item.placeholderValue || '请选择'}}</text>
+            <ui-icon name="chevron-down" size="{{30}}" color="#657065"></ui-icon>
+          </view>
+        </picker>
+
+        <view wx:elif="{{item.normalizedWidget === 'switch' || item.type === 'boolean' || item.type === 'bool'}}"
+          class="switch-control">
+          <switch disabled="{{disabled || item.controlDisabled}}" checked="{{item.value}}"
+            data-path="{{item.pathJson}}" bindchange="switchInput" color="#529917" />
+          <text>{{item.value ? '开启' : '关闭'}}</text>
+        </view>
+
+        <view wx:elif="{{item.normalizedWidget === 'datepicker'}}" class="date-controls">
+          <picker mode="date" fields="{{item.dateFields}}" value="{{item.dateValue}}"
+            start="{{item.props.min || item.min}}" end="{{item.props.max || item.max}}"
+            disabled="{{disabled || item.controlDisabled}}" data-path="{{item.pathJson}}" bindchange="dateInput">
+            <view class="control picker date-control">
+              <text class="{{item.dateValue ? '' : 'placeholder'}}">{{item.dateValue || item.placeholderValue || '请选择日期'}}</text>
+              <ui-icon name="calendar" size="{{30}}" color="#657065"></ui-icon>
+            </view>
+          </picker>
+          <picker wx:if="{{item.isDateTime}}" mode="time" value="{{item.timeValue}}"
+            disabled="{{disabled || item.controlDisabled}}" data-path="{{item.pathJson}}" bindchange="timeInput">
+            <view class="control picker time-control">
+              <text class="{{item.timeValue ? '' : 'placeholder'}}">{{item.timeValue || '选择时间'}}</text>
+              <ui-icon name="clock" size="{{30}}" color="#657065"></ui-icon>
+            </view>
+          </picker>
+        </view>
+
+        <view wx:elif="{{item.normalizedWidget === 'slider'}}" class="slider-control">
+          <slider min="{{item.minimum === undefined ? 0 : item.minimum}}"
+            max="{{item.maximum === undefined ? 100 : item.maximum}}" step="{{item.stepValue}}"
+            value="{{item.sliderValue}}" disabled="{{disabled || item.controlDisabled}}"
+            show-value color="#529917" selected-color="#529917"
+            data-path="{{item.pathJson}}" bindchange="sliderInput" />
+        </view>
+
+        <view wx:elif="{{item.normalizedWidget === 'rate'}}" class="rate"
+          aria-label="{{item.title}}">
+          <text wx:for="{{item.rateItems}}" wx:for-item="rate" wx:key="value"
+            class="rate-star {{rate.active ? 'rate-star-active' : ''}}"
+            data-path="{{item.pathJson}}" data-value="{{rate.value}}" bindtap="rateInput">★</text>
+        </view>
+
+        <textarea wx:elif="{{item.normalizedWidget === 'textarea'}}"
+          class="control textarea" disabled="{{disabled || item.controlDisabled}}" value="{{item.value}}"
+          data-path="{{item.pathJson}}" bindinput="input" placeholder="{{item.placeholderValue}}"
+          maxlength="{{item.maxLengthValue}}" auto-height="{{item.props.autoSize === true}}" />
+
+        <view wx:elif="{{item.normalizedWidget === 'stepper'}}" class="stepper">
+          <button class="stepper-button" disabled="{{disabled || item.controlDisabled || item.atMin}}"
+            data-path="{{item.pathJson}}" data-delta="-1" bindtap="stepperChange">−</button>
+          <view class="stepper-input">{{item.value === undefined ? (item.minimum || 0) : item.value}}</view>
+          <button class="stepper-button" disabled="{{disabled || item.controlDisabled || item.atMax}}"
+            data-path="{{item.pathJson}}" data-delta="1" bindtap="stepperChange">+</button>
+        </view>
+
+        <input wx:elif="{{item.normalizedWidget === 'inputnumber' || item.type === 'number' || item.type === 'integer'}}"
+          class="control" disabled="{{disabled || item.controlDisabled}}" type="number" value="{{item.value}}"
+          data-path="{{item.pathJson}}" bindinput="numberInput" placeholder="{{item.placeholderValue}}" />
+
+        <input wx:else class="control" disabled="{{disabled || item.controlDisabled}}" value="{{item.value}}"
+          data-path="{{item.pathJson}}" bindinput="input" placeholder="{{item.placeholderValue}}"
+          maxlength="{{item.maxLengthValue}}" />
+
+        <view wx:if="{{item.extra}}" class="extra">{{item.extra.text || item.extra}}</view>
+        <view wx:if="{{item.error}}" class="error">{{item.error}}</view>
+        <view wx:elif="{{item.description}}" class="description field-description">{{item.description}}</view>
+      </view>
+    </view>
+  </block>
+</view>

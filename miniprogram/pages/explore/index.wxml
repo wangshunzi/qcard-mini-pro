@@ -1,0 +1,117 @@
+<view class="explore-page safe-bottom tab-page">
+  <immersive-nav overlay="{{true}}" scroll-top="{{navScrollTop}}">
+    <button
+      slot="leading"
+      class="drawer-selector-trigger {{templateDrawerOpen ? 'open' : ''}}"
+      bindtap="openTemplateDrawer"
+      hover-class="drawer-selector-trigger-hover"
+      aria-label="选择模板分类"
+    >
+      <ui-icon name="clipboard-text-outline" size="{{27}}" color="#4f3218" />
+      <text class="drawer-selector-trigger-label">{{selectedTemplateName}}</text>
+      <ui-icon class="drawer-selector-trigger-chevron" name="chevron-down" size="{{26}}" color="#303630" />
+    </button>
+    <button slot="action" class="header-pill my-card-button" bindtap="openMyCards" hover-class="header-pill-hover">
+      <ui-icon name="cards-outline" size="{{29}}" color="#529917" />
+      <text>我的卡面</text>
+    </button>
+  </immersive-nav>
+  <view
+    class="explore-header"
+    style="{{exploreBackground ? 'background-image:url(' + exploreBackground + ')' : ''}}"
+  >
+    <view class="header-shade"></view>
+    <view class="header-title">
+      <text class="header-heading">灵感</text>
+      <text class="header-subheading">优秀卡面案例，一键做同款</text>
+    </view>
+    <view class="search">
+      <ui-icon name="magnify" size="{{37}}" color="#5d5d5d" />
+      <input value="{{query}}" bindinput="onInput" placeholder="搜索灵感卡面..." confirm-type="search" />
+      <view wx:if="{{query}}" class="clear" bindtap="clearSearch" aria-label="清空搜索">
+        <ui-icon name="close-circle" size="{{34}}" color="#a9a9a9" />
+      </view>
+    </view>
+  </view>
+
+  <view class="content">
+    <view wx:if="{{error && !loading}}" class="state">
+      <ui-icon name="alert-circle-outline" size="{{88}}" color="#eb711b" />
+      <text class="state-title">灵感加载失败</text>
+      <text>{{error}}</text>
+      <button bindtap="load" data-reset="{{true}}">重新加载</button>
+    </view>
+
+    <view wx:elif="{{loading}}" class="face-grid">
+      <view wx:for="{{[1,2,3,4]}}" wx:key="*this" class="face-card skeleton"></view>
+    </view>
+
+    <view wx:elif="{{items.length}}" class="face-grid">
+      <view
+        wx:for="{{items}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="openCard"
+        hover-class="face-card-hover"
+        class="face-card {{openingId === item.id ? 'opening' : ''}}"
+      >
+        <flip-card
+          wx:if="{{item.previewCard}}"
+          class="face-renderer"
+          front-card-data="{{item.previewCard}}"
+          aspect-ratio="portrait"
+          preview="{{true}}"
+          read-only="{{true}}"
+          hide-flip-button="{{true}}"
+          is-visible="{{true}}"
+        />
+        <image wx:elif="{{item.thumbnailUrl}}" class="thumbnail" src="{{item.thumbnailUrl}}" mode="aspectFill" />
+        <view wx:elif="{{item.type === 'listening_comprehension_card'}}" class="thumbnail listening-thumbnail">
+          <image class="listening-thumbnail-bg" src="{{listeningBackground}}" mode="aspectFill" />
+          <view class="listening-thumbnail-shade"></view>
+          <view class="listening-thumbnail-content">
+            <view class="listening-thumbnail-meta">
+              <view><ui-icon name="headphones" size="{{16}}" color="currentColor" />听故事</view>
+              <view>{{item.previewQuestionCount || 3}} 题</view>
+            </view>
+            <view class="listening-thumbnail-title">{{item.previewTitle || item.name}}</view>
+            <view class="listening-thumbnail-play" style="background:#6f9b7b">
+              <ui-icon name="play" size="{{28}}" color="#ffffff" />
+            </view>
+          </view>
+        </view>
+        <view wx:else class="thumbnail fallback">
+          <image src="{{assets.appIcon}}" mode="aspectFit" />
+        </view>
+        <view class="make-similar-mask">
+          <button data-template-id="{{item.templateId}}" data-gen-params="{{item.genParams}}" catchtap="makeSimilar">
+            <ui-icon name="star-four-points" size="{{26}}" color="#27533b" />
+            <text>做同款</text>
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <view wx:else class="state">
+      <ui-icon name="lightbulb-on-outline" size="{{88}}" color="#3f3f3f" />
+      <text class="state-title">{{query ? '没有找到相关卡片' : '暂时没有公开卡片'}}</text>
+      <text>换个关键词或模板试试</text>
+    </view>
+
+    <view wx:if="{{loadingMore}}" class="load-more">正在加载更多…</view>
+    <view wx:if="{{!loading && items.length && page >= totalPages}}" class="load-more">已经到底啦</view>
+  </view>
+
+  <selection-side-drawer
+    open="{{templateDrawerOpen}}"
+    title="模板分类"
+    subtitle="选择想浏览的卡面类型"
+    items="{{templates}}"
+    selected-id="{{selectedTemplateId}}"
+    trigger-icon="clipboard-text-outline"
+    show-all="{{true}}"
+    all-label="全部模板"
+    bind:close="closeTemplateDrawer"
+    bind:select="selectTemplate"
+  />
+</view>

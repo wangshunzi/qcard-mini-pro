@@ -1,0 +1,188 @@
+@import "../../styles/card.wxss";
+
+.sound-object {
+  position: relative;
+  overflow: hidden;
+  background: #dcefe6;
+}
+
+.scratch-stage,
+.object-image,
+.preview-image,
+.preview-mask {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.preview-image { filter:blur(14px) brightness(.82) saturate(.84); transform:scale(1.08); }
+
+.scratch-stage {
+  z-index: 1;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.object-image {
+  transition: transform .18s ease;
+}
+
+.object-image.breathing {
+  animation: breathing 1.76s ease-in-out infinite;
+}
+
+.scratch-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  transition: opacity .36s ease;
+}
+
+.control-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  transition: opacity .24s ease;
+}
+
+.scratch-canvas.hidden,
+.control-canvas.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.preview-mask {
+  background: rgba(108, 126, 120, .38);
+  backdrop-filter: blur(14px) brightness(.82) saturate(.84);
+}
+
+.prompt {
+  position: absolute;
+  top: 26px;
+  right: 16px;
+  left: 16px;
+  z-index: 5;
+  display:flex;
+  justify-content:center;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 1px 5px rgba(255, 255, 255, .68);
+}
+.prompt-pill { max-width:100%; padding:9px 18px; box-sizing:border-box; overflow:hidden; border-radius:999px; background:rgba(255,255,255,.9); text-overflow:ellipsis; white-space:nowrap; }
+
+.audio-button {
+  position: absolute;
+  right: 0;
+  bottom: 30px;
+  left: 0;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 62px;
+  margin: auto;
+  padding: 3px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  box-shadow: 0 8px 22px rgba(22, 65, 45, .24);
+  color: #fff;
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.audio-button-inner { width:100%; height:100%; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.cover-glyph {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#ffffff;
+  font-family:"MaterialCommunityIcons";
+  font-size:20px;
+  font-style:normal;
+  font-weight:normal;
+  line-height:1;
+}
+.audio-button.playing .audio-button-inner ui-icon,
+.audio-button.playing .cover-glyph,
+.science-icon.playing .science-icon-inner ui-icon { animation:audio-spin .9s linear infinite; }
+
+.science-dialog {
+  position: absolute;
+  right: 24px;
+  bottom: 90px;
+  left: 24px;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 16px 14px;
+  border: 1px solid rgba(255, 255, 255, .82);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 10px 28px rgba(25, 60, 43, .18);
+  color: #254839;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 21px;
+}
+.science-copy { width:100%; text-align:left; }
+
+.science-icon {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 2px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 20px;
+}
+.science-icon-inner { width:100%; height:100%; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+
+.restart-button {
+  position: absolute;
+  right: 0;
+  bottom: 28px;
+  left: 0;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  border: 2px solid rgba(255, 255, 255, .88);
+  border-radius: 50%;
+  box-shadow: 0 8px 20px rgba(22, 65, 45, .22);
+  color: #fff;
+  font-size: 27px;
+  font-weight: 900;
+}
+
+@keyframes audio-spin {
+  from { transform: perspective(120px) rotateX(0deg); }
+  to { transform: perspective(120px) rotateX(360deg); }
+}
+
+@keyframes breathing {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.055); }
+}

@@ -1,0 +1,13 @@
+{
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 120,
+  "usingComponents": {
+    "flip-card": "/cards/FlipCardContainer/index",
+    "immersive-nav": "/components/immersive-nav/index",
+    "selection-side-drawer": "/components/selection-side-drawer/index",
+    "unlock-confirm-drawer": "/components/unlock-confirm-drawer/index",
+    "app-purchase-guide": "/components/app-purchase-guide/index",
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

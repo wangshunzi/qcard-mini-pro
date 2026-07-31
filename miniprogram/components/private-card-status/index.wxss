@@ -1,0 +1,244 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.private-card-status {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24rpx;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: rgba(245, 247, 243, .88);
+  color: var(--color-text, #22382d);
+  -webkit-backdrop-filter: blur(14rpx);
+  backdrop-filter: blur(14rpx);
+}
+
+.private-card-status.processing {
+  gap: 24rpx;
+  box-shadow: inset 0 0 0 4rpx rgba(82, 153, 23, .1);
+  animation: status-fade-in .24s ease-out both;
+}
+
+.pending-icon {
+  display: flex;
+  width: 96rpx;
+  height: 96rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #eee8d9;
+}
+
+.status-title {
+  color: var(--color-text, #22382d);
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.processing-rings {
+  position: relative;
+  display: flex;
+  width: 128rpx;
+  height: 128rpx;
+  align-items: center;
+  justify-content: center;
+}
+
+.processing-ring,
+.processing-glow,
+.processing-icon {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.processing-ring {
+  box-sizing: border-box;
+  border-style: solid;
+  border-color: transparent;
+}
+
+.processing-ring.outer {
+  inset: 0;
+  border-width: 8rpx;
+  border-top-color: #7ab84a;
+  border-right-color: #7ab84a;
+  animation: status-spin 1.15s linear infinite;
+}
+
+.processing-ring.inner {
+  inset: 16rpx;
+  border-width: 2rpx;
+  border-bottom-color: #3f7f18;
+  border-left-color: #3f7f18;
+  animation: status-spin-reverse .8s linear infinite;
+}
+
+.processing-icon {
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.processing-glow {
+  inset: 0;
+  background: rgba(82, 153, 23, .18);
+  animation: status-glow 1.2s ease-out infinite;
+}
+
+.processing-title {
+  color: #39740f;
+  animation: status-title-pulse 1.2s ease-in-out infinite alternate;
+}
+
+.processing-dots {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-top: -8rpx;
+}
+
+.processing-dots view {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #7ab84a;
+  animation: status-dot-bounce .9s ease-in-out infinite;
+}
+
+.processing-dots view:nth-child(2) {
+  animation-delay: .15s;
+}
+
+.processing-dots view:nth-child(3) {
+  animation-delay: .3s;
+}
+
+.failed {
+  gap: 18rpx;
+}
+
+.failed-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.failed-title {
+  color: #d35f56;
+}
+
+.status-subtitle {
+  color: var(--color-text-secondary, #6d776f);
+  font-size: 24rpx;
+  line-height: 1.2;
+}
+
+.retry-button {
+  width: auto;
+  height: 56rpx;
+  margin: 4rpx 0 0;
+  padding: 0 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7rpx;
+  border: 0;
+  border-radius: 13rpx;
+  color: #ffffff;
+  background: #529917;
+  box-shadow: 0 5rpx 14rpx rgba(44, 90, 18, .18);
+  font-size: 22rpx;
+  font-weight: 650;
+  line-height: 56rpx;
+}
+
+.retry-button::after {
+  border: 0;
+}
+
+.compact {
+  gap: 16rpx;
+}
+
+.compact .pending-icon {
+  width: 72rpx;
+  height: 72rpx;
+}
+
+.compact .processing-rings {
+  width: 88rpx;
+  height: 88rpx;
+}
+
+.compact .processing-ring.outer {
+  border-width: 6rpx;
+}
+
+.compact .processing-ring.inner {
+  inset: 12rpx;
+}
+
+.compact .status-title {
+  font-size: 23rpx;
+}
+
+.compact .status-subtitle {
+  font-size: 20rpx;
+}
+
+.compact .retry-button {
+  height: 48rpx;
+  padding: 0 18rpx;
+  font-size: 19rpx;
+  line-height: 48rpx;
+}
+
+.compact .processing-dots view {
+  width: 12rpx;
+  height: 12rpx;
+}
+
+@keyframes status-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes status-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes status-spin-reverse {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes status-glow {
+  0% { opacity: .42; transform: scale(.72); }
+  78%, 100% { opacity: 0; transform: scale(1.18); }
+}
+
+@keyframes status-title-pulse {
+  from { opacity: .58; }
+  to { opacity: 1; }
+}
+
+@keyframes status-dot-bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-12rpx); }
+}

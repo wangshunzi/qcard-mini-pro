@@ -1,0 +1,107 @@
+<view wx:if="{{open}}" class="unlock-drawer {{closing ? 'closing' : ''}}">
+  <view class="unlock-backdrop" bindtap="close"></view>
+  <view class="unlock-panel safe-bottom" catchtap="preventClose">
+    <view class="unlock-handle"></view>
+
+    <view class="unlock-heading">
+      <view class="unlock-heading-main">
+        <view class="unlock-heading-icon">
+          <ui-icon name="lock-open-outline" size="{{39}}" color="#529917" />
+        </view>
+        <view class="unlock-heading-copy">
+          <text class="unlock-title">{{canAfford ? '解锁确认' : '余额不足'}}</text>
+          <text class="unlock-subtitle">{{canAfford ? '请确认解锁卡包信息' : '请先充值后再解锁'}}</text>
+        </view>
+      </view>
+      <view class="unlock-balance">
+        <view class="unlock-balance-label">
+          <image class="unlock-coin-icon small" src="/assets/icons/coins.png" mode="aspectFit" />
+          <text>账户余额</text>
+        </view>
+        <text class="unlock-balance-value {{canAfford ? 'enough' : 'insufficient'}}">{{balanceFloor}} 咔豆</text>
+      </view>
+    </view>
+
+    <view class="unlock-card">
+      <view class="unlock-pack-row">
+        <image wx:if="{{cardPackInfo.cover}}" class="unlock-cover" src="{{cardPackInfo.cover}}" mode="aspectFill" />
+        <view wx:else class="unlock-cover unlock-cover-fallback">
+          <ui-icon name="cards-outline" size="{{46}}" color="#ffffff" />
+        </view>
+        <view class="unlock-pack-copy">
+          <view class="unlock-pack-title-row">
+            <text class="unlock-pack-title">{{cardPackInfo.title || '学习卡包'}}</text>
+            <text wx:if="{{cardPackInfo.difficulty}}" class="unlock-difficulty">{{cardPackInfo.difficulty}}</text>
+          </view>
+          <view wx:if="{{cardPackInfo.author && cardPackInfo.author.name}}" class="unlock-author">
+            <image wx:if="{{cardPackInfo.author.avatar}}" class="unlock-author-avatar" src="{{cardPackInfo.author.avatar}}" mode="aspectFill" />
+            <view wx:else class="unlock-author-avatar unlock-author-fallback">
+              <ui-icon name="account-outline" size="{{20}}" color="#6f776f" />
+            </view>
+            <text>{{cardPackInfo.author.name}}</text>
+          </view>
+          <view class="unlock-count">
+            <ui-icon name="lock" size="{{23}}" color="#6f776f" />
+            <text>{{cardPackInfo.cardCount || 0}} 张卡片</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="unlock-price-section">
+        <view class="unlock-price-heading">
+          <image class="unlock-coin-icon" src="/assets/icons/coins.png" mode="aspectFit" />
+          <text>价格详情</text>
+        </view>
+        <view class="unlock-price-list">
+          <view class="unlock-price-row">
+            <text class="unlock-price-label">原价</text>
+            <text class="unlock-price-value">{{basePrice}} 咔豆</text>
+          </view>
+          <view wx:if="{{hasDiscount}}" class="unlock-price-row">
+            <view class="unlock-price-label-with-icon">
+              <ui-icon name="gift-outline" size="{{25}}" color="#c95752" />
+              <text>活动折扣</text>
+            </view>
+            <view class="unlock-discount">
+              <text>-{{discountAmount}} 咔豆</text>
+              <text wx:if="{{discountPercent}}">({{discountPercent}}% OFF)</text>
+            </view>
+          </view>
+          <view wx:if="{{hasLevelDiscount}}" class="unlock-price-row">
+            <view class="unlock-price-label-with-icon">
+              <ui-icon name="crown" size="{{25}}" color="#c95752" />
+              <text>等级折扣</text>
+            </view>
+            <view class="unlock-discount">
+              <text>-{{levelDiscountAmount}} 咔豆</text>
+              <text wx:if="{{levelDiscountPercent}}">({{levelDiscountPercent}}% OFF)</text>
+            </view>
+          </view>
+          <view class="unlock-price-row unlock-final-price">
+            <text>最终价格</text>
+            <text class="unlock-final-value {{currentPrice === 0 ? 'free' : ''}}">{{currentPrice === 0 ? '免费' : currentPrice + ' 咔豆'}}</text>
+          </view>
+        </view>
+        <view wx:if="{{!canAfford}}" class="unlock-shortage">
+          <text>余额不足，还需要 {{shortageText}} 咔豆</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="unlock-actions">
+      <button class="unlock-action cancel {{isLoading ? 'disabled' : ''}}" bindtap="close" disabled="{{isLoading}}">取消</button>
+      <button wx:if="{{canAfford}}" class="unlock-action confirm {{isLoading ? 'disabled' : ''}}" bindtap="confirm" loading="{{isLoading}}" disabled="{{isLoading}}">
+        <ui-icon wx:if="{{!isLoading}}" name="lock-open-outline" size="{{30}}" color="#3e2a05" />
+        <text>{{isLoading ? '解锁中…' : '立即解锁'}}</text>
+      </button>
+      <button wx:else class="unlock-action recharge {{isLoading ? 'disabled' : ''}}" bindtap="recharge" disabled="{{isLoading}}">
+        <ui-icon name="wallet" size="{{29}}" color="#ffffff" />
+        <text>立即充值</text>
+      </button>
+    </view>
+
+    <text class="unlock-note">
+      {{canAfford ? (currentPrice === 0 ? '免费领取，该操作不可撤销' : '解锁后将立即扣除 ' + currentPrice + ' 咔豆，该操作不可撤销') : '充值后即可解锁更多精彩内容'}}
+    </text>
+  </view>
+</view>

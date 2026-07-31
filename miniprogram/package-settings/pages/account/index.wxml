@@ -1,0 +1,31 @@
+<view class="page safe-bottom">
+  <immersive-nav title="账号与安全" back="{{true}}" border="{{true}}" />
+  <view class="settings-section">
+    <button class="delete-entry" bindtap="openDeleteDialog" hover-class="entry-hover">
+      <view class="entry-main">
+        <ui-icon name="delete-outline" size="{{36}}" color="#d35f56" />
+        <text>注销账号</text>
+      </view>
+      <ui-icon name="chevron-right" size="{{30}}" color="#d35f56" />
+    </button>
+  </view>
+  <text class="page-tip">注销后账号将无法登录，相关数据将停止使用。</text>
+
+  <view wx:if="{{deleteDialogOpen}}" class="dialog-root">
+    <view class="dialog-backdrop" bindtap="closeDeleteDialog"></view>
+    <view class="dialog" catchtap="preventClose">
+      <button wx:if="{{!deleting}}" class="dialog-close" bindtap="closeDeleteDialog" aria-label="关闭">
+        <ui-icon name="close" size="{{32}}" color="#657065" />
+      </button>
+      <text class="dialog-title">注销账号</text>
+      <text class="dialog-description">注销后，账号及学习记录、咔豆余额、已解锁卡包等相关数据将无法继续使用，此操作不可撤销。</text>
+      <text class="label">请先答对以下算术题：</text>
+      <view class="math">{{expression}} = ?</view>
+      <input class="answer" type="number" maxlength="4" value="{{input}}" bindinput="onInput"
+        disabled="{{deleting}}" placeholder="输入答案" />
+      <view wx:if="{{error}}" class="error">{{error}}</view>
+      <button class="delete-button" loading="{{deleting}}" disabled="{{!input || deleting}}" bindtap="confirmDelete">确认注销账号</button>
+      <button class="cancel-button" disabled="{{deleting}}" bindtap="closeDeleteDialog">我再想想</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,35 @@
+<view class="private-card-status {{status}} {{compact ? 'compact' : ''}}">
+  <block wx:if="{{status === 'pending'}}">
+    <view class="pending-icon">
+      <ui-icon name="clock-outline" size="{{compact ? 34 : 46}}" color="#8f8369" />
+    </view>
+    <text class="status-title">正在排队...</text>
+  </block>
+
+  <block wx:elif="{{status === 'processing'}}">
+    <view class="processing-rings">
+      <view class="processing-glow"></view>
+      <view class="processing-ring outer"></view>
+      <view class="processing-ring inner"></view>
+      <view class="processing-icon">
+        <ui-icon name="auto-fix" size="{{compact ? 32 : 40}}" color="#529917" />
+      </view>
+    </view>
+    <text class="status-title processing-title">正在生成...</text>
+    <view class="processing-dots">
+      <view></view><view></view><view></view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <ui-icon name="alert-circle-outline" size="{{compact ? 48 : 64}}" color="#d35f56" />
+    <view class="failed-copy">
+      <text class="status-title failed-title">生成失败...</text>
+      <text class="status-subtitle">已退款</text>
+    </view>
+    <button wx:if="{{retry}}" class="retry-button" catchtap="retry">
+      <ui-icon name="auto-fix" size="{{compact ? 24 : 28}}" color="#ffffff" />
+      <text>重试</text>
+    </button>
+  </block>
+</view>

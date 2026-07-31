@@ -1,0 +1,40 @@
+<view class="qcard choice" style="background-image:url('{{data.backgroundImage}}')">
+  <view class="scrim"></view>
+  <view class="content {{preview ? 'preview' : ''}}">
+    <view class="question-wrap {{questionPlaying && phase === 'idle' ? 'playing' : ''}}">
+      <view class="question-stage {{phase === 'answered' ? 'show-answer' : ''}}">
+        <view class="question-face question-front">
+          <view class="question-frame {{data.question.mode === 'image' ? 'image-mode' : ''}}"
+            style="border-color:{{primary}}" bindtap="playQuestion">
+            <image wx:if="{{data.question.mode === 'image'}}" class="question-image"
+              src="{{data.question.image}}" mode="aspectFill" />
+            <text wx:else class="question-text" style="color:{{primary}}">{{data.question.text}}</text>
+            <view wx:if="{{data.question.audio && !preview}}" class="audio-badge" style="background:{{primary}}">
+              <ui-icon name="{{questionPlaying ? 'pause' : 'volume-high'}}" size="{{26}}" color="#ffffff" />
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{!preview}}" class="question-face question-back">
+          <view class="answer-card" style="background:{{panelBackground}};border-color:{{primary}}">
+            <view class="answer-title" style="color:{{panelTitle}}">答案：{{correctOption.text || '正确选项'}}</view>
+            <view class="answer-text" style="color:{{panelText}}">{{correctOption.explanation || '回答正确。'}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="options">
+      <view wx:for="{{displayOptions}}" wx:key="id" data-option="{{item}}" bindtap="choose"
+        class="option {{item.mode === 'text' ? 'text-option' : ''}}
+          {{selected === item.id && phase === 'wrong' ? 'wrong' : ''}}
+          {{selected === item.id && phase === 'answered' ? 'correct' : ''}}"
+        style="background:{{optionBackground}};color:{{optionText}};
+          border-color:{{selected === item.id && phase === 'wrong' ? '#E04F5F' : selected === item.id && phase === 'answered' ? primary : 'rgba(255,255,255,.76)'}}">
+        <image wx:if="{{item.mode === 'image'}}" class="option-image" src="{{item.image}}" mode="aspectFill" />
+        <text wx:else class="option-text">{{item.text}}</text>
+        <ui-icon wx:if="{{selected === item.id && phase === 'answered'}}" class="status-icon" name="check-circle" size="{{30}}" color="{{primary}}" />
+        <ui-icon wx:if="{{selected === item.id && phase === 'wrong'}}" class="status-icon" name="close-circle" size="{{30}}" color="#E04F5F" />
+      </view>
+    </view>
+  </view>
+</view>

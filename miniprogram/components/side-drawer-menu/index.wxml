@@ -1,0 +1,111 @@
+<button wx:if="{{mode === 'profile'}}" class="menu-button {{light ? 'light' : ''}}" bindtap="openMenu" aria-label="打开菜单" hover-class="menu-button-hover">
+  <view class="menu-glyph"><text></text><text></text><text></text></view>
+</button>
+<button
+  wx:else
+  class="selection-trigger {{light ? 'light' : ''}} {{open ? 'open' : ''}}"
+  bindtap="openMenu"
+  aria-label="{{title || '打开分类'}}"
+  hover-class="menu-button-hover"
+>
+  <image wx:if="{{selectedIcon}}" class="selection-trigger-image" src="{{selectedIcon}}" mode="aspectFit" />
+  <ui-icon wx:else name="{{triggerIcon}}" size="{{27}}" color="{{light ? '#ffffff' : '#4f3218'}}" />
+  <text class="selection-trigger-label">{{selectedLabel || allLabel}}</text>
+  <ui-icon class="selection-trigger-chevron" name="chevron-down" size="{{26}}" color="{{light ? '#ffffff' : '#303630'}}" />
+</button>
+
+<view wx:if="{{open}}" class="side-menu-root">
+  <view class="side-menu-backdrop" bindtap="closeMenu"></view>
+  <view class="side-menu-panel safe-bottom" catchtap="preventClose">
+    <block wx:if="{{mode === 'profile'}}">
+      <view class="side-menu-profile" style="padding-top:{{safeTopPx}}px;">
+        <image class="side-menu-avatar" src="{{profile.avatar || assets.appIcon}}" mode="aspectFill" />
+        <view class="side-menu-user-copy">
+          <text class="side-menu-name">{{profile.nickname || '叩咔用户'}}</text>
+          <text class="side-menu-level">Lv.{{profile.experience.level || 1}}</text>
+        </view>
+      </view>
+
+      <view class="side-menu-main">
+        <button class="side-menu-row" bindtap="openWallet" hover-class="side-menu-hover">
+          <ui-icon name="wallet" size="{{36}}" color="#3f493f" />
+          <text>我的钱包</text>
+        </button>
+        <button class="side-menu-row" bindtap="openMyLearning" hover-class="side-menu-hover">
+          <ui-icon name="book-open-outline" size="{{36}}" color="#3f493f" />
+          <text>我的卡包</text>
+        </button>
+        <button class="side-menu-row" bindtap="openMyCards" hover-class="side-menu-hover">
+          <ui-icon name="auto-fix" size="{{36}}" color="#3f493f" />
+          <text>我的卡面</text>
+        </button>
+      </view>
+
+      <view class="side-menu-bottom">
+        <button class="side-menu-shortcut" bindtap="openTheme" hover-class="side-menu-hover">
+          <ui-icon name="palette-outline" size="{{40}}" color="#3f493f" />
+          <text>主题</text>
+        </button>
+        <button class="side-menu-shortcut" open-type="contact" bindtap="closeForContact" hover-class="side-menu-hover">
+          <ui-icon name="account-group-outline" size="{{40}}" color="#3f493f" />
+          <text>客服</text>
+        </button>
+        <button class="side-menu-shortcut" bindtap="openChallengeConfig" hover-class="side-menu-hover">
+          <ui-icon name="account-outline" size="{{40}}" color="#3f493f" />
+          <text>定制</text>
+        </button>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="selection-drawer-header" style="padding-top:{{safeTopPx}}px;">
+        <view class="selection-drawer-mark">
+          <ui-icon name="{{triggerIcon}}" size="{{40}}" color="#529917" />
+        </view>
+        <view class="selection-drawer-copy">
+          <text class="selection-drawer-title">{{title}}</text>
+          <text class="selection-drawer-subtitle">{{subtitle}}</text>
+        </view>
+        <button class="selection-drawer-close" bindtap="closeMenu" aria-label="关闭分类">
+          <ui-icon name="close" size="{{35}}" color="#687169" />
+        </button>
+      </view>
+
+      <scroll-view class="selection-drawer-list" scroll-y enhanced show-scrollbar="{{false}}">
+        <button
+          wx:if="{{showAll}}"
+          class="selection-drawer-item {{!selectedId ? 'selected' : ''}}"
+          data-id=""
+          bindtap="selectItem"
+          hover-class="selection-drawer-hover"
+        >
+          <view class="selection-item-icon selection-item-all">
+            <ui-icon name="view-grid-outline" size="{{31}}" color="{{!selectedId ? '#529917' : '#687169'}}" />
+          </view>
+          <text class="selection-item-label">{{allLabel}}</text>
+          <view class="selection-item-check {{!selectedId ? 'selected' : ''}}">
+            <ui-icon wx:if="{{!selectedId}}" name="check" size="{{24}}" color="#ffffff" />
+          </view>
+        </button>
+        <button
+          wx:for="{{items}}"
+          wx:key="id"
+          class="selection-drawer-item {{selectedId === item.id ? 'selected' : ''}}"
+          data-id="{{item.id}}"
+          bindtap="selectItem"
+          hover-class="selection-drawer-hover"
+        >
+          <view class="selection-item-icon">
+            <image wx:if="{{item.icon}}" class="selection-item-image" src="{{item.icon}}" mode="aspectFit" />
+            <ui-icon wx:else name="{{triggerIcon}}" size="{{29}}" color="{{selectedId === item.id ? '#529917' : '#687169'}}" />
+          </view>
+          <text class="selection-item-label">{{item.name}}</text>
+          <view class="selection-item-check {{selectedId === item.id ? 'selected' : ''}}">
+            <ui-icon wx:if="{{selectedId === item.id}}" name="check" size="{{24}}" color="#ffffff" />
+          </view>
+        </button>
+        <view class="selection-list-bottom-space"></view>
+      </scroll-view>
+    </block>
+  </view>
+</view>

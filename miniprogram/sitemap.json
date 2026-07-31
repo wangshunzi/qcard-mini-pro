@@ -1,0 +1,4 @@
+{
+  "desc": "叩咔AI",
+  "rules": [{ "action": "allow", "page": "*" }]
+}

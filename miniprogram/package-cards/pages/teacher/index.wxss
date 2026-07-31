@@ -1,0 +1,33 @@
+.page { min-height:100vh; background:#fff; }
+.hero { padding:calc(env(safe-area-inset-top) + 128rpx) 40rpx 52rpx; display:flex; align-items:flex-start; gap:30rpx; box-sizing:border-box; background:linear-gradient(180deg,#e4f0dc 0%,#f3f8ef 68%,#fff 100%); }
+.avatar { width:128rpx; height:128rpx; flex:none; border:5rpx solid #fff; border-radius:50%; background:#fff; box-shadow:0 9rpx 26rpx rgba(40,70,44,.14); }
+.teacher-copy { min-width:0; flex:1; }
+.name-line { display:flex; align-items:center; flex-wrap:wrap; gap:11rpx; }
+.name { max-width:260rpx; overflow:hidden; color:#303630; font-size:36rpx; font-weight:800; text-overflow:ellipsis; white-space:nowrap; }
+.teacher-title { padding:6rpx 15rpx; border-radius:999rpx; color:#529917; background:#fff; box-shadow:0 3rpx 10rpx rgba(48,78,50,.07); font-size:19rpx; font-weight:650; }
+.rating { margin-top:10rpx; display:flex; align-items:center; gap:2rpx; }
+.rating-label,.rating-number { color:#758077; font-size:20rpx; }
+.rating-number { margin-left:6rpx; }
+.bio { margin-top:12rpx; display:-webkit-box; overflow:hidden; color:#69736b; font-size:21rpx; line-height:1.55; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+.content { margin-top:-18rpx; padding:32rpx 40rpx; border-radius:30rpx 30rpx 0 0; background:#fff; }
+.heading { margin-bottom:22rpx; padding-top:10rpx; }
+.heading text { color:#303630; font-size:30rpx; font-weight:800; }
+.list { display:flex; flex-direction:column; gap:17rpx; }
+.card { min-width:0; min-height:190rpx; padding:14rpx; display:flex; gap:18rpx; box-sizing:border-box; border:1rpx solid #e0e6e0; border-radius:22rpx; background:#fff; box-shadow:0 5rpx 18rpx rgba(33,53,36,.06); transition:transform .15s ease,opacity .15s ease; }
+.card-hover { opacity:.76; transform:scale(.97); }
+.cover { width:150rpx; height:190rpx; flex:none; border-radius:17rpx; background:#e5ece6; }
+.card-copy { min-width:0; flex:1; }
+.title,.meta,.description { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.title { color:#303630; font-size:25rpx; font-weight:740; }
+.meta { margin-top:6rpx; color:#788279; font-size:19rpx; }
+.description { margin-top:7rpx; color:#909891; font-size:18rpx; }
+.card-footer { margin-top:19rpx; display:flex; align-items:center; justify-content:space-between; gap:10rpx; }
+.unlocked { color:#529917; font-size:19rpx; font-weight:650; }
+.price { color:#786a45; font-size:19rpx; font-weight:650; }
+.card-action { width:auto; height:54rpx; margin:0; padding:0 20rpx; border-radius:999rpx; font-size:19rpx; line-height:54rpx; }
+.study { border:1rpx solid #529917; color:#529917; background:#fff; }
+.unlock { color:#fff; background:#529917; }
+.state,.empty { min-height:620rpx; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16rpx; color:var(--color-text-secondary); text-align:center; }
+.state button { width:auto; height:58rpx; padding:0 24rpx; border:1rpx solid var(--color-primary); border-radius:999rpx; color:var(--color-primary); background:#fff; font-size:21rpx; line-height:56rpx; }
+.loading-orbit { width:58rpx; height:58rpx; border:5rpx solid #dce5da; border-top-color:#529917; border-radius:50%; animation:spin .8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }

@@ -1,0 +1,193 @@
+<view class="qcard literacy {{compactLayout ? 'compact-layout' : ''}}">
+  <view class="top-section {{variant.illustration_url ? 'with-image' : ''}}">
+    <image wx:if="{{variant.illustration_url}}" class="illustration" src="{{variant.illustration_url}}" mode="aspectFill"></image>
+    <view wx:if="{{variant.illustration_url}}" class="top-gradient"></view>
+    <view wx:if="{{data.variants.length > 1}}" class="variants">
+      <view
+        wx:for="{{data.variants}}"
+        wx:key="pinyin"
+        data-index="{{index}}"
+        bindtap="changeVariant"
+        class="variant {{variantIndex === index ? 'active' : ''}}"
+      >{{item.pinyin}}</view>
+    </view>
+    <view wx:if="{{variant.conversation && variant.conversation.length && !preview}}" class="conversation-button" bindtap="openConversation">
+      <ui-icon name="message-text-outline" size="{{32}}" color="#ffffff"></ui-icon>
+    </view>
+  </view>
+
+  <block wx:if="{{preview}}">
+    <view class="preview-character-grid" style="{{previewGridStyle}}">
+      <view class="grid-line horizontal"></view>
+      <view class="grid-line vertical"></view>
+      <text>{{data.character}}</text>
+    </view>
+    <view class="preview-phrases">
+      <view wx:for="{{variant.phrases}}" wx:key="word" wx:if="{{index < 2}}" class="preview-phrase">
+        <view class="phrase-aligned">
+          <view wx:for="{{item.segments}}" wx:for-item="segment" wx:key="index" class="phrase-segment">
+            <text class="phrase-pinyin">{{segment.pinyin}}</text>
+            <text class="phrase-character">{{segment.character}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="preview-overlay"></view>
+  </block>
+
+  <block wx:else>
+    <view class="content-panel">
+      <view class="character-section">
+        <view class="character-row">
+          <view class="side-tool {{animating ? 'active' : ''}}" bindtap="animate">
+            <ui-icon name="auto-fix" size="{{toolIconSize}}" color="currentColor"></ui-icon>
+            <text>笔画</text>
+          </view>
+          <view class="character-cluster">
+            <view class="pronounce-button {{playingSource === variant.pinyin_audio ? 'speaking' : ''}}" bindtap="playPinyin">
+              <ui-icon name="volume-high" size="{{27}}" color="currentColor"></ui-icon>
+              <text>{{variant.pinyin}}</text>
+            </view>
+            <view class="writer-wrap" style="{{writerStyle}}">
+              <hanzi-canvas
+                wx:if="{{!tracing && !conversationVisible}}"
+                id="mainWriter"
+                character="{{data.character || ''}}"
+                quiz="{{false}}"
+                show-character
+                stroke-color="#529917"
+                outline-color="#d9e5cf"
+                drawing-color="#529917"
+                highlight-color="#529917"
+                read-only="{{readOnly}}"
+                is-visible="{{isVisible && !tracing && !conversationVisible}}"
+                bind:animationcomplete="onAnimationComplete"
+                bind:error="onWriterError"
+              ></hanzi-canvas>
+              <view wx:else class="writer-fallback">
+                <view class="grid-line horizontal"></view>
+                <view class="grid-line vertical"></view>
+                <text>{{data.character}}</text>
+              </view>
+            </view>
+          </view>
+          <view class="side-tool {{tracing ? 'active' : ''}}" bindtap="openTrace">
+            <ui-icon name="target" size="{{toolIconSize}}" color="currentColor"></ui-icon>
+            <text>临摹</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="bottom-content">
+        <view class="meaning-card {{playingSource === variant.meaning_audio ? 'speaking-card' : ''}}" bindtap="playMeaning">
+          <view class="meaning-heading">
+            <view class="meaning-heading-left">
+              <ui-icon name="school-outline" size="{{26}}" color="#529917"></ui-icon>
+              <text>释义</text>
+            </view>
+            <ui-icon wx:if="{{variant.meaning_audio}}" class="{{playingSource === variant.meaning_audio ? 'speaking' : ''}}" name="volume-high" size="{{28}}" color="#529917"></ui-icon>
+          </view>
+          <text class="meaning">{{variant.meaning}}</text>
+        </view>
+        <view wx:if="{{variant.phrases && variant.phrases.length}}" class="phrases-section">
+          <view class="section-title">常用词组</view>
+          <view class="phrases-grid">
+            <view
+              wx:for="{{variant.phrases}}"
+              wx:key="word"
+              data-index="{{index}}"
+              bindtap="playPhrase"
+              class="phrase {{playingSource === item.audio_url ? 'speaking-card' : ''}}"
+            >
+              <view class="phrase-copy phrase-aligned">
+                <view wx:for="{{item.segments}}" wx:for-item="segment" wx:key="index" class="phrase-segment">
+                  <text class="phrase-pinyin">{{segment.pinyin}}</text>
+                  <text class="phrase-character">{{segment.character}}</text>
+                </view>
+              </view>
+              <ui-icon wx:if="{{item.audio_url}}" name="volume-high" size="{{26}}" color="#529917"></ui-icon>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{conversationVisible}}" class="modal-layer">
+      <view class="modal-mask" bindtap="closeConversation"></view>
+      <view class="conversation-panel {{conversationClosing ? 'closing' : ''}}">
+        <image class="conversation-floating-image" src="{{conversationAssets.together}}" mode="aspectFit"></image>
+        <view class="panel-header">
+          <text>生活对话</text>
+        </view>
+        <scroll-view class="conversation-list" scroll-y>
+          <view
+            wx:for="{{conversationLines}}"
+            wx:key="text"
+            data-index="{{index}}"
+            bindtap="playConversation"
+            class="conversation-line {{index % 2 === 0 ? 'left' : 'right'}} {{playingSource === item.audio_url ? 'speaking' : ''}}"
+          >
+            <view wx:if="{{index % 2 === 0}}" class="conversation-avatar-column">
+              <image class="conversation-avatar" src="{{conversationAssets.child}}" mode="aspectFill"></image>
+              <view wx:if="{{item.audio_url}}" class="conversation-audio">
+                <ui-icon name="volume-high" size="{{25}}" color="#529917"></ui-icon>
+              </view>
+            </view>
+            <view class="conversation-bubble">
+              <view class="conversation-aligned">
+                <view
+                  wx:for="{{item.segments}}"
+                  wx:for-item="segment"
+                  wx:key="index"
+                  class="conversation-segment {{segment.target ? 'target' : ''}} {{segment.punctuation ? 'punctuation' : ''}}"
+                >
+                  <text class="conversation-pinyin">{{segment.pinyin}}</text>
+                  <text class="conversation-text">{{segment.character}}</text>
+                </view>
+              </view>
+            </view>
+            <view wx:if="{{index % 2 !== 0}}" class="conversation-avatar-column">
+              <image class="conversation-avatar" src="{{conversationAssets.mama}}" mode="aspectFill"></image>
+              <view wx:if="{{item.audio_url}}" class="conversation-audio">
+                <ui-icon name="volume-high" size="{{25}}" color="#ffffff"></ui-icon>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+
+    <view wx:if="{{tracing}}" class="trace-layer">
+      <view class="trace-backdrop"></view>
+      <view class="trace-content">
+        <view class="trace-title">临摹“{{data.character}}”</view>
+        <view class="trace-writer">
+          <hanzi-canvas
+            id="traceWriter"
+            character="{{data.character || ''}}"
+            quiz
+            stroke-color="#529917"
+            outline-color="#d9e5cf"
+            drawing-color="#529917"
+            highlight-color="#529917"
+            read-only="{{readOnly}}"
+            is-visible="{{isVisible && tracing}}"
+            bind:mistake="onMistake"
+            bind:correctstroke="onCorrect"
+            bind:complete="onComplete"
+            bind:error="onWriterError"
+          ></hanzi-canvas>
+        </view>
+        <view class="trace-status {{completed ? 'completed' : ''}}">
+          {{completed ? '临摹完成！' : '错误 ' + mistakes + ' 次'}}
+        </view>
+        <view class="trace-actions">
+          <view class="trace-action" bindtap="closeTrace">退出</view>
+          <view class="trace-action primary" bindtap="retryTrace">重新临摹</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{readOnly}}" class="readonly-overlay"></view>
+  </block>
+</view>

@@ -1,0 +1,175 @@
+{
+  "content": {
+    "lang": "zh-CN",
+    "options": [
+      {
+        "id": "heye",
+        "text": "荷叶",
+        "feedback": {
+          "text": "答对啦！它就是荷叶。",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-options-0-feedback-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369942&Signature=ksTrdriHmZLpZkHrD8IaQL6b2FM%3D"
+        },
+        "isCorrect": true
+      },
+      {
+        "id": "hehua",
+        "text": "荷花",
+        "feedback": {
+          "text": "荷花的轮廓有层层叠叠的花瓣，这个轮廓没有花瓣的形状哦。",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-options-1-feedback-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369943&Signature=l%2F4JB9nK2xEl1BEvyjILgyf2ms4%3D"
+        },
+        "isCorrect": false
+      },
+      {
+        "id": "lianpeng",
+        "text": "莲蓬",
+        "feedback": {
+          "text": "莲蓬的轮廓有很多凹凸的小莲子坑，这个轮廓表面很平滑哦。",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-options-2-feedback-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369943&Signature=W%2F6rlLq9X0q%2FiLAAenARbkLY4Xo%3D"
+        },
+        "isCorrect": false
+      },
+      {
+        "id": "fuping",
+        "text": "浮萍",
+        "feedback": {
+          "text": "浮萍的叶片很小，也没有长长的叶柄哦，再仔细看看吧。",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-options-3-feedback-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369944&Signature=S6TK0o8sBbwaQgBTmvtXkKux88w%3D"
+        },
+        "isCorrect": false
+      }
+    ],
+    "science": {
+      "text": "荷叶圆圆的，边缘有个小缺口，还有长长的叶柄，上面的小水珠滚来滚去超有趣。你见过荷叶上的小青蛙吗？",
+      "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-science-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369942&Signature=HzzyFrvM4c3fo0ZgFgO9zhzNl1o%3D"
+    },
+    "question": {
+      "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-question-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369941&Signature=ARvBLwz98fwqGUq5cq27qhOx2Cs%3D",
+      "text": "猜一猜，这是什么的轮廓？",
+      "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-question-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369941&Signature=Ig2McGVUW%2F4b81cIAaGgEg0O02Q%3D",
+      "imagePrompt": "单个主体：荷叶，纯色背景，主体居中完整显示，占画面70%-85%，四周留出少量安全边距。平展开的姿态，突出圆形的叶片、边缘的小缺口和细长的叶柄。3D卡通风格，高清，4k，细节丰富，主体清晰，画面自然。"
+    },
+    "background": {
+      "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-background-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369940&Signature=pyRfGDrlzA%2BambT%2FIpZwonEEXsg%3D",
+      "prompt": "夏日池塘边，清澈的水面飘着细小水藻，远处有模糊的粉色荷花苞，阳光柔和明亮，中央区域干净留白。3D卡通风格，高清4k，画面清晰自然。"
+    },
+    "backgroundUrl": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-background-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369940&Signature=pyRfGDrlzA%2BambT%2FIpZwonEEXsg%3D",
+    "imageUrl": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-question-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369941&Signature=ARvBLwz98fwqGUq5cq27qhOx2Cs%3D",
+    "questionText": "猜一猜，这是什么的轮廓？",
+    "questionAudio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-question-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369941&Signature=Ig2McGVUW%2F4b81cIAaGgEg0O02Q%3D",
+    "scienceText": "荷叶圆圆的，边缘有个小缺口，还有长长的叶柄，上面的小水珠滚来滚去超有趣。你见过荷叶上的小青蛙吗？",
+    "scienceAudio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-science-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369942&Signature=HzzyFrvM4c3fo0ZgFgO9zhzNl1o%3D",
+    "tintColor": "#16251f"
+  },
+  "options": [
+    {
+      "id": "lianpeng",
+      "text": "莲蓬",
+      "feedback": {
+        "text": "莲蓬的轮廓有很多凹凸的小莲子坑，这个轮廓表面很平滑哦。",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-options-2-feedback-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369943&Signature=W%2F6rlLq9X0q%2FiLAAenARbkLY4Xo%3D"
+      },
+      "isCorrect": false
+    },
+    {
+      "id": "heye",
+      "text": "荷叶",
+      "feedback": {
+        "text": "答对啦！它就是荷叶。",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-options-0-feedback-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369942&Signature=ksTrdriHmZLpZkHrD8IaQL6b2FM%3D"
+      },
+      "isCorrect": true
+    },
+    {
+      "id": "hehua",
+      "text": "荷花",
+      "feedback": {
+        "text": "荷花的轮廓有层层叠叠的花瓣，这个轮廓没有花瓣的形状哦。",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-options-1-feedback-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369943&Signature=l%2F4JB9nK2xEl1BEvyjILgyf2ms4%3D"
+      },
+      "isCorrect": false
+    },
+    {
+      "id": "fuping",
+      "text": "浮萍",
+      "feedback": {
+        "text": "浮萍的叶片很小，也没有长长的叶柄哦，再仔细看看吧。",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-options-3-feedback-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369944&Signature=S6TK0o8sBbwaQgBTmvtXkKux88w%3D"
+      },
+      "isCorrect": false
+    }
+  ],
+  "phase": "science",
+  "selectedId": "",
+  "selectedOption": null,
+  "questionPrompt": "猜一猜，这是什么的轮廓？",
+  "revealed": false,
+  "primary": "#4F8FEC",
+  "optionBackground": "rgba(255,255,255,0.94)",
+  "optionText": "#1f3f5f",
+  "promptText": "#ffffff",
+  "success": "#3f9b64",
+  "error": "#E04F5F",
+  "revealDuration": 1100,
+  "audioProgressDeg": 0,
+  "data": {
+    "content": {
+      "lang": "zh-CN",
+      "options": [
+        {
+          "id": "heye",
+          "text": "荷叶",
+          "feedback": {
+            "text": "答对啦！它就是荷叶。",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-options-0-feedback-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369942&Signature=ksTrdriHmZLpZkHrD8IaQL6b2FM%3D"
+          },
+          "isCorrect": true
+        },
+        {
+          "id": "hehua",
+          "text": "荷花",
+          "feedback": {
+            "text": "荷花的轮廓有层层叠叠的花瓣，这个轮廓没有花瓣的形状哦。",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-options-1-feedback-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369943&Signature=l%2F4JB9nK2xEl1BEvyjILgyf2ms4%3D"
+          },
+          "isCorrect": false
+        },
+        {
+          "id": "lianpeng",
+          "text": "莲蓬",
+          "feedback": {
+            "text": "莲蓬的轮廓有很多凹凸的小莲子坑，这个轮廓表面很平滑哦。",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-options-2-feedback-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369943&Signature=W%2F6rlLq9X0q%2FiLAAenARbkLY4Xo%3D"
+          },
+          "isCorrect": false
+        },
+        {
+          "id": "fuping",
+          "text": "浮萍",
+          "feedback": {
+            "text": "浮萍的叶片很小，也没有长长的叶柄哦，再仔细看看吧。",
+            "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-options-3-feedback-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369944&Signature=S6TK0o8sBbwaQgBTmvtXkKux88w%3D"
+          },
+          "isCorrect": false
+        }
+      ],
+      "science": {
+        "text": "荷叶圆圆的，边缘有个小缺口，还有长长的叶柄，上面的小水珠滚来滚去超有趣。你见过荷叶上的小青蛙吗？",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-science-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369942&Signature=HzzyFrvM4c3fo0ZgFgO9zhzNl1o%3D"
+      },
+      "question": {
+        "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-question-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369941&Signature=ARvBLwz98fwqGUq5cq27qhOx2Cs%3D",
+        "text": "猜一猜，这是什么的轮廓？",
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-question-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369941&Signature=Ig2McGVUW%2F4b81cIAaGgEg0O02Q%3D",
+        "imagePrompt": "单个主体：荷叶，纯色背景，主体居中完整显示，占画面70%-85%，四周留出少量安全边距。平展开的姿态，突出圆形的叶片、边缘的小缺口和细长的叶柄。3D卡通风格，高清，4k，细节丰富，主体清晰，画面自然。"
+      },
+      "background": {
+        "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/efdf9459-7c10-44d2-8d83-44748759dc0e/content-background-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369940&Signature=pyRfGDrlzA%2BambT%2FIpZwonEEXsg%3D",
+        "prompt": "夏日池塘边，清澈的水面飘着细小水藻，远处有模糊的粉色荷花苞，阳光柔和明亮，中央区域干净留白。3D卡通风格，高清4k，画面清晰自然。"
+      }
+    }
+  },
+  "preview": false,
+  "readOnly": false,
+  "isVisible": true
+}

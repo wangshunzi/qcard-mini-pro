@@ -1,0 +1,239 @@
+@import "../../styles/card.wxss";
+
+.matching {
+  position: relative;
+  overflow: hidden;
+  background-color: #dbeeff;
+  background-position: center;
+  background-size: cover;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 44, 73, .15);
+}
+
+.matching-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 24px 16px 16px;
+}
+
+.preview-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 18px 10px 10px;
+}
+
+.matching-title {
+  margin-bottom: 8px;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 34px;
+  text-align: center;
+}
+
+.preview-title {
+  margin-bottom: 6px;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 20px;
+  text-align: center;
+}
+
+.board {
+  position: relative;
+  flex: 1;
+  min-height: 260px;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.line-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.group-frame {
+  position: absolute;
+  border: 1px dashed;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, .1);
+  opacity: .35;
+  pointer-events: none;
+}
+
+.group-tag {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  min-width: 66px;
+  min-height: 26px;
+  padding: 4px 12px;
+  box-sizing: border-box;
+  transform: translateX(-50%);
+  border: 2px solid rgba(255, 255, 255, .9);
+  border-radius: 13px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 16px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.match-node {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 7px 8px;
+  box-sizing: border-box;
+  border: 2px solid;
+  border-radius: 21px;
+  box-shadow: 0 5px 11px rgba(0, 0, 0, .12);
+}
+
+.match-node.matched,
+.match-node.active {
+  box-shadow: 0 5px 14px rgba(79, 143, 236, .25);
+}
+
+.match-node.incorrect {
+  box-shadow: 0 5px 14px rgba(224, 79, 95, .25);
+}
+
+.node-image {
+  width: 52px;
+  height: 44px;
+}
+
+.node-text {
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 22px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.node-label {
+  max-width: 100%;
+  margin-top: 1px;
+  overflow: hidden;
+  font-size: 7px;
+  font-weight: 800;
+  line-height: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.check {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 18px;
+  text-align: center;
+}
+
+.status-panel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  min-height: 58px;
+  padding: 8px 9px 8px 12px;
+  box-sizing: border-box;
+  border: 2px solid;
+  border-radius: 18px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .12);
+}
+
+.status-copy {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.status-title {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-progress {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 15px;
+}
+
+.reset-button {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(79, 143, 236, .15);
+}
+
+.preview-content .board {
+  min-height: 0;
+}
+
+.preview-content .match-node {
+  padding: 4px 5px;
+  border-width: 1px;
+  border-radius: 14px;
+}
+
+.preview-content .node-image {
+  width: 30px;
+  height: 25px;
+}
+
+.preview-content .node-text {
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.preview-content .group-frame {
+  border-radius: 14px;
+}
+
+.preview-content .group-tag {
+  top: -9px;
+  min-width: 42px;
+  min-height: 18px;
+  padding: 3px 7px;
+  border-width: 1px;
+  border-radius: 9px;
+  font-size: 8px;
+  line-height: 10px;
+}

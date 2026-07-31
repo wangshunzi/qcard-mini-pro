@@ -1,0 +1,97 @@
+<view class="page safe-bottom">
+  <immersive-nav title="{{pack.title || '专属卡包'}}" back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
+    <view slot="action"><button wx:if="{{pack}}" class="group-button" bindtap="generate" hover-class="soft-hover">
+      <ui-icon name="view-grid-outline" size="{{27}}" color="#529917" />组卡
+    </button></view>
+  </immersive-nav>
+  <view wx:if="{{loading}}" class="state"><text>正在加载卡包…</text></view>
+  <view wx:elif="{{error}}" class="state">
+    <ui-icon name="alert-circle-outline" size="{{82}}" color="#eb711b" />
+    <text>{{error}}</text>
+    <button bindtap="load">重新加载</button>
+  </view>
+
+  <block wx:elif="{{pack}}">
+    <view class="detail-hero" style="{{heroBackground ? 'background-image:url(' + heroBackground + ')' : ''}}">
+    </view>
+
+    <view class="cover-card">
+      <view class="private-tag">专属</view>
+      <image wx:if="{{authorAvatar}}" class="author-avatar large" src="{{authorAvatar}}" mode="aspectFill" />
+      <view wx:else class="author-avatar large avatar-fallback"><ui-icon name="account-outline" size="{{62}}" color="#529917" /></view>
+      <text class="private-title">专属卡包</text>
+      <text class="private-en">PRIVATE</text>
+    </view>
+
+    <view class="title-block">
+      <view class="pack-title"><ui-icon name="ticket-percent-outline" size="{{28}}" color="#529917" />{{pack.title}}</view>
+      <view class="author-row">
+        <image wx:if="{{authorAvatar}}" class="author-avatar small" src="{{authorAvatar}}" mode="aspectFill" />
+        <view wx:else class="author-avatar small avatar-fallback"><ui-icon name="account-outline" size="{{25}}" color="#6d776f" /></view>
+        <text>By {{authorName}}</text>
+        <ui-icon name="chevron-right" size="{{24}}" color="#6d776f" />
+      </view>
+    </view>
+
+    <view class="tabs">
+      <view class="tab {{activeTab === 'intro' ? 'active' : ''}}" data-tab="intro" bindtap="switchTab">
+        <ui-icon name="alert-circle-outline" size="{{34}}" color="{{activeTab === 'intro' ? '#529917' : '#6d776f'}}" />
+        <text>简介</text>
+      </view>
+      <view class="tab {{activeTab === 'cards' ? 'active' : ''}}" data-tab="cards" bindtap="switchTab">
+        <ui-icon name="cards-outline" size="{{34}}" color="{{activeTab === 'cards' ? '#529917' : '#6d776f'}}" />
+        <text>卡片列表</text>
+      </view>
+    </view>
+
+    <view wx:if="{{activeTab === 'intro'}}" class="panel intro-panel">
+      <view class="progress-card">
+        <view class="progress-head"><text>学习进度</text><text>{{progress}}%</text></view>
+        <view class="progress-track"><view class="progress-fill" style="width:{{progress}}%"></view></view>
+        <view class="progress-meta"><text>已学习 {{completedCards}}/{{pack.cardCount || cards.length}} 张卡片</text><text>累计 {{studyTimeText}}</text></view>
+      </view>
+
+      <view class="section">
+        <text class="section-title">卡包简介</text>
+        <text class="section-copy">{{pack.description || '我的专属学习卡包'}}</text>
+      </view>
+      <view class="section">
+        <text class="section-title">卡包信息</text>
+        <view class="info-card">
+          <view class="info-row"><text>卡片数量</text><text>{{pack.cardCount || cards.length}} 张</text></view>
+          <view class="info-row"><text>卡包类型</text><text class="private-badge">专属卡包</text></view>
+          <view class="info-row"><text>最后学习</text><text>{{lastStudiedText}}</text></view>
+        </view>
+      </view>
+      <view class="section">
+        <text class="section-title">作者信息</text>
+        <view class="author-card">
+          <image wx:if="{{authorAvatar}}" class="author-avatar medium" src="{{authorAvatar}}" mode="aspectFill" />
+          <view wx:else class="author-avatar medium avatar-fallback"><ui-icon name="account-outline" size="{{38}}" color="#6d776f" /></view>
+          <view class="author-copy"><text>{{authorName}}</text><text>个人专属学习内容</text></view>
+          <view class="author-type"><text>专属</text><text>卡包类型</text></view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:else class="panel cards-panel">
+      <view class="cards-head">
+        <view><text class="section-title">卡片列表</text><text class="cards-count">（{{completedCards}}/{{pack.cardCount || cards.length}}）</text></view>
+        <button bindtap="generate"><ui-icon name="auto-fix" size="{{25}}" color="#529917" />组卡</button>
+      </view>
+      <view class="cards-grid">
+        <view class="add-placeholder" bindtap="generate" hover-class="soft-hover">
+          <text class="add-symbol">＋</text><text>组建新卡</text>
+        </view>
+        <view wx:for="{{cards}}" wx:key="id" class="card-preview" data-id="{{item.id}}" bindtap="openCard" hover-class="card-hover">
+          <flip-card front-card-data="{{item.frontCardData}}" aspect-ratio="portrait" preview="{{true}}" read-only="{{true}}" hide-flip-button="{{true}}" is-visible="{{true}}" />
+        </view>
+      </view>
+      <view wx:if="{{!cards.length}}" class="cards-empty">暂无卡片</view>
+    </view>
+
+    <view class="bottom">
+      <button bindtap="study"><ui-icon name="play" size="{{34}}" color="#ffffff" />{{progress > 0 ? '继续学习' : '立即学习'}}</button>
+    </view>
+  </block>
+</view>

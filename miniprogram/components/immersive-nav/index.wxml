@@ -1,0 +1,28 @@
+<view
+  class="nav {{overlay ? 'nav-overlay' : ''}} {{light ? 'nav-light' : ''}} {{border ? 'nav-border' : ''}}"
+  style="height:{{totalHeight}}px;background:{{navBackground}};box-shadow:{{navShadow}};backdrop-filter:blur({{navBlur}}rpx);"
+>
+  <view
+    class="nav-row"
+    style="height:{{controlRowHeight}}px;margin-top:{{controlRowTop}}px;"
+  >
+    <view class="nav-controls" style="max-width:{{controlsMaxWidth}}px;">
+      <button wx:if="{{back}}" class="nav-back" bindtap="goBack" aria-label="返回" hover-class="nav-control-hover">
+        <view class="nav-back-icon">
+          <ui-icon name="chevron-left" size="{{44}}" color="#172019" />
+        </view>
+      </button>
+      <view wx:else class="nav-leading">
+        <slot name="leading"></slot>
+      </view>
+      <view class="nav-action">
+        <slot name="action"></slot>
+      </view>
+    </view>
+    <view class="nav-center" style="padding-right:{{capsuleReservedWidth}}px;opacity:{{navTitleOpacity}};color:{{navTitleColor}};">
+      <text wx:if="{{title}}" class="nav-title">{{title}}</text>
+      <slot name="center"></slot>
+    </view>
+  </view>
+</view>
+<view wx:if="{{!overlay}}" style="height:{{totalHeight}}px;"></view>

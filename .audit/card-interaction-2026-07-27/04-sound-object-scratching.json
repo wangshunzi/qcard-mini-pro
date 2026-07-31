@@ -1,0 +1,98 @@
+{
+  "phase": "scratching",
+  "content": {
+    "lang": "zh-CN",
+    "name": "电风扇",
+    "image": {
+      "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/64753a64-8c5b-4da6-8b78-5c67d4a4ecc4/content-image-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370037&Signature=id9ioctFyEOTP5kqY8o9r%2FVzWjg%3D",
+      "prompt": "桌面小风扇吹动彩纸，扇叶和圆形网罩清楚，3D卡通，主体清晰，色彩明亮柔和，无文字，无水印"
+    },
+    "theme": {
+      "coating": "#9CA3AF",
+      "primary": "#2196F3",
+      "promptText": "#2D3142"
+    },
+    "prompt": {
+      "idleText": "点击听声音！🔊",
+      "playingText": "认真听~猜一猜？",
+      "scratchingText": "刮开看答案！✨"
+    },
+    "science": {
+      "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/64753a64-8c5b-4da6-8b78-5c67d4a4ecc4/content-science-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370038&Signature=AfEQEEGfZmZll7TwpUbnxGUpn4U%3D",
+      "voice": {
+        "model": "1.0",
+        "emotion": "",
+        "voiceId": "7468512265151463451",
+        "voiceName": "少儿故事"
+      },
+      "script": "哈哈！这是电风扇~小朋友你猜对了吗？电风扇转动扇叶吹出凉凉的风，夏天开它就不怕热啦。你家有几台电风扇呀？"
+    },
+    "questionAudio": {
+      "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/64753a64-8c5b-4da6-8b78-5c67d4a4ecc4/content-questionAudio-url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370037&Signature=hnnJOaDL4vaWwr7VmTx9f%2F2qbLs%3D",
+      "mode": "search_url",
+      "voice": {
+        "model": "",
+        "emotion": "",
+        "voiceId": "",
+        "voiceName": ""
+      },
+      "prompt": ""
+    },
+    "imageUrl": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/64753a64-8c5b-4da6-8b78-5c67d4a4ecc4/content-image-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370037&Signature=id9ioctFyEOTP5kqY8o9r%2FVzWjg%3D",
+    "questionAudioUrl": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/64753a64-8c5b-4da6-8b78-5c67d4a4ecc4/content-questionAudio-url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370037&Signature=hnnJOaDL4vaWwr7VmTx9f%2F2qbLs%3D",
+    "scienceText": "哈哈！这是电风扇~小朋友你猜对了吗？电风扇转动扇叶吹出凉凉的风，夏天开它就不怕热啦。你家有几台电风扇呀？",
+    "scienceAudioUrl": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/64753a64-8c5b-4da6-8b78-5c67d4a4ecc4/content-science-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370038&Signature=AfEQEEGfZmZll7TwpUbnxGUpn4U%3D"
+  },
+  "promptText": "刮开看答案！✨",
+  "primary": "#2196F3",
+  "coating": "#9CA3AF",
+  "promptColor": "#2D3142",
+  "coatingHidden": false,
+  "scratchProgress": 0,
+  "audioProgressDeg": 0,
+  "volumeGlyph": "󰕾",
+  "data": {
+    "content": {
+      "lang": "zh-CN",
+      "name": "电风扇",
+      "image": {
+        "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/64753a64-8c5b-4da6-8b78-5c67d4a4ecc4/content-image-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370037&Signature=id9ioctFyEOTP5kqY8o9r%2FVzWjg%3D",
+        "prompt": "桌面小风扇吹动彩纸，扇叶和圆形网罩清楚，3D卡通，主体清晰，色彩明亮柔和，无文字，无水印"
+      },
+      "theme": {
+        "coating": "#9CA3AF",
+        "primary": "#2196F3",
+        "promptText": "#2D3142"
+      },
+      "prompt": {
+        "idleText": "点击听声音！🔊",
+        "playingText": "认真听~猜一猜？",
+        "scratchingText": "刮开看答案！✨"
+      },
+      "science": {
+        "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/64753a64-8c5b-4da6-8b78-5c67d4a4ecc4/content-science-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370038&Signature=AfEQEEGfZmZll7TwpUbnxGUpn4U%3D",
+        "voice": {
+          "model": "1.0",
+          "emotion": "",
+          "voiceId": "7468512265151463451",
+          "voiceName": "少儿故事"
+        },
+        "script": "哈哈！这是电风扇~小朋友你猜对了吗？电风扇转动扇叶吹出凉凉的风，夏天开它就不怕热啦。你家有几台电风扇呀？"
+      },
+      "questionAudio": {
+        "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/64753a64-8c5b-4da6-8b78-5c67d4a4ecc4/content-questionAudio-url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370037&Signature=hnnJOaDL4vaWwr7VmTx9f%2F2qbLs%3D",
+        "mode": "search_url",
+        "voice": {
+          "model": "",
+          "emotion": "",
+          "voiceId": "",
+          "voiceName": ""
+        },
+        "prompt": ""
+      }
+    }
+  },
+  "preview": false,
+  "readOnly": false,
+  "isVisible": true
+}

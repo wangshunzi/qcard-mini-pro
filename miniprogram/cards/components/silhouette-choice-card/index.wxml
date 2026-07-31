@@ -1,0 +1,63 @@
+<view class="qcard silhouette" style="background-image:url('{{content.backgroundUrl}}')">
+  <view class="scrim"></view>
+  <view class="{{preview ? 'preview-content' : 'silhouette-content'}}">
+    <view class="stage">
+      <view class="prompt" style="color:{{promptText}}" bindtap="playQuestion">{{questionPrompt}}</view>
+      <view class="image-frame {{phase === 'wrong' ? 'shake' : ''}} {{phase === 'correct' ? 'pulse' : ''}}" bindtap="playQuestion">
+        <image
+          class="silhouette-image"
+          src="{{content.imageUrl}}"
+          mode="aspectFit"
+          style="filter:brightness(0) saturate(100%);opacity:{{revealed ? 0 : 1}};transition-duration:{{revealDuration}}ms"
+        ></image>
+        <image
+          class="real-image"
+          src="{{content.imageUrl}}"
+          mode="aspectFit"
+          style="opacity:{{revealed ? 1 : 0}};transition-duration:{{revealDuration}}ms"
+        ></image>
+      </view>
+    </view>
+
+    <view class="options-stage {{phase === 'shuffling' ? 'shuffling' : ''}} {{phase === 'correct' || phase === 'science' || phase === 'completed' ? 'expanded' : ''}}">
+      <view
+        class="options"
+      >
+        <view
+          wx:for="{{options}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="choose"
+          class="option {{selectedId === item.id && phase === 'wrong' ? 'wrong' : ''}}"
+          style="background:{{optionBackground}};color:{{selectedId === item.id && phase === 'wrong' ? error : optionText}};border-color:{{selectedId === item.id && phase === 'wrong' ? error : 'rgba(255,255,255,.76)'}}"
+        >
+          <text>{{item.text}}</text>
+          <ui-icon wx:if="{{selectedId === item.id && phase === 'wrong'}}" class="status-icon" name="close" size="{{28}}" color="{{error}}"></ui-icon>
+        </view>
+      </view>
+
+      <view wx:if="{{phase === 'correct'}}" class="expanded-option" style="background:{{optionBackground}};border-color:{{primary}}">
+        <ui-icon name="check-circle-outline" size="{{42}}" color="{{success}}"></ui-icon>
+        <view class="expanded-title" style="color:{{success}}">{{selectedOption.text}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!preview && (phase === 'science' || phase === 'completed')}}" class="science-dialog" bindtap="toggleScience">
+    <view
+      class="mini-audio-button"
+      style="background:conic-gradient(#ffffff {{audioProgressDeg}}deg,rgba(255,255,255,.28) 0)"
+    >
+      <view class="mini-audio-inner" style="background:{{primary}}">
+        <ui-icon name="volume-high" size="{{26}}" color="#ffffff"></ui-icon>
+      </view>
+    </view>
+    <text>{{content.scienceText || selectedOption.explanation || '回答正确，真棒！'}}</text>
+  </view>
+  <view wx:if="{{!preview && phase === 'completed'}}" class="restart" style="background:{{primary}}" catchtap="restart">
+    <ui-icon name="restart" size="{{32}}" color="#ffffff"></ui-icon>
+  </view>
+  <view wx:if="{{!preview && phase === 'shuffling'}}" class="shuffle-icon" style="color:{{primary}}">
+    <ui-icon name="refresh" size="{{34}}" color="{{primary}}"></ui-icon>
+  </view>
+</view>

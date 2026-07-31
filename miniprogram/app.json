@@ -1,0 +1,81 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/explore/index",
+    "pages/resource/index",
+    "pages/profile/index",
+    "pages/login/index"
+  ],
+  "subpackages": [
+    {
+      "root": "package-cards",
+      "name": "cards",
+      "pages": [
+        "pages/pack-detail/index",
+        "pages/private-pack/index",
+        "pages/preview/index",
+        "pages/study/index",
+        "pages/generate/index",
+        "pages/ai-generate/index",
+        "pages/my-learning/index",
+        "pages/my-generation/index",
+        "pages/teacher/index"
+      ]
+    },
+    {
+      "root": "package-settings",
+      "name": "settings",
+      "pages": [
+        "pages/settings/index",
+        "pages/theme/index",
+        "pages/feedback/index",
+        "pages/web-doc/index",
+        "pages/account/index",
+        "pages/profile-edit/index",
+        "pages/level-detail/index",
+        "pages/challenge-config/index"
+      ]
+    }
+  ],
+  "window": {
+    "navigationBarTitleText": "叩咔AI",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#ffffff",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#657065",
+    "selectedColor": "#529917",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页",
+        "iconPath": "assets/tabbar/home.png",
+        "selectedIconPath": "assets/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/explore/index",
+        "text": "灵感",
+        "iconPath": "assets/tabbar/explore.png",
+        "selectedIconPath": "assets/tabbar/explore-active.png"
+      },
+      {
+        "pagePath": "pages/resource/index",
+        "text": "卡包",
+        "iconPath": "assets/tabbar/resource.png",
+        "selectedIconPath": "assets/tabbar/resource-active.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的",
+        "iconPath": "assets/tabbar/profile.png",
+        "selectedIconPath": "assets/tabbar/profile-active.png"
+      }
+    ]
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

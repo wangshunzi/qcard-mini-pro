@@ -1,0 +1,108 @@
+<view class="page">
+  <view class="study-header" style="padding-top:{{controlRowTop}}px">
+    <view class="header-row">
+      <view class="study-nav-controls">
+        <button class="icon-button light" bindtap="exit" aria-label="返回"><ui-icon name="chevron-left" size="{{44}}" color="#0f0f0f" /></button>
+        <button wx:if="{{pack && !pack.isUnlocked && packId}}" class="icon-button unlock" bindtap="confirmUnlock" loading="{{unlocking}}" aria-label="解锁"><ui-icon name="lock-open-outline" size="{{35}}" color="#27533b" /></button>
+      </view>
+      <view class="pack-info">
+        <view class="title-row">
+          <image wx:if="{{pack.cover}}" class="cover" src="{{pack.cover}}" mode="aspectFill" />
+          <text class="pack-title">{{pack.title || '开始学习'}}</text>
+          <text wx:if="{{previewOnly || challengeMode}}" class="preview-badge">{{challengeMode ? '挑战' : '预览'}}</text>
+        </view>
+        <text class="progress-text">{{activeIndex + 1}}/{{cards.length}} · 进度: {{progressLabel}}%</text>
+      </view>
+    </view>
+    <view class="progress-track"><view class="progress-fill" style="width:{{progressPercent}}%"></view></view>
+  </view>
+
+  <view wx:if="{{loading}}" class="state-view">
+    <view class="spinner"></view>
+    <text>加载卡片中...</text>
+  </view>
+  <view wx:elif="{{error}}" class="state-view error-view">
+    <ui-icon name="alert-circle-outline" size="{{88}}" color="#eb711b" />
+    <text class="state-title">{{error}}</text>
+    <view class="state-actions">
+      <button class="text-button primary" bindtap="retryLoad">重新加载</button>
+      <button class="text-button" bindtap="exit">关闭</button>
+    </view>
+  </view>
+  <view wx:elif="{{!cards.length}}" class="state-view">
+    <ui-icon name="cards-outline" size="{{88}}" color="#3f3f3f" />
+    <text class="state-title">暂无卡片数据</text>
+    <button class="text-button primary" bindtap="exit">返回</button>
+  </view>
+
+  <block wx:else>
+    <view class="cards-container">
+      <swiper class="swiper" current="{{activeIndex}}" bindchange="onSlide" duration="300" disable-touch="{{true}}">
+        <swiper-item wx:for="{{cards}}" wx:key="id" class="slide">
+          <view wx:if="{{item.locked}}" class="locked-card">
+            <view class="lock-circle"><ui-icon name="lock" size="{{54}}" color="#5d5d5d" /></view>
+            <text class="locked-title">解锁后学习此卡片</text>
+            <text class="locked-copy">完整卡包包含 {{pack.cardCount || cards.length}} 张互动卡片</text>
+            <button class="unlock-card-button" bindtap="confirmUnlock">立即解锁</button>
+          </view>
+          <view wx:elif="{{item.loading && !item.front}}" class="placeholder-card">
+            <view class="placeholder-shimmer"></view>
+            <text>正在加载卡片...</text>
+          </view>
+          <view wx:elif="{{item.loadError}}" class="placeholder-card error-card">
+            <ui-icon name="alert-circle-outline" size="{{58}}" color="#eb711b" />
+            <text>{{item.loadError}}</text>
+            <button wx:if="{{activeIndex === index}}" class="text-button primary" bindtap="retryCard">重试</button>
+          </view>
+          <flip-card wx:elif="{{item.front && index >= activeIndex - 1 && index <= activeIndex + 1}}" id="study-card-{{index}}" class="study-card" front-card-data="{{item.front}}" back-card-data="{{item.back || emptyCardData}}"
+            aspect-ratio="portrait" hide-flip-button="{{true}}" preview="{{false}}" read-only="{{activeIndex !== index}}"
+            is-visible="{{activeIndex === index}}" bind:cardevent="onCardEvent" />
+          <view wx:else class="deferred-card"></view>
+        </swiper-item>
+      </swiper>
+    </view>
+
+    <view class="study-controls safe-bottom">
+      <view class="controls-spacer"></view>
+      <view class="control-group">
+        <button class="icon-button control {{activeIndex === 0 ? 'disabled' : ''}}" bindtap="previous" disabled="{{activeIndex === 0}}" aria-label="上一张"><ui-icon name="chevron-left" size="{{46}}" color="#0f0f0f" /></button>
+        <button class="icon-button control {{!cards[activeIndex].back ? 'disabled' : ''}}" bindtap="flip" disabled="{{!cards[activeIndex].back}}" aria-label="翻面"><ui-icon name="swap-horizontal" size="{{42}}" color="#0f0f0f" /></button>
+        <button class="icon-button control {{activeIndex === cards.length - 1 ? 'finish' : ''}}" bindtap="nextOrComplete" aria-label="{{activeIndex === cards.length - 1 ? '完成' : '下一张'}}">
+          <ui-icon name="{{activeIndex === cards.length - 1 ? 'check' : 'chevron-right'}}" size="{{44}}" color="{{activeIndex === cards.length - 1 ? '#ffffff' : '#0f0f0f'}}" />
+        </button>
+      </view>
+    </view>
+  </block>
+
+  <view wx:if="{{completionVisible}}" class="modal-overlay" bindtap="closeCompletion">
+    <view class="completion-modal" catchtap="noop">
+      <view class="complete-icon"><ui-icon name="check" size="{{58}}" color="#ffffff" /></view>
+      <text class="complete-title">学习完成</text>
+      <text class="complete-subtitle">恭喜你完成了本次学习</text>
+      <view class="stats">
+        <view class="stat-row"><text>学习卡片</text><text class="stat-value">{{cards.length}} 张</text></view>
+        <view class="stat-row"><text>学习时长</text><text class="stat-value">{{studyDuration}}</text></view>
+      </view>
+      <view class="modal-actions">
+        <button class="modal-button secondary" bindtap="restart"><ui-icon name="restart" size="{{30}}" color="#5d5d5d" />重新学习</button>
+        <button class="modal-button primary-outline" bindtap="exit"><ui-icon name="close" size="{{30}}" color="#529917" />退出</button>
+      </view>
+    </view>
+  </view>
+
+  <unlock-confirm-drawer
+    open="{{unlockPanelOpen}}"
+    card-pack-info="{{pack || emptyCardPack}}"
+    user-balance="{{userBalance}}"
+    is-loading="{{unlocking}}"
+    bind:close="closeUnlockPanel"
+    bind:confirm="unlock"
+    bind:recharge="openRechargeGuide"
+  />
+  <app-purchase-guide
+    open="{{purchaseGuideOpen}}"
+    mode="{{purchaseGuideMode}}"
+    reason="{{purchaseGuideReason}}"
+    bind:close="closePurchaseGuide"
+  />
+</view>

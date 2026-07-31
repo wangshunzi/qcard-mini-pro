@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "开始学习",
+  "navigationStyle": "custom",
+  "disableScroll": true,
+  "usingComponents": {
+    "flip-card": "/cards/FlipCardContainer/index",
+    "ui-icon": "/components/ui-icon/index",
+    "unlock-confirm-drawer": "/components/unlock-confirm-drawer/index",
+    "app-purchase-guide": "/components/app-purchase-guide/index"
+  }
+}

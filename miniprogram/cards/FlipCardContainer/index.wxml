@@ -1,0 +1,40 @@
+<view class="flip-bounds {{preview ? 'preview-mode' : ''}}">
+<view class="flip-shell" style="{{aspectStyle}}">
+  <view class="flip-stage {{flipPhase}}">
+    <view wx:if="{{displaySide === 'front'}}" class="flip-face flip-front">
+      <view wx:if="{{!frontValid}}" class="unsupported">该卡片数据暂时无法显示</view>
+      <block wx:else>
+        <recognition-card wx:if="{{frontCardData.type === 'recognition_pic_card'}}" class="card-renderer" data="{{frontCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && !isFlipped}}" bind:cardevent="onCardEvent" />
+        <literacy-card wx:if="{{frontCardData.type === 'literacy_card'}}" class="card-renderer" data="{{frontCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && !isFlipped}}" bind:cardevent="onCardEvent" />
+        <puzzle-card wx:if="{{frontCardData.type === 'puzzle_card'}}" class="card-renderer" data="{{frontCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && !isFlipped}}" bind:cardevent="onCardEvent" />
+        <story-card wx:if="{{frontCardData.type === 'story_card'}}" class="card-renderer" data="{{frontCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && !isFlipped}}" bind:cardevent="onCardEvent" />
+        <sound-object-card wx:if="{{frontCardData.type === 'sound_object_card'}}" class="card-renderer" data="{{frontCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && !isFlipped}}" bind:cardevent="onCardEvent" />
+        <choice-card wx:if="{{frontCardData.type === 'choice_card'}}" class="card-renderer" data="{{frontCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && !isFlipped}}" bind:cardevent="onCardEvent" />
+        <silhouette-card wx:if="{{frontCardData.type === 'silhouette_choice_card'}}" class="card-renderer" data="{{frontCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && !isFlipped}}" bind:cardevent="onCardEvent" />
+        <listening-card wx:if="{{frontCardData.type === 'listening_comprehension_card'}}" class="card-renderer" data="{{frontCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && !isFlipped}}" bind:cardevent="onCardEvent" />
+        <matching-card wx:if="{{frontCardData.type === 'matching_card'}}" class="card-renderer" data="{{frontCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && !isFlipped}}" bind:cardevent="onCardEvent" />
+        <classification-card wx:if="{{frontCardData.type === 'classification_card'}}" class="card-renderer" data="{{frontCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && !isFlipped}}" bind:cardevent="onCardEvent" />
+      </block>
+    </view>
+
+    <view wx:if="{{hasBack && displaySide === 'back'}}" class="flip-face flip-back">
+      <view wx:if="{{!backValid}}" class="unsupported">该卡片数据暂时无法显示</view>
+      <block wx:else>
+        <recognition-card wx:if="{{backCardData.type === 'recognition_pic_card'}}" class="card-renderer" data="{{backCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && isFlipped}}" bind:cardevent="onCardEvent" />
+        <literacy-card wx:if="{{backCardData.type === 'literacy_card'}}" class="card-renderer" data="{{backCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && isFlipped}}" bind:cardevent="onCardEvent" />
+        <puzzle-card wx:if="{{backCardData.type === 'puzzle_card'}}" class="card-renderer" data="{{backCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && isFlipped}}" bind:cardevent="onCardEvent" />
+        <story-card wx:if="{{backCardData.type === 'story_card'}}" class="card-renderer" data="{{backCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && isFlipped}}" bind:cardevent="onCardEvent" />
+        <sound-object-card wx:if="{{backCardData.type === 'sound_object_card'}}" class="card-renderer" data="{{backCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && isFlipped}}" bind:cardevent="onCardEvent" />
+        <choice-card wx:if="{{backCardData.type === 'choice_card'}}" class="card-renderer" data="{{backCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && isFlipped}}" bind:cardevent="onCardEvent" />
+        <silhouette-card wx:if="{{backCardData.type === 'silhouette_choice_card'}}" class="card-renderer" data="{{backCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && isFlipped}}" bind:cardevent="onCardEvent" />
+        <listening-card wx:if="{{backCardData.type === 'listening_comprehension_card'}}" class="card-renderer" data="{{backCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && isFlipped}}" bind:cardevent="onCardEvent" />
+        <matching-card wx:if="{{backCardData.type === 'matching_card'}}" class="card-renderer" data="{{backCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && isFlipped}}" bind:cardevent="onCardEvent" />
+        <classification-card wx:if="{{backCardData.type === 'classification_card'}}" class="card-renderer" data="{{backCardData.data}}" preview="{{preview}}" read-only="{{readOnly}}" is-visible="{{isVisible && isFlipped}}" bind:cardevent="onCardEvent" />
+      </block>
+    </view>
+  </view>
+  <button wx:if="{{hasBack && !hideFlipButton}}" class="flip-button" bindtap="flip" aria-label="{{isFlipped ? '显示正面' : '显示背面'}}">
+    <ui-icon name="swap-horizontal" size="{{38}}" color="#333333"></ui-icon>
+  </button>
+</view>
+</view>

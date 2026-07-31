@@ -1,0 +1,53 @@
+<view
+  class="face-card {{item.status === 'processing' ? 'processing' : ''}}"
+  bindtap="open"
+  hover-class="face-card-hover"
+>
+  <button
+    wx:if="{{editMode && item.status !== 'pending' && item.status !== 'processing'}}"
+    class="delete-card"
+    catchtap="deleteItem"
+    aria-label="删除卡面"
+  >
+    <ui-icon name="delete-outline" size="{{28}}" color="#ffffff" />
+  </button>
+
+  <private-card-status
+    wx:if="{{item.status !== 'success'}}"
+    class="face-renderer private-status-host"
+    status="{{item.status}}"
+    retry="{{item.status === 'failed' && item.templateId}}"
+    bind:retry="makeSimilar"
+  />
+  <flip-card
+    wx:elif="{{item.canPreview && item.cardData}}"
+    class="face-renderer"
+    front-card-data="{{item.cardData}}"
+    back-card-data="{{emptyCardData}}"
+    aspect-ratio="portrait"
+    preview="{{true}}"
+    read-only="{{true}}"
+    hide-flip-button="{{true}}"
+    is-visible="{{true}}"
+  />
+  <image
+    wx:elif="{{item.thumbnailUrl}}"
+    class="face-renderer thumbnail"
+    src="{{item.thumbnailUrl}}"
+    mode="aspectFill"
+  />
+  <view wx:else class="face-renderer fallback">
+    <ui-icon name="alert-circle-outline" size="{{56}}" color="#ffffff" />
+    <text>卡面暂不可用</text>
+  </view>
+
+  <view
+    wx:if="{{item.status === 'success' && showMakeSimilar && item.templateId && !editMode}}"
+    class="make-similar-mask"
+  >
+    <button catchtap="makeSimilar">
+      <ui-icon name="star-four-points" size="{{26}}" color="#27533b" />
+      <text>做同款</text>
+    </button>
+  </view>
+</view>

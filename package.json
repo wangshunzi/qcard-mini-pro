@@ -1,0 +1,27 @@
+{
+  "name": "qcard-miniprogram",
+  "version": "0.1.0",
+  "private": true,
+  "description": "叩咔 AI 微信原生小程序",
+  "scripts": {
+    "assets:tabbar": "swift scripts/generate-tabbar-icons.swift",
+    "vendor:hanzi": "node scripts/vendor-hanzi-writer.mjs",
+    "validate:hanzi-vendor": "node scripts/vendor-hanzi-writer.mjs --check",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate:project": "node scripts/validate-project.mjs",
+    "validate:client-assets": "node scripts/validate-client-assets.mjs",
+    "release:check": "node scripts/check-production.mjs",
+    "check": "pnpm validate:project && pnpm validate:client-assets && pnpm validate:hanzi-vendor && pnpm typecheck && pnpm test"
+  },
+  "dependencies": {
+    "hanzi-writer": "3.7.3"
+  },
+  "devDependencies": {
+    "miniprogram-api-typings": "^4.0.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "packageManager": "pnpm@10.15.1"
+}

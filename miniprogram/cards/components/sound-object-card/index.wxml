@@ -1,0 +1,65 @@
+<view class="qcard sound-object">
+  <block wx:if="{{preview}}">
+    <image class="preview-image" src="{{content.imageUrl}}" mode="aspectFill"></image>
+    <view class="preview-mask"></view>
+    <view class="prompt" style="color:{{promptColor}}"><text class="prompt-pill">{{content.prompt.idleText || '听一听，猜一猜'}}</text></view>
+    <view class="audio-button" style="background:rgba(255,255,255,.88)">
+      <view class="audio-button-inner" style="background:{{primary}}">
+        <ui-icon name="volume-high" size="{{40}}" color="#ffffff"></ui-icon>
+      </view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view
+      class="scratch-stage"
+      catchtouchstart="scratchStart"
+      catchtouchmove="scratchMove"
+      catchtouchend="scratchEnd"
+      catchtouchcancel="scratchEnd"
+    >
+      <image class="object-image {{phase === 'sciencePlaying' ? 'breathing' : ''}}" src="{{content.imageUrl}}" mode="aspectFill"></image>
+      <canvas
+        wx:if="{{coatingMounted}}"
+        type="2d"
+        id="scratchCanvas"
+        class="scratch-canvas {{coatingHidden ? 'hidden' : ''}}"
+      ></canvas>
+      <canvas
+        wx:if="{{coatingMounted}}"
+        type="2d"
+        id="controlCanvas"
+        class="control-canvas {{coatingHidden ? 'hidden' : ''}}"
+        catchtouchstart="surfaceTouchStart"
+        catchtouchmove="surfaceTouchMove"
+        catchtouchend="surfaceTouchEnd"
+        catchtouchcancel="surfaceTouchEnd"
+      ></canvas>
+
+      <view
+        wx:if="{{phase === 'sciencePlaying' || phase === 'revealed'}}"
+        class="science-dialog"
+        catchtap="toggleScience"
+      >
+        <view
+          class="science-icon {{phase === 'sciencePlaying' ? 'playing' : ''}}"
+          style="background:conic-gradient(#ffffff {{audioProgressDeg}}deg,rgba(255,255,255,.28) 0)"
+        >
+          <view class="science-icon-inner" style="background:{{primary}}">
+            <ui-icon name="volume-high" size="{{30}}" color="#ffffff"></ui-icon>
+          </view>
+        </view>
+        <text class="science-copy">{{content.scienceText || content.name}}</text>
+      </view>
+
+      <view
+        wx:if="{{phase === 'revealed'}}"
+        class="restart-button"
+        style="background:{{primary}}"
+        catchtap="restart"
+      >
+        <ui-icon name="restart" size="{{36}}" color="#ffffff"></ui-icon>
+      </view>
+    </view>
+  </block>
+</view>

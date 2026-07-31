@@ -1,0 +1,177 @@
+<view class="home-page safe-bottom tab-page">
+  <immersive-nav overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
+    <view slot="leading" class="level-entry" bindtap="openLevel" hover-class="soft-hover">
+      <image wx:if="{{profile.avatar}}" class="top-avatar" src="{{profile.avatar}}" mode="aspectFill" />
+      <image wx:else class="top-avatar" src="{{assets.appIcon}}" mode="aspectFit" />
+      <view class="level-copy">
+        <text>Lv.{{profile.experience.level || 1}}</text>
+        <view class="level-progress">
+          <view style="width:{{(profile.experience.experience || 0) * 100 / (profile.experience.nextLevelRequiredExp || 1)}}%"></view>
+        </view>
+      </view>
+    </view>
+    <view slot="action" class="balance-entry" bindtap="openCoinHistory" hover-class="soft-hover">
+      <ui-icon name="wallet" size="{{32}}" color="#f6b831" />
+      <text>{{profile.balance || 0}}</text>
+    </view>
+  </immersive-nav>
+  <view
+    class="welcome-card {{homeBackground ? 'has-theme' : ''}}"
+    style="{{homeBackground ? 'background-image:url(' + homeBackground + ')' : ''}}"
+  >
+    <view class="welcome-shade"></view>
+    <view class="welcome-copy">
+      <text>欢迎回来</text>
+      <text class="welcome-name">{{userName}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{dailyChallenge}}" class="challenge-card">
+    <view class="challenge-main">
+      <view class="challenge-summary">
+        <image class="today-icon" src="{{assets.iconToday}}" mode="aspectFit" />
+        <view class="challenge-copy">
+          <view class="challenge-count">
+            <text>{{dailyChallenge.completedNewCards + dailyChallenge.completedReviewCards}}</text>
+            <text class="challenge-count-divider">/</text>
+            <text>{{dailyChallenge.newCardCount + dailyChallenge.reviewCardCount}}</text>
+          </view>
+          <text class="challenge-label">今日挑战</text>
+        </view>
+      </view>
+      <view class="challenge-start" style="background:conic-gradient(#529917 {{challengeProgress}}%,#e2e8e2 0);" bindtap="openChallenge" hover-class="pressable-hover">
+        <view><ui-icon name="{{dailyChallenge.isCompleted ? 'refresh' : 'arrow-right'}}" size="{{34}}" color="#529917" /></view>
+      </view>
+    </view>
+    <scroll-view wx:if="{{challengeCards.length}}" class="challenge-carousel" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="challenge-carousel-inner">
+        <view wx:for="{{challengeCards}}" wx:key="id" class="challenge-preview {{item.isCompleted ? 'completed' : ''}}" bindtap="openChallenge" hover-class="challenge-preview-hover">
+          <flip-card
+            class="challenge-renderer"
+            front-card-data="{{item.previewCard}}"
+            aspect-ratio="portrait"
+            preview="{{true}}"
+            read-only="{{true}}"
+            hide-flip-button="{{true}}"
+            is-visible="{{true}}"
+          />
+          <view wx:if="{{item.isCompleted}}" class="complete-mark"><ui-icon name="check" size="{{22}}" color="#ffffff" /></view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-list">
+    <view wx:for="{{[1,2,3]}}" wx:key="*this" class="skeleton"></view>
+  </view>
+  <view wx:elif="{{error}}" class="state-view">
+    <ui-icon name="alert-circle-outline" size="{{88}}" color="#eb711b" />
+    <text class="state-title">首页加载失败</text>
+    <text class="state-copy">{{error}}</text>
+    <button bindtap="load" hover-class="state-button-hover">重新加载</button>
+  </view>
+
+  <block wx:else>
+    <view class="section">
+      <view class="section-head">
+        <text class="section-title">最近学习</text>
+        <text class="section-more" bindtap="openMyLearning">全部卡包</text>
+      </view>
+      <view wx:if="{{recentStudy.length}}" class="study-list">
+          <view
+            wx:for="{{recentStudy}}"
+            wx:key="id"
+            class="study-card pressable"
+            data-id="{{item.id}}"
+            bindtap="openPack"
+            hover-class="pressable-hover"
+          >
+            <image wx:if="{{item.cover}}" class="study-cover" src="{{item.cover}}" mode="aspectFill" />
+            <image wx:else class="study-cover fallback-image" src="{{assets.appIcon}}" mode="aspectFit" />
+            <view class="study-copy">
+              <text class="study-title">{{item.title || '学习卡包'}}</text>
+              <view class="study-tags">
+                <text>{{item.subject.name || '综合'}}</text><text>·</text><text>{{item.knowledgePoint.name || '通识学习'}}</text>
+              </view>
+              <view class="study-meta">
+                <view><ui-icon name="clipboard-text-outline" size="{{24}}" color="#858b87" /><text>{{item.cardCount || 0}}张</text></view>
+                <view><ui-icon name="clock-outline" size="{{24}}" color="#858b87" /><text>{{item.timeAgo}}</text></view>
+              </view>
+              <view
+                class="study-start"
+                style="background:conic-gradient(#529917 {{item.progressPercent}}%,#e4e9e4 0)"
+                data-id="{{item.id}}"
+                catchtap="startStudy"
+                hover-class="study-start-hover"
+                aria-label="{{item.progressPercent > 0 ? '继续学习' : '开始学习'}}"
+              >
+                <view><ui-icon name="arrow-right" size="{{29}}" color="#529917" /></view>
+              </view>
+            </view>
+          </view>
+      </view>
+      <view wx:else class="compact-empty recent-empty">
+        <ui-icon name="book-open-outline" size="{{64}}" color="#3f3f3f" />
+        <text>暂无卡包</text>
+        <view><button bindtap="openResources">去解锁</button><button bindtap="createPrivatePack">去创建</button></view>
+      </view>
+    </view>
+
+    <view class="section private-face-section">
+      <view class="section-head">
+        <text class="section-title">最近生成</text>
+        <text class="section-more" bindtap="openMyCards">全部卡面</text>
+      </view>
+      <view wx:if="{{recentCards.length}}" class="private-face-grid">
+        <private-card-face-item
+          wx:for="{{recentCards}}"
+          wx:key="id"
+          item="{{item}}"
+          show-make-similar="{{true}}"
+          bind:open="openPrivateCard"
+          bind:make-similar="makeSimilar"
+        />
+      </view>
+      <view wx:else class="compact-empty">
+        <ui-icon name="auto-fix" size="{{64}}" color="#3f3f3f" />
+        <text>暂无卡面</text>
+        <view><button bindtap="openAi">立即生成</button></view>
+      </view>
+    </view>
+
+    <view wx:for="{{sections}}" wx:key="key" class="section promotion-section">
+      <view class="section-head">
+        <view>
+          <text class="section-title">{{item.title}}</text>
+          <text class="section-subtitle">{{item.subtitle}}</text>
+        </view>
+        <text class="section-more" bindtap="openResources">查看全部</text>
+      </view>
+      <scroll-view class="card-row" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="card-row-inner">
+          <view
+            wx:for="{{item.items}}"
+            wx:for-item="card"
+            wx:key="id"
+            class="promotion-card pressable"
+            data-id="{{card.id}}"
+            bindtap="openPack"
+            hover-class="pressable-hover"
+          >
+            <image wx:if="{{card.cover}}" class="promotion-cover" src="{{card.cover}}" mode="aspectFill" />
+            <image wx:else class="promotion-cover fallback-image" src="{{assets.appIcon}}" mode="aspectFit" />
+            <text class="promotion-title">{{card.title || '学习卡包'}}</text>
+            <text class="promotion-meta">{{card.cardCount || 0}} 张{{card.isUnlocked ? ' · 已解锁' : ''}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </block>
+  <coin-history-drawer open="{{coinHistoryOpen}}" profile="{{profile}}" bind:close="closeCoinHistory" bind:recharge="openRechargeGuide" />
+  <app-purchase-guide
+    open="{{purchaseGuideOpen}}"
+    mode="{{purchaseGuideMode}}"
+    reason="{{purchaseGuideReason}}"
+    bind:close="closePurchaseGuide"
+  />
+</view>

@@ -1,0 +1,46 @@
+.schema-form { width:100%; }
+.field { margin-bottom:28rpx; }
+.field-heading { min-width:0; }
+.field-row { display:flex; align-items:flex-start; gap:20rpx; }
+.field-row .field-heading { width:190rpx; padding-top:24rpx; flex:none; }
+.field-row .field-control { min-width:0; flex:1; }
+.label { color:#233b2e; font-size:27rpx; font-weight:750; line-height:1.4; }
+.required { margin-left:6rpx; color:#d85b55; }
+.description { margin-top:6rpx; color:#7b857e; font-size:21rpx; line-height:1.45; }
+.control { width:100%; min-height:82rpx; margin-top:12rpx; padding:20rpx 22rpx; border:2rpx solid #dfe5de; border-radius:18rpx; background:#fff; box-sizing:border-box; color:#233b2e; font-size:26rpx; }
+.textarea { min-height:190rpx; line-height:1.55; }
+.picker { display:flex; align-items:center; justify-content:space-between; gap:12rpx; }
+.placeholder { color:#a7aea8; }
+.error { margin-top:8rpx; color:#c24c49; font-size:21rpx; }
+.extra { margin-top:8rpx; color:#7b857e; font-size:21rpx; line-height:1.5; }
+.checkbox-option { min-height:70rpx; margin-top:12rpx; display:flex; align-items:center; gap:12rpx; padding:0 18rpx; border-radius:16rpx; background:#f5f7f3; font-size:24rpx; }
+.radio-option { min-height:70rpx; margin:12rpx 12rpx 0 0; padding:0 18rpx; border-radius:18rpx; display:inline-flex; align-items:center; background:#f3f6f2; font-size:24rpx; }
+.selector-options radio-group { display:flex; flex-direction:column; gap:12rpx; margin-top:12rpx; }
+.selector-option { min-height:64rpx; padding:0 22rpx; display:flex; align-items:center; border:2rpx solid #e0e6df; border-radius:18rpx; background:#f7f9f6; color:#4b574f; font-size:24rpx; }
+.selector-option-active { border-color:#67a935; background:#edf7e7; color:#315d22; font-weight:650; }
+.selector-radio { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+.stepper { width:100%; min-height:82rpx; margin-top:12rpx; display:flex; align-items:center; overflow:hidden; border:2rpx solid #dfe5de; border-radius:18rpx; background:#fff; box-sizing:border-box; }
+.stepper-button { width:82rpx; height:78rpx; margin:0; padding:0; border-radius:0; display:flex; align-items:center; justify-content:center; background:#f2f6ef; color:#315d22; font-size:38rpx; font-weight:600; line-height:1; }
+.stepper-button::after,.list-add::after,.section-remove::after { border:0; }
+.stepper-button[disabled] { color:#aeb7ae; background:#f7f8f6; opacity:1; }
+.stepper-input { min-width:0; flex:1; height:78rpx; padding:0 16rpx; display:flex; align-items:center; justify-content:center; box-sizing:border-box; text-align:center; font-size:27rpx; }
+.slider-control { margin-top:10rpx; padding:2rpx 0; }
+.rate { min-height:78rpx; margin-top:10rpx; display:flex; align-items:center; gap:10rpx; }
+.rate-star { color:#dfe5de; font-size:50rpx; line-height:1; }
+.rate-star-active { color:#f3b840; }
+.switch-control { min-height:82rpx; display:flex; align-items:center; gap:16rpx; color:#788178; font-size:24rpx; }
+.date-controls { display:flex; gap:12rpx; }
+.date-controls picker:first-child { min-width:0; flex:1; }
+.date-control,.time-control { white-space:nowrap; }
+.time-control { width:220rpx; }
+.section { margin:32rpx 0 20rpx; padding:0 2rpx 12rpx; display:flex; align-items:center; justify-content:space-between; border-bottom:2rpx solid #e6ebe4; }
+.section-card { padding:22rpx; border:2rpx solid #e1e7df; border-radius:20rpx; background:#f8faf7; }
+.section-title { color:#263f30; font-size:29rpx; font-weight:800; }
+.list-item-header { margin-top:22rpx; padding:14rpx 18rpx; border:0; border-radius:16rpx; background:#f1f5ef; }
+.section-remove { min-height:50rpx; margin:0; padding:0 14rpx; border:0; border-radius:12rpx; background:transparent; color:#b74e4b; font-size:22rpx; line-height:50rpx; }
+.list-header { margin:30rpx 0 18rpx; display:flex; align-items:center; justify-content:space-between; gap:20rpx; }
+.list-add { min-height:58rpx; margin:0; padding:0 22rpx; border:0; border-radius:16rpx; background:#edf7e7; color:#39731e; font-size:23rpx; line-height:58rpx; }
+.display-field { color:#536057; font-size:24rpx; line-height:1.6; }
+.void-title { margin:28rpx 0 10rpx; color:var(--color-text); font-size:29rpx; font-weight:800; }
+.html-content { word-break:break-word; }
+.field-description { margin-top:8rpx; }

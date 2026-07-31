@@ -1,0 +1,70 @@
+<view wx:if="{{open}}" class="drawer-root">
+  <view class="drawer-backdrop" bindtap="close"></view>
+  <view class="drawer-panel safe-bottom" catchtap="preventClose">
+    <view class="drawer-handle"></view>
+    <view class="drawer-user">
+      <image class="drawer-avatar" src="{{profile.avatar || assets.appIcon}}" mode="aspectFill" />
+      <view class="drawer-profile">
+        <view class="drawer-name-row">
+          <text class="drawer-name">{{profile.nickname || '用户'}}</text>
+          <text class="drawer-level">Lv.{{profile.experience.level || 1}}</text>
+        </view>
+        <view class="drawer-balance">
+          <ui-icon name="wallet" size="{{32}}" color="#f4aa22" />
+          <text>余额: {{profile.balance || 0}}</text>
+        </view>
+      </view>
+      <button class="recharge-button" bindtap="recharge" hover-class="recharge-hover">
+        <ui-icon name="plus" size="{{35}}" color="#3e2a05" />
+        <text>充值</text>
+      </button>
+    </view>
+
+    <scroll-view class="filter-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="filter-row">
+        <view
+          wx:for="{{filters}}"
+          wx:key="key"
+          class="filter-item {{selectedType === item.key ? 'active' : ''}}"
+          data-type="{{item.key}}"
+          bindtap="selectType"
+        >
+          <ui-icon wx:if="{{item.icon}}" name="{{item.icon}}" size="{{28}}" color="currentColor" />
+          <text>{{item.label}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <scroll-view class="history-scroll" scroll-y bindscrolltolower="loadMore" lower-threshold="120">
+      <view wx:if="{{loading && !items.length}}" class="drawer-state">
+        <view class="loading-ring"></view><text>加载中...</text>
+      </view>
+      <view wx:elif="{{!items.length}}" class="drawer-state">
+        <ui-icon name="history" size="{{80}}" color="#8a918c" />
+        <text>暂无消费记录</text>
+      </view>
+      <view wx:else class="history-list">
+        <view wx:for="{{items}}" wx:key="id" class="history-card">
+          <view class="history-icon {{item.tone}}">
+            <ui-icon name="{{item.icon}}" size="{{34}}" color="currentColor" />
+          </view>
+          <view class="history-main">
+            <view class="history-head">
+              <text class="history-type {{item.tone}}">{{item.label}}</text>
+              <text class="history-amount {{item.amount > 0 ? 'positive' : 'negative'}}">{{item.amountText}}</text>
+            </view>
+            <text class="history-reason">{{item.reasonText}}</text>
+            <view wx:if="{{item.cardPack}}" class="history-pack" data-id="{{item.cardPack.id}}" bindtap="openPack">
+              <image src="{{item.cardPack.cover || assets.appIcon}}" mode="aspectFill" />
+              <view><text>{{item.cardPack.title}}</text><text>{{item.cardPack.subject || '综合'}} · {{item.cardPack.knowledgePoint || '卡包'}}</text></view>
+              <ui-icon name="chevron-right" size="{{28}}" color="#a1a5a2" />
+            </view>
+            <view class="history-foot"><text>{{item.timeText}}</text><text>余额: {{item.balanceAfter}} 咔豆</text></view>
+          </view>
+        </view>
+        <view wx:if="{{loading}}" class="load-more">加载中...</view>
+        <view wx:elif="{{page < totalPages}}" class="load-more" bindtap="loadMore">加载更多</view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

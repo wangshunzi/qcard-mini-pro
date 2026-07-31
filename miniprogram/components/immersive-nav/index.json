@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "options": {
+    "multipleSlots": true
+  },
+  "usingComponents": {
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "languages": [
+    {
+      "label": "中",
+      "value": "zh"
+    }
+  ],
+  "activeLanguage": "zh",
+  "item": {
+    "lang": "zh",
+    "jingle": {
+      "text": "黄雨靴，亮闪闪，踩水洼，水花翻～",
+      "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/4fd8ac66-f00c-4883-b419-e0f8b6929bb8/content-0-jingle-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369239&Signature=RKnHd7Z8aAIEZShu1FcMLJ1L2tg%3D"
+    },
+    "subject": "雨靴",
+    "mainImage": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/4fd8ac66-f00c-4883-b419-e0f8b6929bb8/content-0-mainImage.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369244&Signature=CS%2BfmZSx7oAisYfUNo6eQt%2BmX7w%3D",
+    "pronunciation": {
+      "text": "yǔ xuē",
+      "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/4fd8ac66-f00c-4883-b419-e0f8b6929bb8/content-0-pronunciation-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369238&Signature=NbSOHDDUwqzoMgRG5CTHypXi8mM%3D"
+    },
+    "actionVideos": [],
+    "mainAudio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/4fd8ac66-f00c-4883-b419-e0f8b6929bb8/content-0-jingle-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369239&Signature=RKnHd7Z8aAIEZShu1FcMLJ1L2tg%3D"
+  },
+  "titleSegments": [
+    {
+      "character": "雨",
+      "pinyin": "yǔ"
+    },
+    {
+      "character": "靴",
+      "pinyin": "xuē"
+    }
+  ],
+  "videoIndex": -1,
+  "currentVideoUrl": "",
+  "videoLoading": false,
+  "playingTag": "jingle",
+  "jingleLabel": "顺口溜",
+  "languageMenuVisible": false,
+  "backgroundColor": "#87CEEB",
+  "themeColor": "#FFD700",
+  "data": {
+    "theme": "#FFD700",
+    "uiData": {
+      "langItems": [
+        {
+          "label": "中",
+          "value": "zh"
+        }
+      ]
+    },
+    "content": [
+      {
+        "lang": "zh",
+        "jingle": {
+          "text": "黄雨靴，亮闪闪，踩水洼，水花翻～",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/4fd8ac66-f00c-4883-b419-e0f8b6929bb8/content-0-jingle-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369239&Signature=RKnHd7Z8aAIEZShu1FcMLJ1L2tg%3D"
+        },
+        "subject": "雨靴",
+        "mainImage": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/4fd8ac66-f00c-4883-b419-e0f8b6929bb8/content-0-mainImage.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369244&Signature=CS%2BfmZSx7oAisYfUNo6eQt%2BmX7w%3D",
+        "pronunciation": {
+          "text": "yǔ xuē",
+          "audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/4fd8ac66-f00c-4883-b419-e0f8b6929bb8/content-0-pronunciation-audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369238&Signature=NbSOHDDUwqzoMgRG5CTHypXi8mM%3D"
+        }
+      }
+    ],
+    "environmentTheme": "#87CEEB"
+  },
+  "preview": false,
+  "readOnly": false,
+  "isVisible": true
+}

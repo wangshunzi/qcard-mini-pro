@@ -1,0 +1,179 @@
+<view class="page">
+  <image wx:if="{{pageBackground}}" class="page-background" src="{{pageBackground}}" mode="aspectFill" />
+  <immersive-nav
+    title="{{stepIndex === 0 ? '选择模板' : '填写参数'}}"
+    back="{{true}}"
+    custom-back="{{true}}"
+    border="{{true}}"
+    bind:back="onNavBack"
+  >
+    <view slot="action" class="header-action">
+      <view wx:if="{{stepIndex === 0}}" class="view-switch" bindtap="toggleViewMode"
+        aria-label="{{viewMode === 'carousel' ? '切换到列表模式' : '切换到轮播模式'}}">
+        <view class="view-switch-indicator {{viewMode === 'grid' ? 'grid' : ''}}"></view>
+        <view class="view-switch-button">
+          <ui-icon name="view-carousel" size="{{35}}" color="{{viewMode === 'carousel' ? '#ffffff' : '#748077'}}" />
+        </view>
+        <view class="view-switch-button">
+          <ui-icon name="view-grid-outline" size="{{34}}" color="{{viewMode === 'grid' ? '#ffffff' : '#748077'}}" />
+        </view>
+      </view>
+      <view wx:else class="template-badge">{{currentSummary.name}}</view>
+    </view>
+  </immersive-nav>
+
+  <view class="content">
+    <view wx:if="{{loading}}" class="state">
+      <view class="spinner"></view>
+      <text>加载模板中...</text>
+    </view>
+
+    <view wx:elif="{{loadError}}" class="state">
+      <ui-icon name="alert-circle-outline" size="{{88}}" color="#c85d55" />
+      <text class="state-title">{{loadError}}</text>
+      <button class="retry-button" bindtap="retryLoad">重试</button>
+    </view>
+
+    <view wx:elif="{{empty}}" class="state">
+      <ui-icon name="auto-fix" size="{{88}}" color="#748077" />
+      <text class="state-title">暂无可用模板</text>
+    </view>
+
+    <block wx:elif="{{stepIndex === 0}}">
+      <view wx:if="{{viewMode === 'carousel'}}" class="carousel-stage">
+      <swiper
+        class="template-carousel"
+        style="height:{{carouselHeight}}px;"
+        current="{{selectedIndex}}"
+        previous-margin="{{carouselSideMargin}}px"
+        next-margin="{{carouselSideMargin}}px"
+        bindchange="onSwiperChange"
+        duration="{{300}}"
+        easing-function="easeOutCubic"
+      >
+        <swiper-item wx:for="{{templates}}" wx:key="id">
+          <view class="carousel-item {{selectedIndex === index ? 'active' : 'inactive'}}">
+            <view class="template-card">
+              <view wx:if="{{item.vipRequired}}" class="vip-badge">
+                <text class="vip-crown">♛</text><text>VIP</text>
+              </view>
+              <flip-card
+                wx:if="{{item.previewCard}}"
+                front-card-data="{{item.previewCard}}"
+                aspect-ratio="portrait"
+                hide-flip-button="{{true}}"
+                preview="{{false}}"
+                read-only="{{selectedIndex !== index}}"
+                is-visible="{{selectedIndex === index}}"
+              />
+              <view wx:elif="{{item.detailError}}" class="card-state">
+                <ui-icon name="alert-circle-outline" size="{{54}}" color="#c85d55" />
+                <text>{{item.detailError}}</text>
+              </view>
+              <view wx:else class="card-state">
+                <view class="spinner small"></view>
+                <text>加载中...</text>
+              </view>
+            </view>
+          </view>
+        </swiper-item>
+      </swiper>
+      </view>
+
+      <scroll-view wx:else scroll-y class="template-grid" enhanced="{{true}}" show-scrollbar="{{false}}"
+        scroll-into-view="{{gridScrollIntoView}}" scroll-with-animation="{{true}}">
+        <view class="grid-list">
+          <view wx:for="{{templates}}" wx:key="id" id="template-grid-{{index}}" class="grid-item"
+            data-index="{{index}}" bindtap="chooseGridTemplate">
+            <view class="grid-card-preview {{selectedIndex === index ? 'selected' : ''}}">
+              <view wx:if="{{selectedIndex === index}}" class="selected-icon">
+                <ui-icon name="check-circle" size="{{42}}" color="#529917" />
+              </view>
+              <view wx:if="{{item.vipRequired}}" class="grid-vip-badge">♛</view>
+              <flip-card wx:if="{{item.previewCard}}" front-card-data="{{item.previewCard}}"
+                aspect-ratio="portrait" hide-flip-button="{{true}}" preview="{{true}}"
+                read-only="{{true}}" is-visible="{{viewMode === 'grid'}}" />
+              <view wx:else class="card-state grid-state">
+                <view wx:if="{{!item.detailError}}" class="spinner small"></view>
+                <ui-icon wx:else name="alert-circle-outline" size="{{42}}" color="#c85d55" />
+                <text>{{item.detailError || '加载中...'}}</text>
+              </view>
+            </view>
+            <view class="grid-info">
+              <text class="grid-name">{{item.name}}</text>
+              <text class="grid-price">◆ {{item.price}} 咔豆</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </block>
+
+    <scroll-view wx:else scroll-y class="form-scroll" enhanced="{{true}}" show-scrollbar="{{false}}">
+      <view wx:if="{{templateLoading}}" class="state form-state">
+        <view class="spinner"></view><text>正在准备参数...</text>
+      </view>
+      <view wx:elif="{{templateError}}" class="state form-state">
+        <ui-icon name="alert-circle-outline" size="{{76}}" color="#c85d55" />
+        <text class="state-title">模板暂时不可用</text>
+        <text class="state-copy">{{templateError}}</text>
+        <button class="retry-button" bindtap="retryTemplate">重试</button>
+      </view>
+      <view wx:elif="{{template}}" class="form-content">
+        <schema-form id="form" schema="{{template.params}}" value="{{formData}}"
+          disabled="{{submitting}}" apply-defaults="{{applyFormDefaults}}" bind:change="onFormChange" />
+      </view>
+      <view wx:else class="state form-state">暂无参数</view>
+    </scroll-view>
+  </view>
+
+  <view wx:if="{{currentSummary && !loading}}" class="bottom-bar {{(vipBlocked || !canAfford) && stepIndex === 0 ? 'warning-tone' : ''}}">
+    <view class="bottom-content">
+      <view class="bottom-left">
+        <view wx:if="{{stepIndex === 0}}" class="template-info">
+          <text class="template-info-name">{{currentSummary.name}}</text>
+          <text class="template-info-price">◆ {{currentSummary.price}} 咔豆</text>
+        </view>
+        <button wx:else class="text-action back-action" disabled="{{submitting}}" bindtap="previousStep">
+          <ui-icon name="chevron-left" size="{{32}}" color="#529917" /><text>上一步</text>
+        </button>
+      </view>
+
+      <view class="bottom-right">
+        <view wx:if="{{stepIndex === 0 && vipBlocked}}" class="blocked-action">
+          <button class="primary-action vip-action" bindtap="openVipGuide">前往 App 开通</button>
+          <text class="action-warning"><text class="vip-crown">♛</text> 该模板仅限 VIP 使用</text>
+        </view>
+        <view wx:elif="{{stepIndex === 0 && !canAfford}}" class="blocked-action">
+          <button class="primary-action" bindtap="openRechargeGuide">前往 App 充值</button>
+          <text class="action-warning error">◆ 余额不足，还需 {{needBalance}} 咔豆</text>
+        </view>
+        <button wx:elif="{{stepIndex === 0}}" class="text-action" disabled="{{templateLoading || templateError}}" bindtap="nextStep">
+          <text>下一步</text><ui-icon name="chevron-right" size="{{32}}" color="#529917" />
+        </button>
+        <button wx:else class="primary-action generate-action" loading="{{submitting}}"
+          disabled="{{submitting || !valid || vipBlocked || !canAfford}}" bindtap="generate">生成</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{previewOpen && previewTemplate}}" class="preview-overlay" bindtap="closePreview">
+    <view class="preview-dialog" catchtap="noop">
+      <view class="preview-card">
+        <flip-card front-card-data="{{previewTemplate.previewCard}}" aspect-ratio="portrait"
+          hide-flip-button="{{true}}" read-only="{{true}}" is-visible="{{previewOpen}}" />
+      </view>
+      <view class="preview-actions">
+        <button class="preview-button secondary" bindtap="closePreview">关闭</button>
+        <button class="preview-button primary {{vipBlocked ? 'vip' : ''}}" disabled="{{!vipBlocked && !canAfford}}" bindtap="previewNext">
+          {{vipBlocked ? '开通 VIP' : '下一步'}}
+        </button>
+      </view>
+    </view>
+  </view>
+  <app-purchase-guide
+    open="{{purchaseGuideOpen}}"
+    mode="{{purchaseGuideMode}}"
+    reason="{{purchaseGuideReason}}"
+    bind:close="closePurchaseGuide"
+  />
+</view>

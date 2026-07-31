@@ -1,0 +1,370 @@
+{
+  "variantIndex": 0,
+  "variant": {
+    "pinyin": "chán",
+    "meaning": "夏天在树上鸣叫的昆虫，也叫知了",
+    "phrases": [
+      {
+        "word": "蝉鸣",
+        "pinyin": "chán míng",
+        "tts_word": "蝉鸣",
+        "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-phrases-0-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368960&Signature=uy5b6mGK0O6P4ZU0Od9QEoQAB5M%3D",
+        "segments": [
+          {
+            "character": "蝉",
+            "pinyin": "chán"
+          },
+          {
+            "character": "鸣",
+            "pinyin": "míng"
+          }
+        ]
+      },
+      {
+        "word": "夏蝉",
+        "pinyin": "xià chán",
+        "tts_word": "夏蝉",
+        "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-phrases-1-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368960&Signature=khYUySPPzR62M%2FZzA9U9M7DGhjw%3D",
+        "segments": [
+          {
+            "character": "夏",
+            "pinyin": "xià"
+          },
+          {
+            "character": "蝉",
+            "pinyin": "chán"
+          }
+        ]
+      },
+      {
+        "word": "蝉蜕",
+        "pinyin": "chán tuì",
+        "tts_word": "蝉蜕",
+        "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-phrases-2-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368961&Signature=djkZyjKRHiDty9NZBg4YiUaynl0%3D",
+        "segments": [
+          {
+            "character": "蝉",
+            "pinyin": "chán"
+          },
+          {
+            "character": "蜕",
+            "pinyin": "tuì"
+          }
+        ]
+      },
+      {
+        "word": "金蝉",
+        "pinyin": "jīn chán",
+        "tts_word": "金蝉",
+        "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-phrases-3-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368961&Signature=ueJybReUUSnkFxAjrb9jtDhb3m4%3D",
+        "segments": [
+          {
+            "character": "金",
+            "pinyin": "jīn"
+          },
+          {
+            "character": "蝉",
+            "pinyin": "chán"
+          }
+        ]
+      }
+    ],
+    "homophones": "蝉",
+    "tts_meaning": "夏天在树上鸣叫的昆虫，也叫知了",
+    "conversation": [
+      {
+        "role": "child",
+        "text": "妈妈，树上的蝉叫得好响亮呀！",
+        "pinyin": "mā ma, shù shàng de chán jiào de hǎo xiǎng liàng ya!",
+        "tts_text": "妈妈，树上的蝉叫得好响亮呀！",
+        "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-conversation-0-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368962&Signature=88gvrF6MZdXro0BznRmo%2FJ1iyfA%3D"
+      },
+      {
+        "role": "parent",
+        "text": "对呀，蝉只有夏天才会出来唱歌哦。",
+        "pinyin": "duì ya, chán zhǐ yǒu xià tiān cái huì chū lái chàng gē ó.",
+        "tts_text": "对呀，蝉只有夏天才会出来唱歌哦。",
+        "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-conversation-1-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368962&Signature=unEq4hE05tpmSVh8L7URZu4Hhsw%3D"
+      }
+    ],
+    "pinyin_audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-pinyin_audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368959&Signature=FsFZzoGpiN8MTaWOaxw8Y%2FrSyKg%3D",
+    "meaning_audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-meaning_audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368959&Signature=WiHWehi4xUm8yB7L431y9Z4blzU%3D",
+    "illustration_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-illustration_url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368965&Signature=D1qHM%2BgzqfAF3dfDCyWJcNn7DXQ%3D"
+  },
+  "tracing": false,
+  "conversationVisible": true,
+  "conversationClosing": false,
+  "conversationLines": [
+    {
+      "role": "child",
+      "text": "妈妈，树上的蝉叫得好响亮呀！",
+      "pinyin": "mā ma, shù shàng de chán jiào de hǎo xiǎng liàng ya!",
+      "tts_text": "妈妈，树上的蝉叫得好响亮呀！",
+      "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-conversation-0-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368962&Signature=88gvrF6MZdXro0BznRmo%2FJ1iyfA%3D",
+      "segments": [
+        {
+          "character": "妈",
+          "pinyin": "mā",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "妈",
+          "pinyin": "ma",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "，",
+          "pinyin": "",
+          "target": false,
+          "punctuation": true
+        },
+        {
+          "character": "树",
+          "pinyin": "shù",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "上",
+          "pinyin": "shàng",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "的",
+          "pinyin": "de",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "蝉",
+          "pinyin": "chán",
+          "target": true,
+          "punctuation": false
+        },
+        {
+          "character": "叫",
+          "pinyin": "jiào",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "得",
+          "pinyin": "de",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "好",
+          "pinyin": "hǎo",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "响",
+          "pinyin": "xiǎng",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "亮",
+          "pinyin": "liàng",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "呀",
+          "pinyin": "ya",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "！",
+          "pinyin": "",
+          "target": false,
+          "punctuation": true
+        }
+      ]
+    },
+    {
+      "role": "parent",
+      "text": "对呀，蝉只有夏天才会出来唱歌哦。",
+      "pinyin": "duì ya, chán zhǐ yǒu xià tiān cái huì chū lái chàng gē ó.",
+      "tts_text": "对呀，蝉只有夏天才会出来唱歌哦。",
+      "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-conversation-1-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368962&Signature=unEq4hE05tpmSVh8L7URZu4Hhsw%3D",
+      "segments": [
+        {
+          "character": "对",
+          "pinyin": "duì",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "呀",
+          "pinyin": "ya",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "，",
+          "pinyin": "",
+          "target": false,
+          "punctuation": true
+        },
+        {
+          "character": "蝉",
+          "pinyin": "chán",
+          "target": true,
+          "punctuation": false
+        },
+        {
+          "character": "只",
+          "pinyin": "zhǐ",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "有",
+          "pinyin": "yǒu",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "夏",
+          "pinyin": "xià",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "天",
+          "pinyin": "tiān",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "才",
+          "pinyin": "cái",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "会",
+          "pinyin": "huì",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "出",
+          "pinyin": "chū",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "来",
+          "pinyin": "lái",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "唱",
+          "pinyin": "chàng",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "歌",
+          "pinyin": "gē",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "哦",
+          "pinyin": "ó",
+          "target": false,
+          "punctuation": false
+        },
+        {
+          "character": "。",
+          "pinyin": "",
+          "target": false,
+          "punctuation": true
+        }
+      ]
+    }
+  ],
+  "mistakes": 0,
+  "completed": false,
+  "playingSource": "",
+  "animating": false,
+  "conversationAssets": {
+    "child": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/LiteracyCard/assets/images/child.png",
+    "mama": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/LiteracyCard/assets/images/mama.png",
+    "together": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/qcard/client-assets/v1/LiteracyCard/assets/images/together.png"
+  },
+  "compactLayout": false,
+  "previewGridStyle": "font-size:108px",
+  "writerStyle": "width:148px;height:148px",
+  "toolIconSize": 27,
+  "data": {
+    "variants": [
+      {
+        "pinyin": "chán",
+        "meaning": "夏天在树上鸣叫的昆虫，也叫知了",
+        "phrases": [
+          {
+            "word": "蝉鸣",
+            "pinyin": "chán míng",
+            "tts_word": "蝉鸣",
+            "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-phrases-0-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368960&Signature=uy5b6mGK0O6P4ZU0Od9QEoQAB5M%3D"
+          },
+          {
+            "word": "夏蝉",
+            "pinyin": "xià chán",
+            "tts_word": "夏蝉",
+            "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-phrases-1-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368960&Signature=khYUySPPzR62M%2FZzA9U9M7DGhjw%3D"
+          },
+          {
+            "word": "蝉蜕",
+            "pinyin": "chán tuì",
+            "tts_word": "蝉蜕",
+            "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-phrases-2-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368961&Signature=djkZyjKRHiDty9NZBg4YiUaynl0%3D"
+          },
+          {
+            "word": "金蝉",
+            "pinyin": "jīn chán",
+            "tts_word": "金蝉",
+            "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-phrases-3-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368961&Signature=ueJybReUUSnkFxAjrb9jtDhb3m4%3D"
+          }
+        ],
+        "homophones": "蝉",
+        "tts_meaning": "夏天在树上鸣叫的昆虫，也叫知了",
+        "conversation": [
+          {
+            "role": "child",
+            "text": "妈妈，树上的蝉叫得好响亮呀！",
+            "pinyin": "mā ma, shù shàng de chán jiào de hǎo xiǎng liàng ya!",
+            "tts_text": "妈妈，树上的蝉叫得好响亮呀！",
+            "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-conversation-0-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368962&Signature=88gvrF6MZdXro0BznRmo%2FJ1iyfA%3D"
+          },
+          {
+            "role": "parent",
+            "text": "对呀，蝉只有夏天才会出来唱歌哦。",
+            "pinyin": "duì ya, chán zhǐ yǒu xià tiān cái huì chū lái chàng gē ó.",
+            "tts_text": "对呀，蝉只有夏天才会出来唱歌哦。",
+            "audio_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-conversation-1-audio_url.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368962&Signature=unEq4hE05tpmSVh8L7URZu4Hhsw%3D"
+          }
+        ],
+        "pinyin_audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-pinyin_audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368959&Signature=FsFZzoGpiN8MTaWOaxw8Y%2FrSyKg%3D",
+        "meaning_audio": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-meaning_audio.mp3?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368959&Signature=WiHWehi4xUm8yB7L431y9Z4blzU%3D",
+        "illustration_url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/ccd32df4-06b6-4d99-9268-3fd5bbcd7ebb/variants-0-illustration_url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787368965&Signature=D1qHM%2BgzqfAF3dfDCyWJcNn7DXQ%3D"
+      }
+    ],
+    "character": "蝉",
+    "isPolyphone": false
+  },
+  "preview": false,
+  "readOnly": false,
+  "isVisible": true
+}

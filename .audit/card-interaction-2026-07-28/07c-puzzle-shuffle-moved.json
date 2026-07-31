@@ -1,0 +1,192 @@
+{
+  "mode": "shuffle",
+  "level": 3,
+  "previewLevel": 1,
+  "levels": [
+    2,
+    3,
+    4
+  ],
+  "levelMenuVisible": false,
+  "started": true,
+  "starting": false,
+  "animationPhase": "playing",
+  "phaseText": "",
+  "wholeImageVisible": false,
+  "showStartButton": false,
+  "boardSeamless": false,
+  "removingSpare": false,
+  "restoringSpare": false,
+  "spareTileIndex": 8,
+  "droppingTileMap": {},
+  "shuffling": false,
+  "completed": false,
+  "slots": [
+    0,
+    1,
+    2,
+    4,
+    null,
+    5,
+    3,
+    6,
+    7
+  ],
+  "renderSlots": [
+    {
+      "renderKey": "tile-0",
+      "slotIndex": 0,
+      "slotX": 0,
+      "slotY": 0,
+      "tileIndex": 0,
+      "sourceX": 0,
+      "sourceY": 0,
+      "dropY": 426
+    },
+    {
+      "renderKey": "tile-1",
+      "slotIndex": 1,
+      "slotX": 1,
+      "slotY": 0,
+      "tileIndex": 1,
+      "sourceX": 1,
+      "sourceY": 0,
+      "dropY": 426
+    },
+    {
+      "renderKey": "tile-2",
+      "slotIndex": 2,
+      "slotX": 2,
+      "slotY": 0,
+      "tileIndex": 2,
+      "sourceX": 2,
+      "sourceY": 0,
+      "dropY": 426
+    },
+    {
+      "renderKey": "tile-4",
+      "slotIndex": 3,
+      "slotX": 0,
+      "slotY": 1,
+      "tileIndex": 4,
+      "sourceX": 1,
+      "sourceY": 1,
+      "dropY": 311.3333333333333
+    },
+    {
+      "renderKey": "empty-4",
+      "slotIndex": 4,
+      "slotX": 1,
+      "slotY": 1,
+      "tileIndex": null,
+      "sourceX": 0,
+      "sourceY": 0,
+      "dropY": 311.3333333333333
+    },
+    {
+      "renderKey": "tile-5",
+      "slotIndex": 5,
+      "slotX": 2,
+      "slotY": 1,
+      "tileIndex": 5,
+      "sourceX": 2,
+      "sourceY": 1,
+      "dropY": 311.3333333333333
+    },
+    {
+      "renderKey": "tile-3",
+      "slotIndex": 6,
+      "slotX": 0,
+      "slotY": 2,
+      "tileIndex": 3,
+      "sourceX": 0,
+      "sourceY": 1,
+      "dropY": 196.66666666666666
+    },
+    {
+      "renderKey": "tile-6",
+      "slotIndex": 7,
+      "slotX": 1,
+      "slotY": 2,
+      "tileIndex": 6,
+      "sourceX": 0,
+      "sourceY": 2,
+      "dropY": 196.66666666666666
+    },
+    {
+      "renderKey": "tile-7",
+      "slotIndex": 8,
+      "slotX": 2,
+      "slotY": 2,
+      "tileIndex": 7,
+      "sourceX": 1,
+      "sourceY": 2,
+      "dropY": 196.66666666666666
+    }
+  ],
+  "hitSlots": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "previewSlots": [
+    {
+      "renderKey": "tile-0",
+      "slotIndex": 0,
+      "slotX": 0,
+      "slotY": 0,
+      "tileIndex": 0,
+      "sourceX": 0,
+      "sourceY": 0,
+      "dropY": 0
+    }
+  ],
+  "emptySlot": 4,
+  "poolTiles": [],
+  "selectedTileIndex": -1,
+  "hoveredSlotIndex": -1,
+  "activeTile": null,
+  "activeStyle": "",
+  "activeSize": 0,
+  "activeBgSize": 0,
+  "activeBgX": 0,
+  "activeBgY": 0,
+  "elapsed": 0,
+  "elapsedText": "00:00",
+  "boardSize": 344,
+  "tileSize": 114.66666666666667,
+  "poolTileSize": 96,
+  "objectUrl": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/59bb8c0f-a0e5-4c22-9ea3-6113bf74c987/content-object.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369446&Signature=Y8EKLZvcPOoLHQiqRuY5teeQcEY%3D",
+  "backgroundUrl": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/59bb8c0f-a0e5-4c22-9ea3-6113bf74c987/content-background.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369444&Signature=94D%2FI8cV%2Bz78Xa5N8dH%2FODcBmnA%3D",
+  "videoUrl": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/59bb8c0f-a0e5-4c22-9ea3-6113bf74c987/content-video.mp4?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369446&Signature=akdO9tMAq6FcYjRqcu7uPUHNyTg%3D",
+  "videoEnded": false,
+  "celebrationPhase": "idle",
+  "celebrationVideoPlaying": false,
+  "celebrationResetting": false,
+  "boardScale": 1,
+  "boardOpacity": 1,
+  "boardTransitionMs": 400,
+  "boardOpacityTransitionMs": 0,
+  "videoOpacity": 0,
+  "videoTransitionMs": 0,
+  "blurOpacity": 1,
+  "blurTransitionMs": 350,
+  "showOutline": false,
+  "hasUserMoved": true,
+  "data": {
+    "content": {
+      "video": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/59bb8c0f-a0e5-4c22-9ea3-6113bf74c987/content-video.mp4?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369446&Signature=akdO9tMAq6FcYjRqcu7uPUHNyTg%3D",
+      "object": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/59bb8c0f-a0e5-4c22-9ea3-6113bf74c987/content-object.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369446&Signature=Y8EKLZvcPOoLHQiqRuY5teeQcEY%3D",
+      "background": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/59bb8c0f-a0e5-4c22-9ea3-6113bf74c987/content-background.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787369444&Signature=94D%2FI8cV%2Bz78Xa5N8dH%2FODcBmnA%3D"
+    }
+  },
+  "preview": false,
+  "readOnly": false,
+  "isVisible": true
+}

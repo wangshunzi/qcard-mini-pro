@@ -1,0 +1,113 @@
+:host {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  aspect-ratio: 9/16;
+}
+
+.face-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border: 1rpx solid var(--color-border);
+  border-radius: 18rpx;
+  box-sizing: border-box;
+  background: #ffffff;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, .07);
+  transition: transform .16s ease, opacity .16s ease;
+}
+
+.face-card.processing {
+  box-shadow:
+    0 0 0 4rpx rgba(82, 153, 23, .12),
+    0 8rpx 24rpx rgba(0, 0, 0, .07);
+}
+
+.face-card-hover {
+  opacity: .72;
+  transform: scale(.97);
+}
+
+.face-renderer {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  --qcard-preview-radius: 18rpx;
+}
+
+.private-status-host {
+  overflow: hidden;
+}
+
+.thumbnail {
+  background: var(--color-backdrop);
+}
+
+.fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  color: #ffffff;
+  background: linear-gradient(145deg, #397054, #6d9c80);
+  font-size: 19rpx;
+}
+
+.delete-card {
+  position: absolute;
+  z-index: 8;
+  top: 10rpx;
+  right: 10rpx;
+  width: 54rpx;
+  height: 54rpx;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  color: #ffffff;
+  background: var(--color-error);
+  box-shadow: 0 5rpx 15rpx rgba(0, 0, 0, .2);
+  line-height: 54rpx;
+}
+
+.delete-card::after,
+.make-similar-mask button::after {
+  border: 0;
+}
+
+.make-similar-mask {
+  position: absolute;
+  z-index: 4;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 86rpx;
+  padding: 26rpx 22rpx 10rpx;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, transparent, rgba(15, 15, 15, .5));
+}
+
+.make-similar-mask button {
+  width: 100%;
+  height: 50rpx;
+  margin: 0;
+  padding: 0;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  color: #27533b;
+  background: #d9efdf;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, .16);
+  font-size: 22rpx;
+  font-weight: 800;
+  line-height: 50rpx;
+}

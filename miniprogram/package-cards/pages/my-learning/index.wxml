@@ -1,0 +1,158 @@
+<view class="page safe-bottom">
+  <immersive-nav back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
+    <view slot="action" class="mode-switch">
+      <view class="mode-option {{mode === 'unlocked' ? 'active' : ''}}" data-mode="unlocked" bindtap="switchMode">已解锁</view>
+      <view class="mode-option {{mode === 'private' ? 'active' : ''}}" data-mode="private" bindtap="switchMode">专属</view>
+    </view>
+  </immersive-nav>
+  <view class="hero" style="{{heroBackground ? 'background-image:url(' + heroBackground + ')' : ''}}">
+    <view class="hero-title">我的卡包</view>
+    <view class="hero-subtitle">管理你的所有卡包</view>
+    <view class="search">
+      <ui-icon name="magnify" size="{{36}}" color="#6d776f" />
+      <input class="search-input" value="{{query}}" bindinput="onInput" placeholder="搜索卡包名称..." />
+      <button wx:if="{{mode === 'unlocked'}}" class="filter-trigger {{filterCount ? 'has-filter' : ''}}" bindtap="toggleFilter" aria-label="筛选卡包">
+        <ui-icon name="filter-variant" size="{{35}}" color="{{filterCount ? '#ffffff' : '#657065'}}" />
+        <text wx:if="{{filterCount}}" class="filter-count">{{filterCount}}</text>
+      </button>
+    </view>
+  </view>
+
+  <view wx:if="{{mode === 'unlocked' && filterOpen}}" class="filter-panel">
+    <view class="filter-section">
+      <text class="filter-title">年级筛选</text>
+      <scroll-view class="filter-scroll" scroll-x="{{true}}" show-scrollbar="{{false}}">
+        <view class="filter-row">
+          <button class="filter-chip {{tempGradeId === '' ? 'active' : ''}}" data-id="" bindtap="chooseGrade">全部</button>
+          <button wx:for="{{categories}}" wx:key="id" class="filter-chip {{tempGradeId === item.id ? 'active' : ''}}" data-id="{{item.id}}" bindtap="chooseGrade">{{item.name}}</button>
+        </view>
+      </scroll-view>
+    </view>
+    <view wx:if="{{tempGradeId && subjects.length}}" class="filter-section">
+      <text class="filter-title">学科筛选</text>
+      <scroll-view class="filter-scroll" scroll-x="{{true}}" show-scrollbar="{{false}}">
+        <view class="filter-row">
+          <button class="filter-chip {{tempSubjectId === '' ? 'active' : ''}}" data-id="" bindtap="chooseSubject">全部</button>
+          <button wx:for="{{subjects}}" wx:key="id" class="filter-chip {{tempSubjectId === item.id ? 'active' : ''}}" data-id="{{item.id}}" bindtap="chooseSubject">{{item.name}}</button>
+        </view>
+      </scroll-view>
+    </view>
+    <view wx:if="{{tempSubjectId && knowledgePoints.length}}" class="filter-section">
+      <text class="filter-title">知识点筛选</text>
+      <scroll-view class="filter-scroll" scroll-x="{{true}}" show-scrollbar="{{false}}">
+        <view class="filter-row">
+          <button class="filter-chip {{tempKnowledgePointId === '' ? 'active' : ''}}" data-id="" bindtap="chooseKnowledgePoint">全部</button>
+          <button wx:for="{{knowledgePoints}}" wx:key="id" class="filter-chip {{tempKnowledgePointId === item.id ? 'active' : ''}}" data-id="{{item.id}}" bindtap="chooseKnowledgePoint">{{item.name}}</button>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="filter-actions">
+      <button class="reset-filter" bindtap="resetFilters">重置</button>
+      <button class="confirm-filter" bindtap="confirmFilters">确定</button>
+    </view>
+  </view>
+
+  <view class="content {{filterOpen ? 'filter-open-content' : ''}}">
+    <view wx:if="{{loading}}" class="loading">
+      <view wx:for="{{[1,2,3]}}" wx:key="*this" class="skeleton"></view>
+    </view>
+    <view wx:elif="{{error}}" class="state">
+      <ui-icon name="alert-circle-outline" size="{{78}}" color="#eb711b" />
+      <text>{{error}}</text>
+      <button bindtap="load" data-reset="{{true}}">重新加载</button>
+    </view>
+    <block wx:else>
+      <view wx:if="{{(mode === 'unlocked' && publicItems.length) || (mode === 'private' && privateItems.length)}}" class="list-header">
+        <text>共 {{mode === 'unlocked' ? publicItems.length : privateItems.length}} 个卡包</text>
+        <button wx:if="{{mode === 'private'}}" class="manage-button" bindtap="toggleManage">
+          <ui-icon name="{{editMode ? 'close' : 'cog'}}" size="{{24}}" color="#529917" />
+          <text>{{editMode ? '取消' : '管理'}}</text>
+        </button>
+      </view>
+      <view wx:if="{{mode === 'unlocked' && publicItems.length}}" class="pack-list">
+        <view wx:for="{{publicItems}}" wx:key="id" class="pack" data-id="{{item.id}}" bindtap="openPublic" hover-class="pack-hover">
+          <image class="cover" src="{{item.cover || assets.appIcon}}" mode="aspectFill" />
+          <view class="copy">
+            <text class="title">{{item.title}}</text>
+            <text class="meta">{{item.cardCount || 0}} 张 · {{item.subject.name || '综合'}}</text>
+            <view class="progress"><view class="progress-fill" style="width:{{item.userStudyProgress.progress || 0}}%"></view></view>
+          </view>
+          <button class="study" catchtap="startPublic" data-id="{{item.id}}">学习</button>
+        </view>
+      </view>
+      <view wx:if="{{mode === 'private' && privateItems.length}}" class="pack-list">
+        <view wx:if="{{editMode}}" class="create-placeholder" bindtap="createPack" hover-class="pack-hover">
+          <text class="create-plus">＋</text><text>新增卡包</text>
+        </view>
+        <view wx:for="{{privateItems}}" wx:key="id" class="pack private-pack {{editMode ? 'editing' : ''}}" data-id="{{item.id}}" bindtap="openPrivate" hover-class="pack-hover">
+          <button wx:if="{{editMode}}" class="delete-pack" data-id="{{item.id}}" catchtap="deletePack" aria-label="删除卡包">
+            <ui-icon name="delete-outline" size="{{27}}" color="#ffffff" />
+          </button>
+          <view class="cover private-cover"><ui-icon name="cards-outline" size="{{64}}" color="#ffffff" /></view>
+          <view class="copy">
+            <text class="title">{{item.title}}</text>
+            <text class="meta">{{item.cardCount || 0}} 张 · 专属卡包</text>
+            <text class="description">{{item.description || '点击管理卡片与开始学习'}}</text>
+          </view>
+          <ui-icon wx:if="{{!editMode}}" name="chevron-right" size="{{32}}" color="#a9a9a9" />
+        </view>
+      </view>
+      <view wx:if="{{(mode === 'unlocked' && !publicItems.length) || (mode === 'private' && !privateItems.length)}}" class="state">
+        <ui-icon name="book-open-outline" size="{{82}}" color="#3f3f3f" />
+        <text>没有找到匹配的卡包</text>
+        <button wx:if="{{mode === 'unlocked'}}" bindtap="goResource">去解锁</button>
+        <button wx:else bindtap="createPack">创建卡包</button>
+      </view>
+      <view wx:if="{{loadingMore}}" class="more">正在加载更多…</view>
+    </block>
+  </view>
+
+  <view wx:if="{{createOpen}}" class="create-modal-root">
+    <view class="create-modal-mask" bindtap="cancelCreatePack"></view>
+    <view class="create-modal" catchtap="preventCreateClose">
+      <view class="create-modal-heading">
+        <text class="create-modal-title">新增卡包</text>
+        <text class="create-modal-subtitle">创建一个新的专属卡包</text>
+      </view>
+      <view class="create-form">
+        <label class="create-field">
+          <text class="create-label">卡包标题 <text class="required">*</text></text>
+          <input
+            class="create-input"
+            value="{{createTitle}}"
+            bindinput="onCreateTitleInput"
+            maxlength="{{50}}"
+            placeholder="请输入卡包标题"
+            focus="{{createOpen}}"
+            cursor-spacing="{{24}}"
+          />
+          <text class="create-count">{{createTitle.length}}/50</text>
+        </label>
+        <label class="create-field">
+          <text class="create-label">卡包描述 <text class="required">*</text></text>
+          <textarea
+            class="create-textarea"
+            value="{{createDescription}}"
+            bindinput="onCreateDescriptionInput"
+            maxlength="{{200}}"
+            placeholder="请输入卡包描述"
+            cursor-spacing="{{24}}"
+            fixed="{{true}}"
+          />
+          <text class="create-count">{{createDescription.length}}/200</text>
+        </label>
+      </view>
+      <view class="create-modal-actions">
+        <button class="create-cancel" disabled="{{creating}}" bindtap="cancelCreatePack">取消</button>
+        <button
+          class="create-confirm"
+          disabled="{{creating || !canCreate}}"
+          bindtap="confirmCreatePack"
+        >
+          <view wx:if="{{creating}}" class="create-spinner"></view>
+          <text>{{creating ? '创建中...' : '确认创建'}}</text>
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

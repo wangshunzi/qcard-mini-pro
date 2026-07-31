@@ -1,0 +1,16 @@
+{
+  "component": true,
+  "usingComponents": {
+    "recognition-card": "../components/recognition-pic-card/index",
+    "literacy-card": "../components/literacy-card/index",
+    "puzzle-card": "../components/puzzle-card/index",
+    "story-card": "../components/story-card/index",
+    "sound-object-card": "../components/sound-object-card/index",
+    "choice-card": "../components/choice-card/index",
+    "silhouette-card": "../components/silhouette-choice-card/index",
+    "listening-card": "../components/listening-comprehension-card/index",
+    "matching-card": "../components/matching-card/index",
+    "classification-card": "../components/classification-card/index",
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "immersive-nav": "/components/immersive-nav/index",
+    "ui-icon": "/components/ui-icon/index",
+    "flip-card": "/cards/FlipCardContainer/index",
+    "unlock-confirm-drawer": "/components/unlock-confirm-drawer/index",
+    "app-purchase-guide": "/components/app-purchase-guide/index"
+  }
+}

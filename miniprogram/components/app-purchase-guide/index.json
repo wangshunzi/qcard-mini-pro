@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "styleIsolation": "isolated",
+  "usingComponents": {
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

@@ -1,0 +1,62 @@
+<view class="page safe-bottom">
+  <immersive-nav title="编辑资料" back="{{true}}" border="{{true}}">
+    <view slot="action">
+      <button class="nav-save" loading="{{saving}}" disabled="{{saving || !hasChanges}}" bindtap="save">保存</button>
+    </view>
+  </immersive-nav>
+  <view wx:if="{{loading}}" class="state">正在加载资料…</view>
+  <block wx:else>
+    <view class="avatar-area">
+      <image class="avatar" src="{{avatar || assets.appIcon}}" mode="aspectFill" bindtap="openAvatarDrawer" />
+      <button class="change-avatar" bindtap="openAvatarDrawer">点击更换头像</button>
+    </view>
+    <view class="form">
+      <view class="row">
+        <text>昵称</text>
+        <input value="{{nickname}}" bindinput="onNickname" maxlength="20" placeholder="输入昵称" />
+      </view>
+      <view class="row tappable" bindtap="chooseGender">
+        <text>性别</text>
+        <view><text>{{gender === 'male' ? '男' : gender === 'female' ? '女' : gender === 'unknown' ? '保密' : '未设置'}}</text><ui-icon name="chevron-right" size="{{30}}" color="#a9a9a9" /></view>
+      </view>
+      <picker mode="date" value="{{birthday}}" end="{{maxDate}}" bindchange="onBirthday">
+        <view class="row tappable">
+          <text>生日</text>
+          <view><text>{{birthday || '未设置'}}</text><ui-icon name="chevron-right" size="{{30}}" color="#a9a9a9" /></view>
+        </view>
+      </picker>
+      <view class="bio-row">
+        <view class="bio-label"><text>个人简介</text><text>{{bio.length}}/200</text></view>
+        <textarea value="{{bio}}" bindinput="onBio" maxlength="200" placeholder="介绍一下自己吧..." auto-height="{{false}}" />
+      </view>
+    </view>
+  </block>
+
+  <view wx:if="{{avatarDrawerOpen}}" class="avatar-drawer-root">
+    <view class="avatar-drawer-backdrop" bindtap="closeAvatarDrawer"></view>
+    <view class="avatar-drawer safe-bottom" catchtap="preventClose">
+      <view class="drawer-handle"></view>
+      <view class="drawer-heading">
+        <text>选择头像</text>
+        <text wx:if="{{selectedAvatarId}}">选择一个喜欢的头像</text>
+      </view>
+      <scroll-view scroll-y class="avatar-grid-scroll">
+        <view class="avatar-grid">
+          <button
+            wx:for="{{avatars}}"
+            wx:key="id"
+            class="avatar-option {{selectedAvatarId === item.id ? 'selected' : ''}}"
+            data-id="{{item.id}}"
+            data-url="{{item.url}}"
+            bindtap="chooseAvatar"
+          >
+            <view class="avatar-image-square">
+              <image src="{{item.url}}" mode="aspectFill" />
+            </view>
+            <text>{{item.name || '默认头像'}}</text>
+          </button>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

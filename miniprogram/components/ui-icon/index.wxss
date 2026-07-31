@@ -1,0 +1,9 @@
+.ui-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "MaterialCommunityIcons";
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+}

@@ -1,0 +1,98 @@
+<view class="qcard recognition {{preview ? 'preview' : ''}}" style="background-color:{{backgroundColor}}">
+  <view wx:if="{{!item}}" class="empty">暂无当前语言数据</view>
+
+  <block wx:else>
+    <view class="title-section {{playingTag === 'title' ? 'breathing' : ''}}" style="color:{{themeColor}}" bindtap="playPronunciation">
+      <view wx:if="{{titleSegments.length}}" class="chinese-title">
+        <view wx:for="{{titleSegments}}" wx:key="character" class="chinese-char">
+          <text class="pinyin">{{item.pinyin}}</text>
+          <text class="character">{{item.character}}</text>
+        </view>
+      </view>
+      <view wx:else class="foreign-title">
+        <text class="pronunciation">{{item.pronunciation.text}}</text>
+        <text class="subject">{{item.subject}}</text>
+      </view>
+    </view>
+
+    <view class="image-section" bindtap="playJingle">
+      <image
+        class="main-image {{playingTag === 'jingle' ? 'breathing' : ''}} {{videoVisible ? 'video-visible' : ''}}"
+        src="{{item.mainImage}}"
+        mode="aspectFill"
+      ></image>
+      <view
+        wx:if="{{currentVideoUrl}}"
+        class="action-video-layer {{videoVisible ? 'visible' : ''}}"
+      >
+        <video
+          id="recognitionVideo"
+          class="action-video"
+          src="{{currentVideoUrl}}"
+          autoplay
+          muted="{{false}}"
+          object-fit="cover"
+          controls="{{false}}"
+          show-center-play-btn="{{false}}"
+          show-play-btn="{{false}}"
+          enable-progress-gesture="{{false}}"
+          bindcanplay="videoReady"
+          bindplay="videoReady"
+          bindwaiting="videoWaiting"
+          bindtimeupdate="videoProgress"
+          bindended="videoEnded"
+          binderror="videoError"
+        ></video>
+      </view>
+    </view>
+
+    <view
+      wx:if="{{playingTag === 'jingle' && item.jingle && item.jingle.text && !preview}}"
+      class="jingle-subtitle {{item.actionVideos.length ? 'with-actions' : 'without-actions'}}"
+    >
+      <text class="jingle-subtitle-tag">{{jingleLabel}}</text>
+      <text class="jingle-subtitle-copy">{{item.jingle.text}}</text>
+    </view>
+
+    <view
+      wx:if="{{languages.length > 1 && !preview}}"
+      class="language-switch {{languageSwitchAnimating ? 'switching' : ''}}"
+      catchtap="switchLanguage"
+      role="button"
+      aria-label="切换语言，当前{{currentLanguageLabel}}，下一项{{nextLanguageLabel}}"
+    >
+      <view class="language-switch-inner">
+        <view class="language-box language-box-current">
+          <text>{{currentLanguageLabel}}</text>
+        </view>
+        <view class="language-box language-box-next">
+          <text>{{nextLanguageLabel}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view
+      wx:if="{{item.actionVideos.length}}"
+      class="actions"
+      style="grid-template-columns:repeat({{item.actionVideos.length}},minmax(0,1fr))"
+    >
+      <view
+        wx:for="{{item.actionVideos}}"
+        wx:key="videoUrl"
+        data-index="{{index}}"
+        catchtap="toggleVideo"
+        class="action-wrap {{videoIndex === index ? 'active' : ''}} {{videoIndex === index && videoLoading ? 'loading' : ''}}"
+      >
+        <view wx:if="{{videoIndex === index && item.name}}" class="action-title">{{item.name}}</view>
+        <view class="action-button">
+          <image wx:if="{{item.iconIsImage}}" class="action-icon" src="{{item.icon}}" mode="aspectFill"></image>
+          <text wx:else class="fallback-icon">{{item.icon || item.name}}</text>
+          <view wx:if="{{videoIndex === index && videoLoading}}" class="action-loading">
+            <view class="action-loading-spinner"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{readOnly}}" class="readonly-overlay"></view>
+  </block>
+</view>

@@ -1,0 +1,581 @@
+{
+  "paragraphs": [
+    {
+      "domId": "story-p-0",
+      "index": 0,
+      "imageId": 1,
+      "role": 0,
+      "roleName": "旁白",
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-0-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370228&Signature=yGQObbZ6mKjN6%2F9ozEDLClpOBkU%3D",
+      "startTime": 0,
+      "text": "夏天的太阳像个大火球，烤得池塘边暖乎乎的，圆圆的小荷叶圆圆荷站在水面上，晃着绿油油的大叶子。",
+      "side": "narrator",
+      "distanceClass": "distance-3"
+    },
+    {
+      "domId": "story-p-1",
+      "index": 1,
+      "imageId": 2,
+      "role": 2,
+      "roleName": "叮叮蜓",
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-2-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370231&Signature=K5bDjs0misPdk1KSNWZXrySNh%2BI%3D",
+      "startTime": 10680,
+      "text": "哎呀太热啦，我的翅膀都要晒软啦！",
+      "side": "left",
+      "distanceClass": "distance-3"
+    },
+    {
+      "domId": "story-p-2",
+      "index": 2,
+      "imageId": 2,
+      "role": 0,
+      "roleName": "旁白",
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-0-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370228&Signature=yGQObbZ6mKjN6%2F9ozEDLClpOBkU%3D",
+      "startTime": 14904,
+      "text": "小蜻蜓叮叮蜓扑着蓝翅膀飞得摇摇晃晃，圆圆荷赶紧挥了挥叶子喊它：",
+      "side": "narrator",
+      "distanceClass": "distance-3"
+    },
+    {
+      "domId": "story-p-3",
+      "index": 3,
+      "imageId": 3,
+      "role": 1,
+      "roleName": "圆圆荷",
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-1-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370229&Signature=fyjPjPoSzPRbAZVo3NgdRDdnuB4%3D",
+      "startTime": 23352,
+      "text": "快到我叶子下面来呀，这里凉丝丝的！",
+      "side": "right",
+      "distanceClass": "distance-2"
+    },
+    {
+      "domId": "story-p-4",
+      "index": 4,
+      "imageId": 4,
+      "role": 0,
+      "roleName": "旁白",
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-0-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370228&Signature=yGQObbZ6mKjN6%2F9ozEDLClpOBkU%3D",
+      "startTime": 26928,
+      "text": "叮叮蜓停在圆圆荷的叶片上，风一吹凉丝丝的，舒服得晃起了小脑袋。这时候，小青蛙呱呱蛙蹦得满头大汗跑了过来：",
+      "side": "narrator",
+      "distanceClass": "distance-1"
+    },
+    {
+      "domId": "story-p-5",
+      "index": 5,
+      "imageId": 4,
+      "role": 3,
+      "roleName": "呱呱蛙",
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-3-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370231&Signature=f3cwR23PJs4%2B%2FVonQENdo7lOuqc%3D",
+      "startTime": 40152,
+      "text": "热死我啦热死我啦，有没有地方能躲躲太阳呀？",
+      "side": "right",
+      "distanceClass": "distance-0"
+    },
+    {
+      "domId": "story-p-6",
+      "index": 6,
+      "imageId": 5,
+      "role": 1,
+      "roleName": "圆圆荷",
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-1-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370229&Signature=fyjPjPoSzPRbAZVo3NgdRDdnuB4%3D",
+      "startTime": 46944,
+      "text": "快蹲到我底下来呀，这里晒不到太阳！",
+      "side": "right",
+      "distanceClass": "distance-1"
+    },
+    {
+      "domId": "story-p-7",
+      "index": 7,
+      "imageId": 6,
+      "role": 0,
+      "roleName": "旁白",
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-0-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370228&Signature=yGQObbZ6mKjN6%2F9ozEDLClpOBkU%3D",
+      "startTime": 50976,
+      "text": "呱呱蛙蹲在圆圆荷的阴影里，凉风吹过来，舒服得呱呱直叫。就在这时，穿着碎花裙的小朋友朵朵攥着小风车，满头大汗跑了过来：",
+      "side": "narrator",
+      "distanceClass": "distance-2"
+    },
+    {
+      "domId": "story-p-8",
+      "index": 8,
+      "imageId": 6,
+      "role": 4,
+      "roleName": "朵朵",
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-4-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370232&Signature=IYj9sA8V5UElysJaSw40Oti9C58%3D",
+      "startTime": 65400,
+      "text": "哇，这里好凉快呀，我能和你们一起躲太阳吗？",
+      "side": "left",
+      "distanceClass": "distance-3"
+    },
+    {
+      "domId": "story-p-9",
+      "index": 9,
+      "imageId": 7,
+      "role": 1,
+      "roleName": "圆圆荷",
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-1-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370229&Signature=fyjPjPoSzPRbAZVo3NgdRDdnuB4%3D",
+      "startTime": 69720,
+      "text": "当然可以呀，大家一起挤一挤更热闹！",
+      "side": "right",
+      "distanceClass": "distance-3"
+    },
+    {
+      "domId": "story-p-10",
+      "index": 10,
+      "imageId": 7,
+      "role": 0,
+      "roleName": "旁白",
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-0-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370228&Signature=yGQObbZ6mKjN6%2F9ozEDLClpOBkU%3D",
+      "startTime": 73704,
+      "text": "小蜻蜓、小青蛙和朵朵挤在圆圆的荷叶阴影下，风一吹凉丝丝的，大家都笑啦。圆圆荷还告诉大家，夏天热的时候要躲在阴凉处，多喝温水，就不会中暑啦，大家都学会了避暑的小知识哦。",
+      "side": "narrator",
+      "distanceClass": "distance-3"
+    }
+  ],
+  "roles": [
+    {
+      "id": 0,
+      "name": "旁白",
+      "voice": {
+        "id": "7568423452617572406",
+        "name": "流畅女声",
+        "model": "豆包语音合成大模型 2.0"
+      },
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-0-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370228&Signature=yGQObbZ6mKjN6%2F9ozEDLClpOBkU%3D",
+      "prompt": "小女孩，扎羊角辫，穿鹅黄色棉布连衣裙，举着蒲草小扇子"
+    },
+    {
+      "id": 1,
+      "name": "圆圆荷",
+      "voice": {
+        "id": "7568423452617605174",
+        "name": "可爱女生",
+        "model": "豆包语音合成大模型 2.0"
+      },
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-1-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370229&Signature=fyjPjPoSzPRbAZVo3NgdRDdnuB4%3D",
+      "prompt": "荷叶，嫩绿色圆形叶片，边缘带浅粉色花边，叶柄挂着透明小水珠"
+    },
+    {
+      "id": 2,
+      "name": "叮叮蜓",
+      "voice": {
+        "id": "7468512265151512603",
+        "name": "樱桃丸子",
+        "model": "豆包语音合成大模型 1.0"
+      },
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-2-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370231&Signature=K5bDjs0misPdk1KSNWZXrySNh%2BI%3D",
+      "prompt": "蜻蜓，亮蓝色透明翅膀，圆黑眼睛，穿嫩黄色小背心"
+    },
+    {
+      "id": 3,
+      "name": "呱呱蛙",
+      "voice": {
+        "id": "7468512265134817331",
+        "name": "天才童声",
+        "model": "豆包语音合成大模型 1.0"
+      },
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-3-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370231&Signature=f3cwR23PJs4%2B%2FVonQENdo7lOuqc%3D",
+      "prompt": "青蛙，翠绿色皮肤，白肚皮，穿天蓝色小短裤"
+    },
+    {
+      "id": 4,
+      "name": "朵朵",
+      "voice": {
+        "id": "7468512265134882867",
+        "name": "佩奇猪",
+        "model": "豆包语音合成大模型 1.0"
+      },
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-4-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370232&Signature=IYj9sA8V5UElysJaSw40Oti9C58%3D",
+      "prompt": "人类小女孩，扎双马尾，穿粉色碎花连衣裙，手里拿彩色小风车"
+    }
+  ],
+  "previewRoles": [
+    {
+      "id": 1,
+      "name": "圆圆荷",
+      "voice": {
+        "id": "7568423452617605174",
+        "name": "可爱女生",
+        "model": "豆包语音合成大模型 2.0"
+      },
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-1-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370229&Signature=fyjPjPoSzPRbAZVo3NgdRDdnuB4%3D",
+      "prompt": "荷叶，嫩绿色圆形叶片，边缘带浅粉色花边，叶柄挂着透明小水珠"
+    },
+    {
+      "id": 2,
+      "name": "叮叮蜓",
+      "voice": {
+        "id": "7468512265151512603",
+        "name": "樱桃丸子",
+        "model": "豆包语音合成大模型 1.0"
+      },
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-2-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370231&Signature=K5bDjs0misPdk1KSNWZXrySNh%2BI%3D",
+      "prompt": "蜻蜓，亮蓝色透明翅膀，圆黑眼睛，穿嫩黄色小背心"
+    },
+    {
+      "id": 3,
+      "name": "呱呱蛙",
+      "voice": {
+        "id": "7468512265134817331",
+        "name": "天才童声",
+        "model": "豆包语音合成大模型 1.0"
+      },
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-3-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370231&Signature=f3cwR23PJs4%2B%2FVonQENdo7lOuqc%3D",
+      "prompt": "青蛙，翠绿色皮肤，白肚皮，穿天蓝色小短裤"
+    },
+    {
+      "id": 4,
+      "name": "朵朵",
+      "voice": {
+        "id": "7468512265134882867",
+        "name": "佩奇猪",
+        "model": "豆包语音合成大模型 1.0"
+      },
+      "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-4-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370232&Signature=IYj9sA8V5UElysJaSw40Oti9C58%3D",
+      "prompt": "人类小女孩，扎双马尾，穿粉色碎花连衣裙，手里拿彩色小风车"
+    }
+  ],
+  "hasPreviewRoles": true,
+  "images": [
+    {
+      "id": 1,
+      "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-0-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370210&Signature=EiXWhVPyeulCb9rmMs%2B8gio9Mhk%3D",
+      "roles": [
+        1
+      ],
+      "prompt": "夏天的池塘边，金灿灿的太阳挂在天上，圆圆荷立在清透的水面上，叶片上沾着小水珠"
+    },
+    {
+      "id": 2,
+      "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-1-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370213&Signature=cePyAu2IexXS%2B8uOdG15FL3MxBU%3D",
+      "roles": [
+        1,
+        2
+      ],
+      "prompt": "叮叮蜓扑着透明蓝翅膀，摇摇晃晃朝圆圆荷飞过来，翅膀垂得软软的"
+    },
+    {
+      "id": 3,
+      "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-2-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370216&Signature=1MjRkSBxsqbycDhQtyMqiItLW6g%3D",
+      "roles": [
+        1,
+        2
+      ],
+      "prompt": "叮叮蜓站在圆圆荷的叶片上，晃着小脑袋，开心地扇着翅膀"
+    },
+    {
+      "id": 4,
+      "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-3-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370219&Signature=sD4vZWq5qdY5oSuFk7Kn%2Bt1YkFA%3D",
+      "roles": [
+        1,
+        2,
+        3
+      ],
+      "prompt": "呱呱蛙蹦得满头大汗，伸着舌头朝圆圆荷跑过来，额头上挂着汗珠"
+    },
+    {
+      "id": 5,
+      "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-4-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370222&Signature=Zhj4LZc9BzXGIvct6mu3mMNfvww%3D",
+      "roles": [
+        1,
+        2,
+        3
+      ],
+      "prompt": "呱呱蛙蹲在圆圆荷的阴影里，抬着头开心地笑，旁边站着叮叮蜓"
+    },
+    {
+      "id": 6,
+      "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-5-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370225&Signature=Prncco%2FR98dxCFzjil53y6Pzpi4%3D",
+      "roles": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "prompt": "朵朵攥着彩色小风车，满头大汗跑过来，刘海都被汗湿了贴在额头上"
+    },
+    {
+      "id": 7,
+      "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-6-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370228&Signature=FKQq%2Fc%2FQaxiw6%2BA6eCKSpvLLNPQ%3D",
+      "roles": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "prompt": "叮叮蜓、呱呱蛙和朵朵挤在圆圆荷的阴影下，大家都笑着，凉风吹得叶片轻轻晃"
+    }
+  ],
+  "activeIndex": 5,
+  "activeImage": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-3-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370219&Signature=sD4vZWq5qdY5oSuFk7Kn%2Bt1YkFA%3D",
+  "previewLayoutReady": false,
+  "previewSceneStyle": "aspect-ratio:4/3",
+  "dialogueScrollTop": null,
+  "audioSource": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/vtt-src.m4a?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370207&Signature=e%2F%2F9epUJ4MzuA0bpAD1roUWM9IM%3D",
+  "playing": true,
+  "currentSeconds": 41.202666666666666,
+  "durationSeconds": 94.992,
+  "currentTimeText": "0:41",
+  "durationText": "1:34",
+  "progress": 43.38049519959576,
+  "playbackRate": 1,
+  "data": {
+    "vtt": {
+      "src": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/vtt-src.m4a?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370207&Signature=e%2F%2F9epUJ4MzuA0bpAD1roUWM9IM%3D"
+    },
+    "roles": [
+      {
+        "id": 0,
+        "name": "旁白",
+        "voice": {
+          "id": "7568423452617572406",
+          "name": "流畅女声",
+          "model": "豆包语音合成大模型 2.0"
+        },
+        "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-0-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370228&Signature=yGQObbZ6mKjN6%2F9ozEDLClpOBkU%3D",
+        "prompt": "小女孩，扎羊角辫，穿鹅黄色棉布连衣裙，举着蒲草小扇子"
+      },
+      {
+        "id": 1,
+        "name": "圆圆荷",
+        "voice": {
+          "id": "7568423452617605174",
+          "name": "可爱女生",
+          "model": "豆包语音合成大模型 2.0"
+        },
+        "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-1-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370229&Signature=fyjPjPoSzPRbAZVo3NgdRDdnuB4%3D",
+        "prompt": "荷叶，嫩绿色圆形叶片，边缘带浅粉色花边，叶柄挂着透明小水珠"
+      },
+      {
+        "id": 2,
+        "name": "叮叮蜓",
+        "voice": {
+          "id": "7468512265151512603",
+          "name": "樱桃丸子",
+          "model": "豆包语音合成大模型 1.0"
+        },
+        "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-2-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370231&Signature=K5bDjs0misPdk1KSNWZXrySNh%2BI%3D",
+        "prompt": "蜻蜓，亮蓝色透明翅膀，圆黑眼睛，穿嫩黄色小背心"
+      },
+      {
+        "id": 3,
+        "name": "呱呱蛙",
+        "voice": {
+          "id": "7468512265134817331",
+          "name": "天才童声",
+          "model": "豆包语音合成大模型 1.0"
+        },
+        "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-3-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370231&Signature=f3cwR23PJs4%2B%2FVonQENdo7lOuqc%3D",
+        "prompt": "青蛙，翠绿色皮肤，白肚皮，穿天蓝色小短裤"
+      },
+      {
+        "id": 4,
+        "name": "朵朵",
+        "voice": {
+          "id": "7468512265134882867",
+          "name": "佩奇猪",
+          "model": "豆包语音合成大模型 1.0"
+        },
+        "avatar": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/roles-4-avatar.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370232&Signature=IYj9sA8V5UElysJaSw40Oti9C58%3D",
+        "prompt": "人类小女孩，扎双马尾，穿粉色碎花连衣裙，手里拿彩色小风车"
+      }
+    ],
+    "images": [
+      {
+        "id": 1,
+        "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-0-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370210&Signature=EiXWhVPyeulCb9rmMs%2B8gio9Mhk%3D",
+        "roles": [
+          1
+        ],
+        "prompt": "夏天的池塘边，金灿灿的太阳挂在天上，圆圆荷立在清透的水面上，叶片上沾着小水珠"
+      },
+      {
+        "id": 2,
+        "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-1-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370213&Signature=cePyAu2IexXS%2B8uOdG15FL3MxBU%3D",
+        "roles": [
+          1,
+          2
+        ],
+        "prompt": "叮叮蜓扑着透明蓝翅膀，摇摇晃晃朝圆圆荷飞过来，翅膀垂得软软的"
+      },
+      {
+        "id": 3,
+        "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-2-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370216&Signature=1MjRkSBxsqbycDhQtyMqiItLW6g%3D",
+        "roles": [
+          1,
+          2
+        ],
+        "prompt": "叮叮蜓站在圆圆荷的叶片上，晃着小脑袋，开心地扇着翅膀"
+      },
+      {
+        "id": 4,
+        "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-3-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370219&Signature=sD4vZWq5qdY5oSuFk7Kn%2Bt1YkFA%3D",
+        "roles": [
+          1,
+          2,
+          3
+        ],
+        "prompt": "呱呱蛙蹦得满头大汗，伸着舌头朝圆圆荷跑过来，额头上挂着汗珠"
+      },
+      {
+        "id": 5,
+        "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-4-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370222&Signature=Zhj4LZc9BzXGIvct6mu3mMNfvww%3D",
+        "roles": [
+          1,
+          2,
+          3
+        ],
+        "prompt": "呱呱蛙蹲在圆圆荷的阴影里，抬着头开心地笑，旁边站着叮叮蜓"
+      },
+      {
+        "id": 6,
+        "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-5-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370225&Signature=Prncco%2FR98dxCFzjil53y6Pzpi4%3D",
+        "roles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "prompt": "朵朵攥着彩色小风车，满头大汗跑过来，刘海都被汗湿了贴在额头上"
+      },
+      {
+        "id": 7,
+        "url": "https://kolka-assets.oss-cn-shanghai.aliyuncs.com/assets/admin/933e5ff6-fd12-40fa-a405-bfff0b9d062e/images-6-url.png?OSSAccessKeyId=LTAI5tABYqhJrazkVYiNk8hM&Expires=1787370228&Signature=FKQq%2Fc%2FQaxiw6%2BA6eCKSpvLLNPQ%3D",
+        "roles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "prompt": "叮叮蜓、呱呱蛙和朵朵挤在圆圆荷的阴影下，大家都笑着，凉风吹得叶片轻轻晃"
+      }
+    ],
+    "content": [
+      {
+        "role": 0,
+        "text": "夏天的太阳像个大火球，烤得池塘边暖乎乎的，圆圆的小荷叶圆圆荷站在水面上，晃着绿油油的大叶子。",
+        "voice": {
+          "id": "7568423452617572406",
+          "name": "流畅女声",
+          "emotion": "neutral"
+        },
+        "imageId": 1,
+        "startTime": 0
+      },
+      {
+        "role": 2,
+        "text": "哎呀太热啦，我的翅膀都要晒软啦！",
+        "voice": {
+          "id": "7468512265151512603",
+          "name": "樱桃丸子",
+          "emotion": ""
+        },
+        "imageId": 2,
+        "startTime": 10680
+      },
+      {
+        "role": 0,
+        "text": "小蜻蜓叮叮蜓扑着蓝翅膀飞得摇摇晃晃，圆圆荷赶紧挥了挥叶子喊它：",
+        "voice": {
+          "id": "7568423452617572406",
+          "name": "流畅女声",
+          "emotion": "neutral"
+        },
+        "imageId": 2,
+        "startTime": 14904
+      },
+      {
+        "role": 1,
+        "text": "快到我叶子下面来呀，这里凉丝丝的！",
+        "voice": {
+          "id": "7568423452617605174",
+          "name": "可爱女生",
+          "emotion": "happy"
+        },
+        "imageId": 3,
+        "startTime": 23352
+      },
+      {
+        "role": 0,
+        "text": "叮叮蜓停在圆圆荷的叶片上，风一吹凉丝丝的，舒服得晃起了小脑袋。这时候，小青蛙呱呱蛙蹦得满头大汗跑了过来：",
+        "voice": {
+          "id": "7568423452617572406",
+          "name": "流畅女声",
+          "emotion": "neutral"
+        },
+        "imageId": 4,
+        "startTime": 26928
+      },
+      {
+        "role": 3,
+        "text": "热死我啦热死我啦，有没有地方能躲躲太阳呀？",
+        "voice": {
+          "id": "7468512265134817331",
+          "name": "天才童声",
+          "emotion": ""
+        },
+        "imageId": 4,
+        "startTime": 40152
+      },
+      {
+        "role": 1,
+        "text": "快蹲到我底下来呀，这里晒不到太阳！",
+        "voice": {
+          "id": "7568423452617605174",
+          "name": "可爱女生",
+          "emotion": "happy"
+        },
+        "imageId": 5,
+        "startTime": 46944
+      },
+      {
+        "role": 0,
+        "text": "呱呱蛙蹲在圆圆荷的阴影里，凉风吹过来，舒服得呱呱直叫。就在这时，穿着碎花裙的小朋友朵朵攥着小风车，满头大汗跑了过来：",
+        "voice": {
+          "id": "7568423452617572406",
+          "name": "流畅女声",
+          "emotion": "neutral"
+        },
+        "imageId": 6,
+        "startTime": 50976
+      },
+      {
+        "role": 4,
+        "text": "哇，这里好凉快呀，我能和你们一起躲太阳吗？",
+        "voice": {
+          "id": "7468512265134882867",
+          "name": "佩奇猪",
+          "emotion": ""
+        },
+        "imageId": 6,
+        "startTime": 65400
+      },
+      {
+        "role": 1,
+        "text": "当然可以呀，大家一起挤一挤更热闹！",
+        "voice": {
+          "id": "7568423452617605174",
+          "name": "可爱女生",
+          "emotion": "excited"
+        },
+        "imageId": 7,
+        "startTime": 69720
+      },
+      {
+        "role": 0,
+        "text": "小蜻蜓、小青蛙和朵朵挤在圆圆的荷叶阴影下，风一吹凉丝丝的，大家都笑啦。圆圆荷还告诉大家，夏天热的时候要躲在阴凉处，多喝温水，就不会中暑啦，大家都学会了避暑的小知识哦。",
+        "voice": {
+          "id": "7568423452617572406",
+          "name": "流畅女声",
+          "emotion": "happy"
+        },
+        "imageId": 7,
+        "startTime": 73704
+      }
+    ]
+  },
+  "preview": false,
+  "readOnly": false,
+  "isVisible": true
+}

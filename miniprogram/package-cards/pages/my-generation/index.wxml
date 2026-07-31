@@ -1,0 +1,51 @@
+<view class="page safe-bottom">
+  <immersive-nav back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
+    <button slot="action" class="group-button" bindtap="openGroupCard" hover-class="soft-hover">
+      <ui-icon name="view-grid-outline" size="{{28}}" color="#529917" />组卡
+    </button>
+  </immersive-nav>
+  <view class="hero" style="{{heroBackground ? 'background-image:url(' + heroBackground + ')' : ''}}">
+    <view class="hero-title">我的卡面</view>
+    <view class="hero-subtitle">管理你的所有卡面</view>
+    <view class="search">
+      <ui-icon name="magnify" size="{{34}}" color="#657065" />
+      <input class="search-input" value="{{query}}" bindinput="onInput" placeholder="搜索私有卡面..." />
+    </view>
+  </view>
+
+  <view class="content">
+    <view class="heading">
+      <view class="heading-copy"><text class="title">卡面列表</text><text class="subtitle">管理你的私有卡面</text></view>
+      <button class="filter" bindtap="chooseType">{{typeLabel}} <ui-icon name="chevron-down" size="{{24}}" color="#3f3f3f" /></button>
+      <button wx:if="{{items.length}}" class="manage" bindtap="toggleEditMode"><ui-icon name="{{editMode ? 'close' : 'cog'}}" size="{{24}}" color="#529917" />{{editMode ? '取消' : '管理'}}</button>
+    </view>
+    <view wx:if="{{loading}}" class="grid">
+      <view wx:for="{{[1,2,3,4,5,6]}}" wx:key="*this" class="card skeleton"></view>
+    </view>
+    <view wx:elif="{{error}}" class="state">
+      <ui-icon name="alert-circle-outline" size="{{82}}" color="#eb711b" /><text>{{error}}</text>
+      <button bindtap="load">重新加载</button>
+    </view>
+    <view wx:elif="{{items.length}}" class="grid">
+      <view class="card create-card" bindtap="openAi" hover-class="card-hover">
+        <ui-icon name="auto-fix" size="{{48}}" color="#3f3f3f" />
+        <text>生成卡面</text>
+      </view>
+      <private-card-face-item
+        wx:for="{{items}}"
+        wx:key="id"
+        item="{{item}}"
+        edit-mode="{{editMode}}"
+        show-make-similar="{{true}}"
+        bind:open="openCard"
+        bind:make-similar="makeSimilar"
+        bind:delete="deleteCard"
+      />
+    </view>
+    <view wx:else class="state">
+      <ui-icon name="auto-fix" size="{{82}}" color="#3f3f3f" /><text>还没有生成过卡面</text>
+      <button bindtap="openAi">立即生成</button>
+    </view>
+    <view wx:if="{{loadingMore}}" class="more">正在加载更多…</view>
+  </view>
+</view>

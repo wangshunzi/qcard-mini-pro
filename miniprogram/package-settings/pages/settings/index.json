@@ -1,0 +1,7 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "immersive-nav": "/components/immersive-nav/index",
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "appid": "wxd9f76b56915a35ce",
+  "compileType": "miniprogram",
+  "libVersion": "3.7.10",
+  "miniprogramRoot": "miniprogram/",
+  "projectname": "QCard-MiniProgram",
+  "description": "叩咔 AI 微信原生小程序",
+  "setting": {
+    "useCompilerPlugins": [
+      "typescript"
+    ],
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "packNpmManually": false,
+    "ignoreUploadUnusedFiles": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmRelationList": [],
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {}
+}

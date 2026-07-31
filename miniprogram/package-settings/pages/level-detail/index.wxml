@@ -1,0 +1,83 @@
+<view class="page safe-bottom">
+  <immersive-nav back="{{true}}" overlay="{{true}}" scroll-top="{{navScrollTop}}" />
+
+  <view wx:if="{{loading}}" class="state">正在加载成长记录…</view>
+  <view wx:elif="{{error}}" class="state"><text>{{error}}</text><button bindtap="load">重试</button></view>
+  <block wx:elif="{{profile}}">
+    <view class="profile-card">
+      <image class="level-avatar" src="{{profile.avatar || assets.appIcon}}" mode="aspectFill" />
+      <view class="profile-heading">
+        <text class="profile-name">{{profile.nickname || '小朋友'}}</text>
+        <view class="value-chips">
+          <view class="value-chip exp-chip"><image src="/assets/icons/exp.png" mode="aspectFit" /><text>{{currentExperience}}</text></view>
+          <view class="value-chip coin-chip"><image src="/assets/icons/coins.png" mode="aspectFit" /><text>{{profile.balance || 0}}</text></view>
+        </view>
+      </view>
+
+      <view class="level-progress-label"><text>Lv. {{currentLevel}}</text><text>Lv. {{currentLevel + 1}}</text></view>
+      <view class="level-progress">
+        <view class="level-progress-fill" style="width:{{progress}}%"></view>
+        <text>{{currentExperience}} / {{nextLevelExperience}} 经验</text>
+      </view>
+
+      <view class="level-summary current-summary">
+        <ui-icon name="trophy-outline" size="{{48}}" color="#529917" />
+        <view class="summary-copy">
+          <text>当前等级：{{currentLevelInfo.name}}</text>
+          <text>{{currentLevelInfo.description}}</text>
+        </view>
+        <view class="summary-discount"><text>{{currentDiscount}}</text><text>%</text></view>
+      </view>
+
+      <view class="level-summary next-summary">
+        <ui-icon name="gift-outline" size="{{48}}" color="#f2ae25" />
+        <view class="summary-copy">
+          <text>下一级奖励</text>
+          <text>{{nextLevelInfo ? nextLevelInfo.name : '已达到最高级别'}}</text>
+        </view>
+        <view wx:if="{{nextLevelInfo}}" class="summary-discount next-discount"><text>{{nextLevelInfo.unlockDiscount || 0}}</text><text>%</text></view>
+      </view>
+    </view>
+
+    <view class="details-card">
+      <view class="tabs" aria-role="tablist">
+        <view class="{{tab === 'history' ? 'active' : ''}}" data-tab="history" bindtap="switchTab">
+          <ui-icon name="school-outline" size="{{37}}" color="currentColor" /><text>经验历史</text>
+        </view>
+        <view class="{{tab === 'benefits' ? 'active' : ''}}" data-tab="benefits" bindtap="switchTab">
+          <ui-icon name="medal-outline" size="{{37}}" color="currentColor" /><text>等级权益</text>
+        </view>
+      </view>
+
+      <view wx:if="{{tab === 'history'}}" class="history-list">
+        <view wx:for="{{histories}}" wx:key="id" class="history-item">
+          <view class="history-icon"><ui-icon name="star-four-points" size="{{32}}" color="#529917" /></view>
+          <view class="history-copy"><text>{{item.description || item.reason || '学习经验'}}</text><text>{{item.dateText}}</text></view>
+          <text class="history-amount">{{item.amount > 0 ? '+' : ''}}{{item.amount}} 经验</text>
+        </view>
+        <view wx:if="{{!histories.length}}" class="empty">
+          <ui-icon name="school-outline" size="{{74}}" color="#777d79" />
+          <text>暂无经验记录</text>
+        </view>
+      </view>
+
+      <view wx:else class="benefit-list">
+        <view wx:for="{{visibleLevels}}" wx:key="level" class="benefit-item {{item.state}}">
+          <view class="benefit-copy">
+            <view class="benefit-title">
+              <text>{{item.name || '成长等级 ' + item.level}}</text>
+              <text class="level-tag">Lv.{{item.level}}</text>
+              <text wx:if="{{item.state === 'current'}}" class="state-tag">当前等级</text>
+              <text wx:elif="{{item.state === 'earned'}}" class="state-tag earned-tag">已获得</text>
+            </view>
+            <text class="benefit-description">{{item.description}}</text>
+          </view>
+          <view class="benefit-discount">
+            <text>{{item.unlockDiscount || 0}}%</text>
+            <text>解锁折扣</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

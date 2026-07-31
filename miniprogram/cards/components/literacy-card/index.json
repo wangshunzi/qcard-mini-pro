@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "hanzi-canvas": "../hanzi-canvas/index",
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

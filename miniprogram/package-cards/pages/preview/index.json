@@ -1,0 +1,8 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "immersive-nav": "/components/immersive-nav/index",
+    "flip-card": "/cards/FlipCardContainer/index",
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

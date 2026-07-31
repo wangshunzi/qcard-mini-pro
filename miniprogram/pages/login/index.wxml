@@ -1,0 +1,93 @@
+<view class="login-page safe-bottom">
+  <image class="login-background" src="{{assets.loginBackground}}" mode="aspectFill" />
+  <view class="login-overlay"></view>
+  <view class="brand">
+    <image class="brand-mark" src="{{assets.appIcon}}" mode="aspectFit" />
+    <text class="brand-name">叩咔</text>
+    <text class="brand-subtitle">叩一叩，咔咔秀</text>
+  </view>
+
+  <view class="login-panel">
+    <view class="field">
+      <view class="field-label-row">
+        <text class="field-label">手机号</text>
+        <text wx:if="{{lastLoginMethod === 'phone'}}" class="recent-tag">最近登录</text>
+      </view>
+      <view class="field-control">
+        <ui-icon name="cellphone" size="{{42}}" color="#a9a9a9" />
+      <input
+        class="field-input"
+        type="number"
+        maxlength="11"
+        placeholder="请输入手机号"
+        value="{{phoneNumber}}"
+        bindinput="onPhoneInput"
+      />
+      </view>
+    </view>
+    <view class="field">
+      <text class="field-label">验证码</text>
+      <view class="field-control code-control">
+        <ui-icon name="shield-key-outline" size="{{40}}" color="#a9a9a9" />
+      <input
+        class="field-input"
+        type="number"
+        maxlength="6"
+        placeholder="请输入验证码"
+        value="{{code}}"
+        bindinput="onCodeInput"
+        confirm-type="done"
+        bindconfirm="onPhoneLogin"
+      />
+      <button
+        class="code-button"
+        disabled="{{sending || countdown > 0 || !canSendCode}}"
+        bindtap="onSendCode"
+      >
+        {{sending ? '发送中' : (countdown > 0 ? countdown + 's' : '获取验证码')}}
+      </button>
+      </view>
+    </view>
+    <text wx:if="{{error}}" class="error">{{error}}</text>
+    <button
+      class="primary-button {{!agreed && canPhoneLogin ? 'agreement-disabled' : ''}}"
+      loading="{{loggingIn}}"
+      disabled="{{loggingIn || !canPhoneLogin}}"
+      bindtap="onPhoneLogin"
+      hover-class="primary-button-hover"
+    >
+      {{loggingIn ? '登录中' : '登录'}}
+    </button>
+    <view class="divider"><view class="divider-line"></view><text>或登录通过</text><view class="divider-line"></view></view>
+    <view class="wechat-login-option">
+      <button
+        class="wechat-button {{!agreed ? 'agreement-disabled' : ''}}"
+        loading="{{loggingIn}}"
+        disabled="{{loggingIn}}"
+        bindtap="onWechatLogin"
+        aria-label="微信登录"
+        aria-disabled="{{!agreed}}"
+        hover-class="wechat-button-hover"
+      >
+        <image src="{{assets.loginWechat}}" mode="aspectFit" />
+      </button>
+      <text wx:if="{{lastLoginMethod === 'wechat'}}" class="recent-tag social-recent">最近登录</text>
+    </view>
+    <view class="agreement-row">
+      <view
+        class="agreement-checkbox {{agreed ? 'checked' : ''}}"
+        bindtap="toggleAgreement"
+        aria-role="checkbox"
+        aria-checked="{{agreed}}"
+        aria-label="同意用户协议和隐私政策"
+      >
+        <ui-icon wx:if="{{agreed}}" name="check" size="{{21}}" color="#ffffff" />
+      </view>
+      <text class="agreement-copy" bindtap="toggleAgreement">我已阅读并同意</text>
+      <text class="agreement-link" catchtap="openAgreement">《用户协议》</text>
+      <text class="agreement-copy">和</text>
+      <text class="agreement-link" catchtap="openPrivacy">《隐私政策》</text>
+    </view>
+  </view>
+  <text class="icp">沪ICP备2025146321号-2A</text>
+</view>

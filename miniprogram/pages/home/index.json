@@ -1,0 +1,13 @@
+{
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+    "coin-history-drawer": "/components/coin-history-drawer/index",
+    "app-purchase-guide": "/components/app-purchase-guide/index",
+    "flip-card": "/cards/FlipCardContainer/index",
+    "immersive-nav": "/components/immersive-nav/index",
+    "private-card-face-item": "/components/private-card-face-item/index",
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

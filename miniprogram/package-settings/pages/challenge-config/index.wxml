@@ -1,0 +1,87 @@
+<view class="page safe-bottom">
+  <immersive-nav title="学习定制" back="{{true}}" border="{{true}}">
+    <view slot="action"><button class="nav-save" loading="{{saving}}" disabled="{{saving}}" bindtap="save">保存</button></view>
+  </immersive-nav>
+  <view wx:if="{{loading}}" class="state">正在读取学习计划…</view>
+  <view wx:elif="{{config}}" class="content">
+    <view class="intro"><ui-icon name="target" size="{{48}}" color="#529917" /><view><text>今日挑战计划</text><text>选择适合你的学习节奏，之后可以随时调整</text></view></view>
+    <text class="section-title">学习强度</text>
+    <view class="options">
+      <view wx:for="{{intensities}}" wx:key="value" class="option {{config.learningIntensity === item.value ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="chooseIntensity">
+        <view class="icon"><ui-icon name="{{item.value === 'light' ? 'leaf' : item.value === 'moderate' ? 'scale-balance' : 'rocket-launch-outline'}}" size="{{36}}" color="{{config.learningIntensity === item.value ? '#ffffff' : '#529917'}}" /></view>
+        <view class="copy"><text>{{item.label}}</text><text>{{item.detail}}</text><text>{{item.cards}} 张/天 · 新卡 {{item.percent}}%</text></view>
+        <ui-icon name="{{config.learningIntensity === item.value ? 'check-circle' : 'circle-outline'}}" size="{{34}}" color="{{config.learningIntensity === item.value ? '#529917' : '#c8cec9'}}" />
+      </view>
+    </view>
+    <text class="section-title second">学习策略</text>
+    <view class="options">
+      <view wx:for="{{strategies}}" wx:key="value" class="option compact {{config.learningStrategy === item.value ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="chooseStrategy">
+        <view class="copy"><text>{{item.label}}</text><text>{{item.detail}}</text></view>
+        <ui-icon name="{{config.learningStrategy === item.value ? 'check-circle' : 'circle-outline'}}" size="{{34}}" color="{{config.learningStrategy === item.value ? '#529917' : '#c8cec9'}}" />
+      </view>
+    </view>
+    <view class="auto-row"><view><text>智能调整</text><text>根据学习完成情况自动微调每日数量</text></view><switch checked="{{config.autoAdjust}}" color="#529917" bindchange="toggleAuto" /></view>
+
+    <view class="preview-card">
+      <view class="card-heading">
+        <view class="heading-icon">📊</view>
+        <view><text>学习预览</text><text>基于当前配置的学习效果预估</text></view>
+      </view>
+      <view class="preview-grid">
+        <view><text>{{previewNewCards}}</text><text>新卡</text></view>
+        <view><text>{{previewReviewCards}}</text><text>复习卡</text></view>
+      </view>
+      <view class="preview-summary">
+        <view><text>总计卡片</text><text>{{previewTotalCards}}张</text></view>
+        <view><text>预计时间</text><text>{{previewMinutes}}分钟</text></view>
+      </view>
+    </view>
+
+    <view class="advanced-card">
+      <view class="advanced-heading">
+        <view class="card-heading">
+          <view class="heading-icon">⚙️</view>
+          <view><text>高级配置</text><text>自定义详细的学习参数</text></view>
+        </view>
+        <button bindtap="toggleAdvanced">{{advancedOpen ? '收起' : '展开'}}</button>
+      </view>
+      <view wx:if="{{advancedOpen}}" class="advanced-body">
+        <view class="slider-field">
+          <view class="field-label"><text>目标每日卡片数</text><text>{{config.systemConfig.targetDailyCards}}张</text></view>
+          <slider value="{{config.systemConfig.targetDailyCards}}" min="5" max="50" step="1" activeColor="#529917" block-size="18" data-key="targetDailyCards" bindchange="onSystemSlider" />
+          <view class="range"><text>5张</text><text>50张</text></view>
+        </view>
+        <view class="slider-field">
+          <view class="field-label"><text>最小每日卡片数</text><text>{{config.systemConfig.minDailyCards}}张</text></view>
+          <slider value="{{config.systemConfig.minDailyCards}}" min="3" max="{{minDailyMax}}" step="1" activeColor="#529917" block-size="18" data-key="minDailyCards" bindchange="onSystemSlider" />
+          <view class="range"><text>3张</text><text>{{minDailyMax}}张</text></view>
+        </view>
+        <view class="slider-field">
+          <view class="field-label"><text>新卡百分比</text><text>{{config.systemConfig.newCardPercentage}}%</text></view>
+          <slider value="{{config.systemConfig.newCardPercentage}}" min="10" max="90" step="1" activeColor="#f2ae25" block-size="18" data-key="newCardPercentage" bindchange="onSystemSlider" />
+          <view class="range"><text>10%</text><text>90%</text></view>
+        </view>
+        <view class="slider-field">
+          <view class="field-label"><text>每日新卡上限</text><text>{{config.systemConfig.maxNewCardsPerDay}}张</text></view>
+          <slider value="{{config.systemConfig.maxNewCardsPerDay}}" min="1" max="{{maxNewCardsMax}}" step="1" activeColor="#d35f56" block-size="18" data-key="maxNewCardsPerDay" bindchange="onSystemSlider" />
+          <view class="range"><text>1张</text><text>{{maxNewCardsMax}}张</text></view>
+        </view>
+        <view class="fill-field">
+          <text class="fill-title">填充策略</text>
+          <view class="fill-options">
+            <view wx:for="{{fillStrategies}}" wx:key="value" class="fill-option {{config.systemConfig.fillStrategy === item.value ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="chooseFillStrategy">
+              <view><text>{{item.label}}</text><text>{{item.detail}}</text></view>
+              <ui-icon name="{{config.systemConfig.fillStrategy === item.value ? 'check-circle' : 'circle-outline'}}" size="{{32}}" color="{{config.systemConfig.fillStrategy === item.value ? '#529917' : '#c8cec9'}}" />
+            </view>
+          </view>
+        </view>
+        <view class="slider-field last">
+          <view class="field-label"><text>近到期窗口天数</text><text>{{config.systemConfig.nearDueWindowDays}}天</text></view>
+          <slider value="{{config.systemConfig.nearDueWindowDays}}" min="1" max="7" step="1" activeColor="#529917" block-size="18" data-key="nearDueWindowDays" bindchange="onSystemSlider" />
+          <view class="range"><text>1天</text><text>7天</text></view>
+          <text class="field-tip">天数越大，复习卡选择范围越广，复习更全面</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
