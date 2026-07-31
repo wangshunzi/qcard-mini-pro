@@ -17,6 +17,12 @@ pnpm test
 
 环境地址在 `miniprogram/config/env.ts` 中配置。发布前必须配置 request/downloadFile 合法域名，以及与 App/公众号相同开放平台下的小程序 AppID。
 
+小程序内的咔豆包和固定时长 VIP 使用微信虚拟支付
+`short_series_goods`。客户端每次购买先重新执行 `wx.login`，只把内部商品 ID、
+一次性 `code` 和幂等请求 ID 发给服务端；服务端返回的 `signData` 必须原样传给
+`wx.requestVirtualPayment`。支付面板、订单恢复与三状态购买记录实现在
+`miniprogram/services/virtualPayment.ts`，本地只保存不含签名的待确认订单。
+
 服务端发布前需：
 
 1. 配置 `WECHAT_MINIPROGRAM_APP_ID`、`WECHAT_MINIPROGRAM_APP_SECRET`。

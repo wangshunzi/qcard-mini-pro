@@ -17,6 +17,10 @@
       <view class="row-main"><ui-icon name="message-text-outline" size="{{35}}" color="#657065" /><text>意见反馈</text></view>
       <ui-icon name="chevron-right" size="{{30}}" color="#a9a9a9" />
     </view>
+    <view class="row tappable" bindtap="openVirtualOrders" hover-class="row-hover">
+      <view class="row-main"><ui-icon name="file-document-outline" size="{{35}}" color="#657065" /><text>购买记录</text></view>
+      <ui-icon name="chevron-right" size="{{30}}" color="#a9a9a9" />
+    </view>
     <button class="row tappable contact-row" open-type="contact" hover-class="row-hover">
       <view class="row-main"><ui-icon name="account-group-outline" size="{{35}}" color="#657065" /><text>帮助与客服</text></view>
       <ui-icon name="chevron-right" size="{{30}}" color="#a9a9a9" />

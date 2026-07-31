@@ -241,7 +241,7 @@
           <ui-icon name="star-four-points" size="{{44}}" color="#f39a13" />
           <view class="reward-copy">
             <text class="reward-title">订阅后可每日领取咔豆</text>
-            <text class="reward-subtitle">请前往叩咔 App 开通 VIP</text>
+            <text class="reward-subtitle">开通 VIP 后可在当前账号领取</text>
           </view>
           <text class="subscribe-link">去订阅</text>
         </view>
@@ -273,5 +273,6 @@
     mode="{{purchaseGuideMode}}"
     reason="{{purchaseGuideReason}}"
     bind:close="closePurchaseGuide"
+    bind:success="onVirtualPaymentFulfilled"
   />
 </view>

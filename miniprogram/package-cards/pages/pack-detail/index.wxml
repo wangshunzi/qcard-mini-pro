@@ -184,5 +184,6 @@
     mode="{{purchaseGuideMode}}"
     reason="{{purchaseGuideReason}}"
     bind:close="closePurchaseGuide"
+    bind:success="onVirtualPaymentFulfilled"
   />
 </view>

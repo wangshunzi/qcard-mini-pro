@@ -7,10 +7,6 @@ const DOCUMENTS = {
     title: "隐私政策",
     url: "https://www.kolka.cn/privacy.html",
   },
-  app_download: {
-    title: "下载叩咔 AI App",
-    url: "https://www.kolka.cn/app.html#download",
-  },
 } as const;
 
 type DocumentKey = keyof typeof DOCUMENTS;

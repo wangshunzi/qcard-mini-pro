@@ -267,7 +267,7 @@ Page({
     this.setData({
       purchaseGuideOpen: true,
       purchaseGuideMode: "vip",
-      purchaseGuideReason: "该卡包为 VIP 免费卡包，请在叩咔 AI App 中开通 VIP 后学习。",
+      purchaseGuideReason: "该卡包为 VIP 免费卡包，开通后即可学习。",
     });
   },
   openRechargeGuide(event?: WechatMiniprogram.CustomEvent<{ shortage?: number }>) {
@@ -278,11 +278,16 @@ Page({
       purchaseGuideMode: "recharge",
       purchaseGuideReason: shortage > 0
         ? `余额不足，还需要 ${shortage.toFixed(1)} 咔豆。`
-        : "当前咔豆余额不足，请在叩咔 AI App 中充值。",
+        : "当前咔豆余额不足，可选择咔豆包购买。",
     });
   },
   closePurchaseGuide() {
     this.setData({ purchaseGuideOpen: false });
+  },
+
+  async onVirtualPaymentFulfilled() {
+    this.setData({ purchaseGuideOpen: false });
+    await Promise.all([this.load(), this.loadUnlockProfile()]);
   },
   async unlock() {
     if ((this.data as any).unlocking) return;

@@ -31,6 +31,7 @@ interface RequestOptions<TBody> {
   retry?: boolean;
   idempotent?: boolean;
   timeoutMs?: number;
+  headers?: Record<string, string>;
 }
 
 const wait = (milliseconds: number) =>
@@ -58,6 +59,7 @@ async function executeRequest<T, TBody>(
       header: {
         "content-type": "application/json",
         appname: ENV.appName,
+        ...options.headers,
         ...(options.auth !== false && token
           ? { authorization: `Bearer ${token}` }
           : {}),
@@ -76,6 +78,7 @@ export async function request<T, TBody = unknown>({
   retry = true,
   idempotent = false,
   timeoutMs,
+  headers,
 }: RequestOptions<TBody>): Promise<T> {
   const maxAttempts =
     retry && (method === "GET" || idempotent) ? ENV.requestRetryCount + 1 : 1;
@@ -94,6 +97,7 @@ export async function request<T, TBody = unknown>({
         retry,
         idempotent,
         timeoutMs,
+        headers,
       });
       const retryableStatus =
         response.statusCode === 429 || response.statusCode >= 500;

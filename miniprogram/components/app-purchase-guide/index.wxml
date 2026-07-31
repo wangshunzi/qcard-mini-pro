@@ -9,48 +9,65 @@
         <ui-icon wx:else name="crown" size="{{42}}" color="#b7780b" />
       </view>
       <view class="purchase-heading-copy">
-        <text class="purchase-title">{{mode === 'recharge' ? '在叩咔 AI App 充值' : '在叩咔 AI App 开通 VIP'}}</text>
-        <text class="purchase-subtitle">{{mode === 'recharge' ? '充值由 App Store 或应用商店安全处理' : '订阅由 App Store 或应用商店安全处理'}}</text>
+        <text class="purchase-title">{{mode === 'recharge' ? '购买咔豆' : '开通 VIP'}}</text>
+        <text class="purchase-subtitle">由微信虚拟支付安全处理，权益发放至当前叩咔账号</text>
       </view>
-      <button class="purchase-close" bindtap="close" aria-label="关闭">
+      <button class="purchase-close" bindtap="close" disabled="{{submittingId}}" aria-label="关闭">
         <ui-icon name="close" size="{{31}}" color="#69726b" />
       </button>
     </view>
 
     <view wx:if="{{reason}}" class="purchase-reason">{{reason}}</view>
 
-    <view class="purchase-benefits">
-      <view class="purchase-benefit">
-        <ui-icon wx:if="{{mode === 'recharge'}}" name="lock-open-outline" size="{{31}}" color="#529917" />
-        <ui-icon wx:else name="gift-outline" size="{{31}}" color="#529917" />
-        <text>{{mode === 'recharge' ? '解锁卡包' : '每日咔豆'}}</text>
+    <view wx:if="{{!capabilitySupported}}" class="purchase-state unsupported-state">
+      <ui-icon name="alert-circle-outline" size="{{52}}" color="#d17b20" />
+      <text class="state-title">当前设备暂不支持</text>
+      <text class="state-copy">{{capabilityReason}}</text>
+      <button class="state-action" bindtap="explainUnsupported">查看说明</button>
+    </view>
+
+    <view wx:elif="{{loading}}" class="purchase-state">
+      <view class="loading-dot"></view>
+      <text class="state-copy">正在加载可购买商品…</text>
+    </view>
+
+    <view wx:else class="product-list">
+      <button
+        wx:for="{{products}}"
+        wx:key="id"
+        class="product-card"
+        data-id="{{item.id}}"
+        loading="{{submittingId === item.id}}"
+        disabled="{{submittingId}}"
+        bindtap="purchase"
+        hover-class="product-card-hover"
+      >
+        <view class="product-copy">
+          <view class="product-title-row">
+            <text class="product-title">{{item.name}}</text>
+            <text wx:if="{{item.badge}}" class="product-badge">{{item.badge}}</text>
+          </view>
+          <text class="product-benefit">{{item.benefitText}}</text>
+          <text wx:if="{{item.description}}" class="product-description">{{item.description}}</text>
+        </view>
+        <view class="product-price">
+          <text class="currency">¥</text>
+          <text>{{item.displayPrice}}</text>
+        </view>
+      </button>
+      <view wx:if="{{error}}" class="inline-error">
+        <text>{{error}}</text>
+        <button wx:if="{{!products.length}}" bindtap="loadProducts">重试</button>
       </view>
-      <view class="purchase-benefit">
-        <ui-icon wx:if="{{mode === 'recharge'}}" name="auto-fix" size="{{31}}" color="#529917" />
-        <ui-icon wx:else name="cards-outline" size="{{31}}" color="#529917" />
-        <text>{{mode === 'recharge' ? 'AI 生成' : 'VIP 卡包'}}</text>
-      </view>
-      <view class="purchase-benefit">
-        <ui-icon wx:if="{{mode === 'recharge'}}" name="refresh" size="{{31}}" color="#529917" />
-        <ui-icon wx:else name="star-four-points" size="{{31}}" color="#529917" />
-        <text>{{mode === 'recharge' ? '余额同步' : '专属模板'}}</text>
+      <view wx:if="{{statusMessage}}" class="payment-status">
+        <view class="status-pulse"></view>
+        <text>{{statusMessage}}</text>
       </view>
     </view>
 
-    <button class="purchase-download" bindtap="downloadApp" hover-class="purchase-download-hover">
-      <ui-icon name="arrow-up-circle-outline" size="{{31}}" color="#ffffff" />
-      <text>下载叩咔 AI App</text>
+    <button class="order-link" bindtap="openOrders" disabled="{{submittingId}}">
+      查看购买记录与到账状态
     </button>
-    <button
-      class="purchase-contact"
-      open-type="contact"
-      show-message-card="{{true}}"
-      bindcontact="contactOpened"
-      hover-class="purchase-contact-hover"
-    >
-      <ui-icon name="message-text-outline" size="{{30}}" color="#529917" />
-      <text>联系客服</text>
-    </button>
-    <text class="purchase-note">App 与小程序使用同一账号，VIP、咔豆和学习数据自动同步</text>
+    <text class="purchase-note">支付结果与权益发放均成功后才会显示到账；咔豆和 VIP 在同一账号内统一使用</text>
   </view>
 </view>

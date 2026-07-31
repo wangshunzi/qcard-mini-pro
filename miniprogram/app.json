@@ -31,6 +31,7 @@
         "pages/feedback/index",
         "pages/web-doc/index",
         "pages/account/index",
+        "pages/virtual-orders/index",
         "pages/profile-edit/index",
         "pages/level-detail/index",
         "pages/challenge-config/index"

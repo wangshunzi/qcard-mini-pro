@@ -180,12 +180,9 @@ describe("H5-aligned product surfaces", () => {
     expect(studyLogic).toContain("const hasFullAccess");
   });
 
-  it("consumes server VIP state and routes every purchase prompt to App download or WeChat support", () => {
+  it("consumes server VIP state and keeps every purchase prompt inside WeChat virtual payment", () => {
     const guide = read("miniprogram/components/app-purchase-guide/index.wxml");
     const guideLogic = read("miniprogram/components/app-purchase-guide/index.ts");
-    const webDocument = read(
-      "miniprogram/package-settings/pages/web-doc/index.ts",
-    );
     const contexts = [
       "miniprogram/pages/home/index.wxml",
       "miniprogram/pages/resource/index.wxml",
@@ -196,13 +193,18 @@ describe("H5-aligned product surfaces", () => {
       "miniprogram/package-cards/pages/ai-generate/index.wxml",
     ];
 
-    expect(guide).toContain("下载叩咔 AI App");
-    expect(guide).toContain('open-type="contact"');
-    expect(guide).toContain("VIP、咔豆和学习数据自动同步");
-    expect(guideLogic).toContain("doc=app_download");
-    expect(webDocument).toContain("https://www.kolka.cn/app.html#download");
+    expect(guide).toContain("由微信虚拟支付安全处理");
+    expect(guide).toContain("咔豆和 VIP 在同一账号内统一使用");
+    expect(guide).not.toContain("下载");
+    expect(guide).not.toContain('open-type="contact"');
+    expect(guideLogic).toContain("startVirtualPurchase");
+    expect(guideLogic).not.toContain("app_download");
     for (const context of contexts) {
-      expect(read(context), context).toContain("<app-purchase-guide");
+      const source = read(context);
+      expect(source, context).toContain("<app-purchase-guide");
+      expect(source, context).toContain(
+        'bind:success="onVirtualPaymentFulfilled"',
+      );
     }
 
     const aiLogic = read(

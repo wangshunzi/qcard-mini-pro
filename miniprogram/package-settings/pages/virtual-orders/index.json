@@ -1,0 +1,9 @@
+{
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+    "immersive-nav": "/components/immersive-nav/index",
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

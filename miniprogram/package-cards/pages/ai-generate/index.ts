@@ -422,7 +422,7 @@ Page({
     this.setData({
       purchaseGuideOpen: true,
       purchaseGuideMode: "vip",
-      purchaseGuideReason: "该模板为 VIP 专属模板，请在叩咔 AI App 中开通 VIP 后使用。",
+      purchaseGuideReason: "该模板为 VIP 专属模板，开通后即可使用。",
     });
   },
 
@@ -436,6 +436,11 @@ Page({
 
   closePurchaseGuide() {
     this.setData({ purchaseGuideOpen: false });
+  },
+
+  async onVirtualPaymentFulfilled() {
+    this.setData({ purchaseGuideOpen: false });
+    await this.refreshProfileAccess();
   },
 
   retryTemplate() {

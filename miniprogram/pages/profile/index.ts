@@ -256,7 +256,7 @@ Page({
     this.setData({
       purchaseGuideOpen: true,
       purchaseGuideMode: "recharge",
-      purchaseGuideReason: "小程序不提供充值，请在叩咔 AI App 中完成充值；也可以联系客服获得帮助。",
+      purchaseGuideReason: "选择咔豆包后，可在微信内安全完成购买。",
     });
   },
 
@@ -265,13 +265,19 @@ Page({
     this.setData({
       purchaseGuideOpen: true,
       purchaseGuideMode: "vip",
-      purchaseGuideReason: "小程序不提供订阅，请在叩咔 AI App 中开通 VIP；权益会自动同步到当前账号。",
+      purchaseGuideReason: "选择固定时长 VIP，权益会发放至当前叩咔账号。",
     });
   },
 
   closePurchaseGuide() {
     this.setData({ purchaseGuideOpen: false });
     wx.showTabBar({ animation: false });
+  },
+
+  async onVirtualPaymentFulfilled() {
+    this.setData({ purchaseGuideOpen: false });
+    wx.showTabBar({ animation: false });
+    await this.load();
   },
 
   openProfileEdit() {
@@ -471,8 +477,8 @@ Page({
       purchaseGuideOpen: true,
       purchaseGuideMode: "recharge",
       purchaseGuideReason: shortage > 0
-        ? `还需 ${shortage.toFixed(1)} 咔豆，请前往个人中心查看可用的充值方式。`
-        : "请前往个人中心查看可用的充值方式。",
+        ? `余额不足，还需要 ${shortage.toFixed(1)} 咔豆，可选择咔豆包购买。`
+        : "当前咔豆余额不足，可选择咔豆包购买。",
     });
   },
 

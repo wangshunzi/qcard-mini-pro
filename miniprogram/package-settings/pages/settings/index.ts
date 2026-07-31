@@ -49,6 +49,9 @@ Page({
   openFeedback() {
     wx.navigateTo({ url: "/package-settings/pages/feedback/index" });
   },
+  openVirtualOrders() {
+    wx.navigateTo({ url: "/package-settings/pages/virtual-orders/index" });
+  },
   logout() {
     wx.showModal({
       title: "退出登录",

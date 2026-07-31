@@ -364,13 +364,19 @@ Page({
     this.setData({
       purchaseGuideOpen: true,
       purchaseGuideMode: "recharge",
-      purchaseGuideReason: "小程序不提供充值，请在叩咔 AI App 中完成充值后继续使用。",
+      purchaseGuideReason: "咔豆余额不足，可选择咔豆包购买后继续使用。",
     });
   },
 
   closePurchaseGuide() {
     this.setData({ purchaseGuideOpen: false });
     wx.showTabBar({ animation: false });
+  },
+
+  async onVirtualPaymentFulfilled() {
+    this.setData({ purchaseGuideOpen: false });
+    wx.showTabBar({ animation: false });
+    await this.load();
   },
 
   openPrivateCard(event: WechatMiniprogram.CustomEvent<{ id: string }>) {
