@@ -37,6 +37,26 @@ async function expectDocument(path) {
   console.log(`PASS ${path}`);
 }
 
+async function expectVirtualPaymentCallbackRoute() {
+  const path =
+    "/api/wechat/miniprogram/xpay/callback?signature=release-probe&timestamp=1&nonce=release-probe&echostr=release-probe";
+  const response = await fetch(`${baseUrl}${path}`, {
+    signal: AbortSignal.timeout(8000),
+    redirect: "manual",
+  });
+  const body = await response.text();
+  if (
+    response.status === 404 ||
+    response.status >= 500 ||
+    /Cannot\s+GET/i.test(body)
+  ) {
+    throw new Error(
+      `/api/wechat/miniprogram/xpay/callback: 回调路由未部署或配置异常（HTTP ${response.status}）`,
+    );
+  }
+  console.log("PASS 微信虚拟支付回调路由");
+}
+
 async function expectCardAsset([path, expectedHash]) {
   const response = await fetch(`${CLIENT_CARD_ASSET_BASE_URL}/${path}`, {
     signal: AbortSignal.timeout(8000),
@@ -83,6 +103,12 @@ async function main() {
           Array.isArray(data.recentStudy) &&
           Array.isArray(data.promotions),
       ),
+    () =>
+      expectApi(
+        "/api/client/products?channel=wechat_virtual",
+        (data) => Array.isArray(data),
+      ),
+    () => expectVirtualPaymentCallbackRoute(),
     () =>
       expectApi(
         `/api/client/hanzi-data/${encodeURIComponent("我")}`,

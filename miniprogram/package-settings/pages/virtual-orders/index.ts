@@ -1,6 +1,6 @@
 import {
   getVirtualPaymentOrder,
-  isVirtualOrderFulfilled,
+  getVirtualOrderPresentation,
   listVirtualPaymentOrders,
   type VirtualPaymentOrder,
 } from "../../../services/virtualPayment";
@@ -19,6 +19,7 @@ interface OrderView extends VirtualPaymentOrder {
 }
 
 const PAGE_SIZE = 20;
+const ORDER_PAGE_POLL_DELAYS_MS = [5000, 10000, 20000, 30000, 60000, 120000];
 
 function formatTime(value: string) {
   if (!value) return "--";
@@ -28,56 +29,13 @@ function formatTime(value: string) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
-function paymentPresentation(status: VirtualPaymentOrder["paymentStatus"]) {
-  if (status === "SUCCEEDED") return ["支付成功", "success"] as const;
-  if (status === "FAILED") return ["支付失败", "failed"] as const;
-  if (status === "CANCELLED") return ["已取消", "muted"] as const;
-  if (status === "CLOSED") return ["已关闭", "muted"] as const;
-  if (status === "PENDING") return ["待确认", "pending"] as const;
-  return ["状态确认中", "pending"] as const;
-}
-
-function fulfillmentPresentation(
-  status: VirtualPaymentOrder["fulfillmentStatus"],
-) {
-  if (status === "SUCCEEDED") return ["已到账", "success"] as const;
-  if (status === "FAILED") return ["发放异常", "failed"] as const;
-  if (status === "REVERSED") return ["权益已撤回", "muted"] as const;
-  if (status === "PROCESSING") return ["发放中", "pending"] as const;
-  if (status === "PENDING") return ["待发放", "pending"] as const;
-  return ["状态确认中", "pending"] as const;
-}
-
-function refundPresentation(status: VirtualPaymentOrder["refundStatus"]) {
-  if (status === "SUCCEEDED") return ["已退款", "muted"] as const;
-  if (status === "FAILED") return ["退款失败", "failed"] as const;
-  if (status === "PENDING") return ["退款中", "pending"] as const;
-  return ["无退款", "muted"] as const;
-}
-
 function toOrderView(order: VirtualPaymentOrder): OrderView {
-  const [paymentLabel, paymentTone] = paymentPresentation(order.paymentStatus);
-  const [fulfillmentLabel, fulfillmentTone] = fulfillmentPresentation(
-    order.fulfillmentStatus,
-  );
-  const [refundLabel, refundTone] = refundPresentation(order.refundStatus);
+  const presentation = getVirtualOrderPresentation(order);
   return {
     ...order,
     displayPrice: (order.amountInCents / 100).toFixed(2),
     createdAtText: formatTime(order.createdAt),
-    paymentLabel,
-    paymentTone,
-    fulfillmentLabel,
-    fulfillmentTone,
-    refundLabel,
-    refundTone,
-    completed: isVirtualOrderFulfilled(order),
-    processing:
-      order.paymentStatus === "PENDING" ||
-      order.paymentStatus === "UNKNOWN" ||
-      order.fulfillmentStatus === "PENDING" ||
-      order.fulfillmentStatus === "PROCESSING" ||
-      order.fulfillmentStatus === "UNKNOWN",
+    ...presentation,
   };
 }
 
@@ -98,6 +56,7 @@ Page({
   },
 
   onShow() {
+    (this as any)._pollAttempt = 0;
     if ((this as any)._didShow) void this.load(true);
     (this as any)._didShow = true;
     this.startPolling();
@@ -112,6 +71,7 @@ Page({
   },
 
   async onPullDownRefresh() {
+    (this as any)._pollAttempt = 0;
     await this.load(true);
     wx.stopPullDownRefresh();
   },
@@ -152,12 +112,16 @@ Page({
       this.setData({
         error: error instanceof Error ? error.message : "购买记录加载失败",
       });
+      // Preserve bounded polling when a refresh fails transiently. If there are
+      // no previously loaded processing orders, the normal manual retry remains.
+      this.startPolling();
     } finally {
       this.setData({ loading: false, loadingMore: false });
     }
   },
 
   retryLoad() {
+    (this as any)._pollAttempt = 0;
     void this.load(true);
   },
 
@@ -168,6 +132,7 @@ Page({
   async refreshOrder(event: WechatMiniprogram.TouchEvent) {
     const orderNo = String(event.currentTarget.dataset.orderNo || "");
     if (!orderNo || (this.data as any).refreshingOrderNo) return;
+    (this as any)._pollAttempt = 0;
     this.setData({ refreshingOrderNo: orderNo });
     try {
       const latest = await getVirtualPaymentOrder(orderNo);
@@ -209,10 +174,13 @@ Page({
       (item) => item.processing,
     );
     if (!hasProcessing) return;
+    const attempt = Math.max(0, Number((this as any)._pollAttempt || 0));
+    if (attempt >= ORDER_PAGE_POLL_DELAYS_MS.length) return;
     (this as any)._pollTimer = setTimeout(() => {
       (this as any)._pollTimer = undefined;
+      (this as any)._pollAttempt = attempt + 1;
       void this.load(true);
-    }, 5000);
+    }, ORDER_PAGE_POLL_DELAYS_MS[attempt]);
   },
 
   stopPolling() {

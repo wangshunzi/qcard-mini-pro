@@ -67,6 +67,8 @@ describe("virtual-payment compliance", () => {
     expect(pendingInterface).not.toContain("signature");
     expect(pendingInterface).not.toContain("signData");
     expect(service).toContain("savePending(pending)");
+    expect(service).toContain("const orderPersisted = updatePending(");
+    expect(service).toContain("if (!orderPersisted)");
     expect(service).toContain('"X-Client-Platform"');
     expect(service).toContain(
       "data: { productId, wxCode, clientRequestId }",
@@ -74,10 +76,80 @@ describe("virtual-payment compliance", () => {
     expect(service.indexOf("savePending(pending)")).toBeLessThan(
       service.indexOf("requestVirtualPayment(prepared)"),
     );
+    expect(service.indexOf("const orderPersisted = updatePending(")).toBeLessThan(
+      service.indexOf("requestVirtualPayment(prepared)"),
+    );
     const purchaseComponent = read(
       "miniprogram/components/app-purchase-guide/index.ts",
     );
     expect(purchaseComponent).toContain("(this as any)._purchaseBusy = true");
     expect(purchaseComponent).toContain("(this as any)._purchaseBusy = false");
+  });
+
+  it("locks a user/product checkout and bounds background reconciliation", () => {
+    const service = read("miniprogram/services/virtualPayment.ts");
+    const component = read(
+      "miniprogram/components/app-purchase-guide/index.wxml",
+    );
+    const app = read("miniprogram/app.ts");
+    expect(service).toContain("getPendingVirtualPaymentForProduct(product.id)");
+    expect(service).toContain("const purchasePromises = new Map");
+    expect(service).toContain("item.productId === record.productId");
+    expect(service).toContain("PENDING_QUERY_CONCURRENCY = 3");
+    expect(service).toContain(
+      "Date.parse(record.reconciliationDeadlineAt) > now",
+    );
+    expect(service).toContain("RECONCILIATION_MAX_RETRY_MS");
+    expect(service).toContain("reconciliationPollAttempts");
+    expect(service).toContain("normalizePendingVirtualPaymentRecord");
+    expect(service).toContain(
+      "signedEnvironment !== ENV.virtualPaymentEnv",
+    );
+    expect(service.indexOf("signedEnvironment !== ENV.virtualPaymentEnv"))
+      .toBeLessThan(
+        service.indexOf(
+          "const paymentResult = await requestVirtualPayment(prepared)",
+        ),
+      );
+    expect(service.indexOf("Date.parse(prepared.expiresAt) <= Date.now()"))
+      .toBeLessThan(
+        service.indexOf(
+          "const paymentResult = await requestVirtualPayment(prepared)",
+        ),
+      );
+    expect(component).toContain("item.purchaseLocked");
+    expect(component).toContain("点击可立即查询状态");
+    expect(component).not.toContain(
+      'disabled="{{submittingId || item.purchaseLocked}}"',
+    );
+    expect(app).toContain("getPendingVirtualPaymentRecoveryDelay");
+    expect(app).toContain("unsubscribeSession = sessionStore.subscribe");
+    expect(app).toContain("unsubscribeSession?.()");
+    expect(app).not.toContain("setTimeout(() => void run(), 5000)");
+    const ordersPage = read(
+      "miniprogram/package-settings/pages/virtual-orders/index.ts",
+    );
+    expect(ordersPage).toContain("ORDER_PAGE_POLL_DELAYS_MS");
+    expect(ordersPage).toContain(
+      "attempt >= ORDER_PAGE_POLL_DELAYS_MS.length",
+    );
+    expect(ordersPage).toContain("Preserve bounded polling");
+    const ordersTemplate = read(
+      "miniprogram/package-settings/pages/virtual-orders/index.wxml",
+    );
+    expect(ordersTemplate).toContain('wx:if="{{error}}" class="inline-error"');
+  });
+
+  it("uses fresh WeChat codes for binding and prepare retries", () => {
+    const auth = read("miniprogram/services/auth.ts");
+    const service = read("miniprogram/services/virtualPayment.ts");
+    expect(auth).toContain('path: "/api/client/auth/wechat-mini-bind"');
+    expect(auth).toContain("const code = await getWechatLoginCode()");
+    expect(auth).toContain("return await requestWechatLoginCode()");
+    expect(auth).toContain("attempt === maxAttempts - 1");
+    expect(service).toContain("const wxCode = await getWechatLoginCode()");
+    expect(service).toContain("data: { productId, wxCode, clientRequestId }");
+    expect(service).toContain("retry: false");
+    expect(service).toContain("await bindCurrentWechatMiniIdentity()");
   });
 });

@@ -4,11 +4,17 @@ import { logger } from "./utils/logger";
 import { flushStudyReports } from "./stores/studyReportQueue";
 import {
   claimVirtualFulfillmentNotification,
+  getPendingVirtualPaymentRecoveryDelay,
   resumePendingVirtualPayments,
+  subscribePendingVirtualPayments,
 } from "./services/virtualPayment";
 
 let recoveryTimer: ReturnType<typeof setTimeout> | undefined;
 let recoveryGeneration = 0;
+let recoveryActive = false;
+let appVisible = false;
+let unsubscribePending: (() => void) | undefined;
+let unsubscribeSession: (() => void) | undefined;
 
 function installUpdateManager() {
   if (typeof wx.getUpdateManager !== "function") return;
@@ -64,6 +70,9 @@ async function recoverVirtualPaymentOrders(force = false) {
 }
 
 function startVirtualPaymentRecovery() {
+  if (!appVisible || recoveryActive) return;
+  if (getPendingVirtualPaymentRecoveryDelay() === null) return;
+  recoveryActive = true;
   recoveryGeneration += 1;
   const generation = recoveryGeneration;
   if (recoveryTimer) clearTimeout(recoveryTimer);
@@ -78,7 +87,16 @@ function startVirtualPaymentRecovery() {
       });
     } finally {
       if (generation === recoveryGeneration) {
-        recoveryTimer = setTimeout(() => void run(), 5000);
+        const delay = getPendingVirtualPaymentRecoveryDelay();
+        if (appVisible && delay !== null) {
+          recoveryTimer = setTimeout(
+            () => void run(),
+            Math.max(1000, delay),
+          );
+        } else {
+          recoveryTimer = undefined;
+          recoveryActive = false;
+        }
       }
     }
   };
@@ -89,6 +107,7 @@ function stopVirtualPaymentRecovery() {
   recoveryGeneration += 1;
   if (recoveryTimer) clearTimeout(recoveryTimer);
   recoveryTimer = undefined;
+  recoveryActive = false;
 }
 
 App({
@@ -97,16 +116,39 @@ App({
   },
   onLaunch() {
     sessionStore.hydrate();
+    unsubscribePending = subscribePendingVirtualPayments(() => {
+      if (getPendingVirtualPaymentRecoveryDelay() === null) {
+        stopVirtualPaymentRecovery();
+      } else {
+        startVirtualPaymentRecovery();
+      }
+    });
+    unsubscribeSession = sessionStore.subscribe((session) => {
+      if (!session) {
+        stopVirtualPaymentRecovery();
+        return;
+      }
+      startVirtualPaymentRecovery();
+    });
     installUpdateManager();
     void flushStudyReports();
   },
   onShow() {
+    appVisible = true;
     void flushStudyReports();
     startVirtualPaymentRecovery();
   },
   onHide() {
+    appVisible = false;
     stopVirtualPaymentRecovery();
     mediaCoordinator.pauseAll();
+  },
+  onUnload() {
+    unsubscribePending?.();
+    unsubscribePending = undefined;
+    unsubscribeSession?.();
+    unsubscribeSession = undefined;
+    stopVirtualPaymentRecovery();
   },
   onError(message) {
     logger.error("小程序运行时异常", { message });

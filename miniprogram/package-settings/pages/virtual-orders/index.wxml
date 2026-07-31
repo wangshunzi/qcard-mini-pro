@@ -25,6 +25,10 @@
   </view>
 
   <view wx:else class="order-list">
+    <view wx:if="{{error}}" class="inline-error">
+      <text>{{error}}</text>
+      <button bindtap="retryLoad">立即重试</button>
+    </view>
     <view wx:for="{{items}}" wx:key="orderNo" class="order-card">
       <view class="order-head">
         <view class="order-title-copy">

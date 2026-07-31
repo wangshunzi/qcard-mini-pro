@@ -269,8 +269,8 @@ describe("native card registry", () => {
       text: "苹果",
       color: "#529917",
     })).toEqual({
-      image: "https://www.kolka.cn/uploads/cards/apple.png",
-      audio: "https://www.kolka.cn/uploads/audio/apple.mp3",
+      image: "https://staging.kolka.cn/uploads/cards/apple.png",
+      audio: "https://staging.kolka.cn/uploads/audio/apple.mp3",
       text: "苹果",
       color: "#529917",
     });

@@ -1,10 +1,12 @@
 import {
+  bindCurrentWechatMiniIdentity,
   loginWithPhone,
   loginWithWechat,
   sendVerificationCode,
 } from "../../services/auth";
 import { sessionStore } from "../../stores/session";
 import { UI_ASSETS } from "../../config/uiAssets";
+import { logger } from "../../utils/logger";
 
 const LAST_LOGIN_METHOD_KEY = "qcard.lastLoginMethod";
 const LEGACY_LAST_LOGIN_METHOD_KEY = "qcard.last-login-method";
@@ -142,6 +144,19 @@ Page({
     try {
       const session = await login();
       sessionStore.setSession(session);
+      if (method === "phone") {
+        try {
+          await bindCurrentWechatMiniIdentity();
+        } catch (error) {
+          if (!sessionStore.getState()) throw error;
+          // Phone login still grants access to non-payment features. Checkout
+          // repeats this binding as a hard precondition and will show a
+          // user-facing error if the identity belongs to another account.
+          logger.warn("手机号登录后的微信身份预绑定失败", {
+            message: error instanceof Error ? error.message : String(error),
+          });
+        }
+      }
       wx.setStorageSync(LAST_LOGIN_METHOD_KEY, method);
       wx.showToast({ title: "登录成功", icon: "success" });
       wx.switchTab({ url: "/pages/home/index" });

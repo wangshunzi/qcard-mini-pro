@@ -1,20 +1,32 @@
 import {
   claimVirtualFulfillmentNotification,
   formatVirtualPaymentError,
+  getPendingVirtualPaymentForProduct,
   getVirtualPaymentCapability,
   listVirtualPaymentProducts,
   startVirtualPurchase,
+  subscribePendingVirtualPayments,
   type VirtualPaymentProduct,
   type VirtualProductKind,
 } from "../../services/virtualPayment";
 
 interface ProductView extends VirtualPaymentProduct {
   benefitText: string;
+  purchaseState: "" | "continue" | "confirming";
+  purchaseLocked: boolean;
 }
 
 function toProductView(product: VirtualPaymentProduct): ProductView {
+  const pending = getPendingVirtualPaymentForProduct(product.id);
+  const purchaseState = pending
+    ? pending.orderNo
+      ? "confirming"
+      : "continue"
+    : "";
   return {
     ...product,
+    purchaseState,
+    purchaseLocked: purchaseState === "confirming",
     benefitText:
       product.kind === "coin"
         ? product.bonusCoinAmount
@@ -60,13 +72,27 @@ Component({
   },
 
   lifetimes: {
+    attached() {
+      (this as any)._unsubscribePending = subscribePendingVirtualPayments(() => {
+        this.syncPendingProducts();
+      });
+    },
     detached() {
       this.clearCloseTimer();
+      (this as any)._unsubscribePending?.();
+      (this as any)._unsubscribePending = undefined;
       (this as any)._loadSequence = Number((this as any)._loadSequence || 0) + 1;
     },
   },
 
   methods: {
+    syncPendingProducts() {
+      const products = ((this.data as any).products as ProductView[]).map(
+        (product) => toProductView(product),
+      );
+      this.setData({ products });
+    },
+
     clearCloseTimer() {
       const timer = (this as any)._closeTimer;
       if (timer) clearTimeout(timer);
@@ -146,7 +172,10 @@ Component({
       (this as any)._purchaseBusy = true;
       this.setData({
         submittingId: product.id,
-        statusMessage: "正在创建安全支付订单…",
+        statusMessage:
+          product.purchaseState === "confirming"
+            ? "正在确认上一笔订单状态…"
+            : "正在创建安全支付订单…",
         error: "",
       });
       try {
@@ -166,23 +195,28 @@ Component({
         }
         if (outcome.kind === "pending") {
           this.setData({
-            statusMessage: "微信已受理，正在确认到账状态，可稍后在购买记录查看",
+            statusMessage:
+              "订单状态仍在确认中，可稍后再次点击查询；期间不会创建重复扣款",
           });
+          this.syncPendingProducts();
           return;
         }
         if (outcome.kind === "cancelled") {
-          this.setData({ statusMessage: "已取消支付，未确认扣款" });
+          this.setData({ statusMessage: "支付已取消，正在确认订单最终状态" });
+          this.syncPendingProducts();
           return;
         }
         this.setData({
           statusMessage: "",
           error: outcome.message,
         });
+        this.syncPendingProducts();
       } catch (error) {
         this.setData({
           statusMessage: "",
           error: formatVirtualPaymentError(error),
         });
+        this.syncPendingProducts();
       } finally {
         (this as any)._purchaseBusy = false;
         if ((this.data as any).submittingId) {

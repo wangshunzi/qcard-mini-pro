@@ -35,7 +35,7 @@
       <button
         wx:for="{{products}}"
         wx:key="id"
-        class="product-card"
+        class="product-card {{item.purchaseLocked ? 'product-card-confirming' : ''}}"
         data-id="{{item.id}}"
         loading="{{submittingId === item.id}}"
         disabled="{{submittingId}}"
@@ -49,6 +49,8 @@
           </view>
           <text class="product-benefit">{{item.benefitText}}</text>
           <text wx:if="{{item.description}}" class="product-description">{{item.description}}</text>
+          <text wx:if="{{item.purchaseState === 'confirming'}}" class="product-description">上一笔订单确认中，点击可立即查询状态</text>
+          <text wx:elif="{{item.purchaseState === 'continue'}}" class="product-description">继续上次未完成的订单</text>
         </view>
         <view class="product-price">
           <text class="currency">¥</text>

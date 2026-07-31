@@ -1,6 +1,12 @@
-import { request } from "./http";
+import { ENV } from "../config/env";
 import { sessionStore } from "../stores/session";
+import { logger } from "../utils/logger";
 import { createRequestId } from "../utils/requestId";
+import {
+  bindCurrentWechatMiniIdentity,
+  getWechatLoginCode,
+} from "./auth";
+import { ApiError, request } from "./http";
 
 export type VirtualProductKind = "coin" | "vip";
 export type VirtualPaymentMode = "short_series_goods";
@@ -137,18 +143,27 @@ export interface VirtualPaymentCapability {
 }
 
 export interface PendingVirtualPayment {
-  orderNo: string;
-  outTradeNo: string;
+  orderNo?: string;
+  outTradeNo?: string;
   clientRequestId: string;
   productId: string;
   productName: string;
   productKind: VirtualProductKind;
   createdAt: number;
+  /** Server-signed requestVirtualPayment material is valid only until this time. */
   expiresAt: string;
+  /** Local upper bound for reconciling the already-created server order. */
+  reconciliationDeadlineAt: string;
   userId: string;
+  stage?: "preparing" | "payment" | "reconciling";
   paymentUiResult: "waiting" | "accepted" | "cancelled" | "failed";
+  /** Poll count while the server-signed payment material is still valid. */
   pollAttempts?: number;
+  /** Independent poll count after signed material expiry, starting at 15 minutes. */
+  reconciliationPollAttempts?: number;
   nextCheckAt?: number;
+  lastErrorCode?: number;
+  lastErrorMessage?: string;
 }
 
 export type VirtualPurchaseOutcome =
@@ -162,6 +177,18 @@ export interface VirtualPaymentFailure {
   cancelled: boolean;
   retryable: boolean;
   message: string;
+  diagnostic?: string;
+}
+
+export interface VirtualOrderPresentation {
+  paymentLabel: string;
+  paymentTone: string;
+  fulfillmentLabel: string;
+  fulfillmentTone: string;
+  refundLabel: string;
+  refundTone: string;
+  completed: boolean;
+  processing: boolean;
 }
 
 interface SystemSnapshot {
@@ -181,9 +208,18 @@ const TERMINAL_PAYMENT_STATUSES = new Set([
   "CLOSED",
 ]);
 const MAX_PENDING_RECORDS = 20;
-const MAX_PENDING_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+export const VIRTUAL_PAYMENT_RECONCILIATION_WINDOW_MS =
+  7 * 24 * 60 * 60 * 1000;
+const PREPARE_INTENT_TTL_MS = 10 * 60 * 1000;
+const PENDING_QUERY_CONCURRENCY = 3;
+const SIGNED_PHASE_MAX_RETRY_MS = 5 * 60 * 1000;
+const RECONCILIATION_BASE_RETRY_MS = 15 * 60 * 1000;
+const RECONCILIATION_MAX_RETRY_MS = 6 * 60 * 60 * 1000;
 let resumePromise: Promise<VirtualPaymentOrder[]> | null = null;
 const reportedFulfillmentOrderNos = new Set<string>();
+const pendingListeners = new Set<() => void>();
+const purchasePromises = new Map<string, Promise<VirtualPurchaseOutcome>>();
+let memoryPendingRecords: PendingVirtualPayment[] = [];
 
 export function compareVersion(left: string, right: string) {
   const leftParts = String(left || "0").split(".");
@@ -363,7 +399,11 @@ export async function listVirtualPaymentProducts() {
 
 function normalizePaymentStatus(value?: string): PaymentAxisStatus {
   const status = String(value || "").toUpperCase();
-  if (["SUCCESS", "SUCCEEDED", "PAID", "PAY_SUCCESS"].includes(status)) {
+  if (
+    ["SUCCESS", "SUCCEEDED", "COMPLETED", "PAID", "PAY_SUCCESS"].includes(
+      status,
+    )
+  ) {
     return "SUCCEEDED";
   }
   if (["FAIL", "FAILED", "PAY_FAILED"].includes(status)) return "FAILED";
@@ -412,6 +452,11 @@ function centsFromOrder(order: VirtualPaymentOrderPayload) {
 export function normalizeVirtualPaymentOrder(
   order: VirtualPaymentOrderPayload,
 ): VirtualPaymentOrder {
+  const legacyStatus = String(order.status || "").toUpperCase();
+  const legacyDelivered = ["SUCCESS", "SUCCEEDED", "COMPLETED"].includes(
+    legacyStatus,
+  );
+  const legacyRefunded = legacyStatus === "REFUNDED";
   const kindSource = [
     order.productSnapshot?.fulfillmentType,
     order.productSnapshot?.productType,
@@ -438,9 +483,16 @@ export function normalizeVirtualPaymentOrder(
         : "coin"
       : undefined,
     amountInCents: centsFromOrder(order),
-    paymentStatus: normalizePaymentStatus(order.paymentStatus),
-    fulfillmentStatus: normalizeFulfillmentStatus(order.fulfillmentStatus),
-    refundStatus: normalizeRefundStatus(order.refundStatus),
+    paymentStatus: normalizePaymentStatus(
+      order.paymentStatus || (legacyRefunded ? "SUCCEEDED" : order.status),
+    ),
+    fulfillmentStatus: normalizeFulfillmentStatus(
+      order.fulfillmentStatus ||
+        (legacyDelivered ? "SUCCEEDED" : legacyRefunded ? "REVERSED" : undefined),
+    ),
+    refundStatus: normalizeRefundStatus(
+      order.refundStatus || (legacyRefunded ? "SUCCEEDED" : undefined),
+    ),
     createdAt: String(order.createdAt || ""),
     updatedAt: order.updatedAt ? String(order.updatedAt) : undefined,
   };
@@ -449,16 +501,95 @@ export function normalizeVirtualPaymentOrder(
 export function isVirtualOrderFulfilled(order: VirtualPaymentOrder) {
   return (
     order.paymentStatus === "SUCCEEDED" &&
-    order.fulfillmentStatus === "SUCCEEDED"
+    order.fulfillmentStatus === "SUCCEEDED" &&
+    (order.refundStatus === "NONE" || order.refundStatus === "FAILED")
   );
 }
 
 export function isVirtualOrderTerminal(order: VirtualPaymentOrder) {
+  if (order.refundStatus === "PENDING" || order.refundStatus === "UNKNOWN") {
+    return false;
+  }
   return (
     isVirtualOrderFulfilled(order) ||
     TERMINAL_PAYMENT_STATUSES.has(order.paymentStatus) ||
     order.refundStatus === "SUCCEEDED"
   );
+}
+
+export function getVirtualOrderPresentation(
+  order: VirtualPaymentOrder,
+): VirtualOrderPresentation {
+  const payment =
+    order.paymentStatus === "SUCCEEDED"
+      ? (["支付成功", "success"] as const)
+      : order.paymentStatus === "FAILED"
+        ? (["支付失败", "failed"] as const)
+        : order.paymentStatus === "CANCELLED"
+          ? (["已取消", "muted"] as const)
+          : order.paymentStatus === "CLOSED"
+            ? (["已关闭", "muted"] as const)
+            : order.paymentStatus === "PENDING"
+              ? (["待确认", "pending"] as const)
+              : (["状态确认中", "pending"] as const);
+
+  const refund =
+    order.refundStatus === "SUCCEEDED"
+      ? (["已退款", "muted"] as const)
+      : order.refundStatus === "FAILED"
+        ? (["退款失败", "failed"] as const)
+        : order.refundStatus === "PENDING"
+          ? (["退款中", "pending"] as const)
+          : order.refundStatus === "UNKNOWN"
+            ? (["退款状态确认中", "pending"] as const)
+            : (["无退款", "muted"] as const);
+
+  let fulfillment: readonly [string, string] =
+    order.fulfillmentStatus === "SUCCEEDED"
+      ? (["已到账", "success"] as const)
+      : order.fulfillmentStatus === "FAILED"
+        ? (["发放异常", "failed"] as const)
+        : order.fulfillmentStatus === "REVERSED"
+          ? (["权益已撤回", "muted"] as const)
+          : order.fulfillmentStatus === "PROCESSING"
+            ? (["发放中", "pending"] as const)
+            : order.fulfillmentStatus === "PENDING"
+              ? (["待发放", "pending"] as const)
+              : (["状态确认中", "pending"] as const);
+  if (
+    order.fulfillmentStatus === "SUCCEEDED" &&
+    (order.refundStatus === "PENDING" || order.refundStatus === "UNKNOWN")
+  ) {
+    fulfillment = ["权益状态确认中", "pending"] as const;
+  } else if (
+    order.fulfillmentStatus === "SUCCEEDED" &&
+    order.refundStatus === "SUCCEEDED"
+  ) {
+    fulfillment = ["退款已完成", "muted"] as const;
+  }
+
+  const completed = isVirtualOrderFulfilled(order);
+  const processing =
+    order.refundStatus === "PENDING" ||
+    order.refundStatus === "UNKNOWN" ||
+    order.paymentStatus === "PENDING" ||
+    order.paymentStatus === "UNKNOWN" ||
+    (order.paymentStatus === "SUCCEEDED" &&
+      order.refundStatus !== "SUCCEEDED" &&
+      ["PENDING", "PROCESSING", "FAILED", "REVERSED", "UNKNOWN"].includes(
+        order.fulfillmentStatus,
+      ));
+
+  return {
+    paymentLabel: payment[0],
+    paymentTone: payment[1],
+    fulfillmentLabel: fulfillment[0],
+    fulfillmentTone: fulfillment[1],
+    refundLabel: refund[0],
+    refundTone: refund[1],
+    completed,
+    processing,
+  };
 }
 
 export function claimVirtualFulfillmentNotification(orderNo: string) {
@@ -480,9 +611,16 @@ export async function getVirtualPaymentOrder(orderNo: string) {
     path: `/api/client/orders/${encodeURIComponent(orderNo)}/status`,
     retry: true,
   });
-  return normalizeVirtualPaymentOrder(
+  const order = normalizeVirtualPaymentOrder(
     "order" in response ? response.order : response,
   );
+  if (isVirtualOrderTerminal(order)) {
+    const pending = readPendingRecords().find(
+      (item) => item.orderNo === order.orderNo,
+    );
+    if (pending) removePending(pending.clientRequestId);
+  }
+  return order;
 }
 
 export async function listVirtualPaymentOrders(params: {
@@ -530,17 +668,14 @@ export async function listVirtualPaymentOrders(params: {
   };
 }
 
-function wxLogin() {
-  return new Promise<string>((resolve, reject) => {
-    wx.login({
-      timeout: 8000,
-      success: (result) => {
-        if (result.code) resolve(result.code);
-        else reject(new Error("微信登录凭证获取失败，请重试"));
-      },
-      fail: () => reject(new Error("微信登录凭证获取失败，请检查网络")),
-    });
-  });
+const wait = (milliseconds: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
+
+function isRetryablePrepareError(error: unknown) {
+  return (
+    error instanceof ApiError &&
+    (error.code === -1 || error.code === 429 || error.code >= 500)
+  );
 }
 
 async function prepareVirtualPayment(
@@ -548,32 +683,54 @@ async function prepareVirtualPayment(
   clientRequestId: string,
   platform: string,
 ) {
-  const wxCode = await wxLogin();
-  const prepared = await request<
-    PreparedVirtualPayment,
-    { productId: string; wxCode: string; clientRequestId: string }
-  >({
-    path: "/api/client/wechat-virtual/prepare",
-    method: "POST",
-    data: { productId, wxCode, clientRequestId },
-    idempotent: true,
-    retry: true,
-    timeoutMs: 10000,
-    headers: {
-      "X-Client-Platform": [
-        "ios",
-        "android",
-        "windows",
-        "harmony",
-      ].includes(platform)
-        ? platform
-        : "unknown",
-    },
-  });
+  const maxAttempts = ENV.requestRetryCount + 1;
+  let prepared: PreparedVirtualPayment | undefined;
+  let lastError: unknown;
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    // wx.login codes are one-time credentials. Keep the same idempotency key
+    // for the logical checkout, but acquire a fresh code on every HTTP retry.
+    const wxCode = await getWechatLoginCode();
+    try {
+      prepared = await request<
+        PreparedVirtualPayment,
+        { productId: string; wxCode: string; clientRequestId: string }
+      >({
+        path: "/api/client/wechat-virtual/prepare",
+        method: "POST",
+        data: { productId, wxCode, clientRequestId },
+        idempotent: true,
+        retry: false,
+        timeoutMs: 10000,
+        headers: {
+          "X-Client-Platform": [
+            "ios",
+            "android",
+            "windows",
+            "harmony",
+          ].includes(platform)
+            ? platform
+            : "unknown",
+        },
+      });
+      break;
+    } catch (error) {
+      lastError = error;
+      if (!isRetryablePrepareError(error) || attempt === maxAttempts - 1) {
+        throw error;
+      }
+      await wait(ENV.requestRetryDelayMs * (attempt + 1));
+    }
+  }
+  if (!prepared) {
+    throw lastError instanceof Error
+      ? lastError
+      : new Error("支付订单创建结果待确认，请稍后重试");
+  }
   if (
     !prepared?.orderNo ||
     !prepared.outTradeNo ||
     !prepared.expiresAt ||
+    !Number.isFinite(Date.parse(prepared.expiresAt)) ||
     prepared.mode !== "short_series_goods" ||
     typeof prepared.signData !== "string" ||
     !prepared.signData ||
@@ -644,6 +801,15 @@ export function classifyVirtualPaymentFailure(
   };
 }
 
+export function sanitizeVirtualPaymentDiagnostic(value: unknown) {
+  return String(value || "")
+    .slice(0, 240)
+    .replace(
+      /(["']?(?:paySig|signature|signData|session_key|appKey|token|secret)["']?\s*[:=]).*$/i,
+      "$1[REDACTED]",
+    );
+}
+
 function requestVirtualPayment(
   prepared: PreparedVirtualPayment,
 ): Promise<{ ok: true } | { ok: false; failure: VirtualPaymentFailure }> {
@@ -659,11 +825,22 @@ function requestVirtualPayment(
     invoke({
       ...buildVirtualPaymentInvocation(prepared),
       success: () => resolve({ ok: true }),
-      fail: (result) =>
+      fail: (result) => {
+        const code = Number(result.errCode ?? -1);
+        const diagnostic = sanitizeVirtualPaymentDiagnostic(result.errMsg);
+        logger.warn("微信虚拟支付界面返回失败", {
+          orderNo: prepared.orderNo,
+          errCode: code,
+          ...(diagnostic ? { errMsg: diagnostic } : {}),
+        });
         resolve({
           ok: false,
-          failure: classifyVirtualPaymentFailure(Number(result.errCode ?? -1)),
-        }),
+          failure: {
+            ...classifyVirtualPaymentFailure(code),
+            ...(diagnostic ? { diagnostic } : {}),
+          },
+        });
+      },
     });
   });
 }
@@ -681,48 +858,233 @@ export function buildVirtualPaymentInvocation(
   };
 }
 
-export function isSandboxVirtualPayment(signData: string) {
+export function getSignedVirtualPaymentEnvironment(
+  signData: string,
+): 0 | 1 | null {
   try {
     const parsed = JSON.parse(signData) as { env?: unknown };
-    return Number(parsed.env ?? 0) === 1;
+    if (parsed.env === 0 || parsed.env === 1) return parsed.env;
+    return null;
   } catch {
+    return null;
+  }
+}
+
+export function isSandboxVirtualPayment(signData: string) {
+  return getSignedVirtualPaymentEnvironment(signData) === 1;
+}
+
+export function normalizePendingVirtualPaymentRecord(
+  value: unknown,
+  now: number,
+): PendingVirtualPayment | null {
+  if (!value || typeof value !== "object") return null;
+  const item = value as Partial<PendingVirtualPayment>;
+  if (
+    typeof item.clientRequestId !== "string" ||
+    typeof item.productId !== "string" ||
+    typeof item.productName !== "string" ||
+    (item.productKind !== "coin" && item.productKind !== "vip") ||
+    typeof item.userId !== "string" ||
+    typeof item.createdAt !== "number" ||
+    !Number.isFinite(item.createdAt) ||
+    typeof item.expiresAt !== "string"
+  ) {
+    return null;
+  }
+  const expiresAt = Date.parse(item.expiresAt);
+  if (!Number.isFinite(expiresAt)) return null;
+  const orderNo =
+    typeof item.orderNo === "string" && item.orderNo ? item.orderNo : undefined;
+  const hardDeadlineAt =
+    item.createdAt + VIRTUAL_PAYMENT_RECONCILIATION_WINDOW_MS;
+  const storedDeadlineAt = Date.parse(
+    String(item.reconciliationDeadlineAt || ""),
+  );
+  // Legacy v1 records did not distinguish signature expiry from fact
+  // reconciliation. Derive their deadline from createdAt, and clamp all stored
+  // values so corrupt local data can never create an immortal checkout lock.
+  const reconciliationDeadlineTimestamp =
+    Number.isFinite(storedDeadlineAt) && storedDeadlineAt > item.createdAt
+      ? Math.min(storedDeadlineAt, hardDeadlineAt)
+      : hardDeadlineAt;
+  if (reconciliationDeadlineTimestamp <= now) return null;
+  // An intent that never received an order number owns no authoritative server
+  // order and is safe to discard when its signed checkout window closes. An
+  // order-bearing record survives that point exclusively for status queries.
+  if (!orderNo && expiresAt <= now) return null;
+  const outTradeNo =
+    typeof item.outTradeNo === "string" && item.outTradeNo
+      ? item.outTradeNo
+      : undefined;
+  return {
+    clientRequestId: item.clientRequestId,
+    productId: item.productId,
+    productName: item.productName,
+    productKind: item.productKind,
+    userId: item.userId,
+    createdAt: item.createdAt,
+    expiresAt: item.expiresAt,
+    reconciliationDeadlineAt: new Date(
+      reconciliationDeadlineTimestamp,
+    ).toISOString(),
+    paymentUiResult: ["waiting", "accepted", "cancelled", "failed"].includes(
+      String(item.paymentUiResult),
+    )
+      ? item.paymentUiResult!
+      : "waiting",
+    stage: ["preparing", "payment", "reconciling"].includes(
+      String(item.stage),
+    )
+      ? item.stage
+      : orderNo
+        ? "reconciling"
+        : "preparing",
+    ...(orderNo ? { orderNo } : {}),
+    ...(outTradeNo ? { outTradeNo } : {}),
+    ...(Number.isFinite(Number(item.pollAttempts))
+      ? { pollAttempts: Number(item.pollAttempts) }
+      : {}),
+    ...(Number.isFinite(Number(item.reconciliationPollAttempts))
+      ? {
+          reconciliationPollAttempts: Number(item.reconciliationPollAttempts),
+        }
+      : {}),
+    ...(Number.isFinite(Number(item.nextCheckAt))
+      ? { nextCheckAt: Number(item.nextCheckAt) }
+      : {}),
+    ...(Number.isFinite(Number(item.lastErrorCode))
+      ? { lastErrorCode: Number(item.lastErrorCode) }
+      : {}),
+    ...(item.lastErrorMessage
+      ? { lastErrorMessage: sanitizeVirtualPaymentDiagnostic(item.lastErrorMessage) }
+      : {}),
+  };
+}
+
+function persistPendingRecords(records: PendingVirtualPayment[]) {
+  memoryPendingRecords = records.slice(-MAX_PENDING_RECORDS);
+  try {
+    if (memoryPendingRecords.length) {
+      wx.setStorageSync(PENDING_STORAGE_KEY, memoryPendingRecords);
+    } else {
+      wx.removeStorageSync(PENDING_STORAGE_KEY);
+    }
+    return true;
+  } catch (error) {
+    logger.warn("虚拟支付恢复记录写入失败", {
+      message: error instanceof Error ? error.message : "storage unavailable",
+    });
     return false;
   }
 }
 
 function readPendingRecords(): PendingVirtualPayment[] {
-  const value = wx.getStorageSync(PENDING_STORAGE_KEY) as unknown;
-  if (!Array.isArray(value)) return [];
+  let value: unknown;
+  try {
+    value = wx.getStorageSync(PENDING_STORAGE_KEY) as unknown;
+  } catch (error) {
+    logger.warn("虚拟支付恢复记录读取失败", {
+      message: error instanceof Error ? error.message : "storage unavailable",
+    });
+    memoryPendingRecords = memoryPendingRecords
+      .map((item) => normalizePendingVirtualPaymentRecord(item, Date.now()))
+      .filter((item): item is PendingVirtualPayment => Boolean(item));
+    return memoryPendingRecords;
+  }
+  if (!Array.isArray(value)) {
+    memoryPendingRecords = [];
+    if (value !== "" && value !== undefined && value !== null) {
+      persistPendingRecords([]);
+    }
+    return [];
+  }
   const now = Date.now();
-  return value
-    .filter(
-      (item): item is PendingVirtualPayment =>
-        Boolean(
-          item &&
-            typeof item === "object" &&
-            typeof item.orderNo === "string" &&
-            typeof item.outTradeNo === "string" &&
-            typeof item.clientRequestId === "string" &&
-            typeof item.productId === "string" &&
-            typeof item.userId === "string" &&
-            typeof item.createdAt === "number" &&
-            now - item.createdAt < MAX_PENDING_AGE_MS,
-        ),
-    )
+  const records = value
+    .map((item) => normalizePendingVirtualPaymentRecord(item, now))
+    .filter((item): item is PendingVirtualPayment => Boolean(item))
     .slice(-MAX_PENDING_RECORDS);
+  memoryPendingRecords = records;
+  if (records.length !== value.length) {
+    persistPendingRecords(records);
+    emitPendingChanged();
+  }
+  return records;
 }
 
 function writePendingRecords(records: PendingVirtualPayment[]) {
-  if (records.length) {
-    wx.setStorageSync(PENDING_STORAGE_KEY, records.slice(-MAX_PENDING_RECORDS));
-  } else {
-    wx.removeStorageSync(PENDING_STORAGE_KEY);
-  }
+  return persistPendingRecords(records);
+}
+
+function emitPendingChanged() {
+  pendingListeners.forEach((listener) => {
+    try {
+      listener();
+    } catch {
+      // A UI lifecycle listener must not break payment record persistence.
+    }
+  });
+}
+
+export function subscribePendingVirtualPayments(listener: () => void) {
+  pendingListeners.add(listener);
+  return () => pendingListeners.delete(listener);
 }
 
 export function getPendingVirtualPayments() {
   const userId = sessionStore.getState()?.user.id;
+  if (!userId) return [];
   return readPendingRecords().filter((item) => item.userId === userId);
+}
+
+export function getPendingVirtualPaymentForProduct(productId: string) {
+  return getPendingVirtualPayments().find((item) => item.productId === productId);
+}
+
+export function getPendingVirtualPaymentRetryDelay(
+  record: PendingVirtualPayment,
+  now = Date.now(),
+) {
+  const nextAttempt = Math.max(
+    1,
+    Math.floor(
+      Number(
+        Date.parse(record.expiresAt) > now
+          ? record.pollAttempts || 0
+          : record.reconciliationPollAttempts || 0,
+      ),
+    ) + 1,
+  );
+  const signatureStillValid = Date.parse(record.expiresAt) > now;
+  if (signatureStillValid) {
+    return Math.min(
+      SIGNED_PHASE_MAX_RETRY_MS,
+      5000 * 2 ** Math.min(nextAttempt - 1, 6),
+    );
+  }
+  return Math.min(
+    RECONCILIATION_MAX_RETRY_MS,
+    RECONCILIATION_BASE_RETRY_MS *
+      2 ** Math.min(nextAttempt - 1, 5),
+  );
+}
+
+export function getPendingVirtualPaymentRecoveryDelay() {
+  const now = Date.now();
+  const pollable = getPendingVirtualPayments().filter(
+    (item) =>
+      item.orderNo && Date.parse(item.reconciliationDeadlineAt) > now,
+  );
+  if (!pollable.length) return null;
+  const nextCheckAt = Math.min(
+    ...pollable.map((item) =>
+      Math.min(
+        Number(item.nextCheckAt || 0),
+        Date.parse(item.reconciliationDeadlineAt),
+      ),
+    ),
+  );
+  return Math.max(0, nextCheckAt - Date.now());
 }
 
 function savePending(record: PendingVirtualPayment) {
@@ -730,33 +1092,40 @@ function savePending(record: PendingVirtualPayment) {
     (item) =>
       !(
         item.userId === record.userId &&
-        (item.orderNo === record.orderNo ||
-          item.clientRequestId === record.clientRequestId)
+        (item.clientRequestId === record.clientRequestId ||
+          item.productId === record.productId ||
+          (item.orderNo && record.orderNo && item.orderNo === record.orderNo))
       ),
   );
   records.push(record);
-  writePendingRecords(records);
+  const persisted = writePendingRecords(records);
+  emitPendingChanged();
+  return persisted;
 }
 
 function updatePending(
-  orderNo: string,
+  clientRequestId: string,
   patch: Partial<PendingVirtualPayment>,
+  notify = false,
 ) {
-  writePendingRecords(
+  const persisted = writePendingRecords(
     readPendingRecords().map((item) =>
-      item.orderNo === orderNo ? { ...item, ...patch } : item,
+      item.clientRequestId === clientRequestId ? { ...item, ...patch } : item,
     ),
   );
+  if (notify) emitPendingChanged();
+  return persisted;
 }
 
-function removePending(orderNo: string) {
-  writePendingRecords(
-    readPendingRecords().filter((item) => item.orderNo !== orderNo),
+function removePending(clientRequestId: string) {
+  const records = readPendingRecords();
+  const next = records.filter(
+    (item) => item.clientRequestId !== clientRequestId,
   );
+  if (next.length === records.length) return;
+  writePendingRecords(next);
+  emitPendingChanged();
 }
-
-const wait = (milliseconds: number) =>
-  new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
 
 async function waitForFulfillment(
   orderNo: string,
@@ -775,49 +1144,218 @@ async function waitForFulfillment(
   return lastOrder;
 }
 
-export async function startVirtualPurchase(
+async function executeVirtualPurchase(
   product: VirtualPaymentProduct,
 ): Promise<VirtualPurchaseOutcome> {
   const session = sessionStore.getState();
   if (!session) throw new Error("请先登录后购买");
   const capability = getVirtualPaymentCapability();
   if (!capability.supported) throw new Error(capability.reason);
-
-  const clientRequestId = createRequestId();
-  const prepared = await prepareVirtualPayment(
-    product.id,
-    clientRequestId,
-    capability.platform,
-  );
-  if (
-    capability.platform === "ios" &&
-    isSandboxVirtualPayment(prepared.signData)
-  ) {
-    throw new Error("iPhone 不支持沙箱支付，请使用正式环境商品");
+  if (capability.platform === "ios" && ENV.virtualPaymentEnv === 1) {
+    throw new Error("iPhone 不支持微信支付沙箱，请改用 Android 真机验收");
   }
-  const pending: PendingVirtualPayment = {
-    orderNo: prepared.orderNo,
-    outTradeNo: prepared.outTradeNo,
+
+  const existing = getPendingVirtualPaymentForProduct(product.id);
+  if (existing?.orderNo) {
+    try {
+      const order = await getVirtualPaymentOrder(existing.orderNo);
+      if (isVirtualOrderFulfilled(order)) {
+        removePending(existing.clientRequestId);
+        return { kind: "fulfilled", order };
+      }
+      if (order.refundStatus === "SUCCEEDED") {
+        removePending(existing.clientRequestId);
+        return { kind: "failed", order, message: "该订单已退款" };
+      }
+      if (
+        order.refundStatus === "PENDING" ||
+        order.refundStatus === "UNKNOWN"
+      ) {
+        schedulePendingRetry(existing);
+        return { kind: "pending", order };
+      }
+      if (TERMINAL_PAYMENT_STATUSES.has(order.paymentStatus)) {
+        removePending(existing.clientRequestId);
+        return order.paymentStatus === "CANCELLED"
+          ? { kind: "cancelled", order }
+          : {
+              kind: "failed",
+              order,
+              message: "上一笔订单已结束，请再次点击购买",
+            };
+      }
+      schedulePendingRetry(existing);
+      return { kind: "pending", order };
+    } catch {
+      // The previous order is still authoritative while its status cannot be
+      // queried. Reuse it; never generate a second charge candidate.
+      schedulePendingRetry(existing);
+      return { kind: "pending", order: null };
+    }
+  }
+
+  await bindCurrentWechatMiniIdentity();
+
+  const clientRequestId = existing?.clientRequestId || createRequestId();
+  const createdAt = Date.now();
+  const pending: PendingVirtualPayment =
+    existing || {
+      clientRequestId,
+      productId: product.id,
+      productName: product.name,
+      productKind: product.kind,
+      createdAt,
+      expiresAt: new Date(createdAt + PREPARE_INTENT_TTL_MS).toISOString(),
+      reconciliationDeadlineAt: new Date(
+        createdAt + VIRTUAL_PAYMENT_RECONCILIATION_WINDOW_MS,
+      ).toISOString(),
+      userId: session.user.id,
+      stage: "preparing",
+      paymentUiResult: "waiting",
+    };
+  if (!existing) {
+    if (!savePending(pending)) {
+      throw new Error("设备存储暂不可用，为避免重复扣款，本次未创建订单");
+    }
+  } else if (!writePendingRecords(readPendingRecords())) {
+    throw new Error("设备存储暂不可用，为避免重复扣款，本次未创建订单");
+  }
+
+  let prepared: PreparedVirtualPayment;
+  try {
+    prepared = await prepareVirtualPayment(
+      product.id,
+      clientRequestId,
+      capability.platform,
+    );
+  } catch (error) {
+    const code = error instanceof ApiError ? error.code : undefined;
+    updatePending(clientRequestId, {
+      ...(typeof code === "number" ? { lastErrorCode: code } : {}),
+      lastErrorMessage: sanitizeVirtualPaymentDiagnostic(
+        error instanceof Error ? error.message : error,
+      ),
+    });
+    if (!isRetryablePrepareError(error)) removePending(clientRequestId);
+    throw error;
+  }
+  const orderPersisted = updatePending(
     clientRequestId,
-    productId: product.id,
-    productName: product.name,
-    productKind: product.kind,
-    createdAt: Date.now(),
-    expiresAt: prepared.expiresAt,
-    userId: session.user.id,
-    paymentUiResult: "waiting",
-  };
+    {
+      orderNo: prepared.orderNo,
+      outTradeNo: prepared.outTradeNo,
+      expiresAt: prepared.expiresAt,
+      stage: "payment",
+      lastErrorCode: undefined,
+      lastErrorMessage: undefined,
+    },
+    true,
+  );
+  if (!orderPersisted) {
+    throw new Error(
+      "设备存储暂不可用，订单已创建但未调起支付，请稍后从订单页恢复",
+    );
+  }
+  const signedEnvironment = getSignedVirtualPaymentEnvironment(
+    prepared.signData,
+  );
+  if (signedEnvironment !== ENV.virtualPaymentEnv) {
+    const message =
+      signedEnvironment === null
+        ? "支付环境参数无效，本次未调起支付"
+        : "支付环境配置不一致，本次未调起支付";
+    const reconciliationRecord: PendingVirtualPayment = {
+      ...pending,
+      orderNo: prepared.orderNo,
+      outTradeNo: prepared.outTradeNo,
+      expiresAt: prepared.expiresAt,
+      stage: "reconciling",
+      paymentUiResult: "failed",
+      lastErrorMessage: message,
+    };
+    updatePending(
+      clientRequestId,
+      {
+        stage: "reconciling",
+        paymentUiResult: "failed",
+        lastErrorMessage: message,
+      },
+      true,
+    );
+    schedulePendingRetry(reconciliationRecord);
+    throw new Error(message);
+  }
+  if (capability.platform === "ios" && signedEnvironment === 1) {
+    throw new Error("支付环境配置不一致：iPhone 不支持微信支付沙箱");
+  }
   // Persist the recoverable order before handing control to WeChat. Signatures
   // and signData are intentionally excluded from storage.
-  savePending(pending);
+
+  if (Date.parse(prepared.expiresAt) <= Date.now()) {
+    const reconciliationRecord: PendingVirtualPayment = {
+      ...pending,
+      orderNo: prepared.orderNo,
+      outTradeNo: prepared.outTradeNo,
+      expiresAt: prepared.expiresAt,
+      stage: "reconciling",
+      paymentUiResult: "failed",
+      lastErrorCode: -15007,
+      lastErrorMessage: "支付凭证已过期，正在确认订单最终状态",
+    };
+    updatePending(
+      clientRequestId,
+      {
+        stage: "reconciling",
+        paymentUiResult: "failed",
+        lastErrorCode: -15007,
+        lastErrorMessage: "支付凭证已过期，正在确认订单最终状态",
+      },
+      true,
+    );
+    schedulePendingRetry(reconciliationRecord);
+    const expiredOrder = await waitForFulfillment(prepared.orderNo, [0]);
+    if (expiredOrder && isVirtualOrderFulfilled(expiredOrder)) {
+      removePending(clientRequestId);
+      return { kind: "fulfilled", order: expiredOrder };
+    }
+    if (expiredOrder?.refundStatus === "SUCCEEDED") {
+      removePending(clientRequestId);
+      return {
+        kind: "failed",
+        order: expiredOrder,
+        message: "该订单已退款",
+      };
+    }
+    if (
+      expiredOrder &&
+      TERMINAL_PAYMENT_STATUSES.has(expiredOrder.paymentStatus)
+    ) {
+      removePending(clientRequestId);
+      return expiredOrder.paymentStatus === "CANCELLED"
+        ? { kind: "cancelled", order: expiredOrder }
+        : {
+            kind: "failed",
+            order: expiredOrder,
+            message: "支付凭证已过期，订单已关闭，请重新购买",
+          };
+    }
+    return { kind: "pending", order: expiredOrder };
+  }
 
   const paymentResult = await requestVirtualPayment(prepared);
-  updatePending(prepared.orderNo, {
+  updatePending(clientRequestId, {
+    stage: "reconciling",
     paymentUiResult: paymentResult.ok
       ? "accepted"
       : paymentResult.failure.cancelled
         ? "cancelled"
         : "failed",
+    ...(!paymentResult.ok
+      ? {
+          lastErrorCode: paymentResult.failure.code,
+          lastErrorMessage: paymentResult.failure.diagnostic,
+        }
+      : {}),
   });
   const order = await waitForFulfillment(
     prepared.orderNo,
@@ -825,18 +1363,21 @@ export async function startVirtualPurchase(
   );
 
   if (order && isVirtualOrderFulfilled(order)) {
-    removePending(order.orderNo);
+    removePending(clientRequestId);
     return { kind: "fulfilled", order };
   }
-  if (order?.paymentStatus === "SUCCEEDED") {
-    return { kind: "pending", order };
-  }
   if (order?.refundStatus === "SUCCEEDED") {
-    removePending(order.orderNo);
+    removePending(clientRequestId);
     return { kind: "failed", order, message: "该订单已退款" };
   }
+  if (
+    order?.refundStatus === "PENDING" ||
+    order?.refundStatus === "UNKNOWN"
+  ) {
+    return { kind: "pending", order };
+  }
   if (order && TERMINAL_PAYMENT_STATUSES.has(order.paymentStatus)) {
-    removePending(order.orderNo);
+    removePending(clientRequestId);
     if (
       order.paymentStatus === "CANCELLED" ||
       paymentResult.ok === false && paymentResult.failure.cancelled
@@ -844,6 +1385,9 @@ export async function startVirtualPurchase(
       return { kind: "cancelled", order };
     }
     return { kind: "failed", order, message: "订单未支付成功，请重新购买" };
+  }
+  if (order?.paymentStatus === "SUCCEEDED") {
+    return { kind: "pending", order };
   }
   if (!paymentResult.ok) {
     if (paymentResult.failure.code === -5) {
@@ -861,13 +1405,59 @@ export async function startVirtualPurchase(
   return { kind: "pending", order };
 }
 
+export function startVirtualPurchase(
+  product: VirtualPaymentProduct,
+): Promise<VirtualPurchaseOutcome> {
+  const userId = sessionStore.getState()?.user.id || "anonymous";
+  const key = `${userId}:${product.id}`;
+  const active = purchasePromises.get(key);
+  if (active) return active;
+  const purchase = executeVirtualPurchase(product);
+  purchasePromises.set(key, purchase);
+  const clear = () => {
+    if (purchasePromises.get(key) === purchase) purchasePromises.delete(key);
+  };
+  void purchase.then(clear, clear);
+  return purchase;
+}
+
 function schedulePendingRetry(record: PendingVirtualPayment) {
-  const pollAttempts = Number(record.pollAttempts || 0) + 1;
-  const delay = Math.min(5 * 60 * 1000, 5000 * 2 ** Math.min(pollAttempts, 6));
-  updatePending(record.orderNo, {
-    pollAttempts,
-    nextCheckAt: Date.now() + delay,
+  const now = Date.now();
+  const deadlineAt = Date.parse(record.reconciliationDeadlineAt);
+  const delay = getPendingVirtualPaymentRetryDelay(record, now);
+  const signatureStillValid = Date.parse(record.expiresAt) > now;
+  const attemptPatch = signatureStillValid
+    ? { pollAttempts: Number(record.pollAttempts || 0) + 1 }
+    : {
+        reconciliationPollAttempts:
+          Number(record.reconciliationPollAttempts || 0) + 1,
+      };
+  updatePending(record.clientRequestId, {
+    ...attemptPatch,
+    // Never arm a timer beyond the bounded reconciliation window. At the
+    // deadline normalization drops the stale lock; foreground recovery and
+    // explicit taps still force checks before then.
+    nextCheckAt: Math.min(now + delay, deadlineAt),
   });
+}
+
+async function processWithConcurrency<T>(
+  items: T[],
+  concurrency: number,
+  worker: (item: T) => Promise<void>,
+) {
+  let nextIndex = 0;
+  const runners = Array.from(
+    { length: Math.min(concurrency, items.length) },
+    async () => {
+      while (nextIndex < items.length) {
+        const item = items[nextIndex];
+        nextIndex += 1;
+        await worker(item);
+      }
+    },
+  );
+  await Promise.all(runners);
 }
 
 export async function resumePendingVirtualPayments(options: {
@@ -883,15 +1473,20 @@ export async function resumePendingVirtualPayments(options: {
     const fulfilled: VirtualPaymentOrder[] = [];
     const now = Date.now();
     const pending = getPendingVirtualPayments().filter(
-      (record) => options.force || Number(record.nextCheckAt || 0) <= now,
+      (record) =>
+        Boolean(record.orderNo) &&
+        Date.parse(record.reconciliationDeadlineAt) > now &&
+        (options.force || Number(record.nextCheckAt || 0) <= now),
     );
-    await Promise.all(
-      pending.map(async (record) => {
+    await processWithConcurrency(
+      pending,
+      PENDING_QUERY_CONCURRENCY,
+      async (record) => {
         try {
-          const order = await getVirtualPaymentOrder(record.orderNo);
+          const order = await getVirtualPaymentOrder(record.orderNo!);
           if (isVirtualOrderFulfilled(order)) fulfilled.push(order);
           if (isVirtualOrderTerminal(order)) {
-            removePending(record.orderNo);
+            removePending(record.clientRequestId);
           } else {
             schedulePendingRetry(record);
           }
@@ -899,7 +1494,7 @@ export async function resumePendingVirtualPayments(options: {
           // A network or temporary server error must not discard recovery data.
           schedulePendingRetry(record);
         }
-      }),
+      },
     );
     return fulfilled;
   })().finally(() => {
