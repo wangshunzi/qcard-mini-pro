@@ -388,7 +388,7 @@ export async function listVirtualPaymentProducts() {
     VirtualPaymentProductPayload[] | { items?: VirtualPaymentProductPayload[] }
   >({
     path: "/api/client/products",
-    data: { channel: "wechat_virtual" },
+    data: { channel: "wechat_virtual", env: ENV.virtualPaymentEnv },
   });
   const items = Array.isArray(response) ? response : response.items ?? [];
   return items
@@ -693,11 +693,21 @@ async function prepareVirtualPayment(
     try {
       prepared = await request<
         PreparedVirtualPayment,
-        { productId: string; wxCode: string; clientRequestId: string }
+        {
+          productId: string;
+          wxCode: string;
+          clientRequestId: string;
+          expectedEnv: 0 | 1;
+        }
       >({
         path: "/api/client/wechat-virtual/prepare",
         method: "POST",
-        data: { productId, wxCode, clientRequestId },
+        data: {
+          productId,
+          wxCode,
+          clientRequestId,
+          expectedEnv: ENV.virtualPaymentEnv,
+        },
         idempotent: true,
         retry: false,
         timeoutMs: 10000,

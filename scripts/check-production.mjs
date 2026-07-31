@@ -105,8 +105,11 @@ async function main() {
       ),
     () =>
       expectApi(
-        "/api/client/products?channel=wechat_virtual",
-        (data) => Array.isArray(data),
+        "/api/client/products?channel=wechat_virtual&env=0",
+        // A 200 + [] is deliberately returned when XPay is disabled, not
+        // ready, or running in sandbox. A release must prove that production
+        // has at least one fully confirmed, enabled item that users can buy.
+        (data) => Array.isArray(data) && data.length > 0,
       ),
     () => expectVirtualPaymentCallbackRoute(),
     () =>

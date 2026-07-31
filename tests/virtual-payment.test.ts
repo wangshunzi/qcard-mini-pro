@@ -245,17 +245,18 @@ describe("WeChat virtual payment", () => {
     });
   });
 
-  it("hard-separates staging and production API/payment environments", () => {
-    expect(resolveRuntimeEnvironment("develop")).toMatchObject({
-      apiBaseUrl: "https://staging.kolka.cn",
+  it("uses one API host while selecting the payment environment by build", () => {
+    expect(resolveRuntimeEnvironment("develop")).toEqual({
+      envVersion: "develop",
+      apiBaseUrl: "https://www.kolka.cn",
       virtualPaymentEnv: 1,
     });
-    expect(resolveRuntimeEnvironment("trial")).toMatchObject({
-      name: "staging",
+    expect(resolveRuntimeEnvironment("trial")).toEqual({
+      envVersion: "trial",
+      apiBaseUrl: "https://www.kolka.cn",
       virtualPaymentEnv: 1,
     });
     expect(resolveRuntimeEnvironment("release")).toEqual({
-      name: "production",
       envVersion: "release",
       apiBaseUrl: "https://www.kolka.cn",
       virtualPaymentEnv: 0,

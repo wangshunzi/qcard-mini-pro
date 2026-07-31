@@ -70,8 +70,9 @@ describe("virtual-payment compliance", () => {
     expect(service).toContain("const orderPersisted = updatePending(");
     expect(service).toContain("if (!orderPersisted)");
     expect(service).toContain('"X-Client-Platform"');
+    expect(service).toContain("expectedEnv: ENV.virtualPaymentEnv");
     expect(service).toContain(
-      "data: { productId, wxCode, clientRequestId }",
+      'data: { channel: "wechat_virtual", env: ENV.virtualPaymentEnv }',
     );
     expect(service.indexOf("savePending(pending)")).toBeLessThan(
       service.indexOf("requestVirtualPayment(prepared)"),
@@ -148,8 +149,18 @@ describe("virtual-payment compliance", () => {
     expect(auth).toContain("return await requestWechatLoginCode()");
     expect(auth).toContain("attempt === maxAttempts - 1");
     expect(service).toContain("const wxCode = await getWechatLoginCode()");
-    expect(service).toContain("data: { productId, wxCode, clientRequestId }");
+    expect(service).toContain("expectedEnv: ENV.virtualPaymentEnv");
     expect(service).toContain("retry: false");
     expect(service).toContain("await bindCurrentWechatMiniIdentity()");
+  });
+
+  it("blocks a production release unless an env=0 virtual item is saleable", () => {
+    const releaseCheck = read("scripts/check-production.mjs");
+    expect(releaseCheck).toContain(
+      '"/api/client/products?channel=wechat_virtual&env=0"',
+    );
+    expect(releaseCheck).toContain(
+      "Array.isArray(data) && data.length > 0",
+    );
   });
 });
