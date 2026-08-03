@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -300,7 +300,7 @@ describe("H5-aligned product surfaces", () => {
     const logic = read(
       "miniprogram/package-cards/pages/my-learning/index.ts",
     );
-    const service = read("miniprogram/services/userContent.ts");
+    const service = read("miniprogram/package-cards/services/userContent.ts");
 
     expect(homeTemplate).toContain('bindtap="createPrivatePack"');
     expect(homeLogic).toContain("mode=private&create=true");
@@ -434,7 +434,7 @@ describe("H5-aligned product surfaces", () => {
     const itemTemplate = read(
       "miniprogram/components/private-card-face-item/index.wxml",
     );
-    const service = read("miniprogram/services/userContent.ts");
+    const service = read("miniprogram/package-cards/services/userContent.ts");
     expect(template).toContain("生成卡面");
     expect(itemTemplate).toContain("做同款");
     expect(template).toContain('bindtap="toggleEditMode"');
@@ -773,6 +773,29 @@ describe("H5-aligned product surfaces", () => {
     expect(template).toContain('data-tab="history"');
     expect(template).toContain('data-tab="benefits"');
     expect(template).toContain("/assets/icons/coins.png");
+  });
+
+  it("keeps subpackage-only services outside the main package", () => {
+    for (const service of [
+      "challengeConfig",
+      "experience",
+      "feedback",
+      "theme",
+      "userContent",
+    ]) {
+      expect(existsSync(resolve(root, `miniprogram/services/${service}.ts`))).toBe(
+        false,
+      );
+    }
+    for (const path of [
+      "miniprogram/package-settings/services/challengeConfig.ts",
+      "miniprogram/package-settings/services/experience.ts",
+      "miniprogram/package-settings/services/feedback.ts",
+      "miniprogram/package-settings/services/theme.ts",
+      "miniprogram/package-cards/services/userContent.ts",
+    ]) {
+      expect(existsSync(resolve(root, path)), path).toBe(true);
+    }
   });
 
   it("ships a filtered, paginated coin history drawer", () => {

@@ -9,7 +9,7 @@ import {
   getPrivateCardPacks,
   type PrivateCardPack,
   toPrivateCardData,
-} from "../../../services/userContent";
+} from "../../services/userContent";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
 
 type CardSlot = "front" | "back";

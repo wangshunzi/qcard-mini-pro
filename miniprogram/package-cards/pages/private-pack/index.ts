@@ -3,7 +3,7 @@ import {
   getPrivateCardPack,
   type PrivateCard,
   type PrivateCardPack,
-} from "../../../services/userContent";
+} from "../../services/userContent";
 import { getProfile } from "../../../services/profile";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
 

@@ -3,7 +3,7 @@ import {
   getCurrentTheme,
   selectTheme,
   type Theme,
-} from "../../../services/theme";
+} from "../../services/theme";
 
 Page({
   data: {

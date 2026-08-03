@@ -1,5 +1,5 @@
 import { readCardTransfer } from "../../../stores/cardTransfer";
-import { submitPrivateCardFaceFeedback } from "../../../services/userContent";
+import { submitPrivateCardFaceFeedback } from "../../services/userContent";
 
 Page({
   data: {

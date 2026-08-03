@@ -5,7 +5,7 @@ import {
   deletePrivateCardPack,
   getPrivateCardPacks,
   type PrivateCardPack,
-} from "../../../services/userContent";
+} from "../../services/userContent";
 import { UI_ASSETS } from "../../../config/uiAssets";
 import { getProfile } from "../../../services/profile";
 import {

@@ -6,7 +6,7 @@ import {
   type FeedbackStatus,
   type FeedbackType,
   type UserFeedback,
-} from "../../../services/feedback";
+} from "../../services/feedback";
 
 Page({
   data: {

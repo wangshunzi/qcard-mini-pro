@@ -4,7 +4,7 @@ import {
   type ChallengeConfig,
   type LearningIntensity,
   type LearningStrategy,
-} from "../../../services/challengeConfig";
+} from "../../services/challengeConfig";
 
 const INTENSITIES: Record<LearningIntensity, { label: string; detail: string; cards: number; percent: number }> = {
   light: { label: "轻松模式", detail: "每天少量学习，适合刚开始", cards: 12, percent: 70 },

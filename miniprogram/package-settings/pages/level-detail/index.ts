@@ -4,7 +4,7 @@ import {
   getUnlockDiscount,
   type ExperienceHistory,
   type ExperienceLevel,
-} from "../../../services/experience";
+} from "../../services/experience";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
 import { getProfile, type UserProfile } from "../../../services/profile";
 import { UI_ASSETS } from "../../../config/uiAssets";

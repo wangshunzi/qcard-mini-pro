@@ -1,4 +1,4 @@
-import { request } from "./http";
+import { request } from "../../services/http";
 
 export interface ExperienceLevel {
   level: number;

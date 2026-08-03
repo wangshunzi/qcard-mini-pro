@@ -1,5 +1,5 @@
-import { request } from "./http";
-import { hmacSha1Base64 } from "../utils/hmacSha1";
+import { request } from "../../services/http";
+import { hmacSha1Base64 } from "../../utils/hmacSha1";
 
 export type FeedbackType =
   | "account"

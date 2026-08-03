@@ -19,7 +19,7 @@ import {
   getPrivateCardPack,
   recordPrivateCardStudy,
   toPrivateCardData,
-} from "../../../services/userContent";
+} from "../../services/userContent";
 import { getImmersiveNavigationMetrics } from "../../../utils/navigationMetrics";
 
 interface StudyCard extends CardCatalogue {

@@ -1,8 +1,8 @@
-import type { CardData } from "../cards/types";
-import { request } from "./http";
-import type { Paginated } from "./discovery";
-import type { PrivateCardFace } from "./profile";
-import { resolveApiMediaUrl, resolveCardDataMedia } from "../utils/mediaUrl";
+import type { CardData } from "../../cards/types";
+import { request } from "../../services/http";
+import type { Paginated } from "../../services/discovery";
+import type { PrivateCardFace } from "../../services/profile";
+import { resolveApiMediaUrl, resolveCardDataMedia } from "../../utils/mediaUrl";
 
 export interface PrivateCardPack {
   id: string;

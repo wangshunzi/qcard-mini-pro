@@ -1,4 +1,4 @@
-import { request } from "./http";
+import { request } from "../../services/http";
 
 export type LearningIntensity = "light" | "moderate" | "intensive";
 export type LearningStrategy = "balanced" | "focus" | "explore";
