@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hmacSha1Base64 } from "../miniprogram/utils/hmacSha1";
+import { hmacSha1Base64 } from "../miniprogram/package-settings/services/hmacSha1";
 
 describe("hmacSha1Base64", () => {
   it("matches the RFC 2202 HMAC-SHA1 vector", () => {
