@@ -117,18 +117,20 @@
     </view>
   </view>
 
-  <view wx:if="{{packPickerOpen}}" class="drawer" catchtouchmove="noop">
+  <view wx:if="{{packPickerOpen}}" class="drawer {{packPickerClosing ? 'closing' : ''}}" catchtouchmove="noop">
     <view class="drawer-mask" bindtap="closePackPicker"></view>
-    <view class="drawer-panel">
-      <view class="drawer-handle"></view>
-      <view class="drawer-header">
-        <view class="drawer-copy">
-          <text class="drawer-title">选择归属卡包</text>
-          <text class="drawer-subtitle">卡片将保存到所选私有卡包</text>
+    <view class="drawer-panel {{packPickerDragging ? 'dragging' : ''}} {{packPickerDragSettling ? 'drag-settling' : ''}}" style="--pack-picker-drag-offset: {{packPickerDragOffset}}px;">
+      <view class="drawer-drag-area" bindtouchstart="onPackPickerDragStart" catchtouchmove="onPackPickerDragMove" bindtouchend="onPackPickerDragEnd" bindtouchcancel="onPackPickerDragCancel">
+        <view class="drawer-handle"></view>
+        <view class="drawer-header">
+          <view class="drawer-copy">
+            <text class="drawer-title">选择归属卡包</text>
+            <text class="drawer-subtitle">卡片将保存到所选私有卡包</text>
+          </view>
+          <button class="drawer-close" bindtap="closePackPicker">
+            <ui-icon name="close" size="{{32}}" color="#566058" />
+          </button>
         </view>
-        <button class="drawer-close" bindtap="closePackPicker">
-          <ui-icon name="close" size="{{32}}" color="#566058" />
-        </button>
       </view>
       <scroll-view class="pack-list" scroll-y="{{true}}">
         <view wx:for="{{packs}}" wx:key="id" class="pack-row {{selectedPack.id === item.id ? 'pack-selected' : ''}}"

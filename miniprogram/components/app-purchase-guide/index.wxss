@@ -55,6 +55,7 @@
 .product-title { min-width:0; overflow:hidden; color:#28332b; font-size:25rpx; font-weight:750; text-overflow:ellipsis; white-space:nowrap; }
 .product-badge { padding:3rpx 9rpx; flex:none; border-radius:999rpx; color:#9a6108; background:#fff0c7; font-size:17rpx; font-weight:700; }
 .coin-badge { color:#3f7418; background:#e5f4da; }
+.coin-bonus-tag { max-width:100%; margin-top:8rpx; padding:4rpx 10rpx; overflow:hidden; box-sizing:border-box; border-radius:999rpx; color:#3f7418; background:#e5f4da; font-size:17rpx; font-weight:700; line-height:1.35; text-overflow:ellipsis; white-space:nowrap; }
 .product-price { margin-top:9rpx; display:flex; align-items:baseline; color:#ed8b16; font-size:31rpx; font-weight:800; }
 .coin-price { color:#529917; }
 .product-price .currency { margin-right:2rpx; font-size:20rpx; }

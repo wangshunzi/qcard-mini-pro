@@ -4,6 +4,14 @@ import {
   updateProfile,
 } from "../../../services/profile";
 import { UI_ASSETS } from "../../../config/uiAssets";
+import {
+  clearBottomSheetGesture,
+  closeBottomSheet,
+  endBottomSheetDrag,
+  moveBottomSheetDrag,
+  resetBottomSheetGesture,
+  startBottomSheetDrag,
+} from "../../../utils/bottomSheetGesture";
 
 Page({
   data: {
@@ -19,12 +27,20 @@ Page({
     avatars: [] as Array<{ id: string; name: string; url: string; imagePath: string }>,
     assets: UI_ASSETS,
     avatarDrawerOpen: false,
+    avatarDrawerClosing: false,
+    avatarDrawerDragging: false,
+    avatarDrawerDragSettling: false,
+    avatarDrawerDragOffset: 0,
     initialSignature: "",
     hasChanges: false,
   },
 
   onLoad() {
     void this.load();
+  },
+
+  onUnload() {
+    clearBottomSheetGesture(this, "avatarDrawer");
   },
 
   async load() {
@@ -81,14 +97,37 @@ Page({
   },
 
   openAvatarDrawer() {
+    resetBottomSheetGesture(this, "avatarDrawer");
     this.setData({ avatarDrawerOpen: true });
   },
 
   closeAvatarDrawer() {
-    this.setData({ avatarDrawerOpen: false });
+    closeBottomSheet(this, "avatarDrawer", () => {
+      this.setData({ avatarDrawerOpen: false });
+      resetBottomSheetGesture(this, "avatarDrawer");
+    });
   },
 
   preventClose() {},
+
+  onAvatarDrawerDragStart(event: WechatMiniprogram.TouchEvent) {
+    startBottomSheetDrag(this, event, "avatarDrawer");
+  },
+
+  onAvatarDrawerDragMove(event: WechatMiniprogram.TouchEvent) {
+    moveBottomSheetDrag(this, event, "avatarDrawer");
+  },
+
+  onAvatarDrawerDragEnd() {
+    endBottomSheetDrag(this, "avatarDrawer", () => {
+      this.setData({ avatarDrawerOpen: false });
+      resetBottomSheetGesture(this, "avatarDrawer");
+    });
+  },
+
+  onAvatarDrawerDragCancel() {
+    this.onAvatarDrawerDragEnd();
+  },
 
   signature(values: {
     nickname?: string;
@@ -113,10 +152,15 @@ Page({
   },
 
   chooseAvatar(event: WechatMiniprogram.TouchEvent) {
+    clearBottomSheetGesture(this, "avatarDrawer");
     this.setData({
       avatar: String(event.currentTarget.dataset.url || ""),
       selectedAvatarId: String(event.currentTarget.dataset.id || ""),
       avatarDrawerOpen: false,
+      avatarDrawerClosing: false,
+      avatarDrawerDragging: false,
+      avatarDrawerDragSettling: false,
+      avatarDrawerDragOffset: 0,
     }, () => this.syncChanged());
   },
 

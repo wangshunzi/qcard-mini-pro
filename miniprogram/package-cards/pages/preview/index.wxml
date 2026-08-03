@@ -28,10 +28,12 @@
     </button>
   </view>
 
-  <view wx:if="{{feedbackOpen}}" class="feedback-root">
+  <view wx:if="{{feedbackOpen}}" class="feedback-root {{feedbackClosing ? 'closing' : ''}}" catchtouchmove="preventClose">
     <view class="feedback-backdrop" bindtap="closeFeedback"></view>
-    <view class="feedback-sheet safe-bottom" catchtap="preventClose">
-      <view class="feedback-handle"></view>
+    <view class="feedback-sheet safe-bottom {{feedbackDragging ? 'dragging' : ''}} {{feedbackDragSettling ? 'drag-settling' : ''}}" style="--feedback-drag-offset: {{feedbackDragOffset}}px;" catchtap="preventClose">
+      <view class="feedback-drag-area" bindtouchstart="onFeedbackDragStart" catchtouchmove="onFeedbackDragMove" bindtouchend="onFeedbackDragEnd" bindtouchcancel="onFeedbackDragCancel">
+        <view class="feedback-handle"></view>
+      </view>
       <block wx:if="{{payload.privateFace.feedback}}">
         <view class="feedback-status {{payload.privateFace.feedback.status}}">
           <ui-icon wx:if="{{payload.privateFace.feedback.status === 'resolved'}}" name="check-circle" size="{{36}}" color="currentColor" />

@@ -1,5 +1,13 @@
 import { readCardTransfer } from "../../../stores/cardTransfer";
 import { submitPrivateCardFaceFeedback } from "../../services/userContent";
+import {
+  clearBottomSheetGesture,
+  closeBottomSheet,
+  endBottomSheetDrag,
+  moveBottomSheetDrag,
+  resetBottomSheetGesture,
+  startBottomSheetDrag,
+} from "../../../utils/bottomSheetGesture";
 
 Page({
   data: {
@@ -8,6 +16,10 @@ Page({
     feedbackOpen: false,
     feedbackContent: "",
     submittingFeedback: false,
+    feedbackClosing: false,
+    feedbackDragging: false,
+    feedbackDragSettling: false,
+    feedbackDragOffset: 0,
   },
   onLoad() {
     const payload = readCardTransfer();
@@ -28,6 +40,7 @@ Page({
     (this.selectComponent("#card") as any)?.pause?.();
   },
   onUnload() {
+    clearBottomSheetGesture(this, "feedback");
     (this.selectComponent("#card") as any)?.pause?.();
   },
   openSourcePack() {
@@ -39,14 +52,51 @@ Page({
   },
 
   toggleFeedback() {
-    this.setData({ feedbackOpen: !this.data.feedbackOpen });
+    if (this.data.feedbackOpen) {
+      this.closeFeedback();
+      return;
+    }
+    resetBottomSheetGesture(this, "feedback");
+    this.setData({ feedbackOpen: true });
   },
 
   closeFeedback() {
-    this.setData({ feedbackOpen: false });
+    closeBottomSheet(
+      this,
+      "feedback",
+      () => {
+        this.setData({ feedbackOpen: false });
+        resetBottomSheetGesture(this, "feedback");
+      },
+      this.data.submittingFeedback,
+    );
   },
 
   preventClose() {},
+
+  onFeedbackDragStart(event: WechatMiniprogram.TouchEvent) {
+    startBottomSheetDrag(
+      this,
+      event,
+      "feedback",
+      this.data.submittingFeedback,
+    );
+  },
+
+  onFeedbackDragMove(event: WechatMiniprogram.TouchEvent) {
+    moveBottomSheetDrag(this, event, "feedback");
+  },
+
+  onFeedbackDragEnd() {
+    endBottomSheetDrag(this, "feedback", () => {
+      this.setData({ feedbackOpen: false });
+      resetBottomSheetGesture(this, "feedback");
+    });
+  },
+
+  onFeedbackDragCancel() {
+    this.onFeedbackDragEnd();
+  },
 
   onFeedbackInput(event: WechatMiniprogram.Input) {
     this.setData({ feedbackContent: event.detail.value.slice(0, 2000) });

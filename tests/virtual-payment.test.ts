@@ -21,6 +21,23 @@ import { resolveRuntimeEnvironment } from "../miniprogram/config/env";
 import { getWechatLoginCode } from "../miniprogram/services/auth";
 
 describe("WeChat virtual payment", () => {
+  it("keeps the configured coin bonus used by the App UI", () => {
+    expect(
+      normalizeVirtualProduct({
+        id: "coin-60",
+        type: "coin_package",
+        price: 600,
+        coinAmount: 60,
+        bonusCoinAmount: 2,
+        bonusCoinDescription: "限时额外赠送 2 咔豆",
+      }),
+    ).toMatchObject({
+      coinAmount: 60,
+      bonusCoinAmount: 2,
+      bonusCoinDescription: "限时额外赠送 2 咔豆",
+    });
+  });
+
   it("evaluates base-library and iOS requirements", () => {
     expect(compareVersion("3.7.10", "2.19.2")).toBe(1);
     expect(compareVersion("2.19.2", "2.19.2")).toBe(0);

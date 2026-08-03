@@ -72,6 +72,11 @@ describe("virtual-payment compliance", () => {
     expect(template).toContain("固定时长 · 一次性购买 · 不自动续费");
     expect(template).toContain('bindtap="selectProduct"');
     expect(template).toContain('bindtap="purchase"');
+    expect(logic).toContain("baseCoinAmount + bonusCoinAmount");
+    expect(logic).toContain("bonusCoinDescription");
+    expect(logic).toContain("selectedProduct.totalCoinAmount");
+    expect(template).toContain("coin-bonus-tag");
+    expect(template).toContain("item.bonusCoinAmount");
   });
 
   it("removes VIP products from the selectable state for active members", () => {

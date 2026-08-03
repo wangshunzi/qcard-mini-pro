@@ -507,7 +507,15 @@
   border-radius: 36rpx 36rpx 0 0;
   background: #ffffff;
   box-shadow: 0 -12rpx 38rpx rgba(20, 35, 24, .2);
+  animation: drawer-panel-in .22s ease-out both;
 }
+
+.drawer-panel.dragging { animation:none; transform:translateY(var(--pack-picker-drag-offset)); transition:none; }
+.drawer-panel.drag-settling { animation:none; transform:translateY(var(--pack-picker-drag-offset)); transition:transform .22s ease-in-out; }
+.drawer-drag-area { margin:-15rpx -30rpx 0; padding:15rpx 30rpx 0; }
+.drawer.closing .drawer-mask { animation:drawer-mask-out .22s ease-in both; }
+.drawer.closing .drawer-panel { animation:drawer-panel-out .22s ease-in both; }
+.drawer.closing .drawer-panel.drag-settling { animation:none; }
 
 .drawer-handle {
   width: 70rpx;
@@ -516,6 +524,10 @@
   border-radius: 999rpx;
   background: #d5ddd5;
 }
+
+@keyframes drawer-panel-in { from { transform:translateY(100%); } to { transform:translateY(0); } }
+@keyframes drawer-panel-out { from { transform:translateY(0); } to { transform:translateY(100%); } }
+@keyframes drawer-mask-out { from { opacity:1; } to { opacity:0; } }
 
 .drawer-header {
   display: flex;

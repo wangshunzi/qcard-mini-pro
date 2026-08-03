@@ -17,6 +17,7 @@ export interface VirtualPaymentProduct {
   displayPrice: string;
   coinAmount?: number;
   bonusCoinAmount?: number;
+  bonusCoinDescription?: string;
   vipDurationDays?: number;
   dailyRewardAmount?: number;
   badge?: string;
@@ -36,6 +37,7 @@ interface VirtualPaymentProductPayload {
   priceInCents?: number;
   coinAmount?: number;
   bonusCoinAmount?: number;
+  bonusCoinDescription?: string;
   subscriptionDurationDays?: number;
   vipDurationDays?: number;
   dailyRewardAmount?: number;
@@ -345,6 +347,9 @@ export function normalizeVirtualProduct(
       Number(product.bonusCoinAmount) > 0
         ? Number(product.bonusCoinAmount)
         : undefined,
+    bonusCoinDescription: product.bonusCoinDescription
+      ? String(product.bonusCoinDescription).trim()
+      : undefined,
     vipDurationDays:
       Number.isFinite(
         Number(product.vipDurationDays ?? product.subscriptionDurationDays),

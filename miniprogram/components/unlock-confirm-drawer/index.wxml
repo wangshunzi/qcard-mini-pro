@@ -1,24 +1,25 @@
-<view wx:if="{{open}}" class="unlock-drawer {{closing ? 'closing' : ''}}">
+<view wx:if="{{open}}" class="unlock-drawer {{closing ? 'closing' : ''}}" catchtouchmove="preventClose">
   <view class="unlock-backdrop" bindtap="close"></view>
-  <view class="unlock-panel safe-bottom" catchtap="preventClose">
-    <view class="unlock-handle"></view>
-
-    <view class="unlock-heading">
-      <view class="unlock-heading-main">
-        <view class="unlock-heading-icon">
-          <ui-icon name="lock-open-outline" size="{{39}}" color="#529917" />
+  <view class="unlock-panel safe-bottom {{dragging ? 'dragging' : ''}} {{dragSettling ? 'drag-settling' : ''}}" style="--unlock-drag-offset: {{dragOffset}}px;" catchtap="preventClose">
+    <view class="unlock-drag-area" bindtouchstart="onDragStart" catchtouchmove="onDragMove" bindtouchend="onDragEnd" bindtouchcancel="onDragCancel">
+      <view class="unlock-handle"></view>
+      <view class="unlock-heading">
+        <view class="unlock-heading-main">
+          <view class="unlock-heading-icon">
+            <ui-icon name="lock-open-outline" size="{{39}}" color="#529917" />
+          </view>
+          <view class="unlock-heading-copy">
+            <text class="unlock-title">{{canAfford ? '解锁确认' : '余额不足'}}</text>
+            <text class="unlock-subtitle">{{canAfford ? '请确认解锁卡包信息' : '请先充值后再解锁'}}</text>
+          </view>
         </view>
-        <view class="unlock-heading-copy">
-          <text class="unlock-title">{{canAfford ? '解锁确认' : '余额不足'}}</text>
-          <text class="unlock-subtitle">{{canAfford ? '请确认解锁卡包信息' : '请先充值后再解锁'}}</text>
+        <view class="unlock-balance">
+          <view class="unlock-balance-label">
+            <image class="unlock-coin-icon small" src="/assets/icons/coins.png" mode="aspectFit" />
+            <text>账户余额</text>
+          </view>
+          <text class="unlock-balance-value {{canAfford ? 'enough' : 'insufficient'}}">{{balanceFloor}} 咔豆</text>
         </view>
-      </view>
-      <view class="unlock-balance">
-        <view class="unlock-balance-label">
-          <image class="unlock-coin-icon small" src="/assets/icons/coins.png" mode="aspectFit" />
-          <text>账户余额</text>
-        </view>
-        <text class="unlock-balance-value {{canAfford ? 'enough' : 'insufficient'}}">{{balanceFloor}} 咔豆</text>
       </view>
     </view>
 

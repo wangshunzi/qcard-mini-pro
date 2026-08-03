@@ -18,8 +18,11 @@
 .tappable { transition:background .15s ease; }
 .state { min-height:70vh; display:flex; align-items:center; justify-content:center; color:var(--color-text-secondary); }
 .avatar-drawer-root { position:fixed; z-index:999; inset:0; }
-.avatar-drawer-backdrop { position:absolute; inset:0; background:rgba(13,32,23,.56); backdrop-filter:blur(8rpx); }
+.avatar-drawer-backdrop { position:absolute; inset:0; background:rgba(13,32,23,.56); backdrop-filter:blur(8rpx); animation:avatar-drawer-fade-in .22s ease-out both; }
 .avatar-drawer { position:absolute; right:0; bottom:0; left:0; max-height:78vh; display:flex; flex-direction:column; overflow:hidden; border-radius:30rpx 30rpx 0 0; background:#fff; animation:avatar-drawer-in .22s ease-out; }
+.avatar-drawer.dragging { animation:none; transform:translateY(var(--avatar-drawer-drag-offset)); transition:none; }
+.avatar-drawer.drag-settling { animation:none; transform:translateY(var(--avatar-drawer-drag-offset)); transition:transform .22s ease-in-out; }
+.avatar-drawer-drag-area { flex:none; }
 .drawer-handle { width:92rpx; height:8rpx; margin:18rpx auto 14rpx; flex:none; border-radius:999rpx; background:#d4d8d5; }
 .drawer-heading { padding:8rpx 34rpx 24rpx; display:flex; flex-direction:column; }
 .drawer-heading text:first-child { color:var(--color-text); font-size:34rpx; font-weight:800; }
@@ -32,3 +35,9 @@
 .avatar-option text { width:100%; margin-top:9rpx; overflow:hidden; color:var(--color-text-secondary); font-size:19rpx; line-height:1.3; text-align:center; text-overflow:ellipsis; white-space:nowrap; }
 .avatar-option.selected { border-color:var(--color-primary); background:var(--color-primary-10); box-shadow:0 6rpx 18rpx rgba(82,153,23,.1); }
 @keyframes avatar-drawer-in { from { transform:translateY(100%); } to { transform:translateY(0); } }
+@keyframes avatar-drawer-out { from { transform:translateY(0); } to { transform:translateY(100%); } }
+@keyframes avatar-drawer-fade-in { from { opacity:0; } to { opacity:1; } }
+@keyframes avatar-drawer-fade-out { from { opacity:1; } to { opacity:0; } }
+.avatar-drawer-root.closing .avatar-drawer-backdrop { animation:avatar-drawer-fade-out .22s ease-in both; }
+.avatar-drawer-root.closing .avatar-drawer { animation:avatar-drawer-out .22s ease-in both; }
+.avatar-drawer-root.closing .avatar-drawer.drag-settling { animation:none; }

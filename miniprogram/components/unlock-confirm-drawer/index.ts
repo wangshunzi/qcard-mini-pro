@@ -1,3 +1,12 @@
+import {
+  clearBottomSheetGesture,
+  closeBottomSheet,
+  endBottomSheetDrag,
+  moveBottomSheetDrag,
+  resetBottomSheetGesture,
+  startBottomSheetDrag,
+} from "../../utils/bottomSheetGesture";
+
 type PriceInfo = {
   finalPrice?: number;
   discountAmount?: number;
@@ -32,15 +41,18 @@ Component({
     balanceFloor: 0,
     canAfford: true,
     shortageText: "0",
+    dragging: false,
+    dragSettling: false,
+    dragOffset: 0,
   },
 
   observers: {
     "open, cardPackInfo, userBalance"(open: boolean, cardPackInfo: any, userBalance: number) {
       if (!open) {
-        this.clearCloseTimer();
-        this.setData({ closing: false });
+        resetBottomSheetGesture(this);
         return;
       }
+      resetBottomSheetGesture(this);
       const priceInfo = (cardPackInfo?.priceInfo ?? {}) as PriceInfo;
       const basePrice = amount(cardPackInfo?.basePrice);
       const currentPrice = amount(priceInfo.finalPrice ?? basePrice);
@@ -48,7 +60,6 @@ Component({
       const levelDiscountAmount = amount(priceInfo.levelDiscountAmount);
       const balanceFloor = Math.floor(amount(userBalance));
       this.setData({
-        closing: false,
         currentPrice,
         basePrice,
         discountAmount,
@@ -66,28 +77,42 @@ Component({
 
   lifetimes: {
     detached() {
-      this.clearCloseTimer();
+      clearBottomSheetGesture(this);
     },
   },
 
   methods: {
-    clearCloseTimer() {
-      const timer = (this as any)._closeTimer;
-      if (timer) clearTimeout(timer);
-      (this as any)._closeTimer = null;
-    },
-
     close() {
-      if ((this.data as any).isLoading || (this.data as any).closing) return;
-      this.clearCloseTimer();
-      this.setData({ closing: true });
-      (this as any)._closeTimer = setTimeout(() => {
-        (this as any)._closeTimer = null;
-        this.triggerEvent("close");
-      }, 220);
+      closeBottomSheet(
+        this,
+        "",
+        () => this.triggerEvent("close"),
+        Boolean((this.data as any).isLoading),
+      );
     },
 
     preventClose() {},
+
+    onDragStart(event: WechatMiniprogram.TouchEvent) {
+      startBottomSheetDrag(
+        this,
+        event,
+        "",
+        Boolean((this.data as any).isLoading),
+      );
+    },
+
+    onDragMove(event: WechatMiniprogram.TouchEvent) {
+      moveBottomSheetDrag(this, event);
+    },
+
+    onDragEnd() {
+      endBottomSheetDrag(this, "", () => this.triggerEvent("close"));
+    },
+
+    onDragCancel() {
+      this.onDragEnd();
+    },
 
     confirm() {
       const state = this.data as any;

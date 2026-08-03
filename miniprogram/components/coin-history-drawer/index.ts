@@ -4,6 +4,14 @@ import {
   type BalanceHistoryItem,
 } from "../../services/wallet";
 import { UI_ASSETS } from "../../config/uiAssets";
+import {
+  clearBottomSheetGesture,
+  closeBottomSheet,
+  endBottomSheetDrag,
+  moveBottomSheetDrag,
+  resetBottomSheetGesture,
+  startBottomSheetDrag,
+} from "../../utils/bottomSheetGesture";
 
 type DisplayHistoryItem = BalanceHistoryItem & {
   label: string;
@@ -82,20 +90,51 @@ Component({
     loading: false,
     page: 1,
     totalPages: 1,
+    closing: false,
+    dragging: false,
+    dragSettling: false,
+    dragOffset: 0,
   },
 
   observers: {
     open(open: boolean) {
-      if (open) void this.resetAndLoad();
+      if (!open) {
+        resetBottomSheetGesture(this);
+        return;
+      }
+      resetBottomSheetGesture(this);
+      void this.resetAndLoad();
+    },
+  },
+
+  lifetimes: {
+    detached() {
+      clearBottomSheetGesture(this);
     },
   },
 
   methods: {
     close() {
-      this.triggerEvent("close");
+      closeBottomSheet(this, "", () => this.triggerEvent("close"));
     },
 
     preventClose() {},
+
+    onDragStart(event: WechatMiniprogram.TouchEvent) {
+      startBottomSheetDrag(this, event);
+    },
+
+    onDragMove(event: WechatMiniprogram.TouchEvent) {
+      moveBottomSheetDrag(this, event);
+    },
+
+    onDragEnd() {
+      endBottomSheetDrag(this, "", () => this.triggerEvent("close"));
+    },
+
+    onDragCancel() {
+      this.onDragEnd();
+    },
 
     recharge() {
       this.triggerEvent("recharge");
@@ -148,10 +187,8 @@ Component({
     openPack(event: WechatMiniprogram.TouchEvent) {
       const id = String(event.currentTarget.dataset.id || "");
       if (!id) return;
-      this.close();
-      wx.navigateTo({
-        url: `/package-cards/pages/pack-detail/index?id=${encodeURIComponent(id)}`,
-      });
+      this.triggerEvent("close");
+      wx.navigateTo({ url: `/package-cards/pages/pack-detail/index?id=${encodeURIComponent(id)}` });
     },
   },
 });

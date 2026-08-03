@@ -1,23 +1,25 @@
-<view wx:if="{{open}}" class="drawer-root" catchtouchmove="preventClose">
+<view wx:if="{{open}}" class="drawer-root {{closing ? 'closing' : ''}}" catchtouchmove="preventClose">
   <view class="drawer-backdrop" bindtap="close"></view>
-  <view class="drawer-panel safe-bottom" catchtap="preventClose">
-    <view class="drawer-handle"></view>
-    <view class="drawer-user">
-      <image class="drawer-avatar" src="{{profile.avatar || assets.appIcon}}" mode="aspectFill" />
-      <view class="drawer-profile">
-        <view class="drawer-name-row">
-          <text class="drawer-name">{{profile.nickname || '用户'}}</text>
-          <text class="drawer-level">Lv.{{profile.experience.level || 1}}</text>
+  <view class="drawer-panel safe-bottom {{dragging ? 'dragging' : ''}} {{dragSettling ? 'drag-settling' : ''}}" style="--drawer-drag-offset: {{dragOffset}}px;" catchtap="preventClose">
+    <view class="drawer-drag-area" bindtouchstart="onDragStart" catchtouchmove="onDragMove" bindtouchend="onDragEnd" bindtouchcancel="onDragCancel">
+      <view class="drawer-handle"></view>
+      <view class="drawer-user">
+        <image class="drawer-avatar" src="{{profile.avatar || assets.appIcon}}" mode="aspectFill" />
+        <view class="drawer-profile">
+          <view class="drawer-name-row">
+            <text class="drawer-name">{{profile.nickname || '用户'}}</text>
+            <text class="drawer-level">Lv.{{profile.experience.level || 1}}</text>
+          </view>
+          <view class="drawer-balance">
+            <ui-icon name="wallet" size="{{32}}" color="#f4aa22" />
+            <text>余额: {{profile.balance || 0}}</text>
+          </view>
         </view>
-        <view class="drawer-balance">
-          <ui-icon name="wallet" size="{{32}}" color="#f4aa22" />
-          <text>余额: {{profile.balance || 0}}</text>
-        </view>
+        <button class="recharge-button" bindtap="recharge" hover-class="recharge-hover">
+          <ui-icon name="plus" size="{{35}}" color="#3e2a05" />
+          <text>购买</text>
+        </button>
       </view>
-      <button class="recharge-button" bindtap="recharge" hover-class="recharge-hover">
-        <ui-icon name="plus" size="{{35}}" color="#3e2a05" />
-        <text>购买</text>
-      </button>
     </view>
 
     <scroll-view class="filter-scroll" scroll-x enhanced show-scrollbar="{{false}}">

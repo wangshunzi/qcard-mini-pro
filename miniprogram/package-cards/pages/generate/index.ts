@@ -11,6 +11,14 @@ import {
   toPrivateCardData,
 } from "../../services/userContent";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
+import {
+  clearBottomSheetGesture,
+  closeBottomSheet,
+  endBottomSheetDrag,
+  moveBottomSheetDrag,
+  resetBottomSheetGesture,
+  startBottomSheetDrag,
+} from "../../../utils/bottomSheetGesture";
 
 type CardSlot = "front" | "back";
 
@@ -71,6 +79,10 @@ Page({
     selectedPack: null as PrivateCardPack | null,
     packs: [] as PrivateCardPack[],
     packPickerOpen: false,
+    packPickerClosing: false,
+    packPickerDragging: false,
+    packPickerDragSettling: false,
+    packPickerDragOffset: 0,
     previewOpen: false,
     saving: false,
     heroBackground: "",
@@ -119,6 +131,7 @@ Page({
 
   onUnload() {
     this.clearPrivateFacePolling();
+    clearBottomSheetGesture(this, "packPicker");
     (this.selectComponent("#full-preview") as any)?.pause?.();
   },
 
@@ -297,17 +310,50 @@ Page({
   },
 
   openPackPicker() {
+    resetBottomSheetGesture(this, "packPicker");
     this.setData({ packPickerOpen: true });
   },
 
   closePackPicker() {
-    this.setData({ packPickerOpen: false });
+    closeBottomSheet(this, "packPicker", () => {
+      this.setData({ packPickerOpen: false });
+      resetBottomSheetGesture(this, "packPicker");
+    });
+  },
+
+  onPackPickerDragStart(event: WechatMiniprogram.TouchEvent) {
+    startBottomSheetDrag(this, event, "packPicker");
+  },
+
+  onPackPickerDragMove(event: WechatMiniprogram.TouchEvent) {
+    moveBottomSheetDrag(this, event, "packPicker");
+  },
+
+  onPackPickerDragEnd() {
+    endBottomSheetDrag(this, "packPicker", () => {
+      this.setData({ packPickerOpen: false });
+      resetBottomSheetGesture(this, "packPicker");
+    });
+  },
+
+  onPackPickerDragCancel() {
+    this.onPackPickerDragEnd();
   },
 
   choosePack(event: WechatMiniprogram.TouchEvent) {
     const id = String(event.currentTarget.dataset.id || "");
     const selectedPack = this.data.packs.find((item) => item.id === id) ?? null;
-    if (selectedPack) this.setData({ selectedPack, packPickerOpen: false });
+    if (selectedPack) {
+      clearBottomSheetGesture(this, "packPicker");
+      this.setData({
+        selectedPack,
+        packPickerOpen: false,
+        packPickerClosing: false,
+        packPickerDragging: false,
+        packPickerDragSettling: false,
+        packPickerDragOffset: 0,
+      });
+    }
   },
 
   openPreview() {

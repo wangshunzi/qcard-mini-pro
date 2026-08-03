@@ -32,13 +32,15 @@
     </view>
   </block>
 
-  <view wx:if="{{avatarDrawerOpen}}" class="avatar-drawer-root">
+  <view wx:if="{{avatarDrawerOpen}}" class="avatar-drawer-root {{avatarDrawerClosing ? 'closing' : ''}}" catchtouchmove="preventClose">
     <view class="avatar-drawer-backdrop" bindtap="closeAvatarDrawer"></view>
-    <view class="avatar-drawer safe-bottom" catchtap="preventClose">
-      <view class="drawer-handle"></view>
-      <view class="drawer-heading">
-        <text>选择头像</text>
-        <text wx:if="{{selectedAvatarId}}">选择一个喜欢的头像</text>
+    <view class="avatar-drawer safe-bottom {{avatarDrawerDragging ? 'dragging' : ''}} {{avatarDrawerDragSettling ? 'drag-settling' : ''}}" style="--avatar-drawer-drag-offset: {{avatarDrawerDragOffset}}px;" catchtap="preventClose">
+      <view class="avatar-drawer-drag-area" bindtouchstart="onAvatarDrawerDragStart" catchtouchmove="onAvatarDrawerDragMove" bindtouchend="onAvatarDrawerDragEnd" bindtouchcancel="onAvatarDrawerDragCancel">
+        <view class="drawer-handle"></view>
+        <view class="drawer-heading">
+          <text>选择头像</text>
+          <text wx:if="{{selectedAvatarId}}">选择一个喜欢的头像</text>
+        </view>
       </view>
       <scroll-view scroll-y class="avatar-grid-scroll">
         <view class="avatar-grid">

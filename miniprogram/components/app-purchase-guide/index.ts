@@ -13,6 +13,7 @@ import {
 interface ProductView extends VirtualPaymentProduct {
   benefitText: string;
   detailText: string;
+  totalCoinAmount: number;
   durationLabel: string;
   purchaseState: "" | "continue" | "confirming";
   purchaseLocked: boolean;
@@ -44,20 +45,23 @@ function toProductView(product: VirtualPaymentProduct): ProductView {
       : "continue"
     : "";
   const isCoin = product.kind === "coin";
+  const baseCoinAmount = product.coinAmount || 0;
+  const bonusCoinAmount = product.bonusCoinAmount || 0;
   return {
     ...product,
     purchaseState,
     purchaseLocked: purchaseState === "confirming",
     durationLabel: isCoin ? "" : getDurationLabel(product.vipDurationDays),
+    totalCoinAmount: isCoin ? baseCoinAmount + bonusCoinAmount : 0,
     benefitText: isCoin
-      ? product.bonusCoinAmount
-        ? `${product.coinAmount || 0} 咔豆 + 赠 ${product.bonusCoinAmount}`
-        : `${product.coinAmount || 0} 咔豆`
+      ? bonusCoinAmount
+        ? product.bonusCoinDescription || `额外赠送 ${bonusCoinAmount} 咔豆`
+        : "支付成功后立即到账"
       : `${product.vipDurationDays || 0} 天固定权益`,
     detailText: isCoin
-      ? product.bonusCoinAmount
-        ? `含赠送 ${product.bonusCoinAmount} 咔豆`
-        : "支付成功后发放到统一余额"
+      ? bonusCoinAmount
+        ? `合计到账 ${baseCoinAmount + bonusCoinAmount} 咔豆`
+        : "支付成功后发放到统一咔豆余额"
       : product.dailyRewardAmount
         ? `每日可领取 ${product.dailyRewardAmount} 咔豆`
         : "一次性购买，不自动续费",
@@ -93,7 +97,7 @@ function productSelectionState(
       ? "查询订单状态"
       : selectedProduct.kind === "vip"
         ? `开通 ${selectedProduct.durationLabel || selectedProduct.name}`
-        : `购买 ${selectedProduct.coinAmount || 0} 咔豆`;
+        : `购买 ${selectedProduct.totalCoinAmount || 0} 咔豆`;
   return {
     products: availableProducts,
     subscriptionProducts,

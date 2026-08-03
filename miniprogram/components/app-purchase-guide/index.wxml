@@ -119,6 +119,7 @@
                 <text class="product-title">{{item.coinAmount || 0}} 咔豆</text>
                 <text wx:if="{{item.badge}}" class="product-badge coin-badge">{{item.badge}}</text>
               </view>
+              <text wx:if="{{item.bonusCoinAmount}}" class="coin-bonus-tag">{{item.benefitText}}</text>
               <text class="product-detail">{{item.detailText}}</text>
               <view class="product-price coin-price"><text class="currency">¥</text><text>{{item.displayPrice}}</text></view>
               <text wx:if="{{item.purchaseState === 'confirming'}}" class="product-pending">上一笔订单确认中，点击可立即查询状态</text>

@@ -1,6 +1,9 @@
 .drawer-root { position:fixed; z-index:999; inset:0; }
-.drawer-backdrop { position:absolute; inset:0; background:rgba(13,32,23,.64); backdrop-filter:blur(10rpx); }
+.drawer-backdrop { position:absolute; inset:0; background:rgba(13,32,23,.64); backdrop-filter:blur(10rpx); animation:drawer-fade-in .22s ease-out both; }
 .drawer-panel { position:absolute; right:0; bottom:0; left:0; height:85vh; display:flex; flex-direction:column; overflow:hidden; border-radius:28rpx 28rpx 0 0; background:#fff; box-shadow:0 -12rpx 36rpx rgba(0,0,0,.18); animation:drawer-in .24s ease-out; }
+.drawer-panel.dragging { animation:none; transform:translateY(var(--drawer-drag-offset)); transition:none; }
+.drawer-panel.drag-settling { animation:none; transform:translateY(var(--drawer-drag-offset)); transition:transform .22s ease-in-out; }
+.drawer-drag-area { flex:none; }
 .drawer-handle { width:102rpx; height:8rpx; margin:20rpx auto 16rpx; flex:none; border-radius:999rpx; background:#d0d0d0; }
 .drawer-user { min-height:122rpx; padding:0 34rpx 26rpx; display:flex; align-items:center; gap:22rpx; border-bottom:1rpx solid #eceeec; box-shadow:0 4rpx 12rpx rgba(0,0,0,.025); }
 .drawer-avatar { width:96rpx; height:96rpx; flex:none; border:2rpx solid #cce7b8; border-radius:50%; background:#eef4ef; }
@@ -41,4 +44,10 @@
 .loading-ring { width:50rpx; height:50rpx; box-sizing:border-box; border:5rpx solid #e6eae6; border-top-color:#529917; border-radius:50%; animation:spin .8s linear infinite; }
 .load-more { padding:20rpx; color:#529917; font-size:22rpx; text-align:center; }
 @keyframes drawer-in { from { transform:translateY(100%); } to { transform:translateY(0); } }
+@keyframes drawer-out { from { transform:translateY(0); } to { transform:translateY(100%); } }
+@keyframes drawer-fade-in { from { opacity:0; } to { opacity:1; } }
+@keyframes drawer-fade-out { from { opacity:1; } to { opacity:0; } }
+.drawer-root.closing .drawer-backdrop { animation:drawer-fade-out .22s ease-in both; }
+.drawer-root.closing .drawer-panel { animation:drawer-out .22s ease-in both; }
+.drawer-root.closing .drawer-panel.drag-settling { animation:none; }
 @keyframes spin { to { transform:rotate(360deg); } }
