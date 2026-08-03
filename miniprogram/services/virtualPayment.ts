@@ -2,10 +2,7 @@ import { ENV } from "../config/env";
 import { sessionStore } from "../stores/session";
 import { logger } from "../utils/logger";
 import { createRequestId } from "../utils/requestId";
-import {
-  bindCurrentWechatMiniIdentity,
-  getWechatLoginCode,
-} from "./auth";
+import { bindCurrentWechatMiniIdentity, getWechatLoginCode } from "./auth";
 import { ApiError, request } from "./http";
 
 export type VirtualProductKind = "coin" | "vip";
@@ -21,7 +18,10 @@ export interface VirtualPaymentProduct {
   coinAmount?: number;
   bonusCoinAmount?: number;
   vipDurationDays?: number;
+  dailyRewardAmount?: number;
   badge?: string;
+  /** 从 Server 实时读取；下单时再次由 Server 校验并固化到订单。 */
+  paymentEnv: 0 | 1;
 }
 
 interface VirtualPaymentProductPayload {
@@ -38,13 +38,11 @@ interface VirtualPaymentProductPayload {
   bonusCoinAmount?: number;
   subscriptionDurationDays?: number;
   vipDurationDays?: number;
+  dailyRewardAmount?: number;
   badge?: string;
   isRecommended?: boolean;
   tags?: string | string[];
-  channelMapping?: {
-    priceInCents?: number;
-    status?: string;
-  };
+  paymentEnv?: 0 | 1;
 }
 
 export interface PreparedVirtualPayment {
@@ -55,30 +53,17 @@ export interface PreparedVirtualPayment {
   paySig: string;
   signature: string;
   expiresAt: string;
+  env?: 0 | 1;
 }
 
 export type PaymentAxisStatus =
-  | "PENDING"
-  | "SUCCEEDED"
-  | "FAILED"
-  | "CANCELLED"
-  | "CLOSED"
-  | "UNKNOWN";
+  "PENDING" | "SUCCEEDED" | "FAILED" | "CANCELLED" | "CLOSED" | "UNKNOWN";
 
 export type FulfillmentAxisStatus =
-  | "PENDING"
-  | "PROCESSING"
-  | "SUCCEEDED"
-  | "FAILED"
-  | "REVERSED"
-  | "UNKNOWN";
+  "PENDING" | "PROCESSING" | "SUCCEEDED" | "FAILED" | "REVERSED" | "UNKNOWN";
 
 export type RefundAxisStatus =
-  | "NONE"
-  | "PENDING"
-  | "SUCCEEDED"
-  | "FAILED"
-  | "UNKNOWN";
+  "NONE" | "PENDING" | "SUCCEEDED" | "FAILED" | "UNKNOWN";
 
 export interface VirtualPaymentOrder {
   id?: string;
@@ -202,14 +187,9 @@ const PENDING_STORAGE_KEY = "qcard.virtual-payment.pending.v1";
 const MIN_BASE_LIBRARY_VERSION = "2.19.2";
 const MIN_IOS_VERSION = "15.0.0";
 const MIN_IOS_WECHAT_VERSION = "8.0.68";
-const TERMINAL_PAYMENT_STATUSES = new Set([
-  "FAILED",
-  "CANCELLED",
-  "CLOSED",
-]);
+const TERMINAL_PAYMENT_STATUSES = new Set(["FAILED", "CANCELLED", "CLOSED"]);
 const MAX_PENDING_RECORDS = 20;
-export const VIRTUAL_PAYMENT_RECONCILIATION_WINDOW_MS =
-  7 * 24 * 60 * 60 * 1000;
+export const VIRTUAL_PAYMENT_RECONCILIATION_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 const PREPARE_INTENT_TTL_MS = 10 * 60 * 1000;
 const PENDING_QUERY_CONCURRENCY = 3;
 const SIGNED_PHASE_MAX_RETRY_MS = 5 * 60 * 1000;
@@ -244,10 +224,9 @@ export function evaluateVirtualPaymentCapability(
   canRequestVirtualPayment: boolean,
 ): VirtualPaymentCapability {
   const rawPlatform = String(system.platform || "").toLowerCase();
-  const platform =
-    /harmony|ohos/i.test(`${rawPlatform} ${system.system || ""}`)
-      ? "harmony"
-      : rawPlatform;
+  const platform = /harmony|ohos/i.test(`${rawPlatform} ${system.system || ""}`)
+    ? "harmony"
+    : rawPlatform;
   if (platform === "devtools") {
     return {
       supported: false,
@@ -270,7 +249,9 @@ export function evaluateVirtualPaymentCapability(
   }
 
   if (platform === "ios") {
-    if (compareVersion(parseIosVersion(system.system || ""), MIN_IOS_VERSION) < 0) {
+    if (
+      compareVersion(parseIosVersion(system.system || ""), MIN_IOS_VERSION) < 0
+    ) {
       return {
         supported: false,
         reason: "iPhone 需升级至 iOS 15 或更高版本后购买",
@@ -278,9 +259,7 @@ export function evaluateVirtualPaymentCapability(
         platform,
       };
     }
-    if (
-      compareVersion(system.version || "0", MIN_IOS_WECHAT_VERSION) < 0
-    ) {
+    if (compareVersion(system.version || "0", MIN_IOS_WECHAT_VERSION) < 0) {
       return {
         supported: false,
         reason: "iPhone 需升级至微信 8.0.68 或更高版本后购买",
@@ -319,12 +298,10 @@ export function getVirtualPaymentCapability(): VirtualPaymentCapability {
   return evaluateVirtualPaymentCapability(system, canRequest);
 }
 
-function inferProductKind(product: VirtualPaymentProductPayload): VirtualProductKind {
-  const source = [
-    product.fulfillmentType,
-    product.productType,
-    product.type,
-  ]
+function inferProductKind(
+  product: VirtualPaymentProductPayload,
+): VirtualProductKind {
+  const source = [product.fulfillmentType, product.productType, product.type]
     .filter(Boolean)
     .join("_")
     .toLowerCase();
@@ -332,9 +309,7 @@ function inferProductKind(product: VirtualPaymentProductPayload): VirtualProduct
 }
 
 function centsFromProduct(product: VirtualPaymentProductPayload) {
-  const explicit = Number(
-    product.channelMapping?.priceInCents ?? product.priceInCents,
-  );
+  const explicit = Number(product.priceInCents);
   if (Number.isFinite(explicit) && explicit >= 0) return Math.round(explicit);
   const priceInCents = Number(product.price);
   return Number.isFinite(priceInCents) && priceInCents >= 0
@@ -344,6 +319,7 @@ function centsFromProduct(product: VirtualPaymentProductPayload) {
 
 export function normalizeVirtualProduct(
   product: VirtualPaymentProductPayload,
+  runtimeEnv?: 0 | 1,
 ): VirtualPaymentProduct {
   const priceInCents = centsFromProduct(product);
   const firstTag = Array.isArray(product.tags)
@@ -360,7 +336,8 @@ export function normalizeVirtualProduct(
     priceInCents,
     displayPrice: (priceInCents / 100).toFixed(2),
     coinAmount:
-      Number.isFinite(Number(product.coinAmount)) && Number(product.coinAmount) > 0
+      Number.isFinite(Number(product.coinAmount)) &&
+      Number(product.coinAmount) > 0
         ? Number(product.coinAmount)
         : undefined,
     bonusCoinAmount:
@@ -375,25 +352,44 @@ export function normalizeVirtualProduct(
       Number(product.vipDurationDays ?? product.subscriptionDurationDays) > 0
         ? Number(product.vipDurationDays ?? product.subscriptionDurationDays)
         : undefined,
+    dailyRewardAmount:
+      Number.isFinite(Number(product.dailyRewardAmount)) &&
+      Number(product.dailyRewardAmount) > 0
+        ? Number(product.dailyRewardAmount)
+        : undefined,
     badge: product.badge
       ? String(product.badge)
       : product.isRecommended
         ? "推荐"
         : firstTag,
+    paymentEnv: runtimeEnv ?? product.paymentEnv ?? 0,
   };
 }
 
 export async function listVirtualPaymentProducts() {
-  const response = await request<
-    VirtualPaymentProductPayload[] | { items?: VirtualPaymentProductPayload[] }
-  >({
+  const response = await request<{
+    env: 0 | 1;
+    environment: "production" | "sandbox";
+    enabled: boolean;
+    ready: boolean;
+    items?: VirtualPaymentProductPayload[];
+  }>({
     path: "/api/client/products",
-    data: { channel: "wechat_virtual", env: ENV.virtualPaymentEnv },
+    data: { channel: "wechat_virtual" },
   });
-  const items = Array.isArray(response) ? response : response.items ?? [];
+  if (response.env !== 0 && response.env !== 1) {
+    throw new Error("服务端支付环境无效，请稍后重试");
+  }
+  // 正式版绝不进入沙箱。体验版/开发版则实时跟随管理后台，因而可在
+  // iPhone 上把后台切到生产后测试真实支付，无需重新上传体验版。
+  if (ENV.envVersion === "release" && response.env !== 0) {
+    throw new Error("支付服务维护中，请稍后再试");
+  }
+  if (!response.enabled || !response.ready) return [];
+  const items = response.items ?? [];
   return items
     .filter((item) => item?.id)
-    .map(normalizeVirtualProduct)
+    .map((item) => normalizeVirtualProduct(item, response.env))
     .sort((left, right) => left.priceInCents - right.priceInCents);
 }
 
@@ -488,7 +484,11 @@ export function normalizeVirtualPaymentOrder(
     ),
     fulfillmentStatus: normalizeFulfillmentStatus(
       order.fulfillmentStatus ||
-        (legacyDelivered ? "SUCCEEDED" : legacyRefunded ? "REVERSED" : undefined),
+        (legacyDelivered
+          ? "SUCCEEDED"
+          : legacyRefunded
+            ? "REVERSED"
+            : undefined),
     ),
     refundStatus: normalizeRefundStatus(
       order.refundStatus || (legacyRefunded ? "SUCCEEDED" : undefined),
@@ -596,8 +596,7 @@ export function claimVirtualFulfillmentNotification(orderNo: string) {
   if (reportedFulfillmentOrderNos.has(orderNo)) return false;
   if (reportedFulfillmentOrderNos.size >= 100) {
     const oldest = reportedFulfillmentOrderNos.values().next().value as
-      | string
-      | undefined;
+      string | undefined;
     if (oldest) reportedFulfillmentOrderNos.delete(oldest);
   }
   reportedFulfillmentOrderNos.add(orderNo);
@@ -623,10 +622,31 @@ export async function getVirtualPaymentOrder(orderNo: string) {
   return order;
 }
 
-export async function listVirtualPaymentOrders(params: {
-  page?: number;
-  limit?: number;
-} = {}): Promise<VirtualPaymentOrderPage> {
+async function reportVirtualPaymentInvocationFailure(
+  prepared: PreparedVirtualPayment,
+  failure: VirtualPaymentFailure,
+) {
+  const response = await request<
+    VirtualPaymentOrderPayload,
+    { errCode: number; errMsg?: string }
+  >({
+    path: `/api/client/wechat-virtual/orders/${encodeURIComponent(prepared.orderNo)}/invocation-failure`,
+    method: "POST",
+    data: {
+      errCode: failure.code,
+      ...(failure.diagnostic ? { errMsg: failure.diagnostic } : {}),
+    },
+    idempotent: true,
+  });
+  return normalizeVirtualPaymentOrder(response);
+}
+
+export async function listVirtualPaymentOrders(
+  params: {
+    page?: number;
+    limit?: number;
+  } = {},
+): Promise<VirtualPaymentOrderPage> {
   const page = params.page ?? 1;
   const limit = params.limit ?? 20;
   const response = await request<
@@ -647,7 +667,7 @@ export async function listVirtualPaymentOrders(params: {
       paymentMethod: "wechat_miniprogram_virtual",
     },
   });
-  const items = Array.isArray(response) ? response : response.items ?? [];
+  const items = Array.isArray(response) ? response : (response.items ?? []);
   const total = Array.isArray(response)
     ? response.length
     : Number(response.total ?? items.length);
@@ -682,6 +702,7 @@ async function prepareVirtualPayment(
   productId: string,
   clientRequestId: string,
   platform: string,
+  expectedEnv: 0 | 1,
 ) {
   const maxAttempts = ENV.requestRetryCount + 1;
   let prepared: PreparedVirtualPayment | undefined;
@@ -706,7 +727,7 @@ async function prepareVirtualPayment(
           productId,
           wxCode,
           clientRequestId,
-          expectedEnv: ENV.virtualPaymentEnv,
+          expectedEnv,
         },
         idempotent: true,
         retry: false,
@@ -787,12 +808,52 @@ export function classifyVirtualPaymentFailure(
       message: "支付凭证已过期，请重新发起购买",
     };
   }
+  if ([1001, -15001, -15016].includes(code)) {
+    return {
+      code,
+      cancelled: false,
+      retryable: false,
+      message: `微信支付参数校验失败（错误码 ${code}）`,
+    };
+  }
+  if ([-15005, -15006].includes(code)) {
+    return {
+      code,
+      cancelled: false,
+      retryable: false,
+      message: `微信支付签名校验失败（错误码 ${code}）`,
+    };
+  }
+  if (code === -15013) {
+    return {
+      code,
+      cancelled: false,
+      retryable: false,
+      message: "商品价格与微信后台不一致（错误码 -15013）",
+    };
+  }
+  if (code === -15011) {
+    return {
+      code,
+      cancelled: false,
+      retryable: false,
+      message: "微信支付环境配置不一致（错误码 -15011）",
+    };
+  }
+  if (code === -15002 || code === -15012) {
+    return {
+      code,
+      cancelled: false,
+      retryable: true,
+      message: `本次支付订单已关闭，请重新购买（错误码 ${code}）`,
+    };
+  }
   if ([-15008, -15009, -15010, -15014, -15018].includes(code)) {
     return {
       code,
       cancelled: false,
       retryable: false,
-      message: "该商品暂不可购买，请稍后再试",
+      message: `该商品尚未在微信侧生效（错误码 ${code}）`,
     };
   }
   if ([-15017, -15019].includes(code)) {
@@ -807,8 +868,15 @@ export function classifyVirtualPaymentFailure(
     code,
     cancelled: false,
     retryable: true,
-    message: "支付未完成，请稍后重试",
+    message: `支付未完成（微信错误码 ${code}），请稍后重试`,
   };
+}
+
+const AMBIGUOUS_PAYMENT_FAILURE_CODES = new Set([-1, -5, -15003]);
+
+/** Only these failures may have reached WeChat and must keep reconciliation. */
+export function shouldReconcileVirtualPaymentFailure(code: number) {
+  return AMBIGUOUS_PAYMENT_FAILURE_CODES.has(code);
 }
 
 export function sanitizeVirtualPaymentDiagnostic(value: unknown) {
@@ -832,26 +900,35 @@ function requestVirtualPayment(
       success: () => void;
       fail: (result: { errCode?: number; errMsg?: string }) => void;
     }) => void;
-    invoke({
-      ...buildVirtualPaymentInvocation(prepared),
-      success: () => resolve({ ok: true }),
-      fail: (result) => {
-        const code = Number(result.errCode ?? -1);
-        const diagnostic = sanitizeVirtualPaymentDiagnostic(result.errMsg);
-        logger.warn("微信虚拟支付界面返回失败", {
-          orderNo: prepared.orderNo,
-          errCode: code,
-          ...(diagnostic ? { errMsg: diagnostic } : {}),
-        });
-        resolve({
-          ok: false,
-          failure: {
-            ...classifyVirtualPaymentFailure(code),
-            ...(diagnostic ? { diagnostic } : {}),
-          },
-        });
-      },
-    });
+    const fail = (result: { errCode?: number; errMsg?: string }) => {
+      const rawCode = Number(result.errCode ?? -1);
+      const code = Number.isInteger(rawCode) ? rawCode : -1;
+      const diagnostic = sanitizeVirtualPaymentDiagnostic(result.errMsg);
+      logger.warn("微信虚拟支付界面返回失败", {
+        orderNo: prepared.orderNo,
+        errCode: code,
+        ...(diagnostic ? { errMsg: diagnostic } : {}),
+      });
+      resolve({
+        ok: false,
+        failure: {
+          ...classifyVirtualPaymentFailure(code),
+          ...(diagnostic ? { diagnostic } : {}),
+        },
+      });
+    };
+    try {
+      invoke({
+        ...buildVirtualPaymentInvocation(prepared),
+        success: () => resolve({ ok: true }),
+        fail,
+      });
+    } catch (error) {
+      fail({
+        errCode: 1001,
+        errMsg: error instanceof Error ? error.message : String(error),
+      });
+    }
   });
 }
 
@@ -943,9 +1020,7 @@ export function normalizePendingVirtualPaymentRecord(
     )
       ? item.paymentUiResult!
       : "waiting",
-    stage: ["preparing", "payment", "reconciling"].includes(
-      String(item.stage),
-    )
+    stage: ["preparing", "payment", "reconciling"].includes(String(item.stage))
       ? item.stage
       : orderNo
         ? "reconciling"
@@ -967,7 +1042,11 @@ export function normalizePendingVirtualPaymentRecord(
       ? { lastErrorCode: Number(item.lastErrorCode) }
       : {}),
     ...(item.lastErrorMessage
-      ? { lastErrorMessage: sanitizeVirtualPaymentDiagnostic(item.lastErrorMessage) }
+      ? {
+          lastErrorMessage: sanitizeVirtualPaymentDiagnostic(
+            item.lastErrorMessage,
+          ),
+        }
       : {}),
   };
 }
@@ -1048,7 +1127,9 @@ export function getPendingVirtualPayments() {
 }
 
 export function getPendingVirtualPaymentForProduct(productId: string) {
-  return getPendingVirtualPayments().find((item) => item.productId === productId);
+  return getPendingVirtualPayments().find(
+    (item) => item.productId === productId,
+  );
 }
 
 export function getPendingVirtualPaymentRetryDelay(
@@ -1074,16 +1155,14 @@ export function getPendingVirtualPaymentRetryDelay(
   }
   return Math.min(
     RECONCILIATION_MAX_RETRY_MS,
-    RECONCILIATION_BASE_RETRY_MS *
-      2 ** Math.min(nextAttempt - 1, 5),
+    RECONCILIATION_BASE_RETRY_MS * 2 ** Math.min(nextAttempt - 1, 5),
   );
 }
 
 export function getPendingVirtualPaymentRecoveryDelay() {
   const now = Date.now();
   const pollable = getPendingVirtualPayments().filter(
-    (item) =>
-      item.orderNo && Date.parse(item.reconciliationDeadlineAt) > now,
+    (item) => item.orderNo && Date.parse(item.reconciliationDeadlineAt) > now,
   );
   if (!pollable.length) return null;
   const nextCheckAt = Math.min(
@@ -1161,7 +1240,7 @@ async function executeVirtualPurchase(
   if (!session) throw new Error("请先登录后购买");
   const capability = getVirtualPaymentCapability();
   if (!capability.supported) throw new Error(capability.reason);
-  if (capability.platform === "ios" && ENV.virtualPaymentEnv === 1) {
+  if (capability.platform === "ios" && product.paymentEnv === 1) {
     throw new Error("iPhone 不支持微信支付沙箱，请改用 Android 真机验收");
   }
 
@@ -1208,21 +1287,20 @@ async function executeVirtualPurchase(
 
   const clientRequestId = existing?.clientRequestId || createRequestId();
   const createdAt = Date.now();
-  const pending: PendingVirtualPayment =
-    existing || {
-      clientRequestId,
-      productId: product.id,
-      productName: product.name,
-      productKind: product.kind,
-      createdAt,
-      expiresAt: new Date(createdAt + PREPARE_INTENT_TTL_MS).toISOString(),
-      reconciliationDeadlineAt: new Date(
-        createdAt + VIRTUAL_PAYMENT_RECONCILIATION_WINDOW_MS,
-      ).toISOString(),
-      userId: session.user.id,
-      stage: "preparing",
-      paymentUiResult: "waiting",
-    };
+  const pending: PendingVirtualPayment = existing || {
+    clientRequestId,
+    productId: product.id,
+    productName: product.name,
+    productKind: product.kind,
+    createdAt,
+    expiresAt: new Date(createdAt + PREPARE_INTENT_TTL_MS).toISOString(),
+    reconciliationDeadlineAt: new Date(
+      createdAt + VIRTUAL_PAYMENT_RECONCILIATION_WINDOW_MS,
+    ).toISOString(),
+    userId: session.user.id,
+    stage: "preparing",
+    paymentUiResult: "waiting",
+  };
   if (!existing) {
     if (!savePending(pending)) {
       throw new Error("设备存储暂不可用，为避免重复扣款，本次未创建订单");
@@ -1237,6 +1315,7 @@ async function executeVirtualPurchase(
       product.id,
       clientRequestId,
       capability.platform,
+      product.paymentEnv,
     );
   } catch (error) {
     const code = error instanceof ApiError ? error.code : undefined;
@@ -1269,7 +1348,7 @@ async function executeVirtualPurchase(
   const signedEnvironment = getSignedVirtualPaymentEnvironment(
     prepared.signData,
   );
-  if (signedEnvironment !== ENV.virtualPaymentEnv) {
+  if (signedEnvironment !== product.paymentEnv) {
     const message =
       signedEnvironment === null
         ? "支付环境参数无效，本次未调起支付"
@@ -1363,14 +1442,45 @@ async function executeVirtualPurchase(
     ...(!paymentResult.ok
       ? {
           lastErrorCode: paymentResult.failure.code,
-          lastErrorMessage: paymentResult.failure.diagnostic,
+          lastErrorMessage:
+            paymentResult.failure.diagnostic || paymentResult.failure.message,
         }
       : {}),
   });
-  const order = await waitForFulfillment(
-    prepared.orderNo,
-    paymentResult.ok ? undefined : [0, 800],
-  );
+  let reportedOrder: VirtualPaymentOrder | null = null;
+  if (!paymentResult.ok) {
+    try {
+      reportedOrder = await reportVirtualPaymentInvocationFailure(
+        prepared,
+        paymentResult.failure,
+      );
+    } catch (error) {
+      logger.warn("记录微信虚拟支付调用失败结果失败", {
+        orderNo: prepared.orderNo,
+        errCode: paymentResult.failure.code,
+        message: sanitizeVirtualPaymentDiagnostic(
+          error instanceof Error ? error.message : error,
+        ),
+      });
+    }
+    if (!shouldReconcileVirtualPaymentFailure(paymentResult.failure.code)) {
+      removePending(clientRequestId);
+      return paymentResult.failure.cancelled
+        ? { kind: "cancelled", order: reportedOrder }
+        : {
+            kind: "failed",
+            order: reportedOrder,
+            message: paymentResult.failure.message,
+          };
+    }
+  }
+  const order =
+    reportedOrder && isVirtualOrderTerminal(reportedOrder)
+      ? reportedOrder
+      : await waitForFulfillment(
+          prepared.orderNo,
+          paymentResult.ok ? undefined : [0, 800],
+        );
 
   if (order && isVirtualOrderFulfilled(order)) {
     removePending(clientRequestId);
@@ -1380,17 +1490,14 @@ async function executeVirtualPurchase(
     removePending(clientRequestId);
     return { kind: "failed", order, message: "该订单已退款" };
   }
-  if (
-    order?.refundStatus === "PENDING" ||
-    order?.refundStatus === "UNKNOWN"
-  ) {
+  if (order?.refundStatus === "PENDING" || order?.refundStatus === "UNKNOWN") {
     return { kind: "pending", order };
   }
   if (order && TERMINAL_PAYMENT_STATUSES.has(order.paymentStatus)) {
     removePending(clientRequestId);
     if (
       order.paymentStatus === "CANCELLED" ||
-      paymentResult.ok === false && paymentResult.failure.cancelled
+      (paymentResult.ok === false && paymentResult.failure.cancelled)
     ) {
       return { kind: "cancelled", order };
     }
@@ -1470,9 +1577,11 @@ async function processWithConcurrency<T>(
   await Promise.all(runners);
 }
 
-export async function resumePendingVirtualPayments(options: {
-  force?: boolean;
-} = {}) {
+export async function resumePendingVirtualPayments(
+  options: {
+    force?: boolean;
+  } = {},
+) {
   if (!sessionStore.getState()) return [];
   if (resumePromise) {
     if (!options.force) return resumePromise;

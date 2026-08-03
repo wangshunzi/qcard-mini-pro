@@ -22,14 +22,16 @@ export function getImmersiveNavigationMetrics(): ImmersiveNavigationMetrics {
   }
 
   const statusBarHeight = Number(windowInfo.statusBarHeight || 20);
-  const navigationHeight = capsule?.height
-    ? Math.max(
-        44,
-        Number(capsule.height) +
-          (Number(capsule.top) - statusBarHeight) * 2,
-      )
-    : 44;
-  const controlRowTop = statusBarHeight;
+  const capsuleHeight = Number(capsule?.height || 32);
+  const capsuleTop = Number(
+    capsule?.top || statusBarHeight + Math.max(0, (44 - capsuleHeight) / 2),
+  );
+  const capsuleVerticalGap = Math.max(0, capsuleTop - statusBarHeight);
+  const navigationHeight = Math.max(
+    44,
+    capsuleHeight + capsuleVerticalGap * 2,
+  );
+  const controlRowTop = capsuleTop;
   const totalHeight = statusBarHeight + navigationHeight;
   const windowWidth = Number(windowInfo.windowWidth || 375);
   const capsuleLeft = Number(capsule?.left || windowWidth - 104);
@@ -41,7 +43,10 @@ export function getImmersiveNavigationMetrics(): ImmersiveNavigationMetrics {
     statusBarHeight,
     navigationHeight,
     controlRowTop,
-    controlRowHeight: navigationHeight,
+    // App-owned navigation controls use the native capsule's exact height and
+    // top edge. The surrounding navigation bar may be taller to preserve the
+    // same vertical breathing room above and below the capsule.
+    controlRowHeight: capsuleHeight,
     totalHeight,
     controlsMaxWidth,
     capsuleReservedWidth: Math.max(

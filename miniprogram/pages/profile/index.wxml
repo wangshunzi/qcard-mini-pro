@@ -53,9 +53,9 @@
 
       <scroll-view scroll-x enhanced class="quick-scroll" show-scrollbar="{{false}}">
         <view class="quick-row">
-          <view class="quick-card" bindtap="openCoinHistory" hover-class="quick-hover">
-            <text class="quick-title">账户充值</text>
-            <text class="quick-subtitle">充值与消费历史</text>
+          <view class="quick-card" bindtap="openRechargeGuide" hover-class="quick-hover">
+            <text class="quick-title">咔豆充值</text>
+            <text class="quick-subtitle">会员与咔豆购买</text>
           </view>
           <view class="quick-card" bindtap="openFeedback" hover-class="quick-hover">
             <text class="quick-title">反馈中心</text>
@@ -74,6 +74,14 @@
     </view>
 
     <view class="profile-content">
+      <view wx:if="{{!isVip}}" class="vip-upsell-banner" bindtap="openVipGuide" hover-class="quick-hover">
+        <view class="vip-upsell-icon"><ui-icon name="crown" size="{{36}}" color="#f39a13" /></view>
+        <view class="vip-upsell-copy">
+          <text class="vip-upsell-title">开通 VIP 会员</text>
+          <text class="vip-upsell-subtitle">解锁全部卡包 · 每日咔豆领取 · 专属特权</text>
+        </view>
+        <view class="vip-upsell-action">立即开通</view>
+      </view>
       <scroll-view scroll-x enhanced class="tabs-scroll" show-scrollbar="{{false}}">
         <view class="tabs">
           <view class="tab {{activeTab === 'recent' ? 'active' : ''}}" data-tab="recent" bindtap="switchTab">
@@ -272,6 +280,8 @@
     open="{{purchaseGuideOpen}}"
     mode="{{purchaseGuideMode}}"
     reason="{{purchaseGuideReason}}"
+    balance="{{profile.balance || 0}}"
+    is-vip="{{isVip}}"
     bind:close="closePurchaseGuide"
     bind:success="onVirtualPaymentFulfilled"
   />

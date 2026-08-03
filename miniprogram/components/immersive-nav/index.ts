@@ -19,8 +19,8 @@ Component({
   data: {
     statusBarHeight: 20,
     navigationHeight: 44,
-    controlRowTop: 20,
-    controlRowHeight: 44,
+    controlRowTop: 26,
+    controlRowHeight: 32,
     totalHeight: 64,
     controlsMaxWidth: 260,
     capsuleReservedWidth: 104,

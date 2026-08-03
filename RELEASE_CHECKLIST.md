@@ -2,6 +2,8 @@
 
 以下项目全部通过后才可对外发布。TypeScript 构建通过不能替代微信官方编译器和真机验收。
 
+仅发布体验版时，先按 `TRIAL_RELEASE_GUIDE.md` 执行，并根据 Manager 当前环境运行 `pnpm trial:check:sandbox` 或 `pnpm trial:check:production`；体验版不需要提交审核。
+
 ## 服务端与账号
 
 - 先备份生产数据库，再部署 `QCard-Server` 当前代码并运行可重复执行的完整补丁：
@@ -29,8 +31,8 @@
 - request 合法域名与业务域名加入 `https://www.kolka.cn`。
 - 微信公众平台虚拟支付能力已开通；Offer ID、AppKey、通知 AES Key 仅配置在服务端，
   小程序代码和本地缓存中不得出现这些密钥。
-- 咔豆包与固定时长 VIP 已按 `short_series_goods` 发布，后台 Product ID、正式价格
-  与服务端渠道映射逐项一致；正式版只能使用 `env=0`。
+- 咔豆包与固定时长 VIP 已按 `short_series_goods` 发布，微信道具 ID、正式价格
+  与 Manager 中对应内部商品逐项一致；正式版会拒绝 Server 的沙箱模式，只能使用 `env=0`。
 - 消息推送 URL 已指向服务端虚拟支付回调，Token/AES Key 校验通过；支付回调、
   补单查询与权益发放均使用同一业务订单做幂等处理。
 - downloadFile 合法域名加入：

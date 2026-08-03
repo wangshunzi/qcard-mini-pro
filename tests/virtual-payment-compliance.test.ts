@@ -56,6 +56,24 @@ describe("virtual-payment compliance", () => {
     }
   });
 
+  it("shows fixed-duration VIP and coin products in one H5-aligned drawer", () => {
+    const logic = read(
+      "miniprogram/components/app-purchase-guide/index.ts",
+    );
+    const template = read(
+      "miniprogram/components/app-purchase-guide/index.wxml",
+    );
+    expect(logic).toContain('item.kind === "vip"');
+    expect(logic).toContain('item.kind === "coin"');
+    expect(logic).not.toContain(".filter((item) => item.kind === expectedKind)");
+    expect(template).toContain("会员与咔豆");
+    expect(template).toContain('wx:for="{{subscriptionProducts}}"');
+    expect(template).toContain('wx:for="{{coinProducts}}"');
+    expect(template).toContain("一次性权益 · 不自动续费");
+    expect(template).toContain('bindtap="selectProduct"');
+    expect(template).toContain('bindtap="purchase"');
+  });
+
   it("keeps signed material out of persistent pending records", () => {
     const service = read("miniprogram/services/virtualPayment.ts");
     const pendingInterface = service.slice(
@@ -70,10 +88,12 @@ describe("virtual-payment compliance", () => {
     expect(service).toContain("const orderPersisted = updatePending(");
     expect(service).toContain("if (!orderPersisted)");
     expect(service).toContain('"X-Client-Platform"');
-    expect(service).toContain("expectedEnv: ENV.virtualPaymentEnv");
+    expect(service).toContain("expectedEnv,");
     expect(service).toContain(
-      'data: { channel: "wechat_virtual", env: ENV.virtualPaymentEnv }',
+      'data: { channel: "wechat_virtual" }',
     );
+    expect(service).toContain("reportVirtualPaymentInvocationFailure");
+    expect(service).toContain("shouldReconcileVirtualPaymentFailure");
     expect(service.indexOf("savePending(pending)")).toBeLessThan(
       service.indexOf("requestVirtualPayment(prepared)"),
     );
@@ -104,9 +124,9 @@ describe("virtual-payment compliance", () => {
     expect(service).toContain("reconciliationPollAttempts");
     expect(service).toContain("normalizePendingVirtualPaymentRecord");
     expect(service).toContain(
-      "signedEnvironment !== ENV.virtualPaymentEnv",
+      "signedEnvironment !== product.paymentEnv",
     );
-    expect(service.indexOf("signedEnvironment !== ENV.virtualPaymentEnv"))
+    expect(service.indexOf("signedEnvironment !== product.paymentEnv"))
       .toBeLessThan(
         service.indexOf(
           "const paymentResult = await requestVirtualPayment(prepared)",
@@ -149,7 +169,7 @@ describe("virtual-payment compliance", () => {
     expect(auth).toContain("return await requestWechatLoginCode()");
     expect(auth).toContain("attempt === maxAttempts - 1");
     expect(service).toContain("const wxCode = await getWechatLoginCode()");
-    expect(service).toContain("expectedEnv: ENV.virtualPaymentEnv");
+    expect(service).toContain("expectedEnv,");
     expect(service).toContain("retry: false");
     expect(service).toContain("await bindCurrentWechatMiniIdentity()");
   });
@@ -157,10 +177,10 @@ describe("virtual-payment compliance", () => {
   it("blocks a production release unless an env=0 virtual item is saleable", () => {
     const releaseCheck = read("scripts/check-production.mjs");
     expect(releaseCheck).toContain(
-      '"/api/client/products?channel=wechat_virtual&env=0"',
+      '"/api/client/products?channel=wechat_virtual"',
     );
     expect(releaseCheck).toContain(
-      "Array.isArray(data) && data.length > 0",
+      "data?.env === 0",
     );
   });
 });

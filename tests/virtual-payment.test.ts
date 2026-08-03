@@ -13,6 +13,7 @@ import {
   normalizeVirtualPaymentOrder,
   normalizeVirtualProduct,
   sanitizeVirtualPaymentDiagnostic,
+  shouldReconcileVirtualPaymentFailure,
   type PreparedVirtualPayment,
   VIRTUAL_PAYMENT_RECONCILIATION_WINDOW_MS,
 } from "../miniprogram/services/virtualPayment";
@@ -245,21 +246,18 @@ describe("WeChat virtual payment", () => {
     });
   });
 
-  it("uses one API host while selecting the payment environment by build", () => {
+  it("uses one API host while payment environment is selected by Server", () => {
     expect(resolveRuntimeEnvironment("develop")).toEqual({
       envVersion: "develop",
       apiBaseUrl: "https://www.kolka.cn",
-      virtualPaymentEnv: 1,
     });
     expect(resolveRuntimeEnvironment("trial")).toEqual({
       envVersion: "trial",
       apiBaseUrl: "https://www.kolka.cn",
-      virtualPaymentEnv: 1,
     });
     expect(resolveRuntimeEnvironment("release")).toEqual({
       envVersion: "release",
       apiBaseUrl: "https://www.kolka.cn",
-      virtualPaymentEnv: 0,
     });
   });
 
@@ -312,5 +310,12 @@ describe("WeChat virtual payment", () => {
     expect(classifyVirtualPaymentFailure(-15010)).toMatchObject({
       retryable: false,
     });
+    expect(classifyVirtualPaymentFailure(-15006).message).toContain("签名");
+    expect(classifyVirtualPaymentFailure(-15013).message).toContain("价格");
+    expect(shouldReconcileVirtualPaymentFailure(-1)).toBe(true);
+    expect(shouldReconcileVirtualPaymentFailure(-5)).toBe(true);
+    expect(shouldReconcileVirtualPaymentFailure(-15003)).toBe(true);
+    expect(shouldReconcileVirtualPaymentFailure(-15006)).toBe(false);
+    expect(shouldReconcileVirtualPaymentFailure(-2)).toBe(false);
   });
 });

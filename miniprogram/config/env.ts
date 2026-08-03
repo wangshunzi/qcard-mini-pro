@@ -3,7 +3,6 @@ export type MiniProgramEnvVersion = "develop" | "trial" | "release";
 export interface RuntimeEnvironment {
   envVersion: MiniProgramEnvVersion;
   apiBaseUrl: string;
-  virtualPaymentEnv: 0 | 1;
 }
 
 const API_BASE_URL = "https://www.kolka.cn";
@@ -15,13 +14,11 @@ export function resolveRuntimeEnvironment(
     return {
       envVersion,
       apiBaseUrl: API_BASE_URL,
-      virtualPaymentEnv: 0,
     };
   }
   return {
     envVersion,
     apiBaseUrl: API_BASE_URL,
-    virtualPaymentEnv: 1,
   };
 }
 

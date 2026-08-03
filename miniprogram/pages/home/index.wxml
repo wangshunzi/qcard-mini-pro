@@ -172,6 +172,8 @@
     open="{{purchaseGuideOpen}}"
     mode="{{purchaseGuideMode}}"
     reason="{{purchaseGuideReason}}"
+    balance="{{profile.balance || 0}}"
+    is-vip="{{profile && profile.vip && profile.vip.isVip}}"
     bind:close="closePurchaseGuide"
     bind:success="onVirtualPaymentFulfilled"
   />

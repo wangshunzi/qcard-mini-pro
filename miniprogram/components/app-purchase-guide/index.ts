@@ -12,8 +12,19 @@ import {
 
 interface ProductView extends VirtualPaymentProduct {
   benefitText: string;
+  detailText: string;
+  durationLabel: string;
   purchaseState: "" | "continue" | "confirming";
   purchaseLocked: boolean;
+}
+
+function getDurationLabel(days?: number) {
+  const safeDays = Math.max(0, Number(days) || 0);
+  if (!safeDays) return "";
+  if (safeDays <= 7) return "周卡";
+  if (safeDays <= 31) return "月卡";
+  if (safeDays <= 93) return "季卡";
+  return "年卡";
 }
 
 function toProductView(product: VirtualPaymentProduct): ProductView {
@@ -23,16 +34,60 @@ function toProductView(product: VirtualPaymentProduct): ProductView {
       ? "confirming"
       : "continue"
     : "";
+  const isCoin = product.kind === "coin";
   return {
     ...product,
     purchaseState,
     purchaseLocked: purchaseState === "confirming",
-    benefitText:
-      product.kind === "coin"
-        ? product.bonusCoinAmount
-          ? `${product.coinAmount || 0} 咔豆 + 赠 ${product.bonusCoinAmount}`
-          : `${product.coinAmount || 0} 咔豆`
-        : `${product.vipDurationDays || 0} 天 VIP`,
+    durationLabel: isCoin ? "" : getDurationLabel(product.vipDurationDays),
+    benefitText: isCoin
+      ? product.bonusCoinAmount
+        ? `${product.coinAmount || 0} 咔豆 + 赠 ${product.bonusCoinAmount}`
+        : `${product.coinAmount || 0} 咔豆`
+      : `${product.vipDurationDays || 0} 天固定权益`,
+    detailText: isCoin
+      ? product.bonusCoinAmount
+        ? `含赠送 ${product.bonusCoinAmount} 咔豆`
+        : "支付成功后发放到统一余额"
+      : product.dailyRewardAmount
+        ? `每日可领取 ${product.dailyRewardAmount} 咔豆`
+        : "一次性购买，不自动续费",
+  };
+}
+
+function kindForMode(mode: string): VirtualProductKind {
+  return mode === "recharge" ? "coin" : "vip";
+}
+
+function productSelectionState(
+  products: ProductView[],
+  preferredKind: VirtualProductKind,
+  selectedId: string,
+  isVip: boolean,
+) {
+  const subscriptionProducts = products.filter((item) => item.kind === "vip");
+  const coinProducts = products.filter((item) => item.kind === "coin");
+  const selectedProduct =
+    products.find((item) => item.id === selectedId) ||
+    products.find((item) => item.kind === preferredKind) ||
+    products[0] ||
+    null;
+  const selectedKind = selectedProduct?.kind || preferredKind;
+  const primaryLabel = !selectedProduct
+    ? "请选择商品"
+    : selectedProduct.purchaseState === "confirming"
+      ? "查询订单状态"
+      : selectedProduct.kind === "vip"
+        ? `${isVip ? "续期" : "开通"} ${selectedProduct.durationLabel || selectedProduct.name}`
+        : `购买 ${selectedProduct.coinAmount || 0} 咔豆`;
+  return {
+    products,
+    subscriptionProducts,
+    coinProducts,
+    selectedProduct,
+    selectedProductId: selectedProduct?.id || "",
+    selectedKind,
+    primaryLabel,
   };
 }
 
@@ -41,6 +96,8 @@ Component({
     open: { type: Boolean, value: false },
     mode: { type: String, value: "vip" },
     reason: { type: String, value: "" },
+    balance: { type: Number, value: 0 },
+    isVip: { type: Boolean, value: false },
   },
 
   data: {
@@ -53,11 +110,17 @@ Component({
     capabilityReason: "",
     capabilityAction: "none",
     products: [] as ProductView[],
+    subscriptionProducts: [] as ProductView[],
+    coinProducts: [] as ProductView[],
+    selectedProduct: null as ProductView | null,
+    selectedProductId: "",
+    selectedKind: "vip" as VirtualProductKind,
+    primaryLabel: "请选择商品",
     submittingId: "",
   },
 
   observers: {
-    "open, mode"(open: boolean) {
+    "open, mode, isVip"(open: boolean) {
       if (!open) {
         this.clearCloseTimer();
         this.setData({
@@ -87,10 +150,16 @@ Component({
 
   methods: {
     syncPendingProducts() {
-      const products = ((this.data as any).products as ProductView[]).map(
-        (product) => toProductView(product),
+      const state = this.data as any;
+      const products = (state.products as ProductView[]).map(toProductView);
+      this.setData(
+        productSelectionState(
+          products,
+          kindForMode(state.mode),
+          String(state.selectedProductId || ""),
+          Boolean(state.isVip),
+        ),
       );
-      this.setData({ products });
     },
 
     clearCloseTimer() {
@@ -108,7 +177,12 @@ Component({
           capabilitySupported: false,
           capabilityReason: capability.reason,
           capabilityAction: capability.action,
-          products: [],
+          ...productSelectionState(
+            [],
+            kindForMode(String((this.data as any).mode)),
+            "",
+            Boolean((this.data as any).isVip),
+          ),
           loading: false,
           loaded: true,
           error: "",
@@ -124,21 +198,28 @@ Component({
         error: "",
       });
       try {
-        const expectedKind: VirtualProductKind =
-          (this.data as any).mode === "recharge" ? "coin" : "vip";
-        const products = (await listVirtualPaymentProducts())
-          .filter((item) => item.kind === expectedKind)
-          .map(toProductView);
+        const state = this.data as any;
+        const products = (await listVirtualPaymentProducts()).map(toProductView);
         if (sequence !== (this as any)._loadSequence) return;
         this.setData({
-          products,
+          ...productSelectionState(
+            products,
+            kindForMode(state.mode),
+            "",
+            Boolean(state.isVip),
+          ),
           loaded: true,
           error: products.length ? "" : "当前暂无可购买的商品",
         });
       } catch (error) {
         if (sequence !== (this as any)._loadSequence) return;
         this.setData({
-          products: [],
+          ...productSelectionState(
+            [],
+            kindForMode(String((this.data as any).mode)),
+            "",
+            Boolean((this.data as any).isVip),
+          ),
           loaded: true,
           error: formatVirtualPaymentError(error),
         });
@@ -161,9 +242,22 @@ Component({
 
     preventClose() {},
 
-    async purchase(event: WechatMiniprogram.TouchEvent) {
+    selectProduct(event: WechatMiniprogram.TouchEvent) {
+      if ((this.data as any).submittingId) return;
+      const state = this.data as any;
+      this.setData(
+        productSelectionState(
+          state.products as ProductView[],
+          kindForMode(state.mode),
+          String(event.currentTarget.dataset.id || ""),
+          Boolean(state.isVip),
+        ),
+      );
+    },
+
+    async purchase() {
       if ((this as any)._purchaseBusy || (this.data as any).submittingId) return;
-      const id = String(event.currentTarget.dataset.id || "");
+      const id = String((this.data as any).selectedProductId || "");
       const product = ((this.data as any).products as ProductView[]).find(
         (item) => item.id === id,
       );
@@ -202,7 +296,7 @@ Component({
           return;
         }
         if (outcome.kind === "cancelled") {
-          this.setData({ statusMessage: "支付已取消，正在确认订单最终状态" });
+          this.setData({ statusMessage: "支付已取消，未发生扣款，可重新购买" });
           this.syncPendingProducts();
           return;
         }

@@ -268,8 +268,12 @@ if (
 
 const projectConfigPath = path.join(root, "project.config.json");
 const projectConfig = JSON.parse(fs.readFileSync(projectConfigPath, "utf8"));
-if (!/^wx[a-f0-9]{16}$/i.test(projectConfig.appid ?? "")) {
-  fail(projectConfigPath, "appid 不是有效的小程序 AppID 格式");
+const expectedAppId = "wxd9f76b56915a35ce";
+if (projectConfig.appid !== expectedAppId) {
+  fail(projectConfigPath, `appid 必须为当前小程序 ${expectedAppId}`);
+}
+if (projectConfig.compileType !== "miniprogram") {
+  fail(projectConfigPath, "compileType 必须为 miniprogram");
 }
 if (projectConfig.miniprogramRoot !== "miniprogram/") {
   fail(projectConfigPath, "miniprogramRoot 必须指向 miniprogram/");

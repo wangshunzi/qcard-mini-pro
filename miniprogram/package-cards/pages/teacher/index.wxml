@@ -57,6 +57,8 @@
     open="{{purchaseGuideOpen}}"
     mode="{{purchaseGuideMode}}"
     reason="{{purchaseGuideReason}}"
+    balance="{{userBalance}}"
+    is-vip="{{isVip}}"
     bind:close="closePurchaseGuide"
     bind:success="onVirtualPaymentFulfilled"
   />

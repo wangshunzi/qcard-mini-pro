@@ -13,6 +13,9 @@
     "validate:project": "node scripts/validate-project.mjs",
     "validate:client-assets": "node scripts/validate-client-assets.mjs",
     "release:check": "node scripts/check-production.mjs",
+    "trial:check": "node scripts/check-production.mjs --trial",
+    "trial:check:sandbox": "node scripts/check-production.mjs --trial --xpay-env=1",
+    "trial:check:production": "node scripts/check-production.mjs --trial --xpay-env=0",
     "check": "pnpm validate:project && pnpm validate:client-assets && pnpm validate:hanzi-vendor && pnpm typecheck && pnpm test"
   },
   "dependencies": {

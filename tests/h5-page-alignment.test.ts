@@ -18,7 +18,7 @@ describe("H5-aligned product surfaces", () => {
     expect(logic).toContain("navBackground");
     expect(logic).toContain('navTitleColor: "#172019"');
     expect(logic).toContain("(progress - 0.48) / 0.42");
-    expect(metrics).toContain("const controlRowTop = statusBarHeight");
+    expect(metrics).toContain("const controlRowTop = capsuleTop");
     expect(metrics).toContain("capsule?.left");
     expect(metrics).toContain("controlsMaxWidth");
     expect(template).toContain("margin-top:{{controlRowTop}}px");
@@ -72,9 +72,18 @@ describe("H5-aligned product surfaces", () => {
 
   it("keeps every capsule-row control on the shared polished height", () => {
     const globalStyles = read("miniprogram/app.wxss");
+    const metrics = read("miniprogram/utils/navigationMetrics.ts");
+    const navigationTemplate = read(
+      "miniprogram/components/immersive-nav/index.wxml",
+    );
     expect(globalStyles).toContain("--immersive-control-height: 72rpx");
     expect(globalStyles).toContain("--immersive-control-background:");
     expect(globalStyles).toContain("--immersive-control-shadow:");
+    expect(metrics).toContain("controlRowTop = capsuleTop");
+    expect(metrics).toContain("controlRowHeight: capsuleHeight");
+    expect(navigationTemplate).toContain(
+      "--immersive-control-height:{{controlRowHeight}}px",
+    );
 
     for (const stylesheet of [
       "miniprogram/components/immersive-nav/index.wxss",
@@ -255,11 +264,13 @@ describe("H5-aligned product surfaces", () => {
       expect(drawerTemplate).toContain(label);
     }
     for (const label of [
-      "账户充值",
+      "咔豆充值",
       "反馈中心",
     ]) {
       expect(template).toContain(label);
     }
+    expect(template).toContain("vip-upsell-banner");
+    expect(template).toContain("会员与咔豆购买");
     expect(template).toContain("side-drawer-menu");
     expect(drawerTemplate).toContain('bindtap="openWallet"');
     expect(drawerLogic).toContain("getMenuButtonBoundingClientRect");
@@ -769,6 +780,8 @@ describe("H5-aligned product surfaces", () => {
     const logic = read("miniprogram/components/coin-history-drawer/index.ts");
     expect(template).toContain('class="filter-scroll"');
     expect(template).toContain('bindscrolltolower="loadMore"');
+    expect(template).toContain('catchtouchmove="preventClose"');
+    expect(template).toContain('bounces="{{false}}"');
     expect(logic).toContain("getBalanceHistory");
   });
 

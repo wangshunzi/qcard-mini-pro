@@ -4,7 +4,7 @@
 >
   <view
     class="nav-row"
-    style="height:{{controlRowHeight}}px;margin-top:{{controlRowTop}}px;"
+    style="height:{{controlRowHeight}}px;margin-top:{{controlRowTop}}px;--immersive-control-height:{{controlRowHeight}}px;"
   >
     <view class="nav-controls" style="max-width:{{controlsMaxWidth}}px;">
       <button wx:if="{{back}}" class="nav-back" bindtap="goBack" aria-label="返回" hover-class="nav-control-hover">

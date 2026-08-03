@@ -15,8 +15,7 @@
 
 .header-row {
   position: relative;
-  height: 96rpx;
-  padding: 0 32rpx 16rpx;
+  padding: 0 32rpx;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -36,7 +35,7 @@
   top: 0;
   left: 50%;
   width: 360rpx;
-  height: 80rpx;
+  height: 100%;
   min-width: 0;
   box-sizing: border-box;
   display: flex;

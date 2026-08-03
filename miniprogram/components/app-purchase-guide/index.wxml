@@ -1,75 +1,125 @@
-<view wx:if="{{open}}" class="purchase-guide {{closing ? 'closing' : ''}}">
+<view wx:if="{{open}}" class="purchase-guide {{closing ? 'closing' : ''}}" catchtouchmove="preventClose">
   <view class="purchase-backdrop" bindtap="close"></view>
   <view class="purchase-panel" catchtap="preventClose">
     <view class="purchase-handle"></view>
 
-    <view class="purchase-heading">
-      <view class="purchase-heading-icon {{mode === 'recharge' ? 'recharge' : 'vip'}}">
-        <ui-icon wx:if="{{mode === 'recharge'}}" name="wallet" size="{{42}}" color="#529917" />
-        <ui-icon wx:else name="crown" size="{{42}}" color="#b7780b" />
+    <view class="purchase-header">
+      <view class="purchase-heading">
+        <view class="purchase-heading-icon">
+          <ui-icon name="crown" size="{{44}}" color="#f39a13" />
+        </view>
+        <view class="purchase-heading-copy">
+          <text class="purchase-title">会员与咔豆</text>
+          <text class="purchase-subtitle">固定时长 VIP 与咔豆购买，解锁全部能力</text>
+        </view>
+        <button class="purchase-close" bindtap="close" disabled="{{submittingId}}" aria-label="关闭">
+          <ui-icon name="close" size="{{31}}" color="#69726b" />
+        </button>
       </view>
-      <view class="purchase-heading-copy">
-        <text class="purchase-title">{{mode === 'recharge' ? '购买咔豆' : '开通 VIP'}}</text>
-        <text class="purchase-subtitle">由微信虚拟支付安全处理，权益发放至当前叩咔账号</text>
+      <view class="balance-row">
+        <ui-icon name="wallet" size="{{31}}" color="#529917" />
+        <text>当前余额 {{balance || 0}} 咔豆</text>
       </view>
-      <button class="purchase-close" bindtap="close" disabled="{{submittingId}}" aria-label="关闭">
-        <ui-icon name="close" size="{{31}}" color="#69726b" />
-      </button>
     </view>
 
-    <view wx:if="{{reason}}" class="purchase-reason">{{reason}}</view>
+    <scroll-view class="purchase-body" scroll-y="{{true}}" enhanced="{{true}}" bounces="{{false}}" show-scrollbar="{{false}}">
+      <view wx:if="{{reason}}" class="purchase-reason">{{reason}}</view>
 
-    <view wx:if="{{!capabilitySupported}}" class="purchase-state unsupported-state">
-      <ui-icon name="alert-circle-outline" size="{{52}}" color="#d17b20" />
-      <text class="state-title">当前设备暂不支持</text>
-      <text class="state-copy">{{capabilityReason}}</text>
-      <button class="state-action" bindtap="explainUnsupported">查看说明</button>
-    </view>
+      <view wx:if="{{!capabilitySupported}}" class="purchase-state unsupported-state">
+        <ui-icon name="alert-circle-outline" size="{{52}}" color="#d17b20" />
+        <text class="state-title">当前设备暂不支持</text>
+        <text class="state-copy">{{capabilityReason}}</text>
+        <button class="state-action" bindtap="explainUnsupported">查看说明</button>
+      </view>
 
-    <view wx:elif="{{loading}}" class="purchase-state">
-      <view class="loading-dot"></view>
-      <text class="state-copy">正在加载可购买商品…</text>
-    </view>
+      <view wx:elif="{{loading}}" class="purchase-state">
+        <view class="loading-dot"></view>
+        <text class="state-copy">正在加载可购买商品…</text>
+      </view>
 
-    <view wx:else class="product-list">
-      <button
-        wx:for="{{products}}"
-        wx:key="id"
-        class="product-card {{item.purchaseLocked ? 'product-card-confirming' : ''}}"
-        data-id="{{item.id}}"
-        loading="{{submittingId === item.id}}"
-        disabled="{{submittingId}}"
-        bindtap="purchase"
-        hover-class="product-card-hover"
-      >
-        <view class="product-copy">
-          <view class="product-title-row">
-            <text class="product-title">{{item.name}}</text>
-            <text wx:if="{{item.badge}}" class="product-badge">{{item.badge}}</text>
+      <block wx:else>
+        <view wx:if="{{subscriptionProducts.length}}" class="product-section vip-section">
+          <view class="section-heading">
+            <text class="section-title">VIP 会员</text>
+            <text class="section-hint">一次性权益 · 不自动续费</text>
           </view>
-          <text class="product-benefit">{{item.benefitText}}</text>
-          <text wx:if="{{item.description}}" class="product-description">{{item.description}}</text>
-          <text wx:if="{{item.purchaseState === 'confirming'}}" class="product-description">上一笔订单确认中，点击可立即查询状态</text>
-          <text wx:elif="{{item.purchaseState === 'continue'}}" class="product-description">继续上次未完成的订单</text>
+          <view class="product-grid">
+            <button
+              wx:for="{{subscriptionProducts}}"
+              wx:key="id"
+              class="product-card vip-card {{selectedProductId === item.id ? 'selected' : ''}} {{item.purchaseLocked ? 'product-card-confirming' : ''}}"
+              data-id="{{item.id}}"
+              disabled="{{submittingId}}"
+              bindtap="selectProduct"
+              hover-class="product-card-hover"
+            >
+              <view class="product-title-row">
+                <text class="product-title">{{item.durationLabel || item.name}}</text>
+                <text wx:if="{{item.badge}}" class="product-badge">{{item.badge}}</text>
+              </view>
+              <view class="product-price"><text class="currency">¥</text><text>{{item.displayPrice}}</text></view>
+              <text class="product-detail">{{item.detailText}}</text>
+              <text class="product-benefit">{{item.benefitText}}</text>
+              <text wx:if="{{item.purchaseState === 'confirming'}}" class="product-pending">上一笔订单确认中，点击可立即查询状态</text>
+              <text wx:elif="{{item.purchaseState === 'continue'}}" class="product-pending">继续上次未完成的订单</text>
+            </button>
+          </view>
         </view>
-        <view class="product-price">
-          <text class="currency">¥</text>
-          <text>{{item.displayPrice}}</text>
-        </view>
-      </button>
-      <view wx:if="{{error}}" class="inline-error">
-        <text>{{error}}</text>
-        <button wx:if="{{!products.length}}" bindtap="loadProducts">重试</button>
-      </view>
-      <view wx:if="{{statusMessage}}" class="payment-status">
-        <view class="status-pulse"></view>
-        <text>{{statusMessage}}</text>
-      </view>
-    </view>
 
-    <button class="order-link" bindtap="openOrders" disabled="{{submittingId}}">
-      查看购买记录与到账状态
-    </button>
-    <text class="purchase-note">支付结果与权益发放均成功后才会显示到账；咔豆和 VIP 在同一账号内统一使用</text>
+        <view wx:if="{{coinProducts.length}}" class="product-section coin-section">
+          <view class="section-heading">
+            <text class="section-title">咔豆充值</text>
+            <text class="section-hint">到账后与现有咔豆余额统一使用</text>
+          </view>
+          <view class="product-grid">
+            <button
+              wx:for="{{coinProducts}}"
+              wx:key="id"
+              class="product-card coin-card {{selectedProductId === item.id ? 'selected' : ''}} {{item.purchaseLocked ? 'product-card-confirming' : ''}}"
+              data-id="{{item.id}}"
+              disabled="{{submittingId}}"
+              bindtap="selectProduct"
+              hover-class="product-card-hover"
+            >
+              <view class="product-title-row">
+                <text class="product-title">{{item.coinAmount || 0}} 咔豆</text>
+                <text wx:if="{{item.badge}}" class="product-badge coin-badge">{{item.badge}}</text>
+              </view>
+              <text class="product-detail">{{item.detailText}}</text>
+              <view class="product-price coin-price"><text class="currency">¥</text><text>{{item.displayPrice}}</text></view>
+              <text wx:if="{{item.purchaseState === 'confirming'}}" class="product-pending">上一笔订单确认中，点击可立即查询状态</text>
+              <text wx:elif="{{item.purchaseState === 'continue'}}" class="product-pending">继续上次未完成的订单</text>
+            </button>
+          </view>
+        </view>
+
+        <view wx:if="{{error}}" class="inline-error">
+          <text>{{error}}</text>
+          <button wx:if="{{!products.length}}" bindtap="loadProducts">重试</button>
+        </view>
+        <view wx:if="{{statusMessage}}" class="payment-status">
+          <view class="status-pulse"></view>
+          <text>{{statusMessage}}</text>
+        </view>
+      </block>
+    </scroll-view>
+
+    <view wx:if="{{capabilitySupported}}" class="purchase-footer safe-bottom">
+      <button
+        class="purchase-primary {{selectedKind === 'vip' ? 'vip-primary' : 'coin-primary'}}"
+        bindtap="purchase"
+        loading="{{submittingId !== ''}}"
+        disabled="{{!selectedProductId || submittingId}}"
+      >
+        <ui-icon wx:if="{{!submittingId && selectedKind === 'vip'}}" name="crown" size="{{34}}" color="#ffffff" />
+        <ui-icon wx:elif="{{!submittingId}}" name="wallet" size="{{34}}" color="#ffffff" />
+        <text>{{submittingId ? '正在处理…' : primaryLabel}}</text>
+      </button>
+      <text class="purchase-kind-note">
+        {{selectedKind === 'vip' ? '固定时长权益，一次性支付，不自动续费' : '通过微信虚拟支付安全购买，咔豆立即发放'}}
+      </text>
+      <button class="order-link" bindtap="openOrders" disabled="{{submittingId}}">查看购买记录与到账状态</button>
+      <text class="purchase-note">由微信虚拟支付安全处理；咔豆和 VIP 在同一账号内统一使用</text>
+    </view>
   </view>
 </view>

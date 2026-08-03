@@ -1,6 +1,6 @@
 <view class="page">
   <view class="study-header" style="padding-top:{{controlRowTop}}px">
-    <view class="header-row">
+    <view class="header-row" style="height:{{controlRowHeight}}px;--immersive-control-height:{{controlRowHeight}}px;">
       <view class="study-nav-controls">
         <button class="icon-button light" bindtap="exit" aria-label="返回"><ui-icon name="chevron-left" size="{{44}}" color="#0f0f0f" /></button>
         <button wx:if="{{pack && !pack.isUnlocked && packId}}" class="icon-button unlock" bindtap="confirmUnlock" loading="{{unlocking}}" aria-label="解锁"><ui-icon name="lock-open-outline" size="{{35}}" color="#27533b" /></button>
@@ -103,6 +103,8 @@
     open="{{purchaseGuideOpen}}"
     mode="{{purchaseGuideMode}}"
     reason="{{purchaseGuideReason}}"
+    balance="{{userBalance}}"
+    is-vip="{{isVip}}"
     bind:close="closePurchaseGuide"
     bind:success="onVirtualPaymentFulfilled"
   />

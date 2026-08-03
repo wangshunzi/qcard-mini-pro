@@ -158,6 +158,38 @@
   overflow: hidden;
 }
 
+.vip-upsell-banner {
+  position: relative;
+  z-index: 5;
+  min-height: 112rpx;
+  margin: 18rpx 32rpx 6rpx;
+  padding: 20rpx 22rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 17rpx;
+  border: 1rpx solid rgba(243, 154, 19, .24);
+  border-radius: 22rpx;
+  background: linear-gradient(110deg, #fff8e1, #ffe0b2);
+  box-shadow: 0 8rpx 22rpx rgba(156, 103, 14, .09);
+}
+
+.vip-upsell-icon {
+  width: 64rpx;
+  height: 64rpx;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18rpx;
+  background: rgba(255, 255, 255, .76);
+}
+
+.vip-upsell-copy { min-width: 0; flex: 1; display: flex; flex-direction: column; }
+.vip-upsell-title { color: #6d470b; font-size: 23rpx; font-weight: 750; }
+.vip-upsell-subtitle { margin-top: 7rpx; overflow: hidden; color: #8a6a36; font-size: 18rpx; text-overflow: ellipsis; white-space: nowrap; }
+.vip-upsell-action { padding: 10rpx 17rpx; flex: none; border-radius: 999rpx; color: #fff; background: #f39a13; font-size: 19rpx; font-weight: 700; }
+
 .tabs-scroll {
   position: sticky;
   top: 0;

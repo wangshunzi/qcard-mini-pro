@@ -58,6 +58,7 @@ Page({
     progressPercent: 0,
     progressLabel: "0.0",
     controlRowTop: 72,
+    controlRowHeight: 32,
     unlocking: false,
     unlockPanelOpen: false,
     unlockProfileLoaded: false,
@@ -74,13 +75,15 @@ Page({
   },
 
   onLoad(query: Record<string, string | undefined>) {
-    const { controlRowTop } = getImmersiveNavigationMetrics();
+    const { controlRowTop, controlRowHeight } =
+      getImmersiveNavigationMetrics();
     this.setData({
       packId: String(query.packId ?? ""),
       previewOnly: query.preview === "1",
       challengeMode: query.challenge === "1",
       privateMode: query.private === "1",
       controlRowTop,
+      controlRowHeight,
     });
     (this as any)._initialCardId = String(query.cardId ?? "");
     (this as any)._sessionStartedAt = Date.now();

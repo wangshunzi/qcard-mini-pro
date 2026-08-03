@@ -5,6 +5,21 @@ import {
 } from "./client-card-assets.mjs";
 
 const baseUrl = "https://www.kolka.cn";
+const trialMode = process.argv.includes("--trial");
+const xpayEnvArgument = process.argv.find((argument) =>
+  argument.startsWith("--xpay-env="),
+);
+const explicitXpayEnv = xpayEnvArgument
+  ? Number(xpayEnvArgument.split("=")[1])
+  : undefined;
+if (
+  explicitXpayEnv !== undefined &&
+  explicitXpayEnv !== 0 &&
+  explicitXpayEnv !== 1
+) {
+  throw new Error("--xpay-env 只能是 0（生产）或 1（沙箱）");
+}
+const requiredXpayEnv = explicitXpayEnv ?? (trialMode ? undefined : 0);
 const headers = {
   appname: "kolka-miniprogram",
   platform: "wechat_miniprogram",
@@ -94,6 +109,7 @@ async function expectCardAssets() {
 }
 
 async function main() {
+  let detectedXpayEnv;
   const checks = [
     () =>
       expectApi(
@@ -105,11 +121,21 @@ async function main() {
       ),
     () =>
       expectApi(
-        "/api/client/products?channel=wechat_virtual&env=0",
-        // A 200 + [] is deliberately returned when XPay is disabled, not
-        // ready, or running in sandbox. A release must prove that production
-        // has at least one fully confirmed, enabled item that users can buy.
-        (data) => Array.isArray(data) && data.length > 0,
+        "/api/client/products?channel=wechat_virtual",
+        // A formal release must use production. A trial build may deliberately
+        // target either environment, but it still requires an enabled, healthy
+        // runtime and at least one confirmed saleable item.
+        (data) => {
+          detectedXpayEnv = data?.env;
+          return (
+            (data?.env === 0 || data?.env === 1) &&
+            (requiredXpayEnv === undefined || data.env === requiredXpayEnv) &&
+            data?.enabled === true &&
+            data?.ready === true &&
+            Array.isArray(data?.items) &&
+            data.items.length > 0
+          );
+        },
       ),
     () => expectVirtualPaymentCallbackRoute(),
     () =>
@@ -135,7 +161,11 @@ async function main() {
   if (failures.length) {
     throw new Error(`\n- ${failures.join("\n- ")}`);
   }
-  console.log("生产依赖检查通过");
+  console.log(
+    `${trialMode ? "体验版" : "正式版"}依赖检查通过：微信虚拟支付当前为${
+      detectedXpayEnv === 1 ? "沙箱" : "生产"
+    }环境`,
+  );
 }
 
 main().catch((error) => {

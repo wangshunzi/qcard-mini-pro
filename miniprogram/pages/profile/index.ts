@@ -252,6 +252,7 @@ Page({
   },
 
   openRechargeGuide() {
+    wx.hideTabBar({ animation: false });
     this.setData({ coinHistoryOpen: false });
     this.setData({
       purchaseGuideOpen: true,
