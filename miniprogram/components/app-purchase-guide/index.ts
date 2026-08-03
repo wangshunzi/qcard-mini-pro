@@ -74,12 +74,17 @@ function productSelectionState(
   selectedId: string,
   isVip: boolean,
 ) {
-  const subscriptionProducts = products.filter((item) => item.kind === "vip");
-  const coinProducts = products.filter((item) => item.kind === "coin");
+  const availableProducts = isVip
+    ? products.filter((item) => item.kind !== "vip")
+    : products;
+  const subscriptionProducts = availableProducts.filter(
+    (item) => item.kind === "vip",
+  );
+  const coinProducts = availableProducts.filter((item) => item.kind === "coin");
   const selectedProduct =
-    products.find((item) => item.id === selectedId) ||
-    products.find((item) => item.kind === preferredKind) ||
-    products[0] ||
+    availableProducts.find((item) => item.id === selectedId) ||
+    availableProducts.find((item) => item.kind === preferredKind) ||
+    availableProducts[0] ||
     null;
   const selectedKind = selectedProduct?.kind || preferredKind;
   const primaryLabel = !selectedProduct
@@ -87,10 +92,10 @@ function productSelectionState(
     : selectedProduct.purchaseState === "confirming"
       ? "查询订单状态"
       : selectedProduct.kind === "vip"
-        ? `${isVip ? "续期" : "开通"} ${selectedProduct.durationLabel || selectedProduct.name}`
+        ? `开通 ${selectedProduct.durationLabel || selectedProduct.name}`
         : `购买 ${selectedProduct.coinAmount || 0} 咔豆`;
   return {
-    products,
+    products: availableProducts,
     subscriptionProducts,
     coinProducts,
     selectedProduct,
@@ -247,15 +252,20 @@ Component({
         const state = this.data as any;
         const products = (await listVirtualPaymentProducts()).map(toProductView);
         if (sequence !== (this as any)._loadSequence) return;
+        const selection = productSelectionState(
+          products,
+          kindForMode(state.mode),
+          "",
+          Boolean(state.isVip),
+        );
         this.setData({
-          ...productSelectionState(
-            products,
-            kindForMode(state.mode),
-            "",
-            Boolean(state.isVip),
-          ),
+          ...selection,
           loaded: true,
-          error: products.length ? "" : "当前暂无可购买的商品",
+          error: selection.products.length
+            ? ""
+            : state.isVip
+              ? ""
+              : "当前暂无可购买的商品",
         });
       } catch (error) {
         if (sequence !== (this as any)._loadSequence) return;

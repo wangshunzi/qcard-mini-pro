@@ -21,7 +21,7 @@
           </view>
           <view class="purchase-heading-copy">
             <text class="purchase-title">{{mode === 'vip' ? (isVip ? 'VIP 会员' : '开通 VIP 会员') : '会员与咔豆'}}</text>
-            <text class="purchase-subtitle">{{mode === 'vip' ? (isVip ? '会员权益已生效，可继续购买固定时长权益' : '解锁卡包免费看、每日咔豆领取、专属 AI 模板') : '固定时长 VIP 与咔豆购买，权益发放至当前账号'}}</text>
+            <text class="purchase-subtitle">{{mode === 'vip' ? (isVip ? '会员权益已生效，VIP 商品不再重复展示' : '解锁卡包免费看、每日咔豆领取、专属 AI 模板') : '固定时长 VIP 与咔豆购买，权益发放至当前账号'}}</text>
           </view>
           <button class="purchase-close" bindtap="close" disabled="{{submittingId}}" aria-label="关闭">
             <ui-icon name="close" size="{{31}}" color="#69726b" />
@@ -138,7 +138,7 @@
       </block>
     </scroll-view>
 
-    <view wx:if="{{capabilitySupported}}" class="purchase-footer safe-bottom">
+    <view wx:if="{{capabilitySupported && products.length}}" class="purchase-footer safe-bottom">
       <button
         class="purchase-primary {{selectedKind === 'vip' ? 'vip-primary' : 'coin-primary'}}"
         bindtap="purchase"

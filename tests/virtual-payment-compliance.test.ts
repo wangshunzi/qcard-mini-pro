@@ -74,6 +74,21 @@ describe("virtual-payment compliance", () => {
     expect(template).toContain('bindtap="purchase"');
   });
 
+  it("removes VIP products from the selectable state for active members", () => {
+    const logic = read(
+      "miniprogram/components/app-purchase-guide/index.ts",
+    );
+    const template = read(
+      "miniprogram/components/app-purchase-guide/index.wxml",
+    );
+
+    expect(logic).toContain("const availableProducts = isVip");
+    expect(logic).toContain('products.filter((item) => item.kind !== "vip")');
+    expect(logic).toContain("products: availableProducts");
+    expect(template).toContain("VIP 商品不再重复展示");
+    expect(template).toContain("capabilitySupported && products.length");
+  });
+
   it("locks host-page scrolling and provides a real drag-to-dismiss drawer", () => {
     const logic = read(
       "miniprogram/components/app-purchase-guide/index.ts",
