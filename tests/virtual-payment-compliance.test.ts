@@ -91,7 +91,26 @@ describe("virtual-payment compliance", () => {
     expect(logic).toContain('products.filter((item) => item.kind !== "vip")');
     expect(logic).toContain("products: availableProducts");
     expect(template).toContain("VIP 商品不再重复展示");
-    expect(template).toContain("capabilitySupported && products.length");
+    expect(template).toContain(
+      "capabilitySupported && (products.length || identityStatus !== 'ready')",
+    );
+  });
+
+  it("preflights the WeChat identity and blocks checkout on account conflicts", () => {
+    const logic = read(
+      "miniprogram/components/app-purchase-guide/index.ts",
+    );
+    const template = read(
+      "miniprogram/components/app-purchase-guide/index.wxml",
+    );
+
+    expect(logic).toContain("void this.verifyPaymentIdentity()");
+    expect(logic).toContain("await bindCurrentWechatMiniIdentity()");
+    expect(logic).toContain('identityStatus: conflict ? "conflict" : "error"');
+    expect(logic).toContain('identityStatus !== "ready"');
+    expect(logic).toContain("当前微信身份已绑定其他账号");
+    expect(template).toContain("请切换到微信账号进行支付");
+    expect(template).toContain("identityStatus !== 'ready'");
   });
 
   it("locks host-page scrolling and provides a real drag-to-dismiss drawer", () => {

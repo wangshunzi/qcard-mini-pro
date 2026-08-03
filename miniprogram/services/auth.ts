@@ -128,6 +128,13 @@ export async function bindCurrentWechatMiniIdentity() {
     : new Error("微信身份绑定失败，请稍后重试");
 }
 
+export function isWechatIdentityBindingConflict(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error || "");
+  return /已绑定其他账号|其他微信身份|历史账号记录|已关联其他账号|(?:UnionID|微信身份|绑定关系).*冲突/.test(
+    message,
+  );
+}
+
 export function deleteAccount() {
   return request<null>({
     path: "/api/client/auth/account",

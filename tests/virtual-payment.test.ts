@@ -18,9 +18,28 @@ import {
   VIRTUAL_PAYMENT_RECONCILIATION_WINDOW_MS,
 } from "../miniprogram/services/virtualPayment";
 import { resolveRuntimeEnvironment } from "../miniprogram/config/env";
-import { getWechatLoginCode } from "../miniprogram/services/auth";
+import {
+  getWechatLoginCode,
+  isWechatIdentityBindingConflict,
+} from "../miniprogram/services/auth";
 
 describe("WeChat virtual payment", () => {
+  it("distinguishes account ownership conflicts from temporary bind failures", () => {
+    expect(
+      isWechatIdentityBindingConflict(
+        new Error("该微信身份已绑定其他账号，请使用原账号登录"),
+      ),
+    ).toBe(true);
+    expect(
+      isWechatIdentityBindingConflict(
+        new Error("当前账号已绑定该小程序下的其他微信身份"),
+      ),
+    ).toBe(true);
+    expect(isWechatIdentityBindingConflict(new Error("网络请求失败"))).toBe(
+      false,
+    );
+  });
+
   it("keeps the configured coin bonus used by the App UI", () => {
     expect(
       normalizeVirtualProduct({

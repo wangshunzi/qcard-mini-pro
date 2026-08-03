@@ -9,6 +9,17 @@ import {
   type VirtualPaymentProduct,
   type VirtualProductKind,
 } from "../../services/virtualPayment";
+import {
+  bindCurrentWechatMiniIdentity,
+  isWechatIdentityBindingConflict,
+} from "../../services/auth";
+
+type PaymentIdentityStatus =
+  | "idle"
+  | "checking"
+  | "ready"
+  | "conflict"
+  | "error";
 
 interface ProductView extends VirtualPaymentProduct {
   benefitText: string;
@@ -129,6 +140,8 @@ Component({
     capabilitySupported: true,
     capabilityReason: "",
     capabilityAction: "none",
+    identityStatus: "idle" as PaymentIdentityStatus,
+    identityMessage: "",
     products: [] as ProductView[],
     subscriptionProducts: [] as ProductView[],
     coinProducts: [] as ProductView[],
@@ -150,6 +163,8 @@ Component({
       isVip: boolean,
       vipExpireAt: string,
     ) {
+      const wasOpen = Boolean((this as any)._purchaseGuideOpen);
+      (this as any)._purchaseGuideOpen = open;
       const expiry = formatVipExpireAt(vipExpireAt);
       this.setData({
         vipStatusText: isVip && expiry
@@ -157,6 +172,8 @@ Component({
           : "VIP 权益已生效",
       });
       if (!open) {
+        (this as any)._identitySequence =
+          Number((this as any)._identitySequence || 0) + 1;
         this.clearCloseTimer();
         this.clearDragSettleTimer();
         (this as any)._dragStartY = null;
@@ -167,9 +184,12 @@ Component({
           dragging: false,
           dragSettling: false,
           dragOffset: 0,
+          identityStatus: "idle",
+          identityMessage: "",
         });
         return;
       }
+      if (!wasOpen) void this.verifyPaymentIdentity();
       void this.loadProducts();
     },
   },
@@ -181,15 +201,52 @@ Component({
       });
     },
     detached() {
+      (this as any)._purchaseGuideOpen = false;
       this.clearCloseTimer();
       this.clearDragSettleTimer();
       (this as any)._unsubscribePending?.();
       (this as any)._unsubscribePending = undefined;
       (this as any)._loadSequence = Number((this as any)._loadSequence || 0) + 1;
+      (this as any)._identitySequence =
+        Number((this as any)._identitySequence || 0) + 1;
     },
   },
 
   methods: {
+    async verifyPaymentIdentity() {
+      const sequence = Number((this as any)._identitySequence || 0) + 1;
+      (this as any)._identitySequence = sequence;
+      this.setData({
+        identityStatus: "checking",
+        identityMessage: "正在验证当前微信支付账号…",
+      });
+      try {
+        await bindCurrentWechatMiniIdentity();
+        if (
+          sequence !== (this as any)._identitySequence ||
+          !(this.data as any).open
+        ) return;
+        this.setData({ identityStatus: "ready", identityMessage: "" });
+      } catch (error) {
+        if (
+          sequence !== (this as any)._identitySequence ||
+          !(this.data as any).open
+        ) return;
+        const conflict = isWechatIdentityBindingConflict(error);
+        this.setData({
+          identityStatus: conflict ? "conflict" : "error",
+          identityMessage: conflict
+            ? "当前微信身份已绑定其他账号，请切换到微信账号进行支付"
+            : formatVirtualPaymentError(error),
+        });
+      }
+    },
+
+    retryPaymentIdentity() {
+      if ((this.data as any).identityStatus === "checking") return;
+      void this.verifyPaymentIdentity();
+    },
+
     syncPendingProducts() {
       const state = this.data as any;
       const products = (state.products as ProductView[]).map(toProductView);
@@ -379,6 +436,15 @@ Component({
 
     async purchase() {
       if ((this as any)._purchaseBusy || (this.data as any).submittingId) return;
+      if ((this.data as any).identityStatus !== "ready") {
+        wx.showToast({
+          title: (this.data as any).identityStatus === "conflict"
+            ? "请切换到微信账号进行支付"
+            : "微信支付账号尚未验证",
+          icon: "none",
+        });
+        return;
+      }
       const id = String((this.data as any).selectedProductId || "");
       const product = ((this.data as any).products as ProductView[]).find(
         (item) => item.id === id,
