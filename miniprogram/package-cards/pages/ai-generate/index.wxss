@@ -25,7 +25,6 @@
 .template-card { position:relative; width:100%; height:100%; overflow:hidden; border-radius:24rpx; background:#f4f6f3; box-shadow:0 10rpx 28rpx rgba(31,51,38,.11); --qcard-preview-radius:24rpx; }
 .template-card flip-card,.grid-card-preview flip-card,.preview-card flip-card { display:block; width:100%; height:100%; }
 .vip-badge { position:absolute; z-index:12; top:18rpx; left:18rpx; padding:7rpx 14rpx; display:flex; align-items:center; gap:5rpx; border-radius:999rpx; background:#f39a13; color:#fff; font-size:20rpx; font-weight:800; }
-.vip-crown { font-size:23rpx; line-height:1; }
 .card-state { width:100%; height:100%; padding:34rpx; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18rpx; box-sizing:border-box; color:var(--ai-muted); font-size:22rpx; line-height:1.5; text-align:center; }
 
 .template-grid { height:100%; }
@@ -61,7 +60,7 @@
 .vip-action { background:#f39a13; }
 .generate-action { min-width:160rpx; }
 .blocked-action { position:relative; padding-bottom:28rpx; display:flex; flex-direction:column; align-items:flex-end; }
-.action-warning { position:absolute; right:0; bottom:0; color:var(--ai-text); font-size:18rpx; white-space:nowrap; }
+.action-warning { position:absolute; right:0; bottom:0; display:flex; align-items:center; gap:5rpx; color:var(--ai-text); font-size:18rpx; white-space:nowrap; }
 .action-warning.error { color:#c7524d; }
 
 .preview-overlay { position:fixed; z-index:1000; inset:0; padding:44rpx; display:flex; align-items:center; justify-content:center; background:rgba(25,38,30,.62); backdrop-filter:blur(16rpx); }

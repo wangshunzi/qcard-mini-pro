@@ -21,12 +21,27 @@
       <view class="side-menu-profile" style="padding-top:{{safeTopPx}}px;">
         <image class="side-menu-avatar" src="{{profile.avatar || assets.appIcon}}" mode="aspectFill" />
         <view class="side-menu-user-copy">
-          <text class="side-menu-name">{{profile.nickname || '叩咔用户'}}</text>
+          <view class="side-menu-name-row">
+            <text class="side-menu-name">{{profile.nickname || '叩咔用户'}}</text>
+            <button wx:if="{{isVip}}" class="side-menu-vip-badge" bindtap="openVip" hover-class="side-menu-vip-hover">
+              <ui-icon name="crown" size="{{22}}" color="#ffffff" />
+              <text>VIP</text>
+            </button>
+          </view>
           <text class="side-menu-level">Lv.{{profile.experience.level || 1}}</text>
+          <text class="side-menu-vip-status {{isVip ? 'active' : ''}}">{{vipExpireText}}</text>
         </view>
       </view>
 
       <view class="side-menu-main">
+        <button wx:if="{{!isVip}}" class="side-menu-vip-banner" bindtap="openVip" hover-class="side-menu-vip-hover">
+          <view class="side-menu-vip-icon"><ui-icon name="crown" size="{{31}}" color="#f39a13" /></view>
+          <view class="side-menu-vip-copy">
+            <text class="side-menu-vip-title">开通 VIP · 解锁特权</text>
+            <text class="side-menu-vip-subtitle">免费卡包 · 每日咔豆 · AI 权益</text>
+          </view>
+          <view class="side-menu-vip-action"><text>去开通</text><ui-icon name="chevron-right" size="{{22}}" color="#ffffff" /></view>
+        </button>
         <button class="side-menu-row" bindtap="openWallet" hover-class="side-menu-hover">
           <ui-icon name="wallet" size="{{36}}" color="#3f493f" />
           <text>我的钱包</text>

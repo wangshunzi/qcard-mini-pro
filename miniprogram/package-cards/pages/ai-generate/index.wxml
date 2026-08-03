@@ -56,7 +56,7 @@
           <view class="carousel-item {{selectedIndex === index ? 'active' : 'inactive'}}">
             <view class="template-card">
               <view wx:if="{{item.vipRequired}}" class="vip-badge">
-                <text class="vip-crown">♛</text><text>VIP</text>
+                <ui-icon name="crown" size="{{25}}" color="#ffffff" /><text>VIP</text>
               </view>
               <flip-card
                 wx:if="{{item.previewCard}}"
@@ -90,7 +90,7 @@
               <view wx:if="{{selectedIndex === index}}" class="selected-icon">
                 <ui-icon name="check-circle" size="{{42}}" color="#529917" />
               </view>
-              <view wx:if="{{item.vipRequired}}" class="grid-vip-badge">♛</view>
+              <view wx:if="{{item.vipRequired}}" class="grid-vip-badge"><ui-icon name="crown" size="{{25}}" color="#ffffff" /></view>
               <flip-card wx:if="{{item.previewCard}}" front-card-data="{{item.previewCard}}"
                 aspect-ratio="portrait" hide-flip-button="{{true}}" preview="{{true}}"
                 read-only="{{true}}" is-visible="{{viewMode === 'grid'}}" />
@@ -142,7 +142,7 @@
       <view class="bottom-right">
         <view wx:if="{{stepIndex === 0 && vipBlocked}}" class="blocked-action">
           <button class="primary-action vip-action" bindtap="openVipGuide">开通 VIP</button>
-          <text class="action-warning"><text class="vip-crown">♛</text> 该模板仅限 VIP 使用</text>
+          <view class="action-warning"><ui-icon name="crown" size="{{22}}" color="#f39a13" /><text>该模板仅限 VIP 使用</text></view>
         </view>
         <view wx:elif="{{stepIndex === 0 && !canAfford}}" class="blocked-action">
           <button class="primary-action" bindtap="openRechargeGuide">购买咔豆</button>

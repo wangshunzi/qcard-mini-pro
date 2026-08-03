@@ -1,7 +1,7 @@
 <page-meta page-style="{{purchaseGuideOpen || coinHistoryOpen || unlockPanelOpen ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="profile-page safe-bottom tab-page">
   <immersive-nav overlay="{{true}}" scroll-top="{{navScrollTop}}">
-    <side-drawer-menu wx:if="{{profile}}" slot="leading" profile="{{profile}}" bind:wallet="openCoinHistory" />
+    <side-drawer-menu wx:if="{{profile}}" slot="leading" profile="{{profile}}" bind:wallet="openCoinHistory" bind:vip="openVipGuide" />
     <view slot="action"><button wx:if="{{profile}}" class="settings-button" bindtap="openSettings" aria-label="打开设置" hover-class="soft-hover">
       <ui-icon name="cog" size="{{35}}" color="#3f3f3f" />
     </button></view>
@@ -34,7 +34,9 @@
         <view class="profile-copy">
           <view class="name-row">
             <text class="name">{{profile.nickname || '叩咔用户'}}</text>
-            <text wx:if="{{isVip}}" class="vip-badge">VIP</text>
+            <view wx:if="{{isVip}}" class="vip-badge" bindtap="openVipGuide" hover-class="vip-badge-hover">
+              <ui-icon name="crown" size="{{21}}" color="#ffffff" /><text>VIP</text>
+            </view>
           </view>
           <view class="id-row" bindtap="copyId" hover-class="soft-hover">
             <text class="id-text"><text class="id-label">ID</text>: {{profile.shortId || '--'}}</text>
@@ -95,7 +97,8 @@
             <text>收藏</text><view wx:if="{{activeTab === 'favorited'}}" class="tab-line"></view>
           </view>
           <view class="tab {{activeTab === 'vipBenefits' ? 'active' : ''}}" data-tab="vipBenefits" bindtap="switchTab">
-            <text>每日福利</text><view wx:if="{{activeTab === 'vipBenefits'}}" class="tab-line"></view>
+            <view class="tab-label-row"><text>每日福利</text><view wx:if="{{isVip && profile.vip && !profile.vip.dailyRewardClaimed && profile.vip.dailyRewardAmount > 0}}" class="tab-notice-dot"></view></view>
+            <view wx:if="{{activeTab === 'vipBenefits'}}" class="tab-line"></view>
           </view>
         </view>
       </scroll-view>
@@ -255,8 +258,10 @@
           <text class="subscribe-link">去订阅</text>
         </view>
         <view class="benefit-grid">
-          <view class="benefit-item"><ui-icon name="auto-fix" size="{{38}}" color="#529917" /><text>VIP 专属模板</text></view>
-          <view class="benefit-item"><ui-icon name="star-four-points" size="{{38}}" color="#f39a13" /><text>VIP 免费卡包</text></view>
+          <view class="benefit-item"><ui-icon name="cards-outline" size="{{34}}" color="#f39a13" /><text>卡包免费观看</text></view>
+          <view class="benefit-item"><ui-icon name="gift-outline" size="{{34}}" color="#f39a13" /><text>每日咔豆领取</text></view>
+          <view class="benefit-item"><ui-icon name="star-four-points" size="{{34}}" color="#f39a13" /><text>专属 AI 模板</text></view>
+          <view class="benefit-item"><ui-icon name="robot-outline" size="{{34}}" color="#f39a13" /><text>AI 制卡助手</text></view>
         </view>
       </view>
     </view>
@@ -283,6 +288,8 @@
     reason="{{purchaseGuideReason}}"
     balance="{{profile.balance || 0}}"
     is-vip="{{isVip}}"
+    vip-expire-at="{{profile.vip && profile.vip.vipExpireAt}}"
+    daily-reward-amount="{{profile.vip && profile.vip.dailyRewardAmount || 0}}"
     bind:close="closePurchaseGuide"
     bind:success="onVirtualPaymentFulfilled"
   />

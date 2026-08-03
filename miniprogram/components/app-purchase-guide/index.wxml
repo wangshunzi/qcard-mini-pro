@@ -20,8 +20,8 @@
             <ui-icon name="crown" size="{{44}}" color="#f39a13" />
           </view>
           <view class="purchase-heading-copy">
-            <text class="purchase-title">会员与咔豆</text>
-            <text class="purchase-subtitle">固定时长 VIP 与咔豆购买，解锁全部能力</text>
+            <text class="purchase-title">{{mode === 'vip' ? (isVip ? 'VIP 会员' : '开通 VIP 会员') : '会员与咔豆'}}</text>
+            <text class="purchase-subtitle">{{mode === 'vip' ? (isVip ? '会员权益已生效，可继续购买固定时长权益' : '解锁卡包免费看、每日咔豆领取、专属 AI 模板') : '固定时长 VIP 与咔豆购买，权益发放至当前账号'}}</text>
           </view>
           <button class="purchase-close" bindtap="close" disabled="{{submittingId}}" aria-label="关闭">
             <ui-icon name="close" size="{{31}}" color="#69726b" />
@@ -36,6 +36,28 @@
 
     <scroll-view class="purchase-body" scroll-y="{{true}}" enhanced="{{true}}" bounces="{{false}}" show-scrollbar="{{false}}">
       <view wx:if="{{reason}}" class="purchase-reason">{{reason}}</view>
+
+      <view wx:if="{{isVip}}" class="vip-current-card">
+        <view class="vip-current-icon"><ui-icon name="check-circle" size="{{36}}" color="#529917" /></view>
+        <view class="vip-current-copy">
+          <text class="vip-current-title">当前账号已开通 VIP</text>
+          <text class="vip-current-subtitle">{{vipStatusText}}</text>
+        </view>
+        <view class="vip-current-badge"><ui-icon name="crown" size="{{22}}" color="#ffffff" /><text>VIP</text></view>
+      </view>
+
+      <view wx:if="{{mode === 'vip' || isVip}}" class="vip-benefits-section">
+        <view class="vip-benefits-heading">
+          <text class="vip-benefits-title">会员权益</text>
+          <text class="vip-benefits-hint">支付并发放成功后生效</text>
+        </view>
+        <view class="vip-benefits-grid">
+          <view class="vip-benefit-item"><ui-icon name="cards-outline" size="{{27}}" color="#f39a13" /><text>卡包免费观看</text></view>
+          <view class="vip-benefit-item"><ui-icon name="gift-outline" size="{{27}}" color="#f39a13" /><text>{{dailyRewardAmount > 0 ? '每日领取 ' + dailyRewardAmount + ' 咔豆' : '每日咔豆领取'}}</text></view>
+          <view class="vip-benefit-item"><ui-icon name="star-four-points" size="{{27}}" color="#f39a13" /><text>专属 AI 模板</text></view>
+          <view class="vip-benefit-item"><ui-icon name="robot-outline" size="{{27}}" color="#f39a13" /><text>AI 制卡助手</text></view>
+        </view>
+      </view>
 
       <view wx:if="{{!capabilitySupported}}" class="purchase-state unsupported-state">
         <ui-icon name="alert-circle-outline" size="{{52}}" color="#d17b20" />
@@ -53,7 +75,7 @@
         <view wx:if="{{subscriptionProducts.length}}" class="product-section vip-section">
           <view class="section-heading">
             <text class="section-title">VIP 会员</text>
-            <text class="section-hint">一次性权益 · 不自动续费</text>
+            <text class="section-hint">固定时长 · 一次性购买 · 不自动续费</text>
           </view>
           <view class="product-grid">
             <button

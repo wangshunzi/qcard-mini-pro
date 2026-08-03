@@ -16,10 +16,22 @@
 .side-menu-panel { position:absolute; top:0; bottom:0; left:0; width:82vw; max-width:610rpx; display:flex; flex-direction:column; background:#fff; box-shadow:16rpx 0 40rpx rgba(18,35,25,.16); animation:side-menu-in .22s ease-out; }
 .side-menu-profile { min-height:210rpx; padding-right:42rpx; padding-bottom:32rpx; padding-left:42rpx; box-sizing:border-box; display:flex; align-items:flex-end; gap:22rpx; border-bottom:1rpx solid var(--color-border); }
 .side-menu-avatar { width:96rpx; height:96rpx; flex:none; border:1rpx solid var(--color-border); border-radius:50%; background:var(--color-backdrop); }
-.side-menu-user-copy { min-width:0; min-height:96rpx; display:flex; flex-direction:column; justify-content:center; }
-.side-menu-name { overflow:hidden; color:var(--color-text); font-size:30rpx; font-weight:650; text-overflow:ellipsis; white-space:nowrap; }
+.side-menu-user-copy { min-width:0; min-height:96rpx; flex:1; display:flex; flex-direction:column; justify-content:center; }
+.side-menu-name-row { min-width:0; display:flex; align-items:center; gap:10rpx; }
+.side-menu-name { min-width:0; overflow:hidden; color:var(--color-text); font-size:30rpx; font-weight:650; text-overflow:ellipsis; white-space:nowrap; }
+.side-menu-vip-badge { width:auto; height:38rpx; margin:0; padding:0 11rpx; flex:none; display:flex; align-items:center; gap:4rpx; border:0; border-radius:999rpx; color:#fff; background:linear-gradient(135deg,#ffb300,#f28a00); font-size:17rpx; font-weight:800; line-height:38rpx; }
+.side-menu-vip-badge::after,.side-menu-vip-banner::after { border:0; }
 .side-menu-level { margin-top:7rpx; color:var(--color-text-secondary); font-size:22rpx; }
-.side-menu-main { flex:1; padding:34rpx 24rpx; }
+.side-menu-vip-status { margin-top:5rpx; overflow:hidden; color:var(--color-text-secondary); font-size:18rpx; font-weight:500; text-overflow:ellipsis; white-space:nowrap; }
+.side-menu-vip-status.active { color:#ad6b08; }
+.side-menu-main { flex:1; padding:28rpx 24rpx 34rpx; }
+.side-menu-vip-banner { width:100%; min-height:92rpx; margin:0 0 16rpx; padding:14rpx 15rpx; display:flex; align-items:center; gap:12rpx; box-sizing:border-box; border:1rpx solid rgba(243,154,19,.24); border-radius:20rpx; color:#5d431a; background:linear-gradient(110deg,#fff8e1,#ffe0b2); line-height:1.2; text-align:left; box-shadow:0 7rpx 20rpx rgba(156,103,14,.08); transition:opacity .15s ease,transform .15s ease; }
+.side-menu-vip-icon { width:50rpx; height:50rpx; flex:none; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,.72); }
+.side-menu-vip-copy { min-width:0; flex:1; display:flex; flex-direction:column; }
+.side-menu-vip-title { overflow:hidden; color:#5d431a; font-size:21rpx; font-weight:750; text-overflow:ellipsis; white-space:nowrap; }
+.side-menu-vip-subtitle { margin-top:7rpx; overflow:hidden; color:#8a6a36; font-size:16rpx; text-overflow:ellipsis; white-space:nowrap; }
+.side-menu-vip-action { padding:8rpx 11rpx; flex:none; display:flex; align-items:center; gap:1rpx; border-radius:999rpx; color:#fff; background:#f39a13; font-size:16rpx; font-weight:750; }
+.side-menu-vip-hover { opacity:.82; transform:scale(.985); }
 .side-menu-row { width:100%; height:96rpx; margin:0; padding:0 28rpx; display:flex; align-items:center; gap:24rpx; border:0; border-radius:18rpx; color:var(--color-text); background:transparent; font-size:27rpx; font-weight:600; line-height:96rpx; text-align:left; }
 .side-menu-bottom { min-height:152rpx; padding:20rpx 26rpx 18rpx; display:flex; align-items:flex-start; justify-content:space-around; border-top:1rpx solid var(--color-border); }
 .side-menu-shortcut { width:126rpx; min-height:104rpx; margin:0; padding:13rpx 10rpx; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7rpx; border:0; border-radius:17rpx; color:var(--color-text-secondary); background:transparent; font-size:20rpx; line-height:1.2; }

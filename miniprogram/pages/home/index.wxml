@@ -175,6 +175,8 @@
     reason="{{purchaseGuideReason}}"
     balance="{{profile.balance || 0}}"
     is-vip="{{profile && profile.vip && profile.vip.isVip}}"
+    vip-expire-at="{{profile && profile.vip && profile.vip.vipExpireAt}}"
+    daily-reward-amount="{{profile && profile.vip && profile.vip.dailyRewardAmount || 0}}"
     bind:close="closePurchaseGuide"
     bind:success="onVirtualPaymentFulfilled"
   />

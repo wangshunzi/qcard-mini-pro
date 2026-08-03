@@ -69,7 +69,7 @@ describe("virtual-payment compliance", () => {
     expect(template).toContain("会员与咔豆");
     expect(template).toContain('wx:for="{{subscriptionProducts}}"');
     expect(template).toContain('wx:for="{{coinProducts}}"');
-    expect(template).toContain("一次性权益 · 不自动续费");
+    expect(template).toContain("固定时长 · 一次性购买 · 不自动续费");
     expect(template).toContain('bindtap="selectProduct"');
     expect(template).toContain('bindtap="purchase"');
   });
@@ -99,6 +99,43 @@ describe("virtual-payment compliance", () => {
       expect(source, context).toContain("purchaseGuideOpen");
       expect(source, context).toContain("overflow: hidden;");
     }
+  });
+
+  it("keeps Client-aligned VIP benefits and entry points in the mini program", () => {
+    const guide = read(
+      "miniprogram/components/app-purchase-guide/index.wxml",
+    );
+    const sideMenu = read(
+      "miniprogram/components/side-drawer-menu/index.wxml",
+    );
+    const sideMenuLogic = read(
+      "miniprogram/components/side-drawer-menu/index.ts",
+    );
+    const profile = read("miniprogram/pages/profile/index.wxml");
+    const benefits = [
+      "卡包免费观看",
+      "每日咔豆领取",
+      "专属 AI 模板",
+      "AI 制卡助手",
+    ];
+
+    for (const benefit of benefits) {
+      expect(guide).toContain(benefit);
+      expect(profile).toContain(benefit);
+    }
+    expect(guide).toContain("当前账号已开通 VIP");
+    expect(guide).toContain("一次性购买 · 不自动续费");
+    expect(sideMenu).toContain("开通 VIP · 解锁特权");
+    expect(sideMenu).toContain("vipExpireText");
+    expect(sideMenuLogic).toContain('this.triggerEvent("vip")');
+    expect(profile).toContain('bind:vip="openVipGuide"');
+    expect(profile).toContain("tab-notice-dot");
+    expect(read("miniprogram/components/ui-icon/index.ts")).toContain(
+      "crown: String.fromCodePoint(983461)",
+    );
+    expect(
+      read("miniprogram/package-cards/pages/ai-generate/index.wxml"),
+    ).not.toContain("♛");
   });
 
   it("keeps signed material out of persistent pending records", () => {

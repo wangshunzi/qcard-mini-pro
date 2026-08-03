@@ -27,7 +27,7 @@ const GLYPHS: Record<string, string> = {
   "clock-outline": String.fromCodePoint(983376),
   cog: String.fromCodePoint(984211),
   "content-copy": String.fromCodePoint(983439),
-  crown: String.fromCodePoint(983322),
+  crown: String.fromCodePoint(983461),
   "delete-outline": String.fromCodePoint(985575),
   "eye-off-outline": String.fromCodePoint(984785),
   "eye-outline": String.fromCodePoint(984784),

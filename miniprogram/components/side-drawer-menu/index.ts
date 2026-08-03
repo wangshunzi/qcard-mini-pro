@@ -1,5 +1,14 @@
 import { UI_ASSETS } from "../../config/uiAssets";
 
+function formatVipExpireAt(value?: string | null) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}/${month}/${day}`;
+}
+
 Component({
   properties: {
     mode: { type: String, value: "profile" },
@@ -19,7 +28,24 @@ Component({
   data: {
     open: false,
     safeTopPx: 96,
+    isVip: false,
+    vipExpireText: "未开通 VIP",
     assets: UI_ASSETS,
+  },
+
+  observers: {
+    profile(profile: Record<string, any>) {
+      const isVip = profile?.vip?.isVip === true;
+      const expireAt = formatVipExpireAt(profile?.vip?.vipExpireAt);
+      this.setData({
+        isVip,
+        vipExpireText: isVip
+          ? expireAt
+            ? `VIP 有效期至 ${expireAt}`
+            : "VIP 权益已生效"
+          : "未开通 VIP",
+      });
+    },
   },
 
   lifetimes: {
@@ -59,6 +85,11 @@ Component({
     openWallet() {
       this.setData({ open: false });
       this.triggerEvent("wallet");
+    },
+
+    openVip() {
+      this.setData({ open: false });
+      this.triggerEvent("vip");
     },
 
     navigate(url: string) {

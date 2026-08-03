@@ -27,6 +27,15 @@ function getDurationLabel(days?: number) {
   return "年卡";
 }
 
+function formatVipExpireAt(value?: string) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}/${month}/${day}`;
+}
+
 function toProductView(product: VirtualPaymentProduct): ProductView {
   const pending = getPendingVirtualPaymentForProduct(product.id);
   const purchaseState = pending
@@ -98,6 +107,8 @@ Component({
     reason: { type: String, value: "" },
     balance: { type: Number, value: 0 },
     isVip: { type: Boolean, value: false },
+    vipExpireAt: { type: String, value: "" },
+    dailyRewardAmount: { type: Number, value: 0 },
   },
 
   data: {
@@ -120,10 +131,22 @@ Component({
     dragging: false,
     dragSettling: false,
     dragOffset: 0,
+    vipStatusText: "VIP 权益已生效",
   },
 
   observers: {
-    "open, mode, isVip"(open: boolean) {
+    "open, mode, isVip, vipExpireAt"(
+      open: boolean,
+      _mode: string,
+      isVip: boolean,
+      vipExpireAt: string,
+    ) {
+      const expiry = formatVipExpireAt(vipExpireAt);
+      this.setData({
+        vipStatusText: isVip && expiry
+          ? `有效期至 ${expiry}`
+          : "VIP 权益已生效",
+      });
       if (!open) {
         this.clearCloseTimer();
         this.clearDragSettleTimer();
