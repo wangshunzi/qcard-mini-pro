@@ -70,6 +70,29 @@ describe("H5-aligned product surfaces", () => {
     expect(packDetailLogic).toContain('"收藏操作失败"');
   });
 
+  it("centers icon glyphs inside every capsule-row button", () => {
+    const iconStyles = read("miniprogram/components/ui-icon/index.wxss");
+    expect(iconStyles).toMatch(
+      /:host\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*align-items:\s*center;[\s\S]*justify-content:\s*center;[\s\S]*line-height:\s*1;/,
+    );
+    expect(iconStyles).toMatch(
+      /\.ui-icon\s*\{[\s\S]*width:\s*1em;[\s\S]*height:\s*1em;[\s\S]*align-items:\s*center;[\s\S]*justify-content:\s*center;/,
+    );
+
+    for (const stylesheet of [
+      "miniprogram/components/immersive-nav/index.wxss",
+      "miniprogram/components/side-drawer-menu/index.wxss",
+      "miniprogram/package-cards/pages/study/index.wxss",
+      "miniprogram/pages/profile/index.wxss",
+      "miniprogram/package-cards/pages/pack-detail/index.wxss",
+    ]) {
+      const styles = read(stylesheet);
+      expect(styles, stylesheet).toMatch(/align-items:\s*center/);
+      expect(styles, stylesheet).toMatch(/justify-content:\s*center/);
+      expect(styles, stylesheet).toMatch(/line-height:\s*1/);
+    }
+  });
+
   it("keeps every capsule-row control on the shared polished height", () => {
     const globalStyles = read("miniprogram/app.wxss");
     const metrics = read("miniprogram/utils/navigationMetrics.ts");

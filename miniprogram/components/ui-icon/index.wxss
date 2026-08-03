@@ -1,9 +1,22 @@
-.ui-icon {
+:host {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: none;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.ui-icon {
+  display: inline-flex;
+  width: 1em;
+  height: 1em;
+  align-items: center;
+  justify-content: center;
+  flex: none;
   font-family: "MaterialCommunityIcons";
   font-style: normal;
   font-weight: normal;
   line-height: 1;
+  text-align: center;
 }

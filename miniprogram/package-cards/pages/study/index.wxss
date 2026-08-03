@@ -113,7 +113,7 @@
   font-size: 48rpx;
   font-weight: 400;
   border: var(--immersive-control-border);
-  line-height: var(--immersive-control-height);
+  line-height: 1;
   box-shadow: var(--immersive-control-shadow);
   backdrop-filter: blur(18rpx);
 }

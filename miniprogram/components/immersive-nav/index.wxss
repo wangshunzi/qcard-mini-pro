@@ -3,7 +3,7 @@
 .nav-overlay { color:#fff; pointer-events:none; }
 .nav-row { position:relative; box-sizing:border-box; display:flex; align-items:center; }
 .nav-controls { position:relative; z-index:3; min-width:0; margin-left:16rpx; display:flex; align-items:center; gap:12rpx; overflow:visible; pointer-events:auto; }
-.nav-back { width:var(--immersive-control-height); min-width:var(--immersive-control-height); height:var(--immersive-control-height); margin:0; padding:0; display:flex; align-items:center; justify-content:center; flex:none; border:var(--immersive-control-border); border-radius:50%; background:var(--immersive-control-background); box-shadow:var(--immersive-control-shadow); line-height:var(--immersive-control-height); backdrop-filter:blur(18rpx); transition:opacity .15s ease,transform .15s ease,box-shadow .15s ease; }
+.nav-back { width:var(--immersive-control-height); min-width:var(--immersive-control-height); height:var(--immersive-control-height); margin:0; padding:0; display:flex; align-items:center; justify-content:center; flex:none; border:var(--immersive-control-border); border-radius:50%; background:var(--immersive-control-background); box-shadow:var(--immersive-control-shadow); line-height:1; backdrop-filter:blur(18rpx); transition:opacity .15s ease,transform .15s ease,box-shadow .15s ease; }
 .nav-back-icon { width:100%; height:100%; display:flex; align-items:center; justify-content:center; line-height:1; transform:translateX(1rpx); }
 .nav-control-hover { opacity:.8; transform:scale(.95); box-shadow:0 3rpx 10rpx rgba(24,45,30,.11); }
 .nav-leading { min-width:0; flex:none; display:flex; align-items:center; }

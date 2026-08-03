@@ -32,7 +32,7 @@
   border-radius: 50%;
   background: var(--immersive-control-background);
   box-shadow: var(--immersive-control-shadow);
-  line-height: var(--immersive-control-height);
+  line-height: 1;
   backdrop-filter: blur(18rpx);
 }
 

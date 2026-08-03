@@ -19,7 +19,7 @@ page {
   --immersive-control-shadow: 0 7rpx 20rpx rgba(24, 45, 30, .13), inset 0 1rpx 0 rgba(255, 255, 255, .95);
 }
 
-.drawer-selector-trigger { max-width:250rpx; height:var(--immersive-control-height); margin:0; padding:0 21rpx; display:flex; align-items:center; gap:8rpx; box-sizing:border-box; border:var(--immersive-control-border); border-radius:999rpx; color:#3f321f; background:var(--immersive-control-background); box-shadow:var(--immersive-control-shadow); font-size:22rpx; font-weight:700; line-height:var(--immersive-control-height); backdrop-filter:blur(18rpx); transition:opacity .15s ease,transform .15s ease,box-shadow .15s ease; }
+.drawer-selector-trigger { max-width:250rpx; height:var(--immersive-control-height); margin:0; padding:0 21rpx; display:flex; align-items:center; gap:8rpx; box-sizing:border-box; border:var(--immersive-control-border); border-radius:999rpx; color:#3f321f; background:var(--immersive-control-background); box-shadow:var(--immersive-control-shadow); font-size:22rpx; font-weight:700; line-height:1.2; backdrop-filter:blur(18rpx); transition:opacity .15s ease,transform .15s ease,box-shadow .15s ease; }
 .drawer-selector-trigger-label { min-width:0; max-width:135rpx; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .drawer-selector-trigger-icon { width:29rpx; height:29rpx; flex:none; }
 .drawer-selector-trigger-chevron { flex:none; transition:transform .2s ease; }
