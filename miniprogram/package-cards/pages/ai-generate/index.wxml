@@ -1,3 +1,4 @@
+<page-meta page-style="{{purchaseGuideOpen || previewOpen ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="page">
   <image wx:if="{{pageBackground}}" class="page-background" src="{{pageBackground}}" mode="aspectFill" />
   <immersive-nav

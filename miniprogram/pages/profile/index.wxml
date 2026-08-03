@@ -1,3 +1,4 @@
+<page-meta page-style="{{purchaseGuideOpen || coinHistoryOpen || unlockPanelOpen ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="profile-page safe-bottom tab-page">
   <immersive-nav overlay="{{true}}" scroll-top="{{navScrollTop}}">
     <side-drawer-menu wx:if="{{profile}}" slot="leading" profile="{{profile}}" bind:wallet="openCoinHistory" />

@@ -1,3 +1,4 @@
+<page-meta page-style="{{purchaseGuideOpen || unlockPanelOpen || gradeDrawerOpen ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="resource-page safe-bottom tab-page">
   <immersive-nav overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <button

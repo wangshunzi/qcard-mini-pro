@@ -1,24 +1,36 @@
 <view wx:if="{{open}}" class="purchase-guide {{closing ? 'closing' : ''}}" catchtouchmove="preventClose">
   <view class="purchase-backdrop" bindtap="close"></view>
-  <view class="purchase-panel" catchtap="preventClose">
-    <view class="purchase-handle"></view>
+  <view
+    class="purchase-panel {{dragging ? 'dragging' : ''}} {{dragSettling ? 'drag-settling' : ''}}"
+    style="--purchase-drag-offset: {{dragOffset}}px;"
+    catchtap="preventClose"
+  >
+    <view
+      class="purchase-drag-area"
+      bindtouchstart="onDragStart"
+      catchtouchmove="onDragMove"
+      bindtouchend="onDragEnd"
+      bindtouchcancel="onDragCancel"
+    >
+      <view class="purchase-handle"></view>
 
-    <view class="purchase-header">
-      <view class="purchase-heading">
-        <view class="purchase-heading-icon">
-          <ui-icon name="crown" size="{{44}}" color="#f39a13" />
+      <view class="purchase-header">
+        <view class="purchase-heading">
+          <view class="purchase-heading-icon">
+            <ui-icon name="crown" size="{{44}}" color="#f39a13" />
+          </view>
+          <view class="purchase-heading-copy">
+            <text class="purchase-title">会员与咔豆</text>
+            <text class="purchase-subtitle">固定时长 VIP 与咔豆购买，解锁全部能力</text>
+          </view>
+          <button class="purchase-close" bindtap="close" disabled="{{submittingId}}" aria-label="关闭">
+            <ui-icon name="close" size="{{31}}" color="#69726b" />
+          </button>
         </view>
-        <view class="purchase-heading-copy">
-          <text class="purchase-title">会员与咔豆</text>
-          <text class="purchase-subtitle">固定时长 VIP 与咔豆购买，解锁全部能力</text>
+        <view class="balance-row">
+          <ui-icon name="wallet" size="{{31}}" color="#529917" />
+          <text>当前余额 {{balance || 0}} 咔豆</text>
         </view>
-        <button class="purchase-close" bindtap="close" disabled="{{submittingId}}" aria-label="关闭">
-          <ui-icon name="close" size="{{31}}" color="#69726b" />
-        </button>
-      </view>
-      <view class="balance-row">
-        <ui-icon name="wallet" size="{{31}}" color="#529917" />
-        <text>当前余额 {{balance || 0}} 咔豆</text>
       </view>
     </view>
 

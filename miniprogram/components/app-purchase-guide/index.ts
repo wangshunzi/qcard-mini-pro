@@ -117,16 +117,24 @@ Component({
     selectedKind: "vip" as VirtualProductKind,
     primaryLabel: "请选择商品",
     submittingId: "",
+    dragging: false,
+    dragSettling: false,
+    dragOffset: 0,
   },
 
   observers: {
     "open, mode, isVip"(open: boolean) {
       if (!open) {
         this.clearCloseTimer();
+        this.clearDragSettleTimer();
+        (this as any)._dragStartY = null;
         this.setData({
           closing: false,
           statusMessage: "",
           submittingId: "",
+          dragging: false,
+          dragSettling: false,
+          dragOffset: 0,
         });
         return;
       }
@@ -142,6 +150,7 @@ Component({
     },
     detached() {
       this.clearCloseTimer();
+      this.clearDragSettleTimer();
       (this as any)._unsubscribePending?.();
       (this as any)._unsubscribePending = undefined;
       (this as any)._loadSequence = Number((this as any)._loadSequence || 0) + 1;
@@ -166,6 +175,20 @@ Component({
       const timer = (this as any)._closeTimer;
       if (timer) clearTimeout(timer);
       (this as any)._closeTimer = null;
+    },
+
+    clearDragSettleTimer() {
+      const timer = (this as any)._dragSettleTimer;
+      if (timer) clearTimeout(timer);
+      (this as any)._dragSettleTimer = null;
+    },
+
+    scheduleClose() {
+      this.clearCloseTimer();
+      (this as any)._closeTimer = setTimeout(() => {
+        (this as any)._closeTimer = null;
+        this.triggerEvent("close");
+      }, 220);
     },
 
     async loadProducts() {
@@ -232,15 +255,77 @@ Component({
 
     close() {
       if ((this.data as any).submittingId || (this.data as any).closing) return;
-      this.clearCloseTimer();
-      this.setData({ closing: true });
-      (this as any)._closeTimer = setTimeout(() => {
-        (this as any)._closeTimer = null;
-        this.triggerEvent("close");
-      }, 220);
+      this.clearDragSettleTimer();
+      (this as any)._dragStartY = null;
+      this.setData({
+        closing: true,
+        dragging: false,
+        dragSettling: false,
+        dragOffset: 0,
+      });
+      this.scheduleClose();
     },
 
     preventClose() {},
+
+    onDragStart(event: WechatMiniprogram.TouchEvent) {
+      const state = this.data as any;
+      if (state.submittingId || state.closing) return;
+      const touch = event.touches?.[0];
+      if (!touch) return;
+      this.clearDragSettleTimer();
+      (this as any)._dragStartY = touch.clientY;
+      (this as any)._dragStartedAt = Date.now();
+      this.setData({
+        dragging: true,
+        dragSettling: false,
+        dragOffset: 0,
+      });
+    },
+
+    onDragMove(event: WechatMiniprogram.TouchEvent) {
+      const startY = Number((this as any)._dragStartY);
+      const touch = event.touches?.[0];
+      if (!(this.data as any).dragging || !Number.isFinite(startY) || !touch) return;
+      const windowHeight = wx.getWindowInfo?.().windowHeight || 800;
+      const offset = Math.min(windowHeight, Math.max(0, touch.clientY - startY));
+      this.setData({ dragOffset: offset });
+    },
+
+    onDragEnd() {
+      if (!(this.data as any).dragging) return;
+      const offset = Number((this.data as any).dragOffset || 0);
+      const elapsed = Date.now() - Number((this as any)._dragStartedAt || 0);
+      const shouldClose = offset >= 88 || (offset >= 40 && elapsed <= 260);
+      (this as any)._dragStartY = null;
+
+      if (shouldClose) {
+        const windowHeight = wx.getWindowInfo?.().windowHeight || 800;
+        this.setData({
+          closing: true,
+          dragging: false,
+          dragSettling: true,
+          dragOffset: windowHeight,
+        });
+        this.scheduleClose();
+        return;
+      }
+
+      this.setData({
+        dragging: false,
+        dragSettling: true,
+        dragOffset: 0,
+      });
+      this.clearDragSettleTimer();
+      (this as any)._dragSettleTimer = setTimeout(() => {
+        (this as any)._dragSettleTimer = null;
+        if (!(this.data as any).closing) this.setData({ dragSettling: false });
+      }, 220);
+    },
+
+    onDragCancel() {
+      this.onDragEnd();
+    },
 
     selectProduct(event: WechatMiniprogram.TouchEvent) {
       if ((this.data as any).submittingId) return;

@@ -74,6 +74,33 @@ describe("virtual-payment compliance", () => {
     expect(template).toContain('bindtap="purchase"');
   });
 
+  it("locks host-page scrolling and provides a real drag-to-dismiss drawer", () => {
+    const logic = read(
+      "miniprogram/components/app-purchase-guide/index.ts",
+    );
+    const template = read(
+      "miniprogram/components/app-purchase-guide/index.wxml",
+    );
+    const styles = read(
+      "miniprogram/components/app-purchase-guide/index.wxss",
+    );
+    const contexts = paymentSurfaces.filter((item) => item.endsWith(".wxml") &&
+      item !== "miniprogram/components/app-purchase-guide/index.wxml");
+
+    expect(template).toContain('bindtouchstart="onDragStart"');
+    expect(template).toContain('catchtouchmove="onDragMove"');
+    expect(template).toContain('bindtouchend="onDragEnd"');
+    expect(logic).toContain("onDragStart(event:");
+    expect(logic).toContain("const shouldClose = offset >= 88");
+    expect(styles).toContain("grid-template-columns:minmax(0,1fr) minmax(0,1fr)");
+    for (const context of contexts) {
+      const source = read(context);
+      expect(source.trimStart(), context).toMatch(/^<page-meta\b/);
+      expect(source, context).toContain("purchaseGuideOpen");
+      expect(source, context).toContain("overflow: hidden;");
+    }
+  });
+
   it("keeps signed material out of persistent pending records", () => {
     const service = read("miniprogram/services/virtualPayment.ts");
     const pendingInterface = service.slice(

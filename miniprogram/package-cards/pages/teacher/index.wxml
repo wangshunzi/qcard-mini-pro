@@ -1,3 +1,4 @@
+<page-meta page-style="{{purchaseGuideOpen || unlockPanelOpen ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="page safe-bottom">
   <immersive-nav title="{{teacher.name || '老师主页'}}" back="{{true}}" border="{{true}}" />
   <view wx:if="{{loading}}" class="state">
