@@ -50,6 +50,7 @@ Page({
     error: "",
     assets: UI_ASSETS,
     cardPreviewOpen: false,
+    cardPreviewVisible: false,
     cardPreviewPayload: null as CardTransferPayload | null,
     heroBackground: "",
     editMode: false,
@@ -264,7 +265,15 @@ Page({
     this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
   },
 
+  onCardPreviewShown() {
+    this.setData({ cardPreviewVisible: true });
+  },
+
   closeCardPreview() {
-    this.setData({ cardPreviewOpen: false, cardPreviewPayload: null });
+    this.setData({
+      cardPreviewOpen: false,
+      cardPreviewVisible: false,
+      cardPreviewPayload: null,
+    });
   },
 });

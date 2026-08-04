@@ -35,6 +35,7 @@ Page({
     selectedTemplateName: "全部",
     templateDrawerOpen: false,
     cardPreviewOpen: false,
+    cardPreviewVisible: false,
     cardPreviewPayload: null as CardTransferPayload | null,
     exploreBackground: "",
     assets: UI_ASSETS,
@@ -202,7 +203,6 @@ Page({
         genParams: face.genParams,
       };
       this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
-      wx.hideTabBar({ animation: false });
     } catch (error) {
       wx.showToast({ title: error instanceof Error ? error.message : "卡片加载失败", icon: "none" });
     } finally {
@@ -211,8 +211,17 @@ Page({
     }
   },
 
+  onCardPreviewShown() {
+    this.setData({ cardPreviewVisible: true });
+    wx.hideTabBar({ animation: false });
+  },
+
   closeCardPreview() {
-    this.setData({ cardPreviewOpen: false, cardPreviewPayload: null });
+    this.setData({
+      cardPreviewOpen: false,
+      cardPreviewVisible: false,
+      cardPreviewPayload: null,
+    });
     wx.showTabBar({ animation: false });
   },
 });

@@ -1,5 +1,5 @@
 import type { CardTransferPayload } from "../../stores/cardTransfer";
-import { submitPrivateCardFaceFeedback } from "../../package-cards/services/userContent";
+import { submitPrivateCardFaceFeedback } from "../../services/privateCardFeedback";
 import {
   clearBottomSheetGesture,
   closeBottomSheet,
@@ -8,6 +8,7 @@ import {
   resetBottomSheetGesture,
   startBottomSheetDrag,
 } from "../../utils/bottomSheetGesture";
+import { getImmersiveNavigationMetrics } from "../../utils/navigationMetrics";
 
 Component({
   properties: {
@@ -26,6 +27,8 @@ Component({
     feedbackDragging: false,
     feedbackDragSettling: false,
     feedbackDragOffset: 0,
+    modalTop: 96,
+    modalWidth: 320,
   },
 
   observers: {
@@ -33,6 +36,7 @@ Component({
       if (!open || !payload?.front) {
         (this.selectComponent("#preview-modal-card") as any)?.pause?.();
         this.clearCloseTimer();
+        this.clearShownTimer();
         this.setData({
           cardPayload: null,
           closing: false,
@@ -44,13 +48,45 @@ Component({
       this.setData({
         cardPayload: { ...payload },
         closing: false,
+      }, () => {
+        this.clearShownTimer();
+        (this as any)._shownTimer = setTimeout(() => {
+          (this as any)._shownTimer = null;
+          if (this.properties.open && this.data.cardPayload) {
+            this.triggerEvent("shown");
+          }
+        }, 32);
       });
     },
   },
 
   lifetimes: {
+    attached() {
+      const metrics = getImmersiveNavigationMetrics();
+      const windowInfo = wx.getWindowInfo();
+      const modalTop = metrics.totalHeight + 12;
+      const safeBottom = Math.max(
+        0,
+        Number(windowInfo.windowHeight || 0) -
+          Number(windowInfo.safeArea?.bottom || windowInfo.windowHeight || 0),
+      );
+      const availableCardHeight = Math.max(
+        426,
+        Number(windowInfo.windowHeight || 667) - modalTop - safeBottom - 116,
+      );
+      const modalWidth = Math.max(
+        240,
+        Math.min(
+          320,
+          Number(windowInfo.windowWidth || 375) - 40,
+          availableCardHeight * 9 / 16,
+        ),
+      );
+      this.setData({ modalTop, modalWidth: Math.floor(modalWidth) });
+    },
     detached() {
       this.clearCloseTimer();
+      this.clearShownTimer();
       clearBottomSheetGesture(this, "feedback");
       (this.selectComponent("#preview-modal-card") as any)?.pause?.();
     },
@@ -63,6 +99,12 @@ Component({
       const timer = (this as any)._closeTimer;
       if (timer) clearTimeout(timer);
       (this as any)._closeTimer = null;
+    },
+
+    clearShownTimer() {
+      const timer = (this as any)._shownTimer;
+      if (timer) clearTimeout(timer);
+      (this as any)._shownTimer = null;
     },
 
     close() {

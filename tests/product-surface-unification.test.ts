@@ -50,15 +50,32 @@ describe("unified Mini Program product surfaces", () => {
     const modalStyles = read("miniprogram/components/card-preview-modal/index.wxss");
 
     expect(modalTemplate).toContain('class="preview-modal-backdrop"');
-    expect(modalTemplate).toContain('class="preview-modal-close"');
+    expect(modalTemplate).toContain('class="preview-modal-backdrop" aria-label="关闭卡片详情" bindtap="close"');
+    expect(modalTemplate).toContain('style="top: {{modalTop}}px; width: {{modalWidth}}px;" bindtap="close"');
+    expect(modalTemplate).toContain('class="preview-card-stage" catchtap="preventClose"');
+    expect(modalTemplate).not.toContain("preview-modal-dismiss-target");
+    expect(modalTemplate).not.toContain('class="preview-modal-dock" catchtap');
+    expect(modalTemplate).not.toContain("preview-modal-header");
+    expect(modalTemplate).not.toContain("preview-modal-title");
     expect(modalTemplate).toContain("<flip-card");
-    expect(modalTemplate).toContain('bindtap="openSourcePack"');
-    expect(modalTemplate).toContain('bindtap="openGroupCard"');
-    expect(modalTemplate).toContain('bindtap="makeSimilar"');
+    expect(modalTemplate).toContain('catchtap="openSourcePack"');
+    expect(modalTemplate).toContain('catchtap="openGroupCard"');
+    expect(modalTemplate).toContain('catchtap="makeSimilar"');
     expect(modalLogic).toContain("submitPrivateCardFaceFeedback");
+    expect(modalLogic).toContain('../../services/privateCardFeedback');
+    expect(modalLogic).not.toContain("package-cards/services");
+    expect(modalLogic).toContain('triggerEvent("shown")');
     expect(modalLogic).toContain("closeAndThen");
-    expect(modalStyles).toContain("backdrop-filter:blur(18rpx)");
+    expect(modalLogic).toContain("getImmersiveNavigationMetrics");
+    expect(modalLogic).toContain("metrics.totalHeight + 12");
+    expect(modalStyles).toContain("backdrop-filter:blur(24rpx)");
     expect(modalStyles).toContain("position:fixed");
+    expect(modalStyles).toContain("background:transparent");
+    expect(modalStyles).toContain("aspect-ratio:9/16");
+    expect(modalStyles).toContain(".preview-modal-dock { width:100%");
+    expect(modalStyles).toContain("padding:0");
+    expect(modalStyles).toContain("box-shadow:none");
+    expect(modalStyles).toContain("preview-panel-out");
 
     for (const page of [
       "miniprogram/pages/explore/index",
@@ -74,7 +91,10 @@ describe("unified Mini Program product surfaces", () => {
       const config = read(`${page}.json`);
       expect(template, page).toContain("<card-preview-modal");
       expect(template, page).toContain("cardPreviewOpen");
+      expect(template, page).toContain('bind:shown="onCardPreviewShown"');
       expect(logic, page).toContain("cardPreviewPayload");
+      expect(logic, page).toContain("cardPreviewVisible");
+      expect(logic, page).toContain("onCardPreviewShown()");
       expect(logic, page).not.toContain("/package-cards/pages/preview/index");
       expect(config, page).toContain('"card-preview-modal"');
     }

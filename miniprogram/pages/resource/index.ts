@@ -115,6 +115,7 @@ Page({
     purchaseGuideReason: "",
     assets: UI_ASSETS,
     cardPreviewOpen: false,
+    cardPreviewVisible: false,
     cardPreviewPayload: null as CardTransferPayload | null,
   },
   onPageScroll(event: { scrollTop: number }) {
@@ -493,7 +494,6 @@ Page({
         },
       };
       this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
-      wx.hideTabBar({ animation: false });
     } catch (error) {
       wx.showToast({
         title: error instanceof Error ? error.message : "卡片加载失败",
@@ -504,8 +504,17 @@ Page({
     }
   },
 
+  onCardPreviewShown() {
+    this.setData({ cardPreviewVisible: true });
+    wx.hideTabBar({ animation: false });
+  },
+
   closeCardPreview() {
-    this.setData({ cardPreviewOpen: false, cardPreviewPayload: null });
+    this.setData({
+      cardPreviewOpen: false,
+      cardPreviewVisible: false,
+      cardPreviewPayload: null,
+    });
     wx.showTabBar({ animation: false });
   },
 });

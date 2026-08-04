@@ -136,6 +136,7 @@ Page({
     profileBackground: "",
     assets: UI_ASSETS,
     cardPreviewOpen: false,
+    cardPreviewVisible: false,
     cardPreviewPayload: null as CardTransferPayload | null,
     activeTab: "recent" as "recent" | "feedback" | "favorited" | "vipBenefits",
     feedbackStatus: "all" as "all" | FeedbackStatus,
@@ -422,7 +423,6 @@ Page({
       },
     };
     this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
-    wx.hideTabBar({ animation: false });
   },
 
   makeSimilar(event: PrivateFaceActionEvent) {
@@ -523,11 +523,19 @@ Page({
       title: card.name,
     };
     this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
+  },
+
+  onCardPreviewShown() {
+    this.setData({ cardPreviewVisible: true });
     wx.hideTabBar({ animation: false });
   },
 
   closeCardPreview() {
-    this.setData({ cardPreviewOpen: false, cardPreviewPayload: null });
+    this.setData({
+      cardPreviewOpen: false,
+      cardPreviewVisible: false,
+      cardPreviewPayload: null,
+    });
     wx.showTabBar({ animation: false });
   },
 

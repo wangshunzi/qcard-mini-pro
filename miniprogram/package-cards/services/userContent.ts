@@ -4,6 +4,8 @@ import type { Paginated } from "../../services/discovery";
 import type { PrivateCardFace } from "../../services/profile";
 import { resolveApiMediaUrl, resolveCardDataMedia } from "../../utils/mediaUrl";
 
+export { submitPrivateCardFaceFeedback } from "../../services/privateCardFeedback";
+
 export interface PrivateCardPack {
   id: string;
   title: string;
@@ -158,19 +160,6 @@ export function deletePrivateCardFace(id: string) {
     path: `/api/client/user-private-card-faces/${encodeURIComponent(id)}`,
     method: "DELETE",
     data: {},
-  });
-}
-
-export function submitPrivateCardFaceFeedback(id: string, content: string) {
-  return request<{
-    id: string;
-    status: "processing";
-    content: string;
-    createdAt: string;
-  }, { content: string }>({
-    path: `/api/client/user-private-card-faces/${encodeURIComponent(id)}/feedback`,
-    method: "POST",
-    data: { content },
   });
 }
 

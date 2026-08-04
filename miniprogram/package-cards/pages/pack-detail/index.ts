@@ -40,6 +40,7 @@ Page({
     purchaseGuideMode: "vip",
     purchaseGuideReason: "",
     cardPreviewOpen: false,
+    cardPreviewVisible: false,
     cardPreviewPayload: null as CardTransferPayload | null,
     studyTimeText: "0 小时",
     authorRatingText: "",
@@ -262,8 +263,16 @@ Page({
     this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
   },
 
+  onCardPreviewShown() {
+    this.setData({ cardPreviewVisible: true });
+  },
+
   closeCardPreview() {
-    this.setData({ cardPreviewOpen: false, cardPreviewPayload: null });
+    this.setData({
+      cardPreviewOpen: false,
+      cardPreviewVisible: false,
+      cardPreviewPayload: null,
+    });
   },
   openTeacher() {
     const id = this.data.detail?.author?.id;

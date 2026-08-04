@@ -25,6 +25,7 @@ Page({
     studyTimeText: "0分钟",
     lastStudiedText: "从未学习",
     cardPreviewOpen: false,
+    cardPreviewVisible: false,
     cardPreviewPayload: null as CardTransferPayload | null,
   },
 
@@ -117,8 +118,16 @@ Page({
     this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
   },
 
+  onCardPreviewShown() {
+    this.setData({ cardPreviewVisible: true });
+  },
+
   closeCardPreview() {
-    this.setData({ cardPreviewOpen: false, cardPreviewPayload: null });
+    this.setData({
+      cardPreviewOpen: false,
+      cardPreviewVisible: false,
+      cardPreviewPayload: null,
+    });
   },
 
   study() {

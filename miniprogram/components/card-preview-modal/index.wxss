@@ -1,24 +1,22 @@
-:host { display:block; }
-.preview-modal-root { position:fixed; z-index:1100; inset:0; }
-.preview-modal-backdrop { position:absolute; inset:0; background:rgba(13,24,18,.58); backdrop-filter:blur(18rpx); animation:preview-backdrop-in .22s ease-out both; }
-.preview-modal-panel { position:absolute; top:calc(env(safe-area-inset-top) + 28rpx); right:24rpx; bottom:calc(env(safe-area-inset-bottom) + 24rpx); left:24rpx; max-width:680rpx; margin:0 auto; padding:22rpx; display:flex; flex-direction:column; box-sizing:border-box; overflow:hidden; border:1rpx solid rgba(255,255,255,.72); border-radius:34rpx; background:rgba(250,252,249,.96); box-shadow:0 24rpx 70rpx rgba(8,20,12,.3); animation:preview-panel-in .24s cubic-bezier(.22,.8,.22,1) both; }
-.preview-modal-header { min-height:72rpx; padding:0 2rpx 16rpx; flex:none; display:flex; align-items:center; gap:18rpx; }
-.preview-modal-heading { min-width:0; flex:1; display:flex; flex-direction:column; }
-.preview-modal-title { overflow:hidden; color:#26322a; font-size:28rpx; font-weight:800; text-overflow:ellipsis; white-space:nowrap; }
-.preview-modal-subtitle { margin-top:4rpx; overflow:hidden; color:#7a857d; font-size:18rpx; text-overflow:ellipsis; white-space:nowrap; }
-.preview-modal-close { width:62rpx; min-width:62rpx; height:62rpx; margin:0; padding:0; display:flex; align-items:center; justify-content:center; flex:none; border:1rpx solid #e1e5e1; border-radius:50%; color:#687169; background:#fff; box-shadow:0 4rpx 13rpx rgba(37,55,42,.09); line-height:1; }
-.preview-modal-close::after,.preview-source-pack::after,.preview-icon-action::after,.preview-text-action::after { border:0; }
-.preview-card-stage { min-height:0; flex:1; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:27rpx; background:linear-gradient(145deg,#eef3ec,#e3ebe1); }
+:host { position:fixed; z-index:1100; inset:0; display:block; pointer-events:none; }
+.preview-modal-root { position:fixed; z-index:1100; inset:0; pointer-events:auto; }
+.preview-modal-backdrop { position:absolute; inset:0; width:auto; height:auto; margin:0; padding:0; border:0; border-radius:0; background:rgba(15,25,19,.34); backdrop-filter:blur(24rpx) saturate(.92); line-height:normal; animation:preview-backdrop-in .24s ease-out both; }
+.preview-modal-backdrop::after { border:0; }
+.preview-modal-panel { position:absolute; z-index:3; right:0; bottom:calc(env(safe-area-inset-bottom) + 24rpx); left:0; margin:0 auto; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; overflow:visible; background:transparent; animation:preview-panel-in .28s cubic-bezier(.22,.8,.22,1) both; }
+.preview-source-pack::after,.preview-icon-action::after,.preview-text-action::after { border:0; }
+.preview-card-stage { width:100%; height:auto; aspect-ratio:9/16; flex:none; display:flex; align-items:center; justify-content:center; overflow:visible; background:transparent; }
 .preview-modal-card { width:100%; height:100%; min-width:0; min-height:0; }
-.preview-source-pack { width:100%; min-height:82rpx; margin:14rpx 0 0; padding:9rpx 12rpx; flex:none; display:flex; align-items:center; box-sizing:border-box; border:1rpx solid rgba(82,153,23,.15); border-radius:18rpx; color:#344038; background:#fff; box-shadow:0 5rpx 14rpx rgba(37,55,42,.06); line-height:1.2; text-align:left; }
+.preview-modal-dock { width:100%; margin-top:20rpx; padding:0; flex:none; border:0; background:transparent; box-shadow:none; }
+.preview-source-pack { width:100%; min-height:82rpx; margin:0; padding:9rpx 12rpx; display:flex; align-items:center; box-sizing:border-box; border:0; border-radius:17rpx; color:#344038; background:rgba(255,255,255,.58); line-height:1.2; text-align:left; }
 .preview-source-cover { width:58rpx; height:58rpx; flex:none; border-radius:12rpx; background:#e5e9e5; }
 .preview-source-copy { min-width:0; margin-left:11rpx; flex:1; display:flex; flex-direction:column; }
 .preview-source-title,.preview-source-meta { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .preview-source-title { color:#344038; font-size:21rpx; font-weight:750; }
 .preview-source-meta { margin-top:4rpx; color:#7a857d; font-size:17rpx; }
 .preview-source-status { margin-left:8rpx; flex:none; display:flex; align-items:center; gap:2rpx; color:#529917; font-size:17rpx; font-weight:700; }
-.preview-modal-actions { min-height:68rpx; margin-top:14rpx; flex:none; display:flex; align-items:stretch; gap:10rpx; }
-.preview-icon-action,.preview-text-action { height:66rpx; margin:0; padding:0 19rpx; display:flex; align-items:center; justify-content:center; gap:7rpx; border:0; border-radius:17rpx; color:#45604d; background:#eef4ec; font-size:20rpx; font-weight:750; line-height:1; }
+.preview-modal-actions { min-height:68rpx; display:flex; align-items:stretch; gap:10rpx; }
+.preview-source-pack + .preview-modal-actions { margin-top:10rpx; }
+.preview-icon-action,.preview-text-action { height:66rpx; margin:0; padding:0 19rpx; display:flex; align-items:center; justify-content:center; gap:7rpx; border:0; border-radius:17rpx; color:#45604d; background:rgba(238,244,236,.76); font-size:20rpx; font-weight:750; line-height:1; backdrop-filter:blur(16rpx); }
 .preview-icon-action { width:66rpx; min-width:66rpx; padding:0 !important; flex:none; }
 .preview-icon-action.feedback { color:#d35f56; }
 .preview-icon-action.feedback.processing { color:#d99422; background:#fff7df; }
@@ -43,7 +41,7 @@
 .feedback-buttons { margin-top:20rpx; display:flex; gap:15rpx; }
 .feedback-button,.feedback-close-button { height:76rpx; margin:0; flex:1; border-radius:18rpx; color:#303630; background:#f0f3ef; font-size:23rpx; line-height:76rpx; }
 .feedback-buttons .feedback-send { color:#fff; background:#529917; }
-.feedback-buttons .feedback-send[disabled] { opacity:.45; }
+.feedback-buttons .feedback-send.disabled { opacity:.45; }
 .feedback-status { padding:17rpx; display:flex; align-items:center; gap:13rpx; border-radius:17rpx; font-size:25rpx; font-weight:750; }
 .feedback-status.processing { color:#ad791b; background:#fff6d8; }
 .feedback-status.resolved { color:#438f18; background:#edf9e5; }
