@@ -28,7 +28,7 @@ Component({
     feedbackDragSettling: false,
     feedbackDragOffset: 0,
     modalTop: 96,
-    modalWidth: 320,
+    modalWidth: 344,
   },
 
   observers: {
@@ -72,13 +72,13 @@ Component({
       );
       const availableCardHeight = Math.max(
         426,
-        Number(windowInfo.windowHeight || 667) - modalTop - safeBottom - 116,
+        Number(windowInfo.windowHeight || 667) - modalTop - safeBottom - 82,
       );
       const modalWidth = Math.max(
         240,
         Math.min(
-          320,
-          Number(windowInfo.windowWidth || 375) - 40,
+          344,
+          Number(windowInfo.windowWidth || 375) - 28,
           availableCardHeight * 9 / 16,
         ),
       );

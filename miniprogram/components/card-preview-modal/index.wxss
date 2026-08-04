@@ -1,6 +1,6 @@
 :host { position:fixed; z-index:1100; inset:0; display:block; pointer-events:none; }
 .preview-modal-root { position:fixed; z-index:1100; inset:0; pointer-events:auto; }
-.preview-modal-backdrop { position:absolute; inset:0; width:auto; height:auto; margin:0; padding:0; border:0; border-radius:0; background:rgba(15,25,19,.34); backdrop-filter:blur(24rpx) saturate(.92); line-height:normal; animation:preview-backdrop-in .24s ease-out both; }
+.preview-modal-backdrop { position:absolute; inset:0; width:auto; height:auto; margin:0; padding:0; border:0; border-radius:0; background:rgba(15,25,19,.34); backdrop-filter:blur(24rpx) saturate(.92); line-height:normal; }
 .preview-modal-backdrop::after { border:0; }
 .preview-modal-panel { position:absolute; z-index:3; right:0; bottom:calc(env(safe-area-inset-bottom) + 24rpx); left:0; margin:0 auto; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; overflow:visible; background:transparent; animation:preview-panel-in .28s cubic-bezier(.22,.8,.22,1) both; }
 .preview-source-pack::after,.preview-icon-action::after,.preview-text-action::after { border:0; }
@@ -25,7 +25,6 @@
 .preview-text-action { min-width:0; flex:1; }
 .preview-text-action.primary { color:#fff; background:linear-gradient(145deg,#65aa2e,#478b13); box-shadow:0 5rpx 14rpx rgba(82,153,23,.2); }
 .preview-action-hover { opacity:.76; transform:scale(.98); }
-.preview-modal-root.closing .preview-modal-backdrop { animation:preview-backdrop-out .22s ease-in both; }
 .preview-modal-root.closing .preview-modal-panel { animation:preview-panel-out .22s ease-in both; }
 .feedback-root { position:absolute; z-index:5; inset:0; }
 .feedback-backdrop { position:absolute; inset:0; background:rgba(13,32,23,.46); backdrop-filter:blur(7rpx); animation:feedback-fade-in .22s ease-out both; }
@@ -49,8 +48,6 @@
 .feedback-copy,.admin-reply { display:block; margin-top:19rpx; color:#303630; font-size:23rpx; line-height:1.55; }
 .admin-reply { padding:17rpx; border-radius:15rpx; color:#31551f; background:#eef8e8; }
 .feedback-close-button { width:100%; margin-top:24rpx; }
-@keyframes preview-backdrop-in { from { opacity:0; } to { opacity:1; } }
-@keyframes preview-backdrop-out { from { opacity:1; } to { opacity:0; } }
 @keyframes preview-panel-in { from { opacity:0; transform:translateY(38rpx) scale(.96); } to { opacity:1; transform:translateY(0) scale(1); } }
 @keyframes preview-panel-out { from { opacity:1; transform:translateY(0) scale(1); } to { opacity:0; transform:translateY(30rpx) scale(.97); } }
 @keyframes feedback-in { from { transform:translateY(100%); } to { transform:translateY(0); } }

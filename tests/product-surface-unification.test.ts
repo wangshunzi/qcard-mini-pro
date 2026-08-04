@@ -68,7 +68,11 @@ describe("unified Mini Program product surfaces", () => {
     expect(modalLogic).toContain("closeAndThen");
     expect(modalLogic).toContain("getImmersiveNavigationMetrics");
     expect(modalLogic).toContain("metrics.totalHeight + 12");
+    expect(modalLogic).toContain("modalWidth: 344");
+    expect(modalLogic).toContain("windowInfo.windowWidth || 375) - 28");
     expect(modalStyles).toContain("backdrop-filter:blur(24rpx)");
+    expect(modalStyles).not.toContain("preview-backdrop-in");
+    expect(modalStyles).not.toContain("preview-backdrop-out");
     expect(modalStyles).toContain("position:fixed");
     expect(modalStyles).toContain("background:transparent");
     expect(modalStyles).toContain("aspect-ratio:9/16");
