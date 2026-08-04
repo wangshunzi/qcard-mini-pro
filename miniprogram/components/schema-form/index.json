@@ -1,6 +1,7 @@
 {
   "component": true,
   "usingComponents": {
+    "app-toggle": "../app-toggle/index",
     "ui-icon": "../ui-icon/index"
   }
 }

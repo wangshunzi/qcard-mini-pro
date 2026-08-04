@@ -27,17 +27,30 @@
     <view class="content">
       <view class="heading"><text>卡包列表 ({{cardPacks.length}})</text></view>
       <view wx:if="{{cardPacks.length}}" class="list">
-        <view wx:for="{{cardPacks}}" wx:key="id" class="card" data-id="{{item.id}}" bindtap="openPack" hover-class="card-hover">
-          <image class="cover" src="{{item.cover || assets.appIcon}}" mode="aspectFill" />
-          <view class="card-copy">
-            <text class="title">{{item.title}}</text>
-            <text class="meta">{{item.cardCount || 0}} 张 · {{item.subject.name || '综合'}}</text>
-            <text class="description">{{item.description || item.knowledgePoint.name || '精选学习卡包'}}</text>
+        <view wx:for="{{cardPacks}}" wx:key="id" class="pack-card" data-id="{{item.id}}" bindtap="openPack" hover-class="pack-card-hover">
+          <view class="pack-cover-wrap">
+            <image class="pack-cover" src="{{item.cover || assets.appIcon}}" mode="aspectFill" />
+            <text wx:if="{{item.isBestSeller || item.isHot || item.isNew}}" class="pack-mark {{item.isNew ? 'new' : item.isBestSeller ? 'best' : 'hot'}}">{{item.isNew ? '新品' : item.isBestSeller ? '畅销' : '热门'}}</text>
+          </view>
+          <view class="pack-copy">
+            <view class="pack-title-row">
+              <text class="pack-title">{{item.title}}</text>
+              <text class="subject-badge">{{item.subject.name || '综合'}}</text>
+            </view>
+            <view class="pack-meta">
+              <view><ui-icon name="cards-outline" size="{{24}}" color="#748078" /><text>{{item.cardCount || 0}} 张</text></view>
+              <view wx:if="{{item.knowledgePoint.name}}"><ui-icon name="target" size="{{23}}" color="#748078" /><text>{{item.knowledgePoint.name}}</text></view>
+            </view>
+            <text class="pack-description">{{item.description || '精选学习卡包，循序渐进掌握知识'}}</text>
             <view class="card-footer">
-              <text wx:if="{{item.canStudy}}" class="unlocked">{{item.isUnlocked ? '已解锁' : 'VIP 免费'}}</text>
-              <text wx:else class="price">{{item.priceInfo.finalPrice || item.basePrice || 0}} 咔豆</text>
-              <button wx:if="{{item.canStudy}}" class="card-action study" data-id="{{item.id}}" catchtap="startStudy">开始学习</button>
-              <button wx:else class="card-action unlock" loading="{{unlockingId === item.id}}" data-id="{{item.id}}" catchtap="unlock">解锁</button>
+              <view class="access-copy {{item.canStudy ? 'available' : ''}}">
+                <ui-icon name="{{item.canStudy ? 'check-circle' : item.unlockType === 'vip_free' ? 'crown' : 'wallet'}}" size="{{26}}" color="{{item.canStudy ? '#529917' : item.unlockType === 'vip_free' ? '#e39216' : '#786a45'}}" />
+                <text wx:if="{{item.canStudy}}">{{item.isUnlocked ? '已解锁' : 'VIP 免费'}}</text>
+                <text wx:elif="{{item.unlockType === 'vip_free'}}">VIP 免费</text>
+                <text wx:else>{{item.priceInfo.finalPrice || item.basePrice || 0}} 咔豆</text>
+              </view>
+              <button wx:if="{{item.canStudy}}" class="card-action study" data-id="{{item.id}}" catchtap="startStudy"><text>开始学习</text><ui-icon name="arrow-right" size="{{25}}" color="#ffffff" /></button>
+              <button wx:else class="card-action unlock" loading="{{unlockingId === item.id}}" data-id="{{item.id}}" catchtap="unlock"><text>解锁</text><ui-icon wx:if="{{unlockingId !== item.id}}" name="lock-open-outline" size="{{24}}" color="#ffffff" /></button>
             </view>
           </view>
         </view>

@@ -348,8 +348,9 @@ Page({
     this.nextStep();
   },
 
-  toggleViewMode() {
-    const viewMode = this.data.viewMode === "carousel" ? "grid" : "carousel";
+  switchViewMode(event: WechatMiniprogram.TouchEvent) {
+    const viewMode = String(event.currentTarget.dataset.mode) as "carousel" | "grid";
+    if (viewMode === this.data.viewMode || !["carousel", "grid"].includes(viewMode)) return;
     this.setData({
       viewMode,
       gridScrollIntoView:

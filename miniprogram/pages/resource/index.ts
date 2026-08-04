@@ -10,7 +10,7 @@ import {
 } from "../../services/discovery";
 import { getProfile } from "../../services/profile";
 import { sessionStore } from "../../stores/session";
-import { saveCardTransfer } from "../../stores/cardTransfer";
+import type { CardTransferPayload } from "../../stores/cardTransfer";
 import { isMiniProgramCardType } from "../../config/cardTypes";
 import { validateCardData } from "../../cards/CardTypeConfig";
 import { UI_ASSETS } from "../../config/uiAssets";
@@ -114,6 +114,8 @@ Page({
     purchaseGuideMode: "vip",
     purchaseGuideReason: "",
     assets: UI_ASSETS,
+    cardPreviewOpen: false,
+    cardPreviewPayload: null as CardTransferPayload | null,
   },
   onPageScroll(event: { scrollTop: number }) {
     syncNavigationScroll(this, event.scrollTop);
@@ -475,7 +477,7 @@ Page({
       if (!validateCardData(front.type, front.data)) {
         throw new Error("卡片数据不完整，无法预览");
       }
-      saveCardTransfer({
+      const payload: CardTransferPayload = {
         front,
         back: back && validateCardData(back.type, back.data) ? back : undefined,
         title: card.name,
@@ -489,8 +491,9 @@ Page({
           basePrice: card.cardPack.basePrice,
           finalPrice: card.cardPack.priceInfo?.finalPrice,
         },
-      });
-      wx.navigateTo({ url: "/package-cards/pages/preview/index" });
+      };
+      this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
+      wx.hideTabBar({ animation: false });
     } catch (error) {
       wx.showToast({
         title: error instanceof Error ? error.message : "卡片加载失败",
@@ -499,5 +502,10 @@ Page({
     } finally {
       wx.hideLoading();
     }
+  },
+
+  closeCardPreview() {
+    this.setData({ cardPreviewOpen: false, cardPreviewPayload: null });
+    wx.showTabBar({ animation: false });
   },
 });

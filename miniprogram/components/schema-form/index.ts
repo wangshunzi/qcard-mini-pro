@@ -72,7 +72,7 @@ Component({
       const value = event.detail.value === "" ? undefined : Number(event.detail.value);
       this.update(parseDatasetPath(event), value);
     },
-    switchInput(event: WechatMiniprogram.SwitchChange) {
+    switchInput(event: WechatMiniprogram.CustomEvent<{ value: boolean }>) {
       this.update(parseDatasetPath(event), event.detail.value);
     },
     checkboxInput(event: WechatMiniprogram.CheckboxGroupChange) {

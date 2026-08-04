@@ -1,4 +1,4 @@
-<page-meta page-style="{{purchaseGuideOpen || unlockPanelOpen || gradeDrawerOpen ? 'overflow: hidden;' : ''}}"></page-meta>
+<page-meta page-style="{{purchaseGuideOpen || unlockPanelOpen || gradeDrawerOpen || cardPreviewOpen ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="resource-page safe-bottom tab-page">
   <immersive-nav overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <button
@@ -13,9 +13,9 @@
       <text class="drawer-selector-trigger-label">{{selectedGradeName}}</text>
       <ui-icon class="drawer-selector-trigger-chevron" name="chevron-down" size="{{26}}" color="#303630" />
     </button>
-    <view slot="action" class="mode-switch" aria-role="tablist">
-      <view class="mode-option {{mode === 'cardpack' ? 'active' : ''}}" data-mode="cardpack" bindtap="switchMode">卡包</view>
-      <view class="mode-option {{mode === 'preview' ? 'active' : ''}}" data-mode="preview" bindtap="switchMode">预览</view>
+    <view slot="action" class="app-segmented nav-segmented" aria-role="tablist">
+      <button class="app-segmented-option {{mode === 'cardpack' ? 'active' : ''}}" data-mode="cardpack" bindtap="switchMode" hover-class="app-segmented-option-hover" aria-role="tab" aria-checked="{{mode === 'cardpack'}}">卡包</button>
+      <button class="app-segmented-option {{mode === 'preview' ? 'active' : ''}}" data-mode="preview" bindtap="switchMode" hover-class="app-segmented-option-hover" aria-role="tab" aria-checked="{{mode === 'preview'}}">预览</button>
     </view>
   </immersive-nav>
   <view
@@ -210,4 +210,5 @@
     bind:close="closePurchaseGuide"
     bind:success="onVirtualPaymentFulfilled"
   />
+  <card-preview-modal open="{{cardPreviewOpen}}" payload="{{cardPreviewPayload}}" bind:close="closeCardPreview" />
 </view>

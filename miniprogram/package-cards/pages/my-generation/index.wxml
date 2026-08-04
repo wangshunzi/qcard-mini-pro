@@ -1,3 +1,4 @@
+<page-meta page-style="{{cardPreviewOpen ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="page safe-bottom">
   <immersive-nav back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <button slot="action" class="group-button" bindtap="openGroupCard" hover-class="soft-hover">
@@ -48,4 +49,5 @@
     </view>
     <view wx:if="{{loadingMore}}" class="more">正在加载更多…</view>
   </view>
+  <card-preview-modal open="{{cardPreviewOpen}}" payload="{{cardPreviewPayload}}" bind:close="closeCardPreview" />
 </view>

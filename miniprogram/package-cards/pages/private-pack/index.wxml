@@ -1,3 +1,4 @@
+<page-meta page-style="{{cardPreviewOpen ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="page safe-bottom">
   <immersive-nav title="{{pack.title || '专属卡包'}}" back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <view slot="action"><button wx:if="{{pack}}" class="group-button" bindtap="generate" hover-class="soft-hover">
@@ -94,4 +95,5 @@
       <button bindtap="study"><ui-icon name="play" size="{{34}}" color="#ffffff" />{{progress > 0 ? '继续学习' : '立即学习'}}</button>
     </view>
   </block>
+  <card-preview-modal open="{{cardPreviewOpen}}" payload="{{cardPreviewPayload}}" bind:close="closeCardPreview" />
 </view>

@@ -107,15 +107,24 @@ describe("H5-aligned product surfaces", () => {
     expect(navigationTemplate).toContain(
       "--immersive-control-height:{{controlRowHeight}}px",
     );
+    expect(globalStyles).toContain(
+      ".app-segmented.nav-segmented { height:var(--immersive-control-height)",
+    );
+    for (const template of [
+      "miniprogram/pages/resource/index.wxml",
+      "miniprogram/package-cards/pages/my-learning/index.wxml",
+    ]) {
+      expect(read(template), template).toContain(
+        'class="app-segmented nav-segmented"',
+      );
+    }
 
     for (const stylesheet of [
       "miniprogram/components/immersive-nav/index.wxss",
       "miniprogram/components/side-drawer-menu/index.wxss",
       "miniprogram/pages/home/index.wxss",
       "miniprogram/pages/explore/index.wxss",
-      "miniprogram/pages/resource/index.wxss",
       "miniprogram/pages/profile/index.wxss",
-      "miniprogram/package-cards/pages/my-learning/index.wxss",
       "miniprogram/package-cards/pages/my-generation/index.wxss",
       "miniprogram/package-cards/pages/private-pack/index.wxss",
       "miniprogram/package-cards/pages/pack-detail/index.wxss",

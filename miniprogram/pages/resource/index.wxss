@@ -1,9 +1,6 @@
 .resource-page { min-height:100vh; background:var(--color-background); }
 .resource-header { position:relative; height:468rpx; overflow:visible; color:#fff; background:linear-gradient(145deg,#397054,#78a98a); background-size:cover; background-position:bottom center; }
 .header-shade { position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.2),rgba(0,0,0,.05)); }
-.mode-switch { height:var(--immersive-control-height); padding:5rpx; display:flex; box-sizing:border-box; border:var(--immersive-control-border); border-radius:999rpx; background:var(--immersive-control-background); box-shadow:var(--immersive-control-shadow); color:var(--color-text-secondary); font-size:21rpx; backdrop-filter:blur(18rpx); }
-.mode-option { min-width:74rpx; height:60rpx; padding:0 16rpx; box-sizing:border-box; display:flex; align-items:center; justify-content:center; border-radius:999rpx; text-align:center; transition:background .18s ease,color .18s ease,box-shadow .18s ease; }
-.mode-switch .active { color:#fff; background:linear-gradient(145deg,#65aa2e,#478b13); box-shadow:0 4rpx 12rpx rgba(62,119,18,.22),inset 0 1rpx 0 rgba(255,255,255,.25); }
 .header-control-hover { opacity:.8; }
 .header-title { position:relative; z-index:1; padding:var(--immersive-content-safe-top) 48rpx 18rpx; display:flex; flex-direction:column; align-items:flex-start; }
 .header-heading { font-size:48rpx; font-weight:900; }

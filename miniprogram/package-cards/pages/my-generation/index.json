@@ -3,6 +3,7 @@
   "enablePullDownRefresh": true,
   "onReachBottomDistance": 120,
   "usingComponents": {
+    "card-preview-modal": "/components/card-preview-modal/index",
     "immersive-nav": "/components/immersive-nav/index",
     "private-card-face-item": "/components/private-card-face-item/index",
     "ui-icon": "/components/ui-icon/index"

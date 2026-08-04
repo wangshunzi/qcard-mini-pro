@@ -12,7 +12,7 @@ import {
 } from "../../services/profile";
 import { getFavoriteCardPacks, unlockCardPack } from "../../services/cardPack";
 import type { CardPackSummary } from "../../services/discovery";
-import { saveCardTransfer } from "../../stores/cardTransfer";
+import type { CardTransferPayload } from "../../stores/cardTransfer";
 import { sessionStore } from "../../stores/session";
 import { UI_ASSETS } from "../../config/uiAssets";
 import type { CardData } from "../../cards/types";
@@ -135,6 +135,8 @@ Page({
     isVip: false,
     profileBackground: "",
     assets: UI_ASSETS,
+    cardPreviewOpen: false,
+    cardPreviewPayload: null as CardTransferPayload | null,
     activeTab: "recent" as "recent" | "feedback" | "favorited" | "vipBenefits",
     feedbackStatus: "all" as "all" | FeedbackStatus,
     feedbackCards: [] as ProfileCardFace[],
@@ -410,7 +412,7 @@ Page({
       wx.showToast({ title: "卡片数据暂不支持预览", icon: "none" });
       return;
     }
-    saveCardTransfer({
+    const payload: CardTransferPayload = {
       front: { type: card.type, data: card.data! },
       title: card.name,
       privateFace: {
@@ -418,8 +420,9 @@ Page({
         templateId: card.templateId,
         feedback: card.feedback,
       },
-    });
-    wx.navigateTo({ url: "/package-cards/pages/preview/index" });
+    };
+    this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
+    wx.hideTabBar({ animation: false });
   },
 
   makeSimilar(event: PrivateFaceActionEvent) {
@@ -515,11 +518,17 @@ Page({
       wx.showToast({ title: "该收藏卡片暂不支持预览", icon: "none" });
       return;
     }
-    saveCardTransfer({
+    const payload: CardTransferPayload = {
       front: { type: card.frontFace.type, data: card.frontFace.data },
       title: card.name,
-    });
-    wx.navigateTo({ url: "/package-cards/pages/preview/index" });
+    };
+    this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
+    wx.hideTabBar({ animation: false });
+  },
+
+  closeCardPreview() {
+    this.setData({ cardPreviewOpen: false, cardPreviewPayload: null });
+    wx.showTabBar({ animation: false });
   },
 
   async claimReward() {

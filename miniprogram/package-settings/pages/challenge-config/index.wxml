@@ -20,7 +20,7 @@
         <ui-icon name="{{config.learningStrategy === item.value ? 'check-circle' : 'circle-outline'}}" size="{{34}}" color="{{config.learningStrategy === item.value ? '#529917' : '#c8cec9'}}" />
       </view>
     </view>
-    <view class="auto-row"><view><text>智能调整</text><text>根据学习完成情况自动微调每日数量</text></view><switch checked="{{config.autoAdjust}}" color="#529917" bindchange="toggleAuto" /></view>
+    <view class="auto-row"><view><text>智能调整</text><text>根据学习完成情况自动微调每日数量</text></view><app-toggle checked="{{config.autoAdjust}}" label="智能调整" bind:change="toggleAuto" /></view>
 
     <view class="preview-card">
       <view class="card-heading">

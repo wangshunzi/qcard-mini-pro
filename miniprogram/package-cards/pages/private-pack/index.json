@@ -2,6 +2,7 @@
   "navigationStyle": "custom",
   "enablePullDownRefresh": true,
   "usingComponents": {
+    "card-preview-modal": "/components/card-preview-modal/index",
     "immersive-nav": "/components/immersive-nav/index",
     "ui-icon": "/components/ui-icon/index",
     "flip-card": "/cards/FlipCardContainer/index"

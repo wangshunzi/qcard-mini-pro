@@ -66,8 +66,8 @@
 
         <view wx:elif="{{item.normalizedWidget === 'switch' || item.type === 'boolean' || item.type === 'bool'}}"
           class="switch-control">
-          <switch disabled="{{disabled || item.controlDisabled}}" checked="{{item.value}}"
-            data-path="{{item.pathJson}}" bindchange="switchInput" color="#529917" />
+          <app-toggle disabled="{{disabled || item.controlDisabled}}" checked="{{item.value}}"
+            label="{{item.label || '切换开关'}}" data-path="{{item.pathJson}}" bind:change="switchInput" />
           <text>{{item.value ? '开启' : '关闭'}}</text>
         </view>
 

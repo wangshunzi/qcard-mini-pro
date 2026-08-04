@@ -1,8 +1,5 @@
 .page { min-height:100vh; background:var(--color-background); }
 .hero { position:relative; height:436rpx; box-sizing:border-box; padding:var(--immersive-content-safe-top) 32rpx 0; color:#fff; background:linear-gradient(145deg,#397054,#83ad8e); background-size:cover; background-position:bottom center; }
-.mode-switch { height:var(--immersive-control-height); padding:5rpx; display:flex; box-sizing:border-box; border:var(--immersive-control-border); border-radius:999rpx; background:var(--immersive-control-background); box-shadow:var(--immersive-control-shadow); backdrop-filter:blur(18rpx); }
-.mode-option { min-width:82rpx; height:60rpx; padding:0 16rpx; display:flex; align-items:center; justify-content:center; border-radius:999rpx; color:#657065; font-size:20rpx; text-align:center; transition:background .18s ease,color .18s ease,box-shadow .18s ease; }
-.mode-switch .active { color:#fff; background:linear-gradient(145deg,#65aa2e,#478b13); box-shadow:0 4rpx 12rpx rgba(62,119,18,.22),inset 0 1rpx 0 rgba(255,255,255,.25); }
 .hero-title { margin-top:28rpx; font-size:56rpx; font-weight:800; text-align:center; text-shadow:0 2rpx 8rpx rgba(15,15,15,.16); }
 .hero-subtitle { margin-top:8rpx; color:rgba(255,255,255,.78); font-size:28rpx; font-weight:600; text-align:center; text-shadow:0 2rpx 7rpx rgba(15,15,15,.14); }
 .search { position:absolute; right:32rpx; bottom:-48rpx; left:32rpx; height:96rpx; padding:0 18rpx 0 28rpx; display:flex; align-items:center; gap:14rpx; border-radius:28rpx; background:#fff; box-shadow:0 8rpx 24rpx rgba(0,0,0,.12); }

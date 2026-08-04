@@ -1,6 +1,7 @@
 {
   "navigationStyle": "custom",
   "usingComponents": {
+    "app-toggle": "/components/app-toggle/index",
     "immersive-nav": "/components/immersive-nav/index",
     "ui-icon": "/components/ui-icon/index"
   }

@@ -1,9 +1,9 @@
 <view class="page safe-bottom">
   <immersive-nav title="反馈中心" back="{{true}}" border="{{true}}" />
 
-  <view class="mode-switch">
-    <view class="mode-option {{mode === 'list' ? 'active' : ''}}" data-mode="list" bindtap="switchMode">我的反馈</view>
-    <view class="mode-option {{mode === 'submit' ? 'active' : ''}}" data-mode="submit" bindtap="switchMode">提交反馈</view>
+  <view class="app-segmented feedback-mode-switch" aria-role="tablist">
+    <button class="app-segmented-option {{mode === 'list' ? 'active' : ''}}" data-mode="list" bindtap="switchMode" hover-class="app-segmented-option-hover" aria-role="tab" aria-checked="{{mode === 'list'}}">我的反馈</button>
+    <button class="app-segmented-option {{mode === 'submit' ? 'active' : ''}}" data-mode="submit" bindtap="switchMode" hover-class="app-segmented-option-hover" aria-role="tab" aria-checked="{{mode === 'submit'}}">提交反馈</button>
   </view>
 
   <view wx:if="{{mode === 'submit'}}" class="submit-panel">

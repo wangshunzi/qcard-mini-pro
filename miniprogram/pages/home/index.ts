@@ -15,7 +15,7 @@ import {
 import { UI_ASSETS } from "../../config/uiAssets";
 import { isMiniProgramCardType } from "../../config/cardTypes";
 import { validateCardData } from "../../cards/CardTypeConfig";
-import { saveCardTransfer } from "../../stores/cardTransfer";
+import type { CardTransferPayload } from "../../stores/cardTransfer";
 import type { CardData } from "../../cards/types";
 import { syncNavigationScroll } from "../../utils/navigationScroll";
 
@@ -109,6 +109,8 @@ Page({
     profile: null as Awaited<ReturnType<typeof getProfile>> | null,
     homeBackground: "",
     assets: UI_ASSETS,
+    cardPreviewOpen: false,
+    cardPreviewPayload: null as CardTransferPayload | null,
     coinHistoryOpen: false,
     purchaseGuideOpen: false,
     purchaseGuideMode: "recharge",
@@ -396,10 +398,21 @@ Page({
       wx.showToast({ title: "卡片数据暂不支持预览", icon: "none" });
       return;
     }
-    saveCardTransfer({
+    const payload: CardTransferPayload = {
       front: { type: card.type, data: card.data! },
       title: card.name,
-    });
-    wx.navigateTo({ url: "/package-cards/pages/preview/index" });
+      privateFace: {
+        id: card.id,
+        templateId: card.templateId,
+        feedback: card.feedback,
+      },
+    };
+    this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
+    wx.hideTabBar({ animation: false });
+  },
+
+  closeCardPreview() {
+    this.setData({ cardPreviewOpen: false, cardPreviewPayload: null });
+    wx.showTabBar({ animation: false });
   },
 });

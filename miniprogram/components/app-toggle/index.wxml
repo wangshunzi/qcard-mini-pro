@@ -1,0 +1,10 @@
+<button
+  class="toggle {{checked ? 'checked' : ''}}"
+  disabled="{{disabled}}"
+  bindtap="toggle"
+  aria-role="switch"
+  aria-checked="{{checked}}"
+  aria-label="{{label}}"
+>
+  <view class="toggle-thumb"></view>
+</button>

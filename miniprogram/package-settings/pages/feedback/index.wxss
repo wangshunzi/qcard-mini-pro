@@ -1,7 +1,5 @@
 .page { min-height: 100vh; padding: 28rpx 30rpx 70rpx; box-sizing: border-box; background: #fff; }
-.mode-switch { padding: 7rpx; display: flex; border-radius: 16rpx; background: var(--color-tertiary-10); }
-.mode-option { height: 68rpx; flex: 1; display: flex; align-items: center; justify-content: center; border-radius: 12rpx; color: var(--color-text-secondary); font-size: 23rpx; }
-.mode-option.active { color: var(--color-text); background: #fff; box-shadow: 0 3rpx 12rpx rgba(26, 46, 32, .08); font-weight: 650; }
+.feedback-mode-switch { height:82rpx; }
 .submit-panel, .list-panel, .detail-panel { margin-top: 34rpx; }
 .label { display: block; color: var(--color-text); font-size: 24rpx; font-weight: 650; }
 .block-label { margin-top: 34rpx; }

@@ -1,0 +1,84 @@
+<view wx:if="{{open && cardPayload}}" class="preview-modal-root {{closing ? 'closing' : ''}}" catchtouchmove="preventClose">
+  <view class="preview-modal-backdrop" bindtap="close"></view>
+  <view class="preview-modal-panel safe-bottom" catchtap="preventClose">
+    <view class="preview-modal-header">
+      <view class="preview-modal-heading">
+        <text class="preview-modal-title">{{cardPayload.title || '卡片详情'}}</text>
+        <text class="preview-modal-subtitle">轻触卡片体验互动{{cardPayload.back && cardPayload.back.type ? '，右下角可翻面' : ''}}</text>
+      </view>
+      <button class="preview-modal-close" bindtap="close" aria-label="关闭卡片详情">
+        <ui-icon name="close" size="{{34}}" color="#687169" />
+      </button>
+    </view>
+
+    <view class="preview-card-stage">
+      <flip-card
+        id="preview-modal-card"
+        class="preview-modal-card"
+        front-card-data="{{cardPayload.front}}"
+        back-card-data="{{cardPayload.back || emptyCardData}}"
+        preview="{{false}}"
+        read-only="{{false}}"
+        is-visible="{{open && !closing}}"
+      />
+    </view>
+
+    <button wx:if="{{cardPayload.sourcePack}}" class="preview-source-pack" bindtap="openSourcePack" hover-class="preview-action-hover">
+      <image class="preview-source-cover" src="{{cardPayload.sourcePack.cover}}" mode="aspectFill" />
+      <view class="preview-source-copy">
+        <text class="preview-source-title">{{cardPayload.sourcePack.title}}</text>
+        <text class="preview-source-meta">{{cardPayload.sourcePack.subjectName || '综合'}}{{cardPayload.sourcePack.knowledgePointName ? ' · ' + cardPayload.sourcePack.knowledgePointName : ''}}</text>
+      </view>
+      <view class="preview-source-status">
+        <text wx:if="{{cardPayload.sourcePack.isUnlocked}}">已解锁</text>
+        <text wx:elif="{{cardPayload.sourcePack.finalPrice !== undefined}}">{{cardPayload.sourcePack.finalPrice}} 咔豆</text>
+        <ui-icon name="chevron-right" size="{{28}}" color="#718078" />
+      </view>
+    </button>
+
+    <view wx:if="{{cardPayload.privateFace || cardPayload.templateId}}" class="preview-modal-actions">
+      <button wx:if="{{cardPayload.privateFace}}" class="preview-icon-action feedback {{cardPayload.privateFace.feedback.status || ''}}" bindtap="openFeedback" aria-label="卡面反馈">
+        <ui-icon wx:if="{{cardPayload.privateFace.feedback.status === 'resolved'}}" name="check-circle" size="{{30}}" color="currentColor" />
+        <ui-icon wx:elif="{{cardPayload.privateFace.feedback.status === 'processing'}}" name="timer-outline" size="{{30}}" color="currentColor" />
+        <ui-icon wx:else name="alert-circle-outline" size="{{30}}" color="currentColor" />
+      </button>
+      <button wx:if="{{cardPayload.privateFace}}" class="preview-text-action" bindtap="openGroupCard" hover-class="preview-action-hover">
+        <ui-icon name="view-grid-outline" size="{{28}}" color="#45604d" /><text>去组卡</text>
+      </button>
+      <button wx:if="{{cardPayload.templateId || cardPayload.privateFace.templateId}}" class="preview-text-action primary" bindtap="makeSimilar" hover-class="preview-action-hover">
+        <ui-icon name="auto-fix" size="{{28}}" color="#ffffff" /><text>做同款</text>
+      </button>
+    </view>
+  </view>
+
+  <view wx:if="{{feedbackOpen}}" class="feedback-root {{feedbackClosing ? 'closing' : ''}}" catchtouchmove="preventClose">
+    <view class="feedback-backdrop" bindtap="closeFeedback"></view>
+    <view class="feedback-sheet safe-bottom {{feedbackDragging ? 'dragging' : ''}} {{feedbackDragSettling ? 'drag-settling' : ''}}" style="--feedback-drag-offset: {{feedbackDragOffset}}px;" catchtap="preventClose">
+      <view class="feedback-drag-area" bindtouchstart="onFeedbackDragStart" catchtouchmove="onFeedbackDragMove" bindtouchend="onFeedbackDragEnd" bindtouchcancel="onFeedbackDragCancel">
+        <view class="feedback-handle"></view>
+      </view>
+      <block wx:if="{{cardPayload.privateFace.feedback}}">
+        <view class="feedback-status {{cardPayload.privateFace.feedback.status}}">
+          <ui-icon wx:if="{{cardPayload.privateFace.feedback.status === 'resolved'}}" name="check-circle" size="{{36}}" color="currentColor" />
+          <ui-icon wx:elif="{{cardPayload.privateFace.feedback.status === 'processing'}}" name="timer-outline" size="{{36}}" color="currentColor" />
+          <ui-icon wx:else name="alert-circle-outline" size="{{36}}" color="currentColor" />
+          <text>{{cardPayload.privateFace.feedback.status === 'resolved' ? '已通过并退款' : cardPayload.privateFace.feedback.status === 'rejected' ? '已拒绝' : '处理中'}}</text>
+        </view>
+        <text class="feedback-copy">反馈内容：{{cardPayload.privateFace.feedback.content || '未填写'}}</text>
+        <text wx:if="{{cardPayload.privateFace.feedback.adminReply}}" class="admin-reply">管理员回复：{{cardPayload.privateFace.feedback.adminReply}}</text>
+        <button class="feedback-close-button" bindtap="closeFeedback">关闭</button>
+      </block>
+      <block wx:else>
+        <text class="feedback-title">卡面问题反馈</text>
+        <view class="feedback-input-wrap">
+          <textarea class="feedback-input" value="{{feedbackContent}}" bindinput="onFeedbackInput" maxlength="2000" placeholder="描述卡面问题（如内容不符、图片模糊等）" />
+          <text class="feedback-counter">{{feedbackContent.length}} / 2000</text>
+        </view>
+        <view class="feedback-buttons">
+          <button class="feedback-button" bindtap="closeFeedback">取消</button>
+          <button class="feedback-button feedback-send" loading="{{submittingFeedback}}" disabled="{{submittingFeedback || !feedbackContent}}" bindtap="submitFeedback">发送</button>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

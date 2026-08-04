@@ -1,8 +1,8 @@
 <view class="page safe-bottom">
   <immersive-nav back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
-    <view slot="action" class="mode-switch">
-      <view class="mode-option {{mode === 'unlocked' ? 'active' : ''}}" data-mode="unlocked" bindtap="switchMode">已解锁</view>
-      <view class="mode-option {{mode === 'private' ? 'active' : ''}}" data-mode="private" bindtap="switchMode">专属</view>
+    <view slot="action" class="app-segmented nav-segmented" aria-role="tablist">
+      <button class="app-segmented-option {{mode === 'unlocked' ? 'active' : ''}}" data-mode="unlocked" bindtap="switchMode" hover-class="app-segmented-option-hover" aria-role="tab" aria-checked="{{mode === 'unlocked'}}">已解锁</button>
+      <button class="app-segmented-option {{mode === 'private' ? 'active' : ''}}" data-mode="private" bindtap="switchMode" hover-class="app-segmented-option-hover" aria-role="tab" aria-checked="{{mode === 'private'}}">专属</button>
     </view>
   </immersive-nav>
   <view class="hero" style="{{heroBackground ? 'background-image:url(' + heroBackground + ')' : ''}}">

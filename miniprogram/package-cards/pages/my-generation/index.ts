@@ -5,7 +5,7 @@ import type { PrivateCardFace } from "../../../services/profile";
 import { deletePrivateCardFace, getPrivateCardFaces } from "../../services/userContent";
 import { toPrivateCardData } from "../../services/userContent";
 import { getProfile } from "../../../services/profile";
-import { saveCardTransfer } from "../../../stores/cardTransfer";
+import type { CardTransferPayload } from "../../../stores/cardTransfer";
 import type { CardData } from "../../../cards/types";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
 
@@ -49,6 +49,8 @@ Page({
     loadingMore: false,
     error: "",
     assets: UI_ASSETS,
+    cardPreviewOpen: false,
+    cardPreviewPayload: null as CardTransferPayload | null,
     heroBackground: "",
     editMode: false,
     deletingId: "",
@@ -250,7 +252,7 @@ Page({
       wx.showToast({ title: "卡片数据不完整，无法预览", icon: "none" });
       return;
     }
-    saveCardTransfer({
+    const payload: CardTransferPayload = {
       front: { type: card.type, data: card.data! },
       title: card.name,
       privateFace: {
@@ -258,7 +260,11 @@ Page({
         templateId: card.templateId,
         feedback: card.feedback,
       },
-    });
-    wx.navigateTo({ url: "/package-cards/pages/preview/index" });
+    };
+    this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
+  },
+
+  closeCardPreview() {
+    this.setData({ cardPreviewOpen: false, cardPreviewPayload: null });
   },
 });

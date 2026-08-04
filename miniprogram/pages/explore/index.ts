@@ -4,7 +4,7 @@ import {
   getPublicCardFaces,
   type PublicCardFaceSummary,
 } from "../../services/exploration";
-import { saveCardTransfer } from "../../stores/cardTransfer";
+import type { CardTransferPayload } from "../../stores/cardTransfer";
 import { sessionStore } from "../../stores/session";
 import { getMiniProgramTemplates, type AiTemplate } from "../../services/ai";
 import { getProfile } from "../../services/profile";
@@ -34,6 +34,8 @@ Page({
     selectedTemplateId: "",
     selectedTemplateName: "全部",
     templateDrawerOpen: false,
+    cardPreviewOpen: false,
+    cardPreviewPayload: null as CardTransferPayload | null,
     exploreBackground: "",
     assets: UI_ASSETS,
     listeningBackground: UI_ASSETS.listeningStoryBackground,
@@ -189,20 +191,28 @@ Page({
         face.supportedPlatforms?.length &&
         !face.supportedPlatforms.includes("wechat_miniprogram")
       ) throw new Error("该卡片暂不支持小程序");
-      saveCardTransfer({
+      const payload: CardTransferPayload = {
         front: {
           type: face.type,
           data: face.data,
           schemaVersion: face.schemaVersion,
         },
         title: face.name,
-      });
-      wx.navigateTo({ url: "/package-cards/pages/preview/index" });
+        templateId: face.templateId,
+        genParams: face.genParams,
+      };
+      this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
+      wx.hideTabBar({ animation: false });
     } catch (error) {
       wx.showToast({ title: error instanceof Error ? error.message : "卡片加载失败", icon: "none" });
     } finally {
       wx.hideLoading();
       this.setData({ openingId: "" });
     }
+  },
+
+  closeCardPreview() {
+    this.setData({ cardPreviewOpen: false, cardPreviewPayload: null });
+    wx.showTabBar({ animation: false });
   },
 });

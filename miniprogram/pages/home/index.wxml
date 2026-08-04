@@ -1,4 +1,4 @@
-<page-meta page-style="{{purchaseGuideOpen || coinHistoryOpen ? 'overflow: hidden;' : ''}}"></page-meta>
+<page-meta page-style="{{purchaseGuideOpen || coinHistoryOpen || cardPreviewOpen ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="home-page safe-bottom tab-page">
   <immersive-nav overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <view slot="leading" class="level-entry" bindtap="openLevel" hover-class="soft-hover">
@@ -180,4 +180,5 @@
     bind:close="closePurchaseGuide"
     bind:success="onVirtualPaymentFulfilled"
   />
+  <card-preview-modal open="{{cardPreviewOpen}}" payload="{{cardPreviewPayload}}" bind:close="closeCardPreview" />
 </view>

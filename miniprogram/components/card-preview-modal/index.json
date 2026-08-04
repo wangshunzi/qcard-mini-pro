@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "flip-card": "/cards/FlipCardContainer/index",
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

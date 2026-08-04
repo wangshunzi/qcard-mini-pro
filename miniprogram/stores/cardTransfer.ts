@@ -6,6 +6,8 @@ export interface CardTransferPayload {
   front: CardData;
   back?: CardData;
   title?: string;
+  templateId?: string;
+  genParams?: Record<string, unknown>;
   privateFace?: {
     id: string;
     templateId?: string;

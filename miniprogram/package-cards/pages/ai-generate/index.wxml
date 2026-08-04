@@ -9,15 +9,13 @@
     bind:back="onNavBack"
   >
     <view slot="action" class="header-action">
-      <view wx:if="{{stepIndex === 0}}" class="view-switch" bindtap="toggleViewMode"
-        aria-label="{{viewMode === 'carousel' ? '切换到列表模式' : '切换到轮播模式'}}">
-        <view class="view-switch-indicator {{viewMode === 'grid' ? 'grid' : ''}}"></view>
-        <view class="view-switch-button">
+      <view wx:if="{{stepIndex === 0}}" class="app-segmented nav-segmented icon-segmented" aria-role="tablist">
+        <button class="app-segmented-option {{viewMode === 'carousel' ? 'active' : ''}}" data-mode="carousel" bindtap="switchViewMode" hover-class="app-segmented-option-hover" aria-label="轮播模式" aria-role="tab" aria-checked="{{viewMode === 'carousel'}}">
           <ui-icon name="view-carousel" size="{{35}}" color="{{viewMode === 'carousel' ? '#ffffff' : '#748077'}}" />
-        </view>
-        <view class="view-switch-button">
+        </button>
+        <button class="app-segmented-option {{viewMode === 'grid' ? 'active' : ''}}" data-mode="grid" bindtap="switchViewMode" hover-class="app-segmented-option-hover" aria-label="列表模式" aria-role="tab" aria-checked="{{viewMode === 'grid'}}">
           <ui-icon name="view-grid-outline" size="{{34}}" color="{{viewMode === 'grid' ? '#ffffff' : '#748077'}}" />
-        </view>
+        </button>
       </view>
       <view wx:else class="template-badge">{{currentSummary.name}}</view>
     </view>

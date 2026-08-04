@@ -72,7 +72,7 @@ Page({
     );
   },
 
-  toggleAuto(event: WechatMiniprogram.SwitchChange) {
+  toggleAuto(event: WechatMiniprogram.CustomEvent<{ value: boolean }>) {
     this.setData({ "config.autoAdjust": event.detail.value });
   },
 

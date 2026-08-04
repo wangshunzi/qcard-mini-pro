@@ -1,4 +1,4 @@
-<page-meta page-style="{{purchaseGuideOpen || unlockPanelOpen ? 'overflow: hidden;' : ''}}"></page-meta>
+<page-meta page-style="{{purchaseGuideOpen || unlockPanelOpen || cardPreviewOpen ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="page safe-bottom">
   <immersive-nav title="{{detail.title || '卡包详情'}}" back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <view slot="action"><button wx:if="{{detail}}" class="favorite-button {{detail.isFavorited ? 'active' : ''}}" bindtap="toggleFavorite" hover-class="soft-hover" aria-label="{{detail.isFavorited ? '取消收藏' : '收藏'}}">
@@ -189,4 +189,5 @@
     bind:close="closePurchaseGuide"
     bind:success="onVirtualPaymentFulfilled"
   />
+  <card-preview-modal open="{{cardPreviewOpen}}" payload="{{cardPreviewPayload}}" bind:close="closeCardPreview" />
 </view>

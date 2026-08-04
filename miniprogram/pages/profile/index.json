@@ -3,6 +3,7 @@
   "enablePullDownRefresh": true,
   "backgroundTextStyle": "dark",
   "usingComponents": {
+    "card-preview-modal": "/components/card-preview-modal/index",
     "coin-history-drawer": "/components/coin-history-drawer/index",
     "side-drawer-menu": "/components/side-drawer-menu/index",
     "flip-card": "/cards/FlipCardContainer/index",
