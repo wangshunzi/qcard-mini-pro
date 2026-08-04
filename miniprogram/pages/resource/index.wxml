@@ -62,9 +62,26 @@
               is-visible="{{true}}"
             />
           </view>
-          <view class="preview-copy">
-            <text class="preview-title">{{item.name}}</text>
-            <text class="preview-meta">{{item.cardPack.title}}</text>
+          <view
+            class="preview-pack-summary"
+            data-id="{{item.cardPack.id}}"
+            catchtap="openPack"
+            hover-class="preview-pack-summary-hover"
+          >
+            <image class="preview-pack-cover" src="{{item.cardPack.cover || assets.appIcon}}" mode="aspectFill" />
+            <view class="preview-pack-info">
+              <text class="preview-pack-title">{{item.cardPack.title}}</text>
+              <view class="preview-pack-meta">
+                <text wx:if="{{item.cardPack.subject.name}}" class="preview-pack-meta-text">{{item.cardPack.subject.name}}</text>
+                <text wx:if="{{item.cardPack.subject.name && item.cardPack.knowledgePoint.name}}" class="preview-pack-meta-text"> · </text>
+                <text class="preview-pack-meta-text">{{item.cardPack.knowledgePoint.name || '卡包'}}</text>
+              </view>
+            </view>
+            <view class="preview-pack-status">
+              <ui-icon wx:if="{{item.cardPack.isUnlocked}}" name="lock-open-outline" size="{{27}}" color="#529917" />
+              <text wx:elif="{{item.packDisplayPrice > 0}}">{{item.packDisplayPrice}}咔豆</text>
+              <text wx:else>免费</text>
+            </view>
           </view>
         </view>
       </view>

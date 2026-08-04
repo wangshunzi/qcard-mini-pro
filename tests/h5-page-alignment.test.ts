@@ -631,6 +631,22 @@ describe("H5-aligned product surfaces", () => {
     expect(config).toContain('"/cards/FlipCardContainer/index"');
   });
 
+  it("matches the H5 preview grid with a compact card-pack thumbnail bar", () => {
+    const template = read("miniprogram/pages/resource/index.wxml");
+    const styles = read("miniprogram/pages/resource/index.wxss");
+    const logic = read("miniprogram/pages/resource/index.ts");
+
+    expect(template).toContain('class="preview-pack-summary"');
+    expect(template).toContain('class="preview-pack-cover"');
+    expect(template).toContain("{{item.cardPack.title}}");
+    expect(template).toContain('catchtap="openPack"');
+    expect(template).toContain('name="lock-open-outline"');
+    expect(template).not.toContain('class="preview-title">{{item.name}}');
+    expect(styles).toContain(".preview-pack-summary {");
+    expect(styles).toContain(".preview-pack-cover {");
+    expect(logic).toContain("packDisplayPrice");
+  });
+
   it("renders Home private faces through the shared H5-aligned item", () => {
     const template = read("miniprogram/pages/home/index.wxml");
     const config = read("miniprogram/pages/home/index.json");

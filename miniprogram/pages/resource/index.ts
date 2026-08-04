@@ -20,6 +20,7 @@ import { syncNavigationScroll } from "../../utils/navigationScroll";
 
 interface DisplayDiscoveryCard extends DiscoveryCard {
   previewCard: CardData;
+  packDisplayPrice: number;
 }
 
 interface DisplayCardPack extends CardPackSummary {
@@ -73,6 +74,10 @@ function toDisplayKnowledgePoints(
 function toDisplayDiscoveryCard(item: DiscoveryCard): DisplayDiscoveryCard {
   return {
     ...item,
+    packDisplayPrice: Math.max(
+      0,
+      Number(item.cardPack.priceInfo?.finalPrice ?? item.cardPack.basePrice ?? 0),
+    ),
     previewCard: {
       type: item.frontFace.type as CardData["type"],
       data: item.frontFace.data,

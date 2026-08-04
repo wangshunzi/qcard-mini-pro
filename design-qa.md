@@ -780,4 +780,61 @@ Canvas compositing and media interruption behavior.
   - the incorrect label “选择存属卡包” was corrected to “选择归属卡包”.
 - No remaining P0/P1/P2 issue was found in the two focused runtime states.
 
-final result: blocked by required iOS/Android physical-device comparison
+historical result: blocked by required iOS/Android physical-device comparison
+
+## Resource preview card-pack thumbnail pass — 2026-08-04
+
+### Evidence
+
+- Source visual truth:
+  `/var/folders/qg/nksqszv52xd_n_lftjc7rlsm0000gn/T/codex-clipboard-0fbe21a1-6652-4182-88ac-aca556757bc9.png`
+- Implementation screenshot:
+  `/Users/one/Desktop/work/kolka/kaka-app/client-server/QCard-MiniProgram/qa-artifacts/latest/resource-preview-card-pack-thumbnails-devtools.png`
+- Source pixels: 312 x 632, cropped H5 card-grid item.
+- Implementation pixels: 1200 x 768, WeChat Developer Tools capture containing
+  an iPhone 12/13 Pro simulator at 390 x 844 logical pixels and 70% canvas scale.
+- State: Resource tab, Preview mode, populated two-column card grid.
+- Density normalization: the source is a focused component crop while the
+  implementation is a full Developer Tools capture, so comparison uses the
+  repeated card/thumbnail regions at their logical 9:16 proportions rather than
+  raw desktop-canvas pixels.
+
+### Full-view comparison
+
+- The Mini Program preserves the responsive Resource grid and now repeats the
+  H5 card-plus-card-pack-summary composition below every 9:16 card.
+- The replacement does not change the page header, search, tabs, loading flow,
+  TabBar, or card-preview interaction.
+
+### Focused-region comparison
+
+- Fonts and typography: the card-pack title is the only primary line; subject
+  and knowledge point use a smaller secondary line. Card names are no longer
+  rendered under previews.
+- Spacing and layout rhythm: the card and compact summary are separate rounded
+  surfaces with a short gap, matching the H5 bottom-bar hierarchy.
+- Colors and visual tokens: the white summary surface, green unlocked state,
+  blue taxonomy metadata, restrained border, and light elevation follow H5.
+- Image quality and asset fidelity: the real server-provided card-pack cover is
+  rendered with `aspectFill`; no placeholder or reconstructed artwork replaces it.
+- Copy and content: summary content is card-pack title, subject, knowledge point,
+  and unlocked/price state. The prior card-name/card-pack-name block is gone.
+- Interaction: tapping the card still opens card preview; tapping the compact
+  card-pack summary stops propagation and opens card-pack detail.
+
+### Comparison history
+
+- Earlier P1: Preview grid displayed card name and card-pack title as plain text,
+  which did not communicate the source card pack and diverged from H5.
+- Fix: replaced the plain copy block with a cover-led card-pack thumbnail summary,
+  added unlocked/price state, and separated the card and summary surfaces.
+- Post-fix evidence: the implementation screenshot shows real cover thumbnails,
+  card-pack titles, taxonomy metadata, and the green unlocked icon beneath the
+  preview cards. No actionable P0/P1/P2 mismatch remains in this focused state.
+
+### Follow-up polish
+
+- P3: verify the smallest Android font renderer does not clip long knowledge-point
+  names; current truncation protects the grid width.
+
+final result: passed
