@@ -1,4 +1,3 @@
-<page-meta page-style="{{cardPreviewVisible ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="page safe-bottom">
   <immersive-nav title="{{pack.title || '专属卡包'}}" back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <view slot="action"><button wx:if="{{pack}}" class="group-button" bindtap="generate" hover-class="soft-hover">
@@ -96,4 +95,3 @@
     </view>
   </block>
 </view>
-<card-preview-modal open="{{cardPreviewOpen}}" payload="{{cardPreviewPayload}}" bind:shown="onCardPreviewShown" bind:close="closeCardPreview" />

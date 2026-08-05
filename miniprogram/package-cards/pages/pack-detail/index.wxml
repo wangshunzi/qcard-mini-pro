@@ -1,4 +1,4 @@
-<page-meta page-style="{{purchaseGuideOpen || unlockPanelOpen || cardPreviewVisible ? 'overflow: hidden;' : ''}}"></page-meta>
+<page-meta page-style="{{purchaseGuideOpen || unlockPanelOpen ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="page safe-bottom">
   <immersive-nav title="{{detail.title || '卡包详情'}}" back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <view slot="action"><button wx:if="{{detail}}" class="favorite-button {{detail.isFavorited ? 'active' : ''}}" bindtap="toggleFavorite" hover-class="soft-hover" aria-label="{{detail.isFavorited ? '取消收藏' : '收藏'}}">
@@ -120,15 +120,15 @@
     </view>
 
     <view wx:elif="{{activeTab === 'cards'}}" class="panel cards-panel">
-      <view class="cards-heading">卡片预览 <text wx:if="{{detail.isUnlocked}}">({{detail.userStudyProgress.completedCards || 0}}/{{detail.cardCount || catalogue.length}})</text></view>
+      <view class="cards-heading">卡片列表 <text wx:if="{{canStudy}}">({{detail.userStudyProgress.completedCards || 0}}/{{detail.cardCount || catalogue.length}})</text></view>
       <view class="cards-grid">
-        <view wx:for="{{catalogue}}" wx:key="id" class="card-preview {{!detail.isUnlocked && !item.isPreview ? 'locked' : ''}}" data-id="{{item.id}}" bindtap="openCard" hover-class="card-hover">
-          <flip-card wx:if="{{item.frontCardData && (detail.isUnlocked || item.isPreview)}}" front-card-data="{{item.frontCardData}}" aspect-ratio="portrait" preview="{{true}}" read-only="{{true}}" hide-flip-button="{{true}}" is-visible="{{true}}" />
+        <view wx:for="{{catalogue}}" wx:key="id" class="card-preview {{!canStudy && !item.isPreview ? 'locked' : ''}}" data-id="{{item.id}}" bindtap="openCard" hover-class="card-hover">
+          <flip-card wx:if="{{item.frontCardData && (canStudy || item.isPreview)}}" front-card-data="{{item.frontCardData}}" aspect-ratio="portrait" preview="{{true}}" read-only="{{true}}" hide-flip-button="{{true}}" is-visible="{{true}}" />
           <view wx:else class="locked-card">
             <ui-icon name="lock" size="{{48}}" color="#a9a9a9" />
             <text>解锁后查看</text>
           </view>
-          <text wx:if="{{!detail.isUnlocked && item.isPreview}}" class="preview-badge">预览</text>
+          <text wx:if="{{!canStudy && item.isPreview}}" class="preview-badge">预览</text>
         </view>
       </view>
       <view wx:if="{{!canStudy}}" class="unlock-tip" bindtap="confirmUnlock">
@@ -190,4 +190,3 @@
     bind:success="onVirtualPaymentFulfilled"
   />
 </view>
-<card-preview-modal open="{{cardPreviewOpen}}" payload="{{cardPreviewPayload}}" bind:shown="onCardPreviewShown" bind:close="closeCardPreview" />

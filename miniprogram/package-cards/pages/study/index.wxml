@@ -12,9 +12,9 @@
           <text class="pack-title">{{pack.title || '开始学习'}}</text>
           <text wx:if="{{previewOnly || challengeMode}}" class="preview-badge">{{challengeMode ? '挑战' : '预览'}}</text>
         </view>
-        <text class="progress-text">{{activeIndex + 1}}/{{cards.length}} · 进度: {{progressLabel}}%</text>
       </view>
     </view>
+    <text class="progress-text">{{activeIndex + 1}}/{{cards.length}} · 进度: {{progressLabel}}%</text>
     <view class="progress-track"><view class="progress-fill" style="width:{{progressPercent}}%"></view></view>
   </view>
 

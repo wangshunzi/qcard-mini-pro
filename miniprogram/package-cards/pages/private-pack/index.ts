@@ -5,7 +5,6 @@ import {
   type PrivateCardPack,
 } from "../../services/userContent";
 import { getProfile } from "../../../services/profile";
-import type { CardTransferPayload } from "../../../cards/cardTransfer";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
 
 Page({
@@ -24,9 +23,6 @@ Page({
     completedCards: 0,
     studyTimeText: "0分钟",
     lastStudiedText: "从未学习",
-    cardPreviewOpen: false,
-    cardPreviewVisible: false,
-    cardPreviewPayload: null as CardTransferPayload | null,
   },
 
   onPageScroll(event: { scrollTop: number }) {
@@ -97,36 +93,11 @@ Page({
 
   openCard(event: WechatMiniprogram.TouchEvent) {
     const id = String(event.currentTarget.dataset.id || "");
-    const card = this.data.cards.find((item) => item.id === id);
-    if (!card?.frontCardData) {
-      wx.showToast({ title: "卡片数据不完整，无法预览", icon: "none" });
-      return;
-    }
-    const payload: CardTransferPayload = {
-      front: card.frontCardData,
-      back: card.backFace
-        ? {
-            type: card.backFace.type as CardTransferPayload["front"]["type"],
-            data: card.backFace.data,
-          }
-        : undefined,
-      title: card.name,
-      privateFace: {
-        id: card.frontFace.id,
-      },
-    };
-    this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
-  },
-
-  onCardPreviewShown() {
-    this.setData({ cardPreviewVisible: true });
-  },
-
-  closeCardPreview() {
-    this.setData({
-      cardPreviewOpen: false,
-      cardPreviewVisible: false,
-      cardPreviewPayload: null,
+    if (!id) return;
+    wx.navigateTo({
+      url:
+        `/package-cards/pages/study/index?private=1&packId=${encodeURIComponent(this.data.id)}` +
+        `&cardId=${encodeURIComponent(id)}`,
     });
   },
 

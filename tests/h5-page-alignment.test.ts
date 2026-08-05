@@ -47,7 +47,11 @@ describe("H5-aligned product surfaces", () => {
     );
     expect(studyTemplate).toContain("padding-top:{{controlRowTop}}px");
     expect(studyTemplate).toContain('class="study-nav-controls"');
+    expect(studyTemplate).toMatch(
+      /<\/view>\s*<text class="progress-text">\{\{activeIndex \+ 1\}\}/,
+    );
     expect(studyLogic).toContain("getImmersiveNavigationMetrics");
+    expect(studyStyles).toContain("margin: 12rpx 0 10rpx;");
     expect(studyStyles).toMatch(
       /\.pack-info\s*\{[\s\S]*position:\s*absolute;[\s\S]*left:\s*50%;[\s\S]*transform:\s*translateX\(-50%\);/,
     );
@@ -274,6 +278,9 @@ describe("H5-aligned product surfaces", () => {
     expect(template).toContain('fill-container="{{true}}"');
     expect(template).toContain("快速创建卡包");
     expect(template).toContain("创建并选中");
+    expect(template).toContain("先选择卡片正面");
+    expect(template).toContain("将保存至「");
+    expect(template).toContain("保存卡片");
     expect(template).not.toContain("选择存属卡包");
     expect(logic).toContain("createPrivateCardPack");
     expect(logic).toContain("selectedPack = await createPrivateCardPack");
@@ -281,6 +288,8 @@ describe("H5-aligned product surfaces", () => {
     expect(styles).toContain(
       "padding: var(--immersive-content-safe-top) 32rpx 86rpx",
     );
+    expect(styles).toContain(".selection-status-icon.ready");
+    expect(styles).toContain(".save-button[disabled] { opacity: 1; }");
   });
 
   it("keeps the complete H5 profile entry matrix and wallet semantics", () => {

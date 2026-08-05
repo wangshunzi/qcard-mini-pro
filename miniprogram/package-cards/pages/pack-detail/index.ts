@@ -10,7 +10,6 @@ import {
   type CardPackReview,
 } from "../../../services/cardPack";
 import { getProfile } from "../../../services/profile";
-import type { CardTransferPayload } from "../../../cards/cardTransfer";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
 
 Page({
@@ -39,9 +38,6 @@ Page({
     purchaseGuideOpen: false,
     purchaseGuideMode: "vip",
     purchaseGuideReason: "",
-    cardPreviewOpen: false,
-    cardPreviewVisible: false,
-    cardPreviewPayload: null as CardTransferPayload | null,
     studyTimeText: "0 小时",
     authorRatingText: "",
     displayHighlights: [] as Array<{
@@ -235,43 +231,15 @@ Page({
   openCard(event: WechatMiniprogram.TouchEvent) {
     const state = this.data as any;
     const id = String(event.currentTarget.dataset.id ?? "");
-    const card = (state.catalogue as CardCatalogue[]).find((item) => item.id === id);
-    if (!card) return;
-    if (!state.canStudy && !card.isPreview) {
+    if (!id) return;
+    if (!state.canStudy) {
       this.confirmUnlock();
       return;
     }
-    if (!card.frontCardData) {
-      wx.showToast({ title: "卡片数据不完整，无法预览", icon: "none" });
-      return;
-    }
-    const detail = state.detail as CardPackDetail;
-    const payload: CardTransferPayload = {
-      front: card.frontCardData,
-      title: card.name,
-      sourcePack: {
-        id: detail.id,
-        title: detail.title,
-        cover: detail.cover,
-        subjectName: detail.subject?.name,
-        knowledgePointName: detail.knowledgePoint?.name,
-        isUnlocked: Boolean(state.canStudy),
-        basePrice: detail.basePrice,
-        finalPrice: detail.priceInfo?.finalPrice,
-      },
-    };
-    this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
-  },
-
-  onCardPreviewShown() {
-    this.setData({ cardPreviewVisible: true });
-  },
-
-  closeCardPreview() {
-    this.setData({
-      cardPreviewOpen: false,
-      cardPreviewVisible: false,
-      cardPreviewPayload: null,
+    wx.navigateTo({
+      url:
+        `/package-cards/pages/study/index?packId=${encodeURIComponent(state.id)}` +
+        `&cardId=${encodeURIComponent(id)}`,
     });
   },
   openTeacher() {

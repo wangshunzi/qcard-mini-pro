@@ -399,8 +399,8 @@
   bottom: calc(18rpx + env(safe-area-inset-bottom));
   left: 22rpx;
   z-index: 30;
-  min-height: 94rpx;
-  padding: 13rpx 14rpx 13rpx 23rpx;
+  min-height: 104rpx;
+  padding: 13rpx 14rpx;
   display: flex;
   align-items: center;
   gap: 16rpx;
@@ -410,6 +410,27 @@
   background: rgba(255, 255, 255, .94);
   box-shadow: 0 10rpx 32rpx rgba(24, 43, 28, .18);
   backdrop-filter: blur(18rpx);
+}
+
+.save-bar.ready {
+  border-color: rgba(82, 153, 23, .24);
+  box-shadow: 0 10rpx 34rpx rgba(55, 105, 24, .2);
+}
+
+.selection-status-icon {
+  width: 66rpx;
+  height: 66rpx;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22rpx;
+  background: #edf2e9;
+}
+
+.selection-status-icon.ready {
+  background: linear-gradient(145deg, #67aa32, #4b8e18);
+  box-shadow: 0 6rpx 16rpx rgba(82, 153, 23, .22);
 }
 
 .selection-copy {
@@ -439,20 +460,23 @@
 }
 
 .save-button {
-  width: 150rpx;
-  height: 68rpx;
+  width: 166rpx;
+  height: 72rpx;
   margin: 0;
   border-radius: 999rpx;
-  color: #fff5f4;
-  background: #d9675e;
+  color: #78827a;
+  background: #edf1ed;
   font-size: 22rpx;
   font-weight: 700;
-  line-height: 68rpx;
+  line-height: 72rpx;
 }
+
+.save-button[disabled] { opacity: 1; }
 
 .save-button.ready {
   color: #ffffff;
   background: #529917;
+  box-shadow: 0 6rpx 16rpx rgba(82, 153, 23, .22);
 }
 
 .modal,

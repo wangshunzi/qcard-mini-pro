@@ -97,12 +97,20 @@
     <view wx:if="{{loadingMore}}" class="more">正在加载更多…</view>
   </view>
 
-  <view class="save-bar">
-    <view class="selection-copy">
-      <text class="selection-title">{{frontFace ? (backFace ? '正反面已选择' : '正面已选择') : '请选择卡面'}}</text>
-      <text class="selection-subtitle">{{selectedPack ? selectedPack.title : '尚未选择归属卡包'}}</text>
+  <view class="save-bar {{frontFace && (cardCount === 1 || backFace) && selectedPack ? 'ready' : ''}}">
+    <view class="selection-status-icon {{frontFace && (cardCount === 1 || backFace) && selectedPack ? 'ready' : ''}}">
+      <ui-icon
+        name="{{!frontFace ? 'cards-outline' : (cardCount === 2 && !backFace ? 'cards-outline' : (!selectedPack ? 'view-grid-outline' : 'check-circle'))}}"
+        size="{{30}}"
+        color="{{frontFace && (cardCount === 1 || backFace) && selectedPack ? '#ffffff' : '#657065'}}"
+      />
     </view>
-    <button class="save-button {{frontFace && (cardCount === 1 || backFace) && selectedPack ? 'ready' : ''}}" loading="{{saving}}" bindtap="save">保存</button>
+    <view class="selection-copy">
+      <text class="selection-title">{{!frontFace ? '先选择卡片正面' : (cardCount === 2 && !backFace ? '再选择卡片背面' : (!selectedPack ? '选择归属卡包' : '卡片已准备好'))}}</text>
+      <text class="selection-subtitle">{{selectedPack ? '将保存至「' + selectedPack.title + '」' : '选择完成后即可保存到专属卡包'}}</text>
+    </view>
+    <button class="save-button {{frontFace && (cardCount === 1 || backFace) && selectedPack ? 'ready' : ''}}"
+      disabled="{{saving || !frontFace || (cardCount === 2 && !backFace) || !selectedPack}}" loading="{{saving}}" bindtap="save">保存卡片</button>
   </view>
 
   <view wx:if="{{previewOpen}}" class="modal" catchtouchmove="noop">

@@ -59,7 +59,7 @@ describe("unified Mini Program product surfaces", () => {
     expect(modalTemplate).not.toContain("preview-modal-title");
     expect(modalTemplate).toContain("<flip-card");
     expect(modalTemplate).toContain('fill-container="{{true}}"');
-    expect(modalTemplate).toContain('style="width:100%;height:100%;"');
+    expect(modalTemplate).toContain('style="width:100%;height:100%;overflow:hidden;border-radius:34rpx;"');
     expect(modalTemplate).toContain('catchtap="openSourcePack"');
     expect(modalTemplate).toContain('catchtap="openGroupCard"');
     expect(modalTemplate).toContain('catchtap="makeSimilar"');
@@ -80,6 +80,7 @@ describe("unified Mini Program product surfaces", () => {
     expect(modalStyles).toContain("aspect-ratio:9/16");
     expect(modalStyles).toContain("min-width:100%");
     expect(modalStyles).toContain("min-height:100%");
+    expect(modalStyles).toContain("overflow:hidden; border-radius:34rpx");
     expect(modalStyles).toContain(".preview-modal-dock { width:100%");
     expect(modalStyles).toContain("padding:0");
     expect(modalStyles).toContain("box-shadow:none");
@@ -89,8 +90,6 @@ describe("unified Mini Program product surfaces", () => {
       "miniprogram/pages/explore/index",
       "miniprogram/pages/resource/index",
       "miniprogram/package-cards/pages/my-generation/index",
-      "miniprogram/package-cards/pages/pack-detail/index",
-      "miniprogram/package-cards/pages/private-pack/index",
       "miniprogram/pages/home/index",
       "miniprogram/pages/profile/index",
     ]) {
@@ -105,6 +104,39 @@ describe("unified Mini Program product surfaces", () => {
       expect(logic, page).toContain("onCardPreviewShown()");
       expect(logic, page).not.toContain("/package-cards/pages/preview/index");
       expect(config, page).toContain('"card-preview-modal"');
+    }
+  });
+
+  it("opens tapped public and private pack cards directly in study", () => {
+    const publicTemplate = read(
+      "miniprogram/package-cards/pages/pack-detail/index.wxml",
+    );
+    const publicLogic = read(
+      "miniprogram/package-cards/pages/pack-detail/index.ts",
+    );
+    const publicConfig = read(
+      "miniprogram/package-cards/pages/pack-detail/index.json",
+    );
+    const privateTemplate = read(
+      "miniprogram/package-cards/pages/private-pack/index.wxml",
+    );
+    const privateLogic = read(
+      "miniprogram/package-cards/pages/private-pack/index.ts",
+    );
+    const privateConfig = read(
+      "miniprogram/package-cards/pages/private-pack/index.json",
+    );
+
+    expect(publicTemplate).toContain("卡片列表");
+    expect(publicLogic).toContain("/package-cards/pages/study/index?packId=");
+    expect(publicLogic).toContain("&cardId=");
+    expect(privateLogic).toContain("/package-cards/pages/study/index?private=1&packId=");
+    expect(privateLogic).toContain("&cardId=");
+    for (const source of [publicTemplate, privateTemplate]) {
+      expect(source).not.toContain("<card-preview-modal");
+    }
+    for (const source of [publicConfig, privateConfig]) {
+      expect(source).not.toContain('"card-preview-modal"');
     }
   });
 });
