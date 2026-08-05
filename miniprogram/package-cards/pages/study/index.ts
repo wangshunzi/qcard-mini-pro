@@ -10,7 +10,7 @@ import {
   type CardPackDetail,
 } from "../../../services/cardPack";
 import { getProfile } from "../../../services/profile";
-import { readCardTransfer } from "../../../stores/cardTransfer";
+import { readCardTransfer } from "../../services/cardTransfer";
 import { readChallengeTransfer } from "../../../stores/challengeTransfer";
 import { enqueueStudyReport } from "../../../stores/studyReportQueue";
 import {

@@ -4,7 +4,7 @@ import {
   getPublicCardFaces,
   type PublicCardFaceSummary,
 } from "../../services/exploration";
-import type { CardTransferPayload } from "../../stores/cardTransfer";
+import type { CardTransferPayload } from "../../cards/cardTransfer";
 import { sessionStore } from "../../stores/session";
 import { getMiniProgramTemplates, type AiTemplate } from "../../services/ai";
 import { getProfile } from "../../services/profile";

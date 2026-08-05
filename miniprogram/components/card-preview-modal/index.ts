@@ -1,4 +1,4 @@
-import type { CardTransferPayload } from "../../stores/cardTransfer";
+import type { CardTransferPayload } from "../../cards/cardTransfer";
 import { submitPrivateCardFaceFeedback } from "../../services/privateCardFeedback";
 import {
   clearBottomSheetGesture,

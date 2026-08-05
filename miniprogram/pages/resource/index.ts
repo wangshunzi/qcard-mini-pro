@@ -10,7 +10,7 @@ import {
 } from "../../services/discovery";
 import { getProfile } from "../../services/profile";
 import { sessionStore } from "../../stores/session";
-import type { CardTransferPayload } from "../../stores/cardTransfer";
+import type { CardTransferPayload } from "../../cards/cardTransfer";
 import { isMiniProgramCardType } from "../../config/cardTypes";
 import { validateCardData } from "../../cards/CardTypeConfig";
 import { UI_ASSETS } from "../../config/uiAssets";

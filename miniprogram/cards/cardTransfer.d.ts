@@ -1,6 +1,4 @@
-import type { CardData } from "../cards/types";
-
-const TRANSFER_KEY = "qcard.card-transfer";
+import type { CardData } from "./types";
 
 export interface CardTransferPayload {
   front: CardData;
@@ -27,16 +25,4 @@ export interface CardTransferPayload {
     basePrice?: number;
     finalPrice?: number;
   };
-}
-
-export function saveCardTransfer(payload: CardTransferPayload) {
-  wx.setStorageSync(TRANSFER_KEY, payload);
-}
-
-export function readCardTransfer(): CardTransferPayload | undefined {
-  return wx.getStorageSync<CardTransferPayload>(TRANSFER_KEY) || undefined;
-}
-
-export function clearCardTransfer() {
-  wx.removeStorageSync(TRANSFER_KEY);
 }

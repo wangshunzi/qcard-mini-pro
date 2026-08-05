@@ -5,7 +5,7 @@ import {
   type PrivateCardPack,
 } from "../../services/userContent";
 import { getProfile } from "../../../services/profile";
-import type { CardTransferPayload } from "../../../stores/cardTransfer";
+import type { CardTransferPayload } from "../../../cards/cardTransfer";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
 
 Page({

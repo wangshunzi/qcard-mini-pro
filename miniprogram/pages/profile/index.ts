@@ -12,7 +12,7 @@ import {
 } from "../../services/profile";
 import { getFavoriteCardPacks, unlockCardPack } from "../../services/cardPack";
 import type { CardPackSummary } from "../../services/discovery";
-import type { CardTransferPayload } from "../../stores/cardTransfer";
+import type { CardTransferPayload } from "../../cards/cardTransfer";
 import { sessionStore } from "../../stores/session";
 import { UI_ASSETS } from "../../config/uiAssets";
 import type { CardData } from "../../cards/types";

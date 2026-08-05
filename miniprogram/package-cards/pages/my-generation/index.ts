@@ -5,7 +5,7 @@ import type { PrivateCardFace } from "../../../services/profile";
 import { deletePrivateCardFace, getPrivateCardFaces } from "../../services/userContent";
 import { toPrivateCardData } from "../../services/userContent";
 import { getProfile } from "../../../services/profile";
-import type { CardTransferPayload } from "../../../stores/cardTransfer";
+import type { CardTransferPayload } from "../../../cards/cardTransfer";
 import type { CardData } from "../../../cards/types";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
 

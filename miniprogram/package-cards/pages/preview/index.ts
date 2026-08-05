@@ -1,4 +1,4 @@
-import { readCardTransfer } from "../../../stores/cardTransfer";
+import { readCardTransfer } from "../../services/cardTransfer";
 import { submitPrivateCardFaceFeedback } from "../../services/userContent";
 import {
   clearBottomSheetGesture,

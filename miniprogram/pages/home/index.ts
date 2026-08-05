@@ -15,7 +15,7 @@ import {
 import { UI_ASSETS } from "../../config/uiAssets";
 import { isMiniProgramCardType } from "../../config/cardTypes";
 import { validateCardData } from "../../cards/CardTypeConfig";
-import type { CardTransferPayload } from "../../stores/cardTransfer";
+import type { CardTransferPayload } from "../../cards/cardTransfer";
 import type { CardData } from "../../cards/types";
 import { syncNavigationScroll } from "../../utils/navigationScroll";
 
