@@ -169,6 +169,8 @@ describe("card preview/full interaction alignment", () => {
     const styles = readFileSync(resolve(root, "index.wxss"), "utf8");
     const cardStyles = readFileSync(resolve(ROOT, "..", "styles", "card.wxss"), "utf8");
     expect(logic).toContain("Math.min(rect.width, rect.height * 9 / 16)");
+    expect(logic).toContain('fillContainer: { type: Boolean, value: false }');
+    expect(logic).toContain('aspectStyle: "width:100%;height:100%;"');
     expect(logic).toContain('displaySide: isFlipped ? "back" : "front"');
     expect(template).toContain("displaySide === 'front'");
     expect(template).toContain("displaySide === 'back'");

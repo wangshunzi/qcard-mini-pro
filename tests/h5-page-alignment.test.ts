@@ -264,11 +264,20 @@ describe("H5-aligned product surfaces", () => {
     const template = read(
       "miniprogram/package-cards/pages/generate/index.wxml",
     );
+    const logic = read(
+      "miniprogram/package-cards/pages/generate/index.ts",
+    );
     const styles = read(
       "miniprogram/package-cards/pages/generate/index.wxss",
     );
     expect(template).toContain("选择归属卡包");
+    expect(template).toContain('fill-container="{{true}}"');
+    expect(template).toContain("快速创建卡包");
+    expect(template).toContain("创建并选中");
     expect(template).not.toContain("选择存属卡包");
+    expect(logic).toContain("createPrivateCardPack");
+    expect(logic).toContain("selectedPack = await createPrivateCardPack");
+    expect(logic).toContain('title: "已创建并选中"');
     expect(styles).toContain(
       "padding: var(--immersive-content-safe-top) 32rpx 86rpx",
     );

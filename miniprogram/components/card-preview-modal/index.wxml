@@ -5,10 +5,12 @@
       <flip-card
         id="preview-modal-card"
         class="preview-modal-card"
+        style="width:100%;height:100%;"
         front-card-data="{{cardPayload.front}}"
         back-card-data="{{cardPayload.back || emptyCardData}}"
         preview="{{false}}"
         read-only="{{false}}"
+        fill-container="{{true}}"
         is-visible="{{open && !closing}}"
       />
     </view>

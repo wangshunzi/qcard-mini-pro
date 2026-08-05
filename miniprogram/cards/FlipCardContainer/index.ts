@@ -7,6 +7,7 @@ Component({
     backCardData: { type: Object, value: {} },
     aspectRatio: { type: String, value: "portrait" },
     hideFlipButton: { type: Boolean, value: false },
+    fillContainer: { type: Boolean, value: false },
     preview: { type: Boolean, value: false },
     readOnly: { type: Boolean, value: false },
     isVisible: { type: Boolean, value: true },
@@ -44,6 +45,9 @@ Component({
       void value;
       this.measureCard();
     },
+    fillContainer() {
+      this.measureCard();
+    },
   },
 
   lifetimes: {
@@ -66,6 +70,10 @@ Component({
       (this as any)._flipEndTimer = null;
     },
     measureCard() {
+      if (this.properties.fillContainer) {
+        this.setData({ aspectStyle: "width:100%;height:100%;" });
+        return;
+      }
       wx.nextTick(() => {
         this.createSelectorQuery()
           .select(".flip-bounds")

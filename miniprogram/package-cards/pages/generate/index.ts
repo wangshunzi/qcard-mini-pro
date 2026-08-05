@@ -4,6 +4,7 @@ import { getProfile } from "../../../services/profile";
 import type { PrivateCardFace } from "../../../services/profile";
 import {
   createPrivateCard,
+  createPrivateCardPack,
   getPrivateCardFaces,
   getPrivateCardPack,
   getPrivateCardPacks,
@@ -83,6 +84,11 @@ Page({
     packPickerDragging: false,
     packPickerDragSettling: false,
     packPickerDragOffset: 0,
+    createPackOpen: false,
+    createPackTitle: "",
+    createPackDescription: "",
+    canCreatePack: false,
+    creatingPack: false,
     previewOpen: false,
     saving: false,
     heroBackground: "",
@@ -353,6 +359,89 @@ Page({
         packPickerDragSettling: false,
         packPickerDragOffset: 0,
       });
+    }
+  },
+
+  openPackCreator() {
+    if (this.data.creatingPack) return;
+    this.setData({
+      createPackOpen: true,
+      createPackTitle: "",
+      createPackDescription: "",
+      canCreatePack: false,
+    });
+  },
+
+  closePackCreator() {
+    if (this.data.creatingPack) return;
+    this.setData({
+      createPackOpen: false,
+      createPackTitle: "",
+      createPackDescription: "",
+      canCreatePack: false,
+    });
+  },
+
+  onCreatePackTitleInput(event: WechatMiniprogram.Input) {
+    const createPackTitle = event.detail.value;
+    this.setData({
+      createPackTitle,
+      canCreatePack: Boolean(
+        createPackTitle.trim() && this.data.createPackDescription.trim(),
+      ),
+    });
+  },
+
+  onCreatePackDescriptionInput(event: WechatMiniprogram.Input) {
+    const createPackDescription = event.detail.value;
+    this.setData({
+      createPackDescription,
+      canCreatePack: Boolean(
+        this.data.createPackTitle.trim() && createPackDescription.trim(),
+      ),
+    });
+  },
+
+  async confirmCreatePack() {
+    if (this.data.creatingPack) return;
+    const title = this.data.createPackTitle.trim();
+    const description = this.data.createPackDescription.trim();
+    if (!title) {
+      wx.showToast({ title: "请输入卡包标题", icon: "none" });
+      return;
+    }
+    if (!description) {
+      wx.showToast({ title: "请输入卡包描述", icon: "none" });
+      return;
+    }
+    this.setData({ creatingPack: true });
+    try {
+      const selectedPack = await createPrivateCardPack(title, description);
+      clearBottomSheetGesture(this, "packPicker");
+      this.setData({
+        packs: [
+          selectedPack,
+          ...this.data.packs.filter((item) => item.id !== selectedPack.id),
+        ],
+        selectedPack,
+        packPickerOpen: false,
+        packPickerClosing: false,
+        packPickerDragging: false,
+        packPickerDragSettling: false,
+        packPickerDragOffset: 0,
+        createPackOpen: false,
+        createPackTitle: "",
+        createPackDescription: "",
+        canCreatePack: false,
+      });
+      wx.showToast({ title: "已创建并选中", icon: "success" });
+    } catch (error) {
+      wx.showToast({
+        title: error instanceof Error ? error.message : "创建卡包失败",
+        icon: "none",
+      });
+    } finally {
+      this.setData({ creatingPack: false });
     }
   },
 

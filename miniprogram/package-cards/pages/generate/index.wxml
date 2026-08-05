@@ -111,9 +111,9 @@
       <button class="modal-close" bindtap="closePreview" aria-label="关闭预览">
         <ui-icon name="close" size="{{32}}" color="#ffffff" />
       </button>
-      <flip-card id="full-preview" class="full-preview" front-card-data="{{frontFace.cardData}}"
+      <flip-card id="full-preview" class="full-preview" style="width:100%;height:100%;" front-card-data="{{frontFace.cardData}}"
         back-card-data="{{cardCount === 2 && backFace ? backFace.cardData : emptyCardData}}"
-        preview="{{false}}" read-only="{{false}}" is-visible="{{previewOpen}}" />
+        preview="{{false}}" read-only="{{false}}" fill-container="{{true}}" is-visible="{{previewOpen}}" />
     </view>
   </view>
 
@@ -133,6 +133,16 @@
         </view>
       </view>
       <scroll-view class="pack-list" scroll-y="{{true}}">
+        <button class="quick-create-pack" bindtap="openPackCreator" hover-class="soft-hover">
+          <view class="quick-create-icon">
+            <ui-icon name="plus" size="{{34}}" color="#ffffff" />
+          </view>
+          <view class="pack-copy">
+            <text class="pack-title">快速创建卡包</text>
+            <text class="pack-meta">创建成功后自动选中，无需离开组卡页</text>
+          </view>
+          <ui-icon name="chevron-right" size="{{31}}" color="#529917" />
+        </button>
         <view wx:for="{{packs}}" wx:key="id" class="pack-row {{selectedPack.id === item.id ? 'pack-selected' : ''}}"
           data-id="{{item.id}}" bindtap="choosePack" hover-class="soft-hover">
           <image wx:if="{{item.cover}}" class="pack-cover" src="{{item.cover}}" mode="aspectFill" />
@@ -145,8 +155,39 @@
           </view>
           <ui-icon name="{{selectedPack.id === item.id ? 'check-circle' : 'chevron-right'}}" size="{{31}}" color="{{selectedPack.id === item.id ? '#529917' : '#9aa29c'}}" />
         </view>
-        <view wx:if="{{!packs.length}}" class="empty-packs">暂无私有卡包，请先在“我的卡包”中创建</view>
+        <view wx:if="{{!packs.length}}" class="empty-packs">还没有专属卡包，可直接在上方快速创建</view>
       </scroll-view>
+    </view>
+  </view>
+
+  <view wx:if="{{createPackOpen}}" class="create-pack-root" catchtouchmove="noop">
+    <view class="create-pack-mask" bindtap="closePackCreator"></view>
+    <view class="create-pack-dialog" catchtap="noop">
+      <view class="create-pack-heading">
+        <text class="create-pack-title">快速创建卡包</text>
+        <text class="create-pack-subtitle">创建后将自动设为当前卡片的归属卡包</text>
+      </view>
+      <view class="create-pack-form">
+        <label class="create-pack-field">
+          <text class="create-pack-label">卡包标题 <text class="required">*</text></text>
+          <input class="create-pack-input" value="{{createPackTitle}}" bindinput="onCreatePackTitleInput"
+            maxlength="{{50}}" placeholder="请输入卡包标题" focus="{{createPackOpen}}" cursor-spacing="{{24}}" />
+          <text class="create-pack-count">{{createPackTitle.length}}/50</text>
+        </label>
+        <label class="create-pack-field">
+          <text class="create-pack-label">卡包描述 <text class="required">*</text></text>
+          <textarea class="create-pack-textarea" value="{{createPackDescription}}" bindinput="onCreatePackDescriptionInput"
+            maxlength="{{200}}" placeholder="请输入卡包描述" cursor-spacing="{{24}}" fixed="{{true}}" />
+          <text class="create-pack-count">{{createPackDescription.length}}/200</text>
+        </label>
+      </view>
+      <view class="create-pack-actions">
+        <button class="create-pack-cancel" disabled="{{creatingPack}}" bindtap="closePackCreator">取消</button>
+        <button class="create-pack-confirm" disabled="{{creatingPack || !canCreatePack}}" bindtap="confirmCreatePack">
+          <view wx:if="{{creatingPack}}" class="create-pack-spinner"></view>
+          <text>{{creatingPack ? '创建中...' : '创建并选中'}}</text>
+        </button>
+      </view>
     </view>
   </view>
 </view>

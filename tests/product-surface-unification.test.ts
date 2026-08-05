@@ -58,6 +58,8 @@ describe("unified Mini Program product surfaces", () => {
     expect(modalTemplate).not.toContain("preview-modal-header");
     expect(modalTemplate).not.toContain("preview-modal-title");
     expect(modalTemplate).toContain("<flip-card");
+    expect(modalTemplate).toContain('fill-container="{{true}}"');
+    expect(modalTemplate).toContain('style="width:100%;height:100%;"');
     expect(modalTemplate).toContain('catchtap="openSourcePack"');
     expect(modalTemplate).toContain('catchtap="openGroupCard"');
     expect(modalTemplate).toContain('catchtap="makeSimilar"');
@@ -76,6 +78,8 @@ describe("unified Mini Program product surfaces", () => {
     expect(modalStyles).toContain("position:fixed");
     expect(modalStyles).toContain("background:transparent");
     expect(modalStyles).toContain("aspect-ratio:9/16");
+    expect(modalStyles).toContain("min-width:100%");
+    expect(modalStyles).toContain("min-height:100%");
     expect(modalStyles).toContain(".preview-modal-dock { width:100%");
     expect(modalStyles).toContain("padding:0");
     expect(modalStyles).toContain("box-shadow:none");
