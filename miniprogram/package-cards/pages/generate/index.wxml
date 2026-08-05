@@ -153,9 +153,9 @@
         </button>
         <view wx:for="{{packs}}" wx:key="id" class="pack-row {{selectedPack.id === item.id ? 'pack-selected' : ''}}"
           data-id="{{item.id}}" bindtap="choosePack" hover-class="soft-hover">
-          <image wx:if="{{item.cover}}" class="pack-cover" src="{{item.cover}}" mode="aspectFill" />
+          <image wx:if="{{item.author.avatar || userAvatar}}" class="pack-cover" src="{{item.author.avatar || userAvatar}}" mode="aspectFill" />
           <view wx:else class="pack-cover pack-cover-fallback">
-            <ui-icon name="cards-outline" size="{{36}}" color="#529917" />
+            <ui-icon name="account-outline" size="{{36}}" color="#529917" />
           </view>
           <view class="pack-copy">
             <text class="pack-title">{{item.title}}</text>

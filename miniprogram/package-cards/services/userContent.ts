@@ -43,6 +43,14 @@ export function getPrivateCardPacks(page = 1, limit = 20, title = "") {
     items: (result.items ?? []).map((item) => ({
       ...item,
       cover: item.cover ? resolveApiMediaUrl(item.cover) : undefined,
+      author: item.author
+        ? {
+            ...item.author,
+            avatar: item.author.avatar
+              ? resolveApiMediaUrl(item.author.avatar)
+              : undefined,
+          }
+        : undefined,
     })),
   }));
 }

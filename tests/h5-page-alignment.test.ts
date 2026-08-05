@@ -351,6 +351,12 @@ describe("H5-aligned product surfaces", () => {
       "miniprogram/package-cards/pages/my-learning/index.ts",
     );
     const service = read("miniprogram/package-cards/services/userContent.ts");
+    const generateTemplate = read(
+      "miniprogram/package-cards/pages/generate/index.wxml",
+    );
+    const generateLogic = read(
+      "miniprogram/package-cards/pages/generate/index.ts",
+    );
 
     expect(homeTemplate).toContain('bindtap="createPrivatePack"');
     expect(homeLogic).toContain("mode=private&create=true");
@@ -359,8 +365,16 @@ describe("H5-aligned product surfaces", () => {
     expect(template).toContain("卡包描述");
     expect(template).toContain('bindtap="toggleManage"');
     expect(template).toContain('catchtap="deletePack"');
+    expect(template).toContain("item.author.avatar || userAvatar");
+    expect(template).toContain('class="private-cover-avatar"');
+    expect(template).toContain('wx:else name="account-outline"');
+    expect(logic).toContain('userAvatar: profile.avatar || ""');
+    expect(generateTemplate).toContain("item.author.avatar || userAvatar");
+    expect(generateTemplate).toContain('name="account-outline"');
+    expect(generateLogic).toContain('userAvatar: profile.avatar || ""');
     expect(logic).toContain("createPrivateCardPack(title, description)");
     expect(service).toContain("{ title, description, isActive: true }");
+    expect(service).toContain("resolveApiMediaUrl(item.author.avatar)");
   });
 
   it("shares the drawer shell while keeping page-specific menu content", () => {

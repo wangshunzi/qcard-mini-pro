@@ -30,6 +30,7 @@ Page({
     privateItems: [] as PrivateCardPack[],
     assets: UI_ASSETS,
     heroBackground: "",
+    userAvatar: "",
     categories: [] as Grade[],
     subjects: [] as Subject[],
     knowledgePoints: [] as KnowledgePoint[],
@@ -58,7 +59,10 @@ Page({
     void this.load(true);
     void getProfile()
       .then((profile) => {
-        this.setData({ heroBackground: profile.currentTheme?.config?.learning_bg || "" });
+        this.setData({
+          heroBackground: profile.currentTheme?.config?.learning_bg || "",
+          userAvatar: profile.avatar || "",
+        });
       })
       .catch(() => undefined);
     void getDiscoveryData()

@@ -88,7 +88,10 @@
           <button wx:if="{{editMode}}" class="delete-pack" data-id="{{item.id}}" catchtap="deletePack" aria-label="删除卡包">
             <ui-icon name="delete-outline" size="{{27}}" color="#ffffff" />
           </button>
-          <view class="cover private-cover"><ui-icon name="cards-outline" size="{{64}}" color="#ffffff" /></view>
+          <view class="cover private-cover">
+            <image wx:if="{{item.author.avatar || userAvatar}}" class="private-cover-avatar" src="{{item.author.avatar || userAvatar}}" mode="aspectFill" />
+            <ui-icon wx:else name="account-outline" size="{{64}}" color="#ffffff" />
+          </view>
           <view class="copy">
             <text class="title">{{item.title}}</text>
             <text class="meta">{{item.cardCount || 0}} 张 · 专属卡包</text>

@@ -92,6 +92,7 @@ Page({
     previewOpen: false,
     saving: false,
     heroBackground: "",
+    userAvatar: "",
     defaultFrontFaceId: "",
   },
 
@@ -107,7 +108,10 @@ Page({
       this.loadPacks(privatePackId),
       getProfile()
         .then((profile) => {
-          this.setData({ heroBackground: profile.currentTheme?.config?.gen_bg || "" });
+          this.setData({
+            heroBackground: profile.currentTheme?.config?.gen_bg || "",
+            userAvatar: profile.avatar || "",
+          });
         })
         .catch(() => undefined),
     ]);
