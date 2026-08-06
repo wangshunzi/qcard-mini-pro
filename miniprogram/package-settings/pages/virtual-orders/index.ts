@@ -4,6 +4,12 @@ import {
   listVirtualPaymentOrders,
   type VirtualPaymentOrder,
 } from "../../../services/virtualPayment";
+import {
+  markDataFresh,
+  shouldRefreshData,
+} from "../../../stores/dataInvalidation";
+
+const ORDER_DATA_DOMAINS = ["orders"] as const;
 
 interface OrderView extends VirtualPaymentOrder {
   displayPrice: string;
@@ -57,7 +63,10 @@ Page({
 
   onShow() {
     (this as any)._pollAttempt = 0;
-    if ((this as any)._didShow) void this.load(true);
+    if (
+      (this as any)._didShow &&
+      shouldRefreshData(this as any, ORDER_DATA_DOMAINS)
+    ) void this.load(true);
     (this as any)._didShow = true;
     this.startPolling();
   },
@@ -86,6 +95,7 @@ Page({
   },
 
   async load(reset: boolean) {
+    markDataFresh(this as any, ORDER_DATA_DOMAINS);
     if ((this.data as any).loadingMore) return;
     const page = reset ? 1 : Number((this.data as any).page) + 1;
     this.setData(

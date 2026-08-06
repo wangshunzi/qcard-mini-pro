@@ -1,5 +1,6 @@
 import { ENV } from "../config/env";
 import { sessionStore } from "../stores/session";
+import { invalidateData } from "../stores/dataInvalidation";
 import { logger } from "../utils/logger";
 import { createRequestId } from "../utils/requestId";
 import { bindCurrentWechatMiniIdentity, getWechatLoginCode } from "./auth";
@@ -201,7 +202,24 @@ let resumePromise: Promise<VirtualPaymentOrder[]> | null = null;
 const reportedFulfillmentOrderNos = new Set<string>();
 const pendingListeners = new Set<() => void>();
 const purchasePromises = new Map<string, Promise<VirtualPurchaseOutcome>>();
+const invalidatedFulfillmentOrderNos = new Set<string>();
 let memoryPendingRecords: PendingVirtualPayment[] = [];
+
+function invalidateVirtualFulfillment(
+  order: VirtualPaymentOrder,
+  fallbackKind?: VirtualProductKind,
+) {
+  if (!order.orderNo || invalidatedFulfillmentOrderNos.has(order.orderNo)) return;
+  if (invalidatedFulfillmentOrderNos.size >= 100) {
+    const oldest = invalidatedFulfillmentOrderNos.values().next().value as
+      | string
+      | undefined;
+    if (oldest) invalidatedFulfillmentOrderNos.delete(oldest);
+  }
+  invalidatedFulfillmentOrderNos.add(order.orderNo);
+  const kind = order.productKind || fallbackKind;
+  invalidateData("wallet", "orders", ...(kind === "vip" ? ["learning" as const] : []));
+}
 
 export function compareVersion(left: string, right: string) {
   const leftParts = String(left || "0").split(".");
@@ -622,6 +640,9 @@ export async function getVirtualPaymentOrder(orderNo: string) {
     const pending = readPendingRecords().find(
       (item) => item.orderNo === order.orderNo,
     );
+    if (isVirtualOrderFulfilled(order)) {
+      invalidateVirtualFulfillment(order, pending?.productKind);
+    }
     if (pending) removePending(pending.clientRequestId);
   }
   return order;
@@ -1534,7 +1555,12 @@ export function startVirtualPurchase(
   const key = `${userId}:${product.id}`;
   const active = purchasePromises.get(key);
   if (active) return active;
-  const purchase = executeVirtualPurchase(product);
+  const purchase = executeVirtualPurchase(product).then((outcome) => {
+    if (outcome.kind === "fulfilled") {
+      invalidateVirtualFulfillment(outcome.order, product.kind);
+    }
+    return outcome;
+  });
   purchasePromises.set(key, purchase);
   const clear = () => {
     if (purchasePromises.get(key) === purchase) purchasePromises.delete(key);
@@ -1608,7 +1634,10 @@ export async function resumePendingVirtualPayments(
       async (record) => {
         try {
           const order = await getVirtualPaymentOrder(record.orderNo!);
-          if (isVirtualOrderFulfilled(order)) fulfilled.push(order);
+          if (isVirtualOrderFulfilled(order)) {
+            invalidateVirtualFulfillment(order, record.productKind);
+            fulfilled.push(order);
+          }
           if (isVirtualOrderTerminal(order)) {
             removePending(record.clientRequestId);
           } else {

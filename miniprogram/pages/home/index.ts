@@ -18,6 +18,19 @@ import { validateCardData } from "../../cards/CardTypeConfig";
 import type { CardTransferPayload } from "../../cards/cardTransfer";
 import type { CardData } from "../../cards/types";
 import { syncNavigationScroll } from "../../utils/navigationScroll";
+import {
+  markDataFresh,
+  shouldRefreshData,
+  type DataDomain,
+} from "../../stores/dataInvalidation";
+
+const HOME_DATA_DOMAINS: DataDomain[] = [
+  "account",
+  "wallet",
+  "learning",
+  "content",
+  "challenge",
+];
 
 interface HomeSection {
   key: string;
@@ -129,7 +142,8 @@ Page({
       return;
     }
     this.setData({ userName: session.user.nickname || "同学" });
-    void this.load();
+    if (shouldRefreshData(this as any, HOME_DATA_DOMAINS)) void this.load();
+    else this.schedulePrivateFacePolling();
   },
 
   onHide() {
@@ -147,6 +161,7 @@ Page({
   },
 
   async load() {
+    markDataFresh(this as any, HOME_DATA_DOMAINS);
     this.clearPrivateFacePolling();
     this.setData({ loading: true, error: "" });
     try {

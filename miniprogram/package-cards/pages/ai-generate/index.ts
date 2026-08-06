@@ -8,6 +8,12 @@ import {
   type AiTemplate,
 } from "../../../services/ai";
 import { getProfile } from "../../../services/profile";
+import {
+  markDataFresh,
+  shouldRefreshData,
+} from "../../../stores/dataInvalidation";
+
+const AI_ACCESS_DOMAINS = ["account", "wallet"] as const;
 import { getImmersiveNavigationMetrics } from "../../../utils/navigationMetrics";
 import { createRequestId } from "../../../utils/requestId";
 import { initializeFormData } from "../../../components/schema-form/runtime";
@@ -92,16 +98,21 @@ Page({
   },
 
   onShow() {
-    if ((this as any)._didShow) void this.refreshProfileAccess();
+    if (
+      (this as any)._didShow &&
+      shouldRefreshData(this as any, AI_ACCESS_DOMAINS)
+    ) void this.refreshProfileAccess();
     else (this as any)._didShow = true;
   },
 
   async refreshProfileAccess() {
+    markDataFresh(this as any, AI_ACCESS_DOMAINS);
     try {
       const profile = await getProfile();
       this.setData({
         userBalance: Number(profile.balance || 0),
         isVip: profile.vip?.isVip === true,
+        pageBackground: profile.currentTheme?.config?.gen_bg || "",
       });
       this.updateAccessState();
     } catch {
@@ -131,6 +142,7 @@ Page({
   },
 
   async loadTemplates() {
+    markDataFresh(this as any, AI_ACCESS_DOMAINS);
     this.setData({ loading: true, loadError: "" });
     try {
       const [compact, profile] = await Promise.all([

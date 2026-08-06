@@ -3,6 +3,7 @@ import { isMiniProgramCardType } from "../config/cardTypes";
 import { request } from "./http";
 import { normalizeCardPack, type CardPackSummary } from "./discovery";
 import { resolveApiMediaUrl, resolveCardDataMedia } from "../utils/mediaUrl";
+import { invalidateData } from "../stores/dataInvalidation";
 
 export interface CardFace {
   id: string;
@@ -163,6 +164,9 @@ export function unlockCardPack(id: string) {
     path: `/api/client/card-packs/${encodeURIComponent(id)}/unlock`,
     method: "POST",
     data: { paymentMethod: "balance" },
+  }).then((result) => {
+    if (result.success) invalidateData("wallet", "learning");
+    return result;
   });
 }
 
@@ -218,6 +222,9 @@ export function setCardPackFavorite(id: string, favorited: boolean) {
     path: `/api/client/card-packs/${encodeURIComponent(id)}/favorite`,
     method: favorited ? "DELETE" : "POST",
     data: {},
+  }).then((result) => {
+    invalidateData("favorites");
+    return result;
   });
 }
 
@@ -234,6 +241,9 @@ export function recordCardStudy(
     path: `/api/client/user-study/record/${encodeURIComponent(cardPackId)}/${encodeURIComponent(cardId)}`,
     method: "POST",
     data: { studyTime, requestId },
+  }).then((result) => {
+    if (result.success) invalidateData("learning");
+    return result;
   });
 }
 

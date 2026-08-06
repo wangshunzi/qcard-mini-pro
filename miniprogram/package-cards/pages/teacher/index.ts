@@ -2,6 +2,13 @@ import { getTeacherCardPacks, unlockCardPack } from "../../../services/cardPack"
 import type { CardPackSummary } from "../../../services/discovery";
 import { getProfile } from "../../../services/profile";
 import { UI_ASSETS } from "../../../config/uiAssets";
+import {
+  markDataFresh,
+  shouldRefreshData,
+  type DataDomain,
+} from "../../../stores/dataInvalidation";
+
+const TEACHER_DATA_DOMAINS: DataDomain[] = ["wallet", "learning"];
 
 interface DisplayTeacherPack extends CardPackSummary {
   canStudy: boolean;
@@ -32,7 +39,10 @@ Page({
     void this.loadUnlockProfile();
   },
   onShow() {
-    if ((this as any)._didShow) {
+    if (
+      (this as any)._didShow &&
+      shouldRefreshData(this as any, TEACHER_DATA_DOMAINS)
+    ) {
       void Promise.all([this.load(), this.loadUnlockProfile()]);
     } else {
       (this as any)._didShow = true;
@@ -64,6 +74,7 @@ Page({
   },
 
   async load() {
+    markDataFresh(this as any, TEACHER_DATA_DOMAINS);
     if (!this.data.id) {
       this.setData({ loading: false, error: "老师参数无效" });
       return;

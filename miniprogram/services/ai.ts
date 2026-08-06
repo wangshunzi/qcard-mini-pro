@@ -1,5 +1,6 @@
 import { request } from "./http";
 import { resolveCardDataMedia } from "../utils/mediaUrl";
+import { invalidateData } from "../stores/dataInvalidation";
 export {
   getMiniProgramSchemaIssues,
   isMiniProgramSchemaSupported,
@@ -71,6 +72,9 @@ export function generateCard(
       params,
       requestId,
     },
+  }).then((result) => {
+    invalidateData("content");
+    return result;
   });
 }
 

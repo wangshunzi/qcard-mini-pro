@@ -17,6 +17,13 @@ import { UI_ASSETS } from "../../config/uiAssets";
 import { getCardDetails, toCardData, unlockCardPack } from "../../services/cardPack";
 import type { CardData } from "../../cards/types";
 import { syncNavigationScroll } from "../../utils/navigationScroll";
+import {
+  markDataFresh,
+  shouldRefreshData,
+  type DataDomain,
+} from "../../stores/dataInvalidation";
+
+const RESOURCE_DATA_DOMAINS: DataDomain[] = ["account", "wallet", "learning"];
 
 interface DisplayDiscoveryCard extends DiscoveryCard {
   previewCard: CardData;
@@ -110,6 +117,7 @@ Page({
     previewPage: 1,
     previewTotalPages: 1,
     previewLoadingMore: false,
+    previewLoaded: false,
     unlockPanelOpen: false,
     selectedUnlockPack: {} as CardPackSummary,
     unlocking: false,
@@ -134,7 +142,10 @@ Page({
       wx.reLaunch({ url: "/pages/login/index" });
       return;
     }
-    if ((this as any)._didShow) void this.load();
+    if (
+      (this as any)._didShow &&
+      shouldRefreshData(this as any, RESOURCE_DATA_DOMAINS)
+    ) void this.load();
     else (this as any)._didShow = true;
   },
   onUnload() {
@@ -154,6 +165,10 @@ Page({
     }
   },
   async load() {
+    markDataFresh(this as any, RESOURCE_DATA_DOMAINS);
+    if ((this.data as any).mode !== "preview") {
+      this.setData({ previewLoaded: false });
+    }
     this.setData({ loading: true, error: "" });
     try {
       const [discovery, profile] = await Promise.all([
@@ -297,6 +312,7 @@ Page({
         (this.data as any).isVip,
       ),
       collapsedKnowledgePoints: {},
+      previewLoaded: false,
     });
     if ((this.data as any).mode === "preview") void this.loadPreview(true);
   },
@@ -321,13 +337,18 @@ Page({
   switchMode(event: WechatMiniprogram.TouchEvent) {
     const mode = String(event.currentTarget.dataset.mode) as "cardpack" | "preview";
     if (mode === (this.data as any).mode) return;
+    const hadPreviewSearch =
+      (this.data as any).mode === "preview" && Boolean((this.data as any).query.trim());
     this.setData({
       mode,
       query: "",
       searching: false,
       searchItems: [],
+      previewLoaded: hadPreviewSearch ? false : (this.data as any).previewLoaded,
     });
-    if (mode === "preview") void this.loadPreview(true);
+    if (mode === "preview" && !(this.data as any).previewLoaded) {
+      void this.loadPreview(true);
+    }
   },
 
   toggleKnowledge(event: WechatMiniprogram.TouchEvent) {
@@ -456,6 +477,7 @@ Page({
         previewItems: reset ? displayItems : [...state.previewItems, ...displayItems],
         previewPage: result.page ?? page,
         previewTotalPages: result.totalPages ?? page,
+        previewLoaded: true,
       });
     } catch (error) {
       this.setData({ error: error instanceof Error ? error.message : "预览卡片加载失败" });

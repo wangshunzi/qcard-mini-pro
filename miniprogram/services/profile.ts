@@ -2,6 +2,10 @@ import { request } from "./http";
 import type { Paginated } from "./discovery";
 import { ENV } from "../config/env";
 import { resolveApiMediaUrl, resolveCardDataMedia } from "../utils/mediaUrl";
+import {
+  invalidateData,
+  trackVipExpiry,
+} from "../stores/dataInvalidation";
 
 export interface UserProfile {
   id: string;
@@ -68,26 +72,29 @@ export interface PrivateCardFace {
 }
 
 export function getProfile() {
-  return request<UserProfile>({ path: "/api/client/profile" }).then((profile) => ({
-    ...profile,
-    avatar: profile.avatar ? resolveApiMediaUrl(profile.avatar) : undefined,
-    grade: profile.grade
-      ? { ...profile.grade, icon: profile.grade.icon ? resolveApiMediaUrl(profile.grade.icon) : undefined }
-      : undefined,
-    currentTheme: profile.currentTheme
-      ? {
-          ...profile.currentTheme,
-          config: Object.fromEntries(
-            Object.entries(profile.currentTheme.config ?? {}).map(([key, value]) => [
-              key,
-              key.endsWith("_bg") && typeof value === "string" && value
-                ? resolveApiMediaUrl(value)
-                : value,
-            ]),
-          ),
-        }
-      : undefined,
-  }));
+  return request<UserProfile>({ path: "/api/client/profile" }).then((profile) => {
+    trackVipExpiry(profile.vip?.isVip === true, profile.vip?.vipExpireAt);
+    return {
+      ...profile,
+      avatar: profile.avatar ? resolveApiMediaUrl(profile.avatar) : undefined,
+      grade: profile.grade
+        ? { ...profile.grade, icon: profile.grade.icon ? resolveApiMediaUrl(profile.grade.icon) : undefined }
+        : undefined,
+      currentTheme: profile.currentTheme
+        ? {
+            ...profile.currentTheme,
+            config: Object.fromEntries(
+              Object.entries(profile.currentTheme.config ?? {}).map(([key, value]) => [
+                key,
+                key.endsWith("_bg") && typeof value === "string" && value
+                  ? resolveApiMediaUrl(value)
+                  : value,
+              ]),
+            ),
+          }
+        : undefined,
+    };
+  });
 }
 
 export function updateProfile(data: {
@@ -101,6 +108,9 @@ export function updateProfile(data: {
     path: "/api/client/profile",
     method: "PUT",
     data,
+  }).then((profile) => {
+    invalidateData("account");
+    return profile;
   });
 }
 
@@ -204,5 +214,8 @@ export function claimDailyReward() {
     path: "/api/client/vip/daily-reward",
     method: "POST",
     data: {},
+  }).then((result) => {
+    invalidateData("wallet");
+    return result;
   });
 }

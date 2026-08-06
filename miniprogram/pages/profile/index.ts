@@ -17,6 +17,19 @@ import { sessionStore } from "../../stores/session";
 import { UI_ASSETS } from "../../config/uiAssets";
 import type { CardData } from "../../cards/types";
 import { syncNavigationScroll } from "../../utils/navigationScroll";
+import {
+  markDataFresh,
+  shouldRefreshData,
+  type DataDomain,
+} from "../../stores/dataInvalidation";
+
+const PROFILE_DATA_DOMAINS: DataDomain[] = [
+  "account",
+  "wallet",
+  "learning",
+  "content",
+  "favorites",
+];
 
 interface ProfileCardFace extends PrivateCardFace {
   previewCard?: CardData;
@@ -164,7 +177,8 @@ Page({
       wx.reLaunch({ url: "/pages/login/index" });
       return;
     }
-    void this.load();
+    if (shouldRefreshData(this as any, PROFILE_DATA_DOMAINS)) void this.load();
+    else this.schedulePrivateFacePolling();
   },
 
   onHide() {
@@ -185,6 +199,9 @@ Page({
   },
 
   async load() {
+    markDataFresh(this as any, PROFILE_DATA_DOMAINS);
+    (this as any)._loadedFeedbackStatuses = new Set<string>();
+    (this as any)._loadedFavoriteModes = new Set<string>();
     this.clearPrivateFacePolling();
     this.setData({ loading: true, error: "" });
     try {
@@ -200,6 +217,9 @@ Page({
         isVip: profile.vip?.isVip === true,
         profileBackground: profile.currentTheme?.config?.profile_bg || "",
       }, () => this.schedulePrivateFacePolling());
+      if (this.data.activeTab === "feedback" || this.data.activeTab === "favorited") {
+        await this.loadPanel();
+      }
     } catch (error) {
       this.setData({ error: error instanceof Error ? error.message : "个人信息加载失败" });
     } finally {
@@ -329,18 +349,26 @@ Page({
       | "all"
       | FeedbackStatus;
     if (feedbackStatus === this.data.feedbackStatus) return;
-    this.setData({ feedbackStatus }, () => void this.loadFeedbackCards());
+    this.setData({ feedbackStatus }, () => void this.loadPanel());
   },
 
   switchFavoritesMode(event: WechatMiniprogram.TouchEvent) {
     const favoritesMode = String(event.currentTarget.dataset.mode) as "packs" | "cards";
     if (favoritesMode === this.data.favoritesMode) return;
-    this.setData({ favoritesMode }, () => void this.loadFavorites());
+    this.setData({ favoritesMode }, () => void this.loadPanel());
   },
 
   async loadPanel() {
-    if (this.data.activeTab === "feedback") await this.loadFeedbackCards();
-    if (this.data.activeTab === "favorited") await this.loadFavorites();
+    if (this.data.activeTab === "feedback") {
+      const loaded = ((this as any)._loadedFeedbackStatuses as Set<string> | undefined)
+        ?.has(this.data.feedbackStatus);
+      if (!loaded) await this.loadFeedbackCards();
+    }
+    if (this.data.activeTab === "favorited") {
+      const loaded = ((this as any)._loadedFavoriteModes as Set<string> | undefined)
+        ?.has(this.data.favoritesMode);
+      if (!loaded) await this.loadFavorites();
+    }
   },
 
   async loadFeedbackCards() {
@@ -351,6 +379,10 @@ Page({
         feedbackStatus:
           this.data.feedbackStatus === "all" ? undefined : this.data.feedbackStatus,
       });
+      const loaded = ((this as any)._loadedFeedbackStatuses as Set<string> | undefined)
+        ?? new Set<string>();
+      loaded.add(this.data.feedbackStatus);
+      (this as any)._loadedFeedbackStatuses = loaded;
       this.setData({ feedbackCards: (result.items ?? []).map(withPrivatePreview) });
     } catch (error) {
       wx.showToast({
@@ -380,6 +412,10 @@ Page({
             .filter((item): item is DisplayFavoriteCard => item !== null),
         });
       }
+      const loaded = ((this as any)._loadedFavoriteModes as Set<string> | undefined)
+        ?? new Set<string>();
+      loaded.add(this.data.favoritesMode);
+      (this as any)._loadedFavoriteModes = loaded;
     } catch (error) {
       wx.showToast({
         title: error instanceof Error ? error.message : "收藏加载失败",

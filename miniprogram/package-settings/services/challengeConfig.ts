@@ -1,4 +1,5 @@
 import { request } from "../../services/http";
+import { invalidateData } from "../../stores/dataInvalidation";
 
 export type LearningIntensity = "light" | "moderate" | "intensive";
 export type LearningStrategy = "balanced" | "focus" | "explore";
@@ -26,5 +27,8 @@ export function updateChallengeConfig(data: ChallengeConfig) {
     path: "/api/client/challenge-config",
     method: "PUT",
     data,
+  }).then((config) => {
+    invalidateData("challenge");
+    return config;
   });
 }

@@ -2,6 +2,7 @@ import { sessionStore } from "./stores/session";
 import { mediaCoordinator } from "./services/MediaCoordinator";
 import { logger } from "./utils/logger";
 import { flushStudyReports } from "./stores/studyReportQueue";
+import { trackDayBoundary } from "./stores/dataInvalidation";
 import {
   claimVirtualFulfillmentNotification,
   getPendingVirtualPaymentRecoveryDelay,
@@ -115,6 +116,7 @@ App({
     sessionStore,
   },
   onLaunch() {
+    trackDayBoundary();
     sessionStore.hydrate();
     unsubscribePending = subscribePendingVirtualPayments(() => {
       if (getPendingVirtualPaymentRecoveryDelay() === null) {
@@ -135,6 +137,7 @@ App({
   },
   onShow() {
     appVisible = true;
+    trackDayBoundary();
     void flushStudyReports();
     startVirtualPaymentRecovery();
   },

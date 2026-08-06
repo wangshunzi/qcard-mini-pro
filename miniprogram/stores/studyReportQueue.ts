@@ -2,6 +2,7 @@ import { recordCardStudy } from "../services/cardPack";
 import { ApiError } from "../services/http";
 import { createRequestId } from "../utils/requestId";
 import { sessionStore } from "./session";
+import { invalidateData } from "./dataInvalidation";
 
 const STORAGE_KEY = "qcard.study-report-queue.v1";
 const MAX_QUEUE_SIZE = 100;
@@ -15,7 +16,7 @@ interface StudyReport {
   createdAt: number;
 }
 
-let flushing = false;
+let flushPromise: Promise<void> | null = null;
 
 function readQueue(): StudyReport[] {
   const value = wx.getStorageSync(STORAGE_KEY);
@@ -42,7 +43,7 @@ export function enqueueStudyReport(
   studyTime: number,
 ) {
   const userId = sessionStore.getState()?.user.id;
-  if (!userId || !cardPackId || !cardId) return;
+  if (!userId || !cardPackId || !cardId) return Promise.resolve();
   const report: StudyReport = {
     requestId: createRequestId(),
     userId,
@@ -52,15 +53,15 @@ export function enqueueStudyReport(
     createdAt: Date.now(),
   };
   writeQueue([...readQueue(), report]);
-  void flushStudyReports();
+  invalidateData("learning");
+  return flushStudyReports();
 }
 
-export async function flushStudyReports() {
-  if (flushing) return;
+export function flushStudyReports() {
+  if (flushPromise) return flushPromise;
   const session = sessionStore.getState();
-  if (!session) return;
-  flushing = true;
-  try {
+  if (!session) return Promise.resolve();
+  flushPromise = (async () => {
     while (sessionStore.getState()?.user.id === session.user.id) {
       const queue = readQueue();
       const index = queue.findIndex((item) => item.userId === session.user.id);
@@ -95,7 +96,8 @@ export async function flushStudyReports() {
         break;
       }
     }
-  } finally {
-    flushing = false;
-  }
+  })().finally(() => {
+    flushPromise = null;
+  });
+  return flushPromise;
 }

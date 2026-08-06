@@ -20,6 +20,12 @@ import {
   resetBottomSheetGesture,
   startBottomSheetDrag,
 } from "../../../utils/bottomSheetGesture";
+import {
+  markDataFresh,
+  shouldRefreshData,
+} from "../../../stores/dataInvalidation";
+
+const CARD_BUILDER_DATA_DOMAINS = ["account", "content"] as const;
 
 type CardSlot = "front" | "back";
 
@@ -101,6 +107,7 @@ Page({
   },
 
   onLoad(options: Record<string, string>) {
+    markDataFresh(this as any, CARD_BUILDER_DATA_DOMAINS);
     const privatePackId = String(options.privatePackId || "");
     this.setData({ defaultFrontFaceId: String(options.frontFaceId || "") });
     void Promise.all([
@@ -127,10 +134,27 @@ Page({
   },
 
   onShow() {
-    if ((this as any)._didShow) {
-      void this.refreshPrivateFaces(true);
-    } else {
+    if (!(this as any)._didShow) {
       (this as any)._didShow = true;
+      return;
+    }
+    const stale = shouldRefreshData(this as any, CARD_BUILDER_DATA_DOMAINS);
+    if (stale) {
+      markDataFresh(this as any, CARD_BUILDER_DATA_DOMAINS);
+      void Promise.all([
+        this.refreshPrivateFaces(true),
+        this.loadPacks(this.data.selectedPack?.id || ""),
+        getProfile()
+          .then((profile) => {
+            this.setData({
+              heroBackground: profile.currentTheme?.config?.gen_bg || "",
+              userAvatar: profile.avatar || "",
+            });
+          })
+          .catch(() => undefined),
+      ]);
+    } else if (hasGeneratingFaces(this.data.faces)) {
+      void this.refreshPrivateFaces(true);
     }
   },
 

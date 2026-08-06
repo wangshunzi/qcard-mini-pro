@@ -15,6 +15,17 @@ import {
   type Subject,
 } from "../../../services/discovery";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
+import {
+  markDataFresh,
+  shouldRefreshData,
+} from "../../../stores/dataInvalidation";
+
+const MY_LEARNING_DATA_DOMAINS = [
+  "account",
+  "wallet",
+  "learning",
+  "content",
+] as const;
 
 Page({
   data: {
@@ -71,6 +82,24 @@ Page({
     if (options.create === "true") setTimeout(() => this.createPack(), 180);
   },
 
+  onShow() {
+    if (
+      (this as any)._didShow &&
+      shouldRefreshData(this as any, MY_LEARNING_DATA_DOMAINS)
+    ) {
+      void this.load(true);
+      void getProfile()
+        .then((profile) => {
+          this.setData({
+            heroBackground: profile.currentTheme?.config?.learning_bg || "",
+            userAvatar: profile.avatar || "",
+          });
+        })
+        .catch(() => undefined);
+    }
+    (this as any)._didShow = true;
+  },
+
   async onPullDownRefresh() {
     await this.load(true);
     wx.stopPullDownRefresh();
@@ -83,14 +112,28 @@ Page({
   switchMode(event: WechatMiniprogram.TouchEvent) {
     const mode = String(event.currentTarget.dataset.mode) as "unlocked" | "private";
     if (mode === this.data.mode) return;
+    const pagination = ((this as any)._learningPagination as Record<
+      string,
+      { page: number; totalPages: number }
+    > | undefined) ?? {};
+    pagination[this.data.mode] = {
+      page: this.data.page,
+      totalPages: this.data.totalPages,
+    };
+    (this as any)._learningPagination = pagination;
+    const targetPagination = pagination[mode];
     this.setData({
       mode,
       query: "",
-      page: 1,
-      totalPages: 1,
+      page: targetPagination?.page ?? 1,
+      totalPages: targetPagination?.totalPages ?? 1,
       filterOpen: false,
       editMode: false,
-    }, () => void this.load(true));
+    }, () => {
+      const loaded = ((this as any)._loadedLearningModes as Set<string> | undefined)
+        ?.has(mode);
+      if (!loaded) void this.load(true);
+    });
   },
 
   onInput(event: WechatMiniprogram.Input) {
@@ -102,8 +145,25 @@ Page({
   },
 
   async load(reset: boolean) {
+    if (reset) {
+      if (shouldRefreshData(this as any, MY_LEARNING_DATA_DOMAINS)) {
+        (this as any)._loadedLearningModes = new Set<string>();
+        (this as any)._learningPagination = {};
+      }
+      markDataFresh(this as any, MY_LEARNING_DATA_DOMAINS);
+    }
     if (!reset && (this.data.loadingMore || this.data.page >= this.data.totalPages)) return;
     const page = reset ? 1 : this.data.page + 1;
+    const mode = this.data.mode;
+    const defaultView =
+      !this.data.query.trim() &&
+      !this.data.selectedGradeId &&
+      !this.data.selectedSubjectId &&
+      !this.data.selectedKnowledgePointId;
+    const loadedModes = ((this as any)._loadedLearningModes as Set<string> | undefined)
+      ?? new Set<string>();
+    if (!defaultView) loadedModes.delete(mode);
+    (this as any)._loadedLearningModes = loadedModes;
     this.setData(reset ? { loading: true, error: "" } : { loadingMore: true });
     try {
       if (this.data.mode === "unlocked") {
@@ -128,6 +188,18 @@ Page({
           page: result.page ?? page,
           totalPages: result.totalPages ?? page,
         });
+      }
+      if (reset && defaultView) {
+        loadedModes.add(mode);
+        const pagination = ((this as any)._learningPagination as Record<
+          string,
+          { page: number; totalPages: number }
+        > | undefined) ?? {};
+        pagination[mode] = {
+          page: this.data.page,
+          totalPages: this.data.totalPages,
+        };
+        (this as any)._learningPagination = pagination;
       }
     } catch (error) {
       this.setData({ error: error instanceof Error ? error.message : "卡包加载失败" });

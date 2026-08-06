@@ -3,6 +3,7 @@ import { request } from "../../services/http";
 import type { Paginated } from "../../services/discovery";
 import type { PrivateCardFace } from "../../services/profile";
 import { resolveApiMediaUrl, resolveCardDataMedia } from "../../utils/mediaUrl";
+import { invalidateData } from "../../stores/dataInvalidation";
 
 export { submitPrivateCardFaceFeedback } from "../../services/privateCardFeedback";
 
@@ -60,6 +61,9 @@ export function deletePrivateCardPack(id: string) {
     path: `/api/client/user-private-card-packs/${encodeURIComponent(id)}`,
     method: "DELETE",
     data: {},
+  }).then((result) => {
+    invalidateData("content", "learning");
+    return result;
   });
 }
 
@@ -71,6 +75,9 @@ export function createPrivateCardPack(title: string, description: string) {
     path: "/api/client/user-private-card-packs",
     method: "POST",
     data: { title, description, isActive: true },
+  }).then((result) => {
+    invalidateData("content", "learning");
+    return result;
   });
 }
 
@@ -123,6 +130,9 @@ export function recordPrivateCardStudy(cardPackId: string, cardId: string) {
     path: `/api/client/user-private-card-packs/${encodeURIComponent(cardPackId)}/record/${encodeURIComponent(cardId)}`,
     method: "POST",
     data: {},
+  }).then((result) => {
+    invalidateData("learning");
+    return result;
   });
 }
 
@@ -136,6 +146,9 @@ export function createPrivateCard(data: {
     path: "/api/client/user-private-cards",
     method: "POST",
     data,
+  }).then((result) => {
+    invalidateData("content", "learning");
+    return result;
   });
 }
 
@@ -168,6 +181,9 @@ export function deletePrivateCardFace(id: string) {
     path: `/api/client/user-private-card-faces/${encodeURIComponent(id)}`,
     method: "DELETE",
     data: {},
+  }).then((result) => {
+    invalidateData("content");
+    return result;
   });
 }
 

@@ -1,4 +1,5 @@
 import { request } from "../../services/http";
+import { invalidateData } from "../../stores/dataInvalidation";
 
 export interface Theme {
   id: string;
@@ -27,5 +28,8 @@ export function selectTheme(themeId: string) {
   return request<Theme>({
     path: `/api/client/themes/select/${encodeURIComponent(themeId)}`,
     method: "POST",
+  }).then((theme) => {
+    invalidateData("account");
+    return theme;
   });
 }

@@ -11,6 +11,12 @@ import { getProfile } from "../../services/profile";
 import { UI_ASSETS } from "../../config/uiAssets";
 import { validateCardData } from "../../cards/CardTypeConfig";
 import { syncNavigationScroll } from "../../utils/navigationScroll";
+import {
+  markDataFresh,
+  shouldRefreshData,
+} from "../../stores/dataInvalidation";
+
+const EXPLORE_CONTEXT_DOMAINS = ["account"] as const;
 
 interface ExplorationFace extends PublicCardFaceSummary {
   previewCard?: {
@@ -46,6 +52,7 @@ Page({
   },
   onLoad() {
     if (sessionStore.getState()) {
+      markDataFresh(this as any, EXPLORE_CONTEXT_DOMAINS);
       void this.loadContext();
       void this.load(true);
     }
@@ -65,7 +72,18 @@ Page({
     }
   },
   onShow() {
-    if (!sessionStore.getState()) wx.reLaunch({ url: "/pages/login/index" });
+    if (!sessionStore.getState()) {
+      wx.reLaunch({ url: "/pages/login/index" });
+      return;
+    }
+    if (
+      (this as any)._didShow &&
+      shouldRefreshData(this as any, EXPLORE_CONTEXT_DOMAINS)
+    ) {
+      markDataFresh(this as any, EXPLORE_CONTEXT_DOMAINS);
+      void this.loadContext();
+    }
+    (this as any)._didShow = true;
   },
   onUnload() {
     const timer = (this as any)._searchTimer;

@@ -1,4 +1,20 @@
+import {
+  invalidateData,
+  trackVipExpiry,
+  type DataDomain,
+} from "./dataInvalidation";
+
 const SESSION_KEY = "qcard.session.v1";
+
+const SESSION_DATA_DOMAINS: DataDomain[] = [
+  "account",
+  "wallet",
+  "learning",
+  "content",
+  "favorites",
+  "orders",
+  "challenge",
+];
 
 export interface SessionUser {
   id: string;
@@ -31,14 +47,18 @@ class SessionStore {
   }
 
   setSession(session: SessionState) {
+    const changedUser = this.state?.user.id !== session.user.id;
     this.state = session;
     wx.setStorageSync(SESSION_KEY, session);
+    if (changedUser) invalidateData(...SESSION_DATA_DOMAINS);
     this.emit();
   }
 
   clear() {
     this.state = null;
     wx.removeStorageSync(SESSION_KEY);
+    trackVipExpiry(false);
+    invalidateData(...SESSION_DATA_DOMAINS);
     this.emit();
   }
 

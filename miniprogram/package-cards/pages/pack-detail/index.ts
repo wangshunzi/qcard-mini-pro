@@ -11,6 +11,18 @@ import {
 } from "../../../services/cardPack";
 import { getProfile } from "../../../services/profile";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
+import {
+  markDataFresh,
+  shouldRefreshData,
+  type DataDomain,
+} from "../../../stores/dataInvalidation";
+
+const PACK_DETAIL_DATA_DOMAINS: DataDomain[] = [
+  "account",
+  "wallet",
+  "learning",
+  "favorites",
+];
 
 Page({
   data: {
@@ -63,7 +75,10 @@ Page({
     void this.loadUnlockProfile();
   },
   onShow() {
-    if ((this as any)._didShow) {
+    if (
+      (this as any)._didShow &&
+      shouldRefreshData(this as any, PACK_DETAIL_DATA_DOMAINS)
+    ) {
       void Promise.all([this.load(), this.loadUnlockProfile()]);
     } else {
       (this as any)._didShow = true;
@@ -169,6 +184,7 @@ Page({
     };
   },
   async load() {
+    markDataFresh(this as any, PACK_DETAIL_DATA_DOMAINS);
     const id = String((this.data as any).id);
     if (!id) return;
     this.setData({ loading: true, error: "" });

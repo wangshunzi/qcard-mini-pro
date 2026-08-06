@@ -6,6 +6,12 @@ import {
 } from "../../services/userContent";
 import { getProfile } from "../../../services/profile";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
+import {
+  markDataFresh,
+  shouldRefreshData,
+} from "../../../stores/dataInvalidation";
+
+const PRIVATE_PACK_DATA_DOMAINS = ["account", "learning", "content"] as const;
 
 Page({
   data: {
@@ -43,12 +49,32 @@ Page({
       .catch(() => undefined);
   },
 
+  onShow() {
+    if (
+      (this as any)._didShow &&
+      shouldRefreshData(this as any, PRIVATE_PACK_DATA_DOMAINS)
+    ) {
+      void this.load();
+      void getProfile()
+        .then((profile) => {
+          this.setData({
+            heroBackground: profile.currentTheme?.config?.detail_bg || "",
+            authorName: profile.nickname || "叩咔用户",
+            authorAvatar: profile.avatar || "",
+          });
+        })
+        .catch(() => undefined);
+    }
+    (this as any)._didShow = true;
+  },
+
   async onPullDownRefresh() {
     await this.load();
     wx.stopPullDownRefresh();
   },
 
   async load() {
+    markDataFresh(this as any, PRIVATE_PACK_DATA_DOMAINS);
     if (!this.data.id) {
       this.setData({ loading: false, error: "卡包参数无效" });
       return;

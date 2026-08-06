@@ -21,6 +21,12 @@ import {
   toPrivateCardData,
 } from "../../services/userContent";
 import { getImmersiveNavigationMetrics } from "../../../utils/navigationMetrics";
+import {
+  markDataFresh,
+  shouldRefreshData,
+} from "../../../stores/dataInvalidation";
+
+const STUDY_ACCESS_DOMAINS = ["wallet"] as const;
 
 interface StudyCard extends CardCatalogue {
   cardPackId?: string;
@@ -75,6 +81,7 @@ Page({
   },
 
   onLoad(query: Record<string, string | undefined>) {
+    markDataFresh(this as any, STUDY_ACCESS_DOMAINS);
     const { controlRowTop, controlRowHeight } =
       getImmersiveNavigationMetrics();
     this.setData({
@@ -481,7 +488,13 @@ Page({
     void this.preloadAround(0);
   },
 
-  exit() {
+  async exit() {
+    const report = this.reportCurrentCard();
+    (this as any)._trackingPaused = true;
+    await Promise.race([
+      Promise.resolve(report),
+      new Promise<void>((resolve) => setTimeout(resolve, 1200)),
+    ]);
     wx.navigateBack();
   },
 
@@ -565,14 +578,17 @@ Page({
     );
     if (state.privateMode) {
       if (cardPackId && cardId) {
-        void recordPrivateCardStudy(cardPackId, cardId).catch(() => undefined);
+        return recordPrivateCardStudy(cardPackId, cardId).then(
+          () => undefined,
+          () => undefined,
+        );
       }
       return;
     }
     if (!cardPackId || (!pack?.isUnlocked && !state.challengeMode) || !cardId) return;
     const seconds = Math.max(1, (Date.now() - Number((this as any)._cardStartedAt)) / 1000);
     (this as any)._cardStartedAt = Date.now();
-    enqueueStudyReport(cardPackId, cardId, seconds);
+    return enqueueStudyReport(cardPackId, cardId, seconds);
   },
 
   onHide() {
@@ -587,10 +603,13 @@ Page({
     if (!(this as any)._trackingPaused) {
       (this as any)._cardStartedAt = Date.now();
     }
-    void this.refreshVipAccess();
+    if (shouldRefreshData(this as any, STUDY_ACCESS_DOMAINS)) {
+      void this.refreshVipAccess();
+    }
   },
 
   async refreshVipAccess() {
+    markDataFresh(this as any, STUDY_ACCESS_DOMAINS);
     const state = this.data as any;
     if (state.privateMode || state.challengeMode || !state.packId) return;
     try {

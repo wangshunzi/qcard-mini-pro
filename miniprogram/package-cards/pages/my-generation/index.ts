@@ -8,6 +8,12 @@ import { getProfile } from "../../../services/profile";
 import type { CardTransferPayload } from "../../../cards/cardTransfer";
 import type { CardData } from "../../../cards/types";
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
+import {
+  markDataFresh,
+  shouldRefreshData,
+} from "../../../stores/dataInvalidation";
+
+const GENERATED_CONTENT_DOMAINS = ["account", "content"] as const;
 
 interface DisplayCardFace extends PrivateCardFace {
   cardData: CardData | null;
@@ -71,10 +77,21 @@ Page({
   },
 
   onShow() {
-    if ((this as any)._didShow) {
-      void this.refreshPrivateFaces(true);
-    } else {
+    if (!(this as any)._didShow) {
       (this as any)._didShow = true;
+      return;
+    }
+    const stale = shouldRefreshData(this as any, GENERATED_CONTENT_DOMAINS);
+    if (stale) {
+      markDataFresh(this as any, GENERATED_CONTENT_DOMAINS);
+      void this.refreshPrivateFaces(true);
+      void getProfile()
+        .then((profile) => {
+          this.setData({ heroBackground: profile.currentTheme?.config?.explore_bg || "" });
+        })
+        .catch(() => undefined);
+    } else if (hasGeneratingFaces(this.data.items)) {
+      void this.refreshPrivateFaces(true);
     }
   },
 
@@ -117,6 +134,7 @@ Page({
   },
 
   async load(reset: boolean) {
+    if (reset) markDataFresh(this as any, GENERATED_CONTENT_DOMAINS);
     if (!reset && (this.data.loadingMore || this.data.page >= this.data.totalPages)) return;
     const page = reset ? 1 : this.data.page + 1;
     this.setData(reset ? { loading: true, error: "" } : { loadingMore: true });
