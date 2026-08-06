@@ -316,14 +316,19 @@ Page({
     });
   },
 
-  openChallenge() {
+  openChallenge(event?: WechatMiniprogram.TouchEvent) {
     const challenge = (this.data as any).dailyChallenge as DailyChallenge | null;
     if (!challenge?.cards?.length) {
       wx.showToast({ title: "今日暂无挑战卡片", icon: "none" });
       return;
     }
+    const cardId = String(event?.currentTarget?.dataset?.id ?? "");
     saveChallengeTransfer(challenge);
-    wx.navigateTo({ url: "/package-cards/pages/study/index?challenge=1" });
+    wx.navigateTo({
+      url:
+        "/package-cards/pages/study/index?challenge=1" +
+        (cardId ? `&cardId=${encodeURIComponent(cardId)}` : ""),
+    });
   },
 
   openResources() {

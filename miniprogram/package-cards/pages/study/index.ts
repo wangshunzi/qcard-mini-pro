@@ -187,6 +187,10 @@ Page({
         detailsLoaded: false,
       };
     });
+    const initialCardId = String((this as any)._initialCardId ?? "");
+    const initialIndex = cards.findIndex((item) => item.id === initialCardId);
+    const activeIndex = initialIndex >= 0 ? initialIndex : 0;
+    const progressPercent = cards.length ? ((activeIndex + 1) / cards.length) * 100 : 0;
     this.setData({
       pack: {
         id: "",
@@ -196,14 +200,14 @@ Page({
       },
       cards,
       loading: false,
-      activeIndex: 0,
-      progressPercent: cards.length ? 100 / cards.length : 0,
-      progressLabel: cards.length ? (100 / cards.length).toFixed(1) : "0.0",
+      activeIndex,
+      progressPercent,
+      progressLabel: progressPercent.toFixed(1),
     });
-    (this as any)._currentCardId = cards[0]?.id ?? "";
-    (this as any)._currentCardPackId = cards[0]?.cardPackId ?? "";
+    (this as any)._currentCardId = cards[activeIndex]?.id ?? "";
+    (this as any)._currentCardPackId = cards[activeIndex]?.cardPackId ?? "";
     (this as any)._cardStartedAt = Date.now();
-    await this.preloadAround(0);
+    await this.preloadAround(activeIndex);
   },
 
   async load() {

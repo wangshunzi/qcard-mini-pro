@@ -46,7 +46,7 @@
     </view>
     <scroll-view wx:if="{{challengeCards.length}}" class="challenge-carousel" scroll-x enhanced show-scrollbar="{{false}}">
       <view class="challenge-carousel-inner">
-        <view wx:for="{{challengeCards}}" wx:key="id" class="challenge-preview {{item.isCompleted ? 'completed' : ''}}" bindtap="openChallenge" hover-class="challenge-preview-hover">
+        <view wx:for="{{challengeCards}}" wx:key="id" class="challenge-preview {{item.isCompleted ? 'completed' : ''}}" data-id="{{item.id}}" bindtap="openChallenge" hover-class="challenge-preview-hover">
           <flip-card
             class="challenge-renderer"
             front-card-data="{{item.previewCard}}"

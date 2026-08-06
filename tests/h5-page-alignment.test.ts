@@ -631,11 +631,17 @@ describe("H5-aligned product surfaces", () => {
 
   it("renders home challenge cards with the shared native preview renderer", () => {
     const template = read("miniprogram/pages/home/index.wxml");
+    const homeLogic = read("miniprogram/pages/home/index.ts");
+    const studyLogic = read("miniprogram/package-cards/pages/study/index.ts");
     const styles = read("miniprogram/pages/home/index.wxss");
     const config = read("miniprogram/pages/home/index.json");
+    expect(template).toContain('data-id="{{item.id}}"');
     expect(template).toContain('front-card-data="{{item.previewCard}}"');
     expect(template).toContain('preview="{{true}}"');
     expect(template).toContain('read-only="{{true}}"');
+    expect(homeLogic).toContain('`&cardId=${encodeURIComponent(cardId)}`');
+    expect(studyLogic).toContain("const initialIndex = cards.findIndex((item) => item.id === initialCardId);");
+    expect(studyLogic).toContain("await this.preloadAround(activeIndex);");
     expect(styles).toContain("width:250rpx; height:444.44rpx;");
     expect(config).toContain('"/cards/FlipCardContainer/index"');
   });
