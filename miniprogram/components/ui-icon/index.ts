@@ -36,6 +36,7 @@ const GLYPHS: Record<string, string> = {
   headphones: String.fromCodePoint(983755),
   history: String.fromCodePoint(983770),
   heart: String.fromCodePoint(983761),
+  "heart-outline": String.fromCodePoint(983765),
   home: String.fromCodePoint(983772),
   "home-outline": String.fromCodePoint(984737),
   leaf: String.fromCodePoint(983850),

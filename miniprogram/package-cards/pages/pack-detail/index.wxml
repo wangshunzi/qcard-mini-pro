@@ -3,13 +3,13 @@
   <immersive-nav title="{{detail.title || '卡包详情'}}" back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <view slot="action"><button wx:if="{{detail}}" class="favorite-button {{detail.isFavorited ? 'active' : ''}}" bindtap="toggleFavorite" hover-class="soft-hover" aria-label="{{detail.isFavorited ? '取消收藏' : '收藏'}}">
       <view class="favorite-button-icon">
-        <ui-icon name="heart" size="{{34}}" color="{{detail.isFavorited ? '#c95752' : '#a9a9a9'}}" />
+        <ui-icon name="heart" size="{{34}}" color="{{detail.isFavorited ? 'var(--color-error)' : 'var(--color-text-muted)'}}" />
       </view>
     </button></view>
   </immersive-nav>
   <view wx:if="{{loading}}" class="state"><text>正在加载卡包…</text></view>
   <view wx:elif="{{error}}" class="state">
-    <ui-icon name="alert-circle-outline" size="{{88}}" color="#eb711b" />
+    <ui-icon name="alert-circle-outline" size="{{88}}" color="var(--color-error)" />
     <text>{{error}}</text>
     <button bindtap="load">重新加载</button>
   </view>
@@ -20,7 +20,7 @@
 
     <view class="cover-card">
       <image wx:if="{{detail.cover}}" class="cover" src="{{detail.cover}}" mode="aspectFill" />
-      <view wx:else class="cover cover-fallback"><ui-icon name="cards-outline" size="{{92}}" color="#ffffff" /></view>
+      <view wx:else class="cover cover-fallback"><ui-icon name="cards-outline" size="{{92}}" color="var(--color-text-inverse)" /></view>
       <view class="badges">
         <text wx:if="{{detail.isHot}}" class="badge hot">热门</text>
         <text wx:if="{{detail.isNew}}" class="badge new">新品</text>
@@ -30,28 +30,28 @@
 
     <view class="title-block">
       <view class="pack-title">
-        <ui-icon name="{{detail.isUnlocked ? 'lock-open-outline' : 'lock'}}" size="{{31}}" color="{{detail.isUnlocked ? '#529917' : '#a9a9a9'}}" />
+        <ui-icon name="{{detail.isUnlocked ? 'lock-open-outline' : 'lock'}}" size="{{31}}" color="{{detail.isUnlocked ? 'var(--color-primary)' : 'var(--color-text-muted)'}}" />
         <text>{{detail.title}}</text>
       </view>
       <view wx:if="{{detail.author.name}}" class="author-link" bindtap="openTeacher" hover-class="soft-hover">
         <image wx:if="{{detail.author.avatar}}" class="author-avatar" src="{{detail.author.avatar}}" mode="aspectFill" />
-        <view wx:else class="author-avatar avatar-fallback"><ui-icon name="account-outline" size="{{24}}" color="#6d776f" /></view>
+        <view wx:else class="author-avatar avatar-fallback"><ui-icon name="account-outline" size="{{24}}" color="var(--color-text-secondary)" /></view>
         <text>{{detail.author.name}}</text>
-        <ui-icon name="chevron-right" size="{{25}}" color="#6d776f" />
+        <ui-icon name="chevron-right" size="{{25}}" color="var(--color-text-secondary)" />
       </view>
     </view>
 
     <view class="tabs">
       <view class="tab {{activeTab === 'intro' ? 'active' : ''}}" data-tab="intro" bindtap="switchTab">
-        <ui-icon name="alert-circle-outline" size="{{34}}" color="{{activeTab === 'intro' ? '#529917' : '#6d776f'}}" />
+        <ui-icon name="alert-circle-outline" size="{{34}}" color="{{activeTab === 'intro' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}}" />
         <text>介绍</text>
       </view>
       <view class="tab {{activeTab === 'cards' ? 'active' : ''}}" data-tab="cards" bindtap="switchTab">
-        <ui-icon name="cards-outline" size="{{34}}" color="{{activeTab === 'cards' ? '#529917' : '#6d776f'}}" />
+        <ui-icon name="cards-outline" size="{{34}}" color="{{activeTab === 'cards' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}}" />
         <text>卡片集</text>
       </view>
       <view class="tab {{activeTab === 'comments' ? 'active' : ''}}" data-tab="comments" bindtap="switchTab">
-        <ui-icon name="message-text-outline" size="{{34}}" color="{{activeTab === 'comments' ? '#529917' : '#6d776f'}}" />
+        <ui-icon name="message-text-outline" size="{{34}}" color="{{activeTab === 'comments' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}}" />
         <text>评论</text>
       </view>
     </view>
@@ -94,7 +94,7 @@
       <view wx:if="{{detail.learningOutcomes.length}}" class="section">
         <text class="section-title">学习成果</text>
         <view class="outcomes">
-          <view wx:for="{{detail.learningOutcomes}}" wx:key="id" class="outcome"><ui-icon name="check-circle-outline" size="{{28}}" color="#529917" /><text>{{item.description}}</text></view>
+          <view wx:for="{{detail.learningOutcomes}}" wx:key="id" class="outcome"><ui-icon name="check-circle-outline" size="{{28}}" color="var(--color-primary)" /><text>{{item.description}}</text></view>
         </view>
       </view>
 
@@ -102,7 +102,7 @@
         <text class="section-title">作者信息</text>
         <view class="author-card">
           <image wx:if="{{detail.author.avatar}}" class="author-avatar medium" src="{{detail.author.avatar}}" mode="aspectFill" />
-          <view wx:else class="author-avatar medium avatar-fallback"><ui-icon name="account-outline" size="{{38}}" color="#6d776f" /></view>
+          <view wx:else class="author-avatar medium avatar-fallback"><ui-icon name="account-outline" size="{{38}}" color="var(--color-text-secondary)" /></view>
           <view class="author-copy">
             <view class="author-name-row">
               <text>{{detail.author.name}}</text>
@@ -111,10 +111,10 @@
             <text>{{detail.author.bio || '叩咔内容创作者'}}</text>
           </view>
           <view wx:if="{{authorRatingText}}" class="author-rating">
-            <view><ui-icon name="star" size="{{24}}" color="#529917" /><text>{{authorRatingText}}</text></view>
+            <view><ui-icon name="star" size="{{24}}" color="var(--color-primary)" /><text>{{authorRatingText}}</text></view>
             <text>平均评分</text>
           </view>
-          <ui-icon wx:else name="chevron-right" size="{{30}}" color="#a9a9a9" />
+          <ui-icon wx:else name="chevron-right" size="{{30}}" color="var(--color-text-muted)" />
         </view>
       </view>
     </view>
@@ -125,14 +125,14 @@
         <view wx:for="{{catalogue}}" wx:key="id" class="card-preview {{!canStudy && !item.isPreview ? 'locked' : ''}}" data-id="{{item.id}}" bindtap="openCard" hover-class="card-hover">
           <flip-card wx:if="{{item.frontCardData && (canStudy || item.isPreview)}}" front-card-data="{{item.frontCardData}}" aspect-ratio="portrait" preview="{{true}}" read-only="{{true}}" hide-flip-button="{{true}}" is-visible="{{true}}" />
           <view wx:else class="locked-card">
-            <ui-icon name="lock" size="{{48}}" color="#a9a9a9" />
+            <ui-icon name="lock" size="{{48}}" color="var(--color-text-muted)" />
             <text>解锁后查看</text>
           </view>
           <text wx:if="{{!canStudy && item.isPreview}}" class="preview-badge">预览</text>
         </view>
       </view>
       <view wx:if="{{!canStudy}}" class="unlock-tip" bindtap="confirmUnlock">
-        <ui-icon name="cards-outline" size="{{42}}" color="#3f3f3f" />
+        <ui-icon name="cards-outline" size="{{42}}" color="var(--color-text)" />
         <text>共 {{detail.cardCount || catalogue.length}} 张学习卡片</text>
         <text>解锁后查看完整卡片内容</text>
       </view>
@@ -143,7 +143,7 @@
       <view wx:if="{{detail.isUnlocked && !detail.hasReviewed}}" class="review-form">
         <text class="section-title">写下你的学习感受</text>
         <view class="rating-row">
-          <ui-icon wx:for="{{[1,2,3,4,5]}}" wx:key="*this" name="star" size="{{39}}" color="{{reviewRating >= item ? '#f6b831' : '#d8ddd8'}}" data-rating="{{item}}" bindtap="chooseRating" />
+          <ui-icon wx:for="{{[1,2,3,4,5]}}" wx:key="*this" name="star" size="{{39}}" color="{{reviewRating >= item ? 'var(--color-warning)' : 'var(--color-border)'}}" data-rating="{{item}}" bindtap="chooseRating" />
         </view>
         <textarea class="review-input" value="{{reviewComment}}" bindinput="onReviewInput" maxlength="500" placeholder="分享这套卡包对你的帮助..." />
         <button class="review-submit" loading="{{reviewSubmitting}}" disabled="{{reviewSubmitting || !canSubmitReview}}" bindtap="submitReview">提交评价</button>
@@ -152,20 +152,26 @@
       <view wx:elif="{{reviews.length}}" class="review-list">
         <view wx:for="{{reviews}}" wx:key="id" class="review-item">
           <image wx:if="{{item.user.avatar}}" class="review-avatar" src="{{item.user.avatar}}" mode="aspectFill" />
-          <view wx:else class="review-avatar avatar-fallback"><ui-icon name="account-outline" size="{{30}}" color="#6d776f" /></view>
+          <view wx:else class="review-avatar avatar-fallback"><ui-icon name="account-outline" size="{{30}}" color="var(--color-text-secondary)" /></view>
           <view class="review-copy">
             <view class="review-head"><text>{{item.user.nickname || '叩咔用户'}}</text><text>{{item.createdAtText}}</text></view>
-            <view class="review-stars"><ui-icon wx:for="{{[1,2,3,4,5]}}" wx:for-item="starItem" wx:key="*this" name="star" size="{{23}}" color="{{item.rating >= starItem ? '#f6b831' : '#d8ddd8'}}" /></view>
+            <view class="review-stars"><ui-icon wx:for="{{[1,2,3,4,5]}}" wx:for-item="starItem" wx:key="*this" name="star" size="{{23}}" color="{{item.rating >= starItem ? 'var(--color-warning)' : 'var(--color-border)'}}" /></view>
             <text class="review-comment">{{item.comment}}</text>
+            <view class="review-actions">
+              <button class="review-action {{item.isLikedByCurrentUser ? 'active' : ''}}" data-id="{{item.id}}" disabled="{{reviewActionId === item.id}}" bindtap="toggleReviewLike">赞 {{item.likesCount || 0}}</button>
+              <button class="review-action dislike {{item.isDislikedByCurrentUser ? 'active' : ''}}" data-id="{{item.id}}" disabled="{{reviewActionId === item.id}}" bindtap="toggleReviewDislike">踩 {{item.dislikesCount || 0}}</button>
+            </view>
           </view>
         </view>
+        <button wx:if="{{reviewsPage < reviewsTotalPages}}" class="reviews-more" loading="{{reviewsLoadingMore}}" disabled="{{reviewsLoadingMore}}" bindtap="loadMoreReviews">{{reviewsLoadingMore ? '加载中...' : '加载更多评论'}}</button>
+        <view wx:else class="reviews-end">已展示全部评论</view>
       </view>
       <view wx:else class="comments-state">还没有评论，完成学习后来说说感受吧</view>
     </view>
 
     <view class="bottom-bar">
       <button class="study-button" loading="{{unlocking}}" bindtap="bottomAction">
-        <ui-icon name="{{canStudy ? 'play' : 'lock-open-outline'}}" size="{{34}}" color="#ffffff" />
+        <ui-icon name="{{canStudy ? 'play' : 'lock-open-outline'}}" size="{{34}}" color="var(--color-text-inverse)" />
         {{canStudy ? '继续学习' : (detail.unlockType === 'vip_free' ? 'VIP 免费学习' : (detail.priceInfo.finalPrice || detail.basePrice || 0) + '咔豆 立即解锁')}}
       </button>
     </view>

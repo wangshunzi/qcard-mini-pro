@@ -17,12 +17,12 @@
       </view>
       <view class="row tappable" bindtap="chooseGender">
         <text>性别</text>
-        <view><text>{{gender === 'male' ? '男' : gender === 'female' ? '女' : gender === 'unknown' ? '保密' : '未设置'}}</text><ui-icon name="chevron-right" size="{{30}}" color="#a9a9a9" /></view>
+        <view><text>{{gender === 'male' ? '男' : gender === 'female' ? '女' : gender === 'unknown' ? '保密' : '未设置'}}</text><ui-icon name="chevron-right" size="{{30}}" color="var(--color-text-muted)" /></view>
       </view>
       <picker mode="date" value="{{birthday}}" end="{{maxDate}}" bindchange="onBirthday">
         <view class="row tappable">
           <text>生日</text>
-          <view><text>{{birthday || '未设置'}}</text><ui-icon name="chevron-right" size="{{30}}" color="#a9a9a9" /></view>
+          <view><text>{{birthday || '未设置'}}</text><ui-icon name="chevron-right" size="{{30}}" color="var(--color-text-muted)" /></view>
         </view>
       </picker>
       <view class="bio-row">

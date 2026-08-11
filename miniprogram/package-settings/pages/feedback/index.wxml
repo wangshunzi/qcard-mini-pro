@@ -15,10 +15,10 @@
     <text class="label block-label">问题截图（选填）</text>
     <view wx:if="{{imagePath}}" class="image-preview-wrap">
       <image class="image-preview" src="{{imagePath}}" mode="aspectFill" bindtap="previewImage" />
-      <button class="remove-image" bindtap="removeImage" aria-label="移除截图"><ui-icon name="close" size="{{28}}" color="#ffffff" /></button>
+      <button class="remove-image" bindtap="removeImage" aria-label="移除截图"><ui-icon name="close" size="{{28}}" color="var(--color-text-inverse)" /></button>
     </view>
     <view wx:else class="image-picker" bindtap="chooseImage" hover-class="soft-hover">
-      <ui-icon name="file-document-outline" size="{{42}}" color="#6d776f" />
+      <ui-icon name="file-document-outline" size="{{42}}" color="var(--color-text-secondary)" />
       <text>添加截图</text>
     </view>
 
@@ -61,7 +61,7 @@
     <view wx:if="{{loading}}" class="state"><view class="spinner"></view><text>加载中...</text></view>
     <view wx:elif="{{items.length}}" class="feedback-list">
       <view wx:for="{{items}}" wx:key="id" class="feedback-item" data-id="{{item.id}}" bindtap="openDetail" hover-class="item-hover">
-        <view class="feedback-icon"><ui-icon name="message-text-outline" size="{{36}}" color="#529917" /></view>
+        <view class="feedback-icon"><ui-icon name="message-text-outline" size="{{36}}" color="var(--color-primary)" /></view>
         <view class="feedback-copy">
           <view class="feedback-title-row">
             <text class="feedback-type">{{item.typeLabel}}</text>
@@ -69,12 +69,12 @@
           </view>
           <text class="feedback-content">{{item.content}}</text>
         </view>
-        <ui-icon name="chevron-right" size="{{30}}" color="#a9a9a9" />
+        <ui-icon name="chevron-right" size="{{30}}" color="var(--color-text-muted)" />
       </view>
       <button wx:if="{{page < totalPages}}" class="load-more" loading="{{loadingMore}}" bindtap="loadMore">{{loadingMore ? '加载中...' : '加载更多'}}</button>
     </view>
     <view wx:else class="state">
-      <ui-icon name="message-text-outline" size="{{76}}" color="#6d776f" />
+      <ui-icon name="message-text-outline" size="{{76}}" color="var(--color-text-secondary)" />
       <text>暂无反馈记录</text>
     </view>
   </view>

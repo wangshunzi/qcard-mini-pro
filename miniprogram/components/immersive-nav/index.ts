@@ -10,7 +10,7 @@ Component({
     back: { type: Boolean, value: false },
     overlay: { type: Boolean, value: false },
     light: { type: Boolean, value: false },
-    background: { type: String, value: "#ffffff" },
+    background: { type: String, value: "var(--color-surface-translucent)" },
     border: { type: Boolean, value: false },
     customBack: { type: Boolean, value: false },
     scrollTop: { type: Number, value: 0 },
@@ -24,29 +24,37 @@ Component({
     totalHeight: 64,
     controlsMaxWidth: 260,
     capsuleReservedWidth: 104,
-    navBackground: "rgba(255,255,255,0)",
     navShadow: "0 0 0 rgba(15,15,15,0)",
     navBlur: 0,
+    navSurfaceOpacity: 0,
+    navScrolled: false,
     navTitleOpacity: 0,
-    navTitleColor: "#172019",
+    navForeground: "var(--color-text)",
   },
 
   observers: {
-    "scrollTop, overlay"(scrollTop: number, overlay: boolean) {
+    "scrollTop, overlay, light"(
+      scrollTop: number,
+      overlay: boolean,
+      light: boolean,
+    ) {
       const progress = overlay
         ? Math.max(0, Math.min(1, Number(scrollTop || 0) / 96))
         : 1;
       const eased = progress * progress * (3 - 2 * progress);
+      const navScrolled = !overlay || progress >= 0.58;
       this.setData({
-        navBackground: overlay
-          ? `rgba(255,255,255,${(eased * 0.94).toFixed(3)})`
-          : this.data.background,
         navShadow: `0 4rpx 22rpx rgba(15,15,15,${(eased * 0.1).toFixed(3)})`,
         navBlur: Math.round(eased * 24),
+        navSurfaceOpacity: overlay ? Number((eased * 0.94).toFixed(3)) : 1,
+        navScrolled,
         navTitleOpacity: overlay
           ? Math.max(0, Math.min(1, (progress - 0.48) / 0.42))
           : 1,
-        navTitleColor: "#172019",
+        navForeground:
+          light && !navScrolled
+            ? "var(--color-text-inverse)"
+            : "var(--color-text)",
       });
     },
   },

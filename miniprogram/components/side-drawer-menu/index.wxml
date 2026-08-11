@@ -9,12 +9,13 @@
   hover-class="menu-button-hover"
 >
   <image wx:if="{{selectedIcon}}" class="selection-trigger-image" src="{{selectedIcon}}" mode="aspectFit" />
-  <ui-icon wx:else name="{{triggerIcon}}" size="{{27}}" color="{{light ? '#ffffff' : '#4f3218'}}" />
+  <ui-icon wx:else name="{{triggerIcon}}" size="{{27}}" color="{{light ? 'var(--color-text-inverse)' : 'var(--color-text)'}}" />
   <text class="selection-trigger-label">{{selectedLabel || allLabel}}</text>
-  <ui-icon class="selection-trigger-chevron" name="chevron-down" size="{{26}}" color="{{light ? '#ffffff' : '#303630'}}" />
+  <ui-icon class="selection-trigger-chevron" name="chevron-down" size="{{26}}" color="{{light ? 'var(--color-text-inverse)' : 'var(--color-text)'}}" />
 </button>
 
-<view wx:if="{{open}}" class="side-menu-root">
+<root-portal>
+<view wx:if="{{open}}" class="side-menu-root" catchtouchmove="preventClose">
   <view class="side-menu-backdrop" bindtap="closeMenu"></view>
   <view class="side-menu-panel safe-bottom" catchtap="preventClose">
     <block wx:if="{{mode === 'profile'}}">
@@ -24,7 +25,7 @@
           <view class="side-menu-name-row">
             <text class="side-menu-name">{{profile.nickname || '叩咔用户'}}</text>
             <button wx:if="{{isVip}}" class="side-menu-vip-badge" bindtap="openVip" hover-class="side-menu-vip-hover">
-              <ui-icon name="crown" size="{{22}}" color="#ffffff" />
+              <ui-icon name="crown" size="{{22}}" color="var(--side-menu-inverse)" />
               <text>VIP</text>
             </button>
           </view>
@@ -35,38 +36,38 @@
 
       <view class="side-menu-main">
         <button wx:if="{{!isVip}}" class="side-menu-vip-banner" bindtap="openVip" hover-class="side-menu-vip-hover">
-          <view class="side-menu-vip-icon"><ui-icon name="crown" size="{{31}}" color="#f39a13" /></view>
+          <view class="side-menu-vip-icon"><ui-icon name="crown" size="{{31}}" color="var(--side-menu-warning)" /></view>
           <view class="side-menu-vip-copy">
             <text class="side-menu-vip-title">开通 VIP · 解锁特权</text>
             <text class="side-menu-vip-subtitle">免费卡包 · 每日咔豆 · AI 权益</text>
           </view>
-          <view class="side-menu-vip-action"><text>去开通</text><ui-icon name="chevron-right" size="{{22}}" color="#ffffff" /></view>
+          <view class="side-menu-vip-action"><text>去开通</text><ui-icon name="chevron-right" size="{{22}}" color="var(--side-menu-inverse)" /></view>
         </button>
         <button class="side-menu-row" bindtap="openWallet" hover-class="side-menu-hover">
-          <ui-icon name="wallet" size="{{36}}" color="#3f493f" />
+          <ui-icon name="wallet" size="{{36}}" color="var(--side-menu-text)" />
           <text>我的钱包</text>
         </button>
         <button class="side-menu-row" bindtap="openMyLearning" hover-class="side-menu-hover">
-          <ui-icon name="book-open-outline" size="{{36}}" color="#3f493f" />
+          <ui-icon name="book-open-outline" size="{{36}}" color="var(--side-menu-text)" />
           <text>我的卡包</text>
         </button>
         <button class="side-menu-row" bindtap="openMyCards" hover-class="side-menu-hover">
-          <ui-icon name="auto-fix" size="{{36}}" color="#3f493f" />
+          <ui-icon name="auto-fix" size="{{36}}" color="var(--side-menu-text)" />
           <text>我的卡面</text>
         </button>
       </view>
 
       <view class="side-menu-bottom">
         <button class="side-menu-shortcut" bindtap="openTheme" hover-class="side-menu-hover">
-          <ui-icon name="palette-outline" size="{{40}}" color="#3f493f" />
+          <ui-icon name="palette-outline" size="{{40}}" color="var(--side-menu-text)" />
           <text>主题</text>
         </button>
         <button class="side-menu-shortcut" open-type="contact" bindtap="closeForContact" hover-class="side-menu-hover">
-          <ui-icon name="account-group-outline" size="{{40}}" color="#3f493f" />
+          <ui-icon name="account-group-outline" size="{{40}}" color="var(--side-menu-text)" />
           <text>客服</text>
         </button>
         <button class="side-menu-shortcut" bindtap="openChallengeConfig" hover-class="side-menu-hover">
-          <ui-icon name="account-outline" size="{{40}}" color="#3f493f" />
+          <ui-icon name="account-outline" size="{{40}}" color="var(--side-menu-text)" />
           <text>定制</text>
         </button>
       </view>
@@ -75,14 +76,14 @@
     <block wx:else>
       <view class="selection-drawer-header" style="padding-top:{{safeTopPx}}px;">
         <view class="selection-drawer-mark">
-          <ui-icon name="{{triggerIcon}}" size="{{40}}" color="#529917" />
+          <ui-icon name="{{triggerIcon}}" size="{{40}}" color="var(--side-menu-primary)" />
         </view>
         <view class="selection-drawer-copy">
           <text class="selection-drawer-title">{{title}}</text>
           <text class="selection-drawer-subtitle">{{subtitle}}</text>
         </view>
         <button class="selection-drawer-close" bindtap="closeMenu" aria-label="关闭分类">
-          <ui-icon name="close" size="{{35}}" color="#687169" />
+          <ui-icon name="close" size="{{35}}" color="var(--side-menu-text-secondary)" />
         </button>
       </view>
 
@@ -95,11 +96,11 @@
           hover-class="selection-drawer-hover"
         >
           <view class="selection-item-icon selection-item-all">
-            <ui-icon name="view-grid-outline" size="{{31}}" color="{{!selectedId ? '#529917' : '#687169'}}" />
+            <ui-icon name="view-grid-outline" size="{{31}}" color="{{!selectedId ? 'var(--side-menu-primary)' : 'var(--side-menu-text-secondary)'}}" />
           </view>
           <text class="selection-item-label">{{allLabel}}</text>
           <view class="selection-item-check {{!selectedId ? 'selected' : ''}}">
-            <ui-icon wx:if="{{!selectedId}}" name="check" size="{{24}}" color="#ffffff" />
+            <ui-icon wx:if="{{!selectedId}}" name="check" size="{{24}}" color="var(--side-menu-inverse)" />
           </view>
         </button>
         <button
@@ -112,11 +113,11 @@
         >
           <view class="selection-item-icon">
             <image wx:if="{{item.icon}}" class="selection-item-image" src="{{item.icon}}" mode="aspectFit" />
-            <ui-icon wx:else name="{{triggerIcon}}" size="{{29}}" color="{{selectedId === item.id ? '#529917' : '#687169'}}" />
+            <ui-icon wx:else name="{{triggerIcon}}" size="{{29}}" color="{{selectedId === item.id ? 'var(--side-menu-primary)' : 'var(--side-menu-text-secondary)'}}" />
           </view>
           <text class="selection-item-label">{{item.name}}</text>
           <view class="selection-item-check {{selectedId === item.id ? 'selected' : ''}}">
-            <ui-icon wx:if="{{selectedId === item.id}}" name="check" size="{{24}}" color="#ffffff" />
+            <ui-icon wx:if="{{selectedId === item.id}}" name="check" size="{{24}}" color="var(--side-menu-inverse)" />
           </view>
         </button>
         <view class="selection-list-bottom-space"></view>
@@ -124,3 +125,4 @@
     </block>
   </view>
 </view>
+</root-portal>

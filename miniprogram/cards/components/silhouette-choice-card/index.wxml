@@ -49,13 +49,13 @@
       style="background:conic-gradient(#ffffff {{audioProgressDeg}}deg,rgba(255,255,255,.28) 0)"
     >
       <view class="mini-audio-inner" style="background:{{primary}}">
-        <ui-icon name="volume-high" size="{{26}}" color="#ffffff"></ui-icon>
+        <ui-icon name="volume-high" size="{{26}}" color="var(--color-text-inverse)"></ui-icon>
       </view>
     </view>
     <text>{{content.scienceText || selectedOption.explanation || '回答正确，真棒！'}}</text>
   </view>
   <view wx:if="{{!preview && phase === 'completed'}}" class="restart" style="background:{{primary}}" catchtap="restart">
-    <ui-icon name="restart" size="{{32}}" color="#ffffff"></ui-icon>
+    <ui-icon name="restart" size="{{32}}" color="var(--color-text-inverse)"></ui-icon>
   </view>
   <view wx:if="{{!preview && phase === 'shuffling'}}" class="shuffle-icon" style="color:{{primary}}">
     <ui-icon name="refresh" size="{{34}}" color="{{primary}}"></ui-icon>

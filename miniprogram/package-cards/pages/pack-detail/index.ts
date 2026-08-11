@@ -1,10 +1,14 @@
 import {
   createCardPackReview,
+  dislikeReview,
   getCardPackCatalogue,
   getCardPackDetail,
   getCardPackReviews,
+  likeReview,
   setCardPackFavorite,
+  undislikeReview,
   unlockCardPack,
+  unlikeReview,
   type CardCatalogue,
   type CardPackDetail,
   type CardPackReview,
@@ -16,6 +20,7 @@ import {
   shouldRefreshData,
   type DataDomain,
 } from "../../../stores/dataInvalidation";
+import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
 
 const PACK_DETAIL_DATA_DOMAINS: DataDomain[] = [
   "account",
@@ -41,6 +46,10 @@ Page({
     detailBackground: "",
     reviews: [] as CardPackReview[],
     reviewsLoading: false,
+    reviewsLoadingMore: false,
+    reviewsPage: 1,
+    reviewsTotalPages: 1,
+    reviewActionId: "",
     reviewRating: 5,
     reviewComment: "",
     reviewSubmitting: false,
@@ -89,8 +98,10 @@ Page({
       const profile = await getProfile();
       const isVip = profile.vip?.isVip === true;
       const detail = this.data.detail;
+      bindThemeBackgrounds(this, profile.currentTheme?.config, {
+        detailBackground: "detail_bg",
+      });
       this.setData({
-        detailBackground: profile.currentTheme?.config?.detail_bg || "",
         isVip,
         userBalance: Math.max(0, Number(profile.balance || 0)),
         unlockProfileLoaded: true,
@@ -110,21 +121,93 @@ Page({
       | "comments";
     if (!activeTab || activeTab === this.data.activeTab) return;
     this.setData({ activeTab });
-    if (activeTab === "comments" && !this.data.reviews.length) void this.loadReviews();
+    if (activeTab === "comments" && !this.data.reviews.length) void this.loadReviews(true);
   },
-  async loadReviews() {
+  async loadReviews(reset = true) {
     if (!this.data.id) return;
-    this.setData({ reviewsLoading: true });
+    const page = reset ? 1 : this.data.reviewsPage + 1;
+    if (!reset && (
+      this.data.reviewsLoadingMore ||
+      page > this.data.reviewsTotalPages
+    )) return;
+    this.setData(reset ? { reviewsLoading: true } : { reviewsLoadingMore: true });
     try {
-      const result = await getCardPackReviews(this.data.id, 1, 30);
-      this.setData({ reviews: result.items ?? [] });
+      const result = await getCardPackReviews(this.data.id, page, 10);
+      const items = result.items ?? [];
+      const existingIds = new Set(this.data.reviews.map((item) => item.id));
+      this.setData({
+        reviews: reset
+          ? items
+          : [...this.data.reviews, ...items.filter((item) => !existingIds.has(item.id))],
+        reviewsPage: result.page ?? page,
+        reviewsTotalPages: result.totalPages ?? 1,
+      });
     } catch (error) {
       wx.showToast({
         title: error instanceof Error ? error.message : "评论加载失败",
         icon: "none",
       });
     } finally {
-      this.setData({ reviewsLoading: false });
+      this.setData({ reviewsLoading: false, reviewsLoadingMore: false });
+    }
+  },
+  loadMoreReviews() {
+    void this.loadReviews(false);
+  },
+  async toggleReviewLike(event: WechatMiniprogram.TouchEvent) {
+    const id = String(event.currentTarget.dataset.id ?? "");
+    const review = this.data.reviews.find((item) => item.id === id);
+    if (!review || this.data.reviewActionId) return;
+    this.setData({ reviewActionId: id });
+    try {
+      const result = review.isLikedByCurrentUser
+        ? await unlikeReview(id)
+        : await likeReview(id);
+      if (result.success === false) throw new Error(result.message || "点赞失败");
+      const nextLiked = !review.isLikedByCurrentUser;
+      this.setData({
+        reviews: this.data.reviews.map((item) => item.id === id ? {
+          ...item,
+          isLikedByCurrentUser: nextLiked,
+          likesCount: Math.max(0, Number(item.likesCount || 0) + (nextLiked ? 1 : -1)),
+          isDislikedByCurrentUser: nextLiked ? false : item.isDislikedByCurrentUser,
+          dislikesCount: nextLiked && item.isDislikedByCurrentUser
+            ? Math.max(0, Number(item.dislikesCount || 0) - 1)
+            : Number(item.dislikesCount || 0),
+        } : item),
+      });
+    } catch (error) {
+      wx.showToast({ title: error instanceof Error ? error.message : "点赞失败", icon: "none" });
+    } finally {
+      this.setData({ reviewActionId: "" });
+    }
+  },
+  async toggleReviewDislike(event: WechatMiniprogram.TouchEvent) {
+    const id = String(event.currentTarget.dataset.id ?? "");
+    const review = this.data.reviews.find((item) => item.id === id);
+    if (!review || this.data.reviewActionId) return;
+    this.setData({ reviewActionId: id });
+    try {
+      const result = review.isDislikedByCurrentUser
+        ? await undislikeReview(id)
+        : await dislikeReview(id);
+      if (result.success === false) throw new Error(result.message || "操作失败");
+      const nextDisliked = !review.isDislikedByCurrentUser;
+      this.setData({
+        reviews: this.data.reviews.map((item) => item.id === id ? {
+          ...item,
+          isDislikedByCurrentUser: nextDisliked,
+          dislikesCount: Math.max(0, Number(item.dislikesCount || 0) + (nextDisliked ? 1 : -1)),
+          isLikedByCurrentUser: nextDisliked ? false : item.isLikedByCurrentUser,
+          likesCount: nextDisliked && item.isLikedByCurrentUser
+            ? Math.max(0, Number(item.likesCount || 0) - 1)
+            : Number(item.likesCount || 0),
+        } : item),
+      });
+    } catch (error) {
+      wx.showToast({ title: error instanceof Error ? error.message : "操作失败", icon: "none" });
+    } finally {
+      this.setData({ reviewActionId: "" });
     }
   },
   chooseRating(event: WechatMiniprogram.TouchEvent) {
@@ -145,7 +228,7 @@ Page({
       await createCardPackReview(this.data.id, this.data.reviewRating, comment);
       wx.showToast({ title: "评价已提交", icon: "success" });
       this.setData({ reviewComment: "", canSubmitReview: false });
-      await this.loadReviews();
+      await this.loadReviews(true);
       await this.load();
     } catch (error) {
       wx.showToast({
@@ -226,8 +309,13 @@ Page({
       this.confirmUnlock();
       return;
     }
+    const lastStudiedCardId = state.detail?.userStudyProgress?.lastStudiedCardId;
     wx.navigateTo({
-      url: `/package-cards/pages/study/index?packId=${encodeURIComponent(state.id)}`,
+      url:
+        `/package-cards/pages/study/index?packId=${encodeURIComponent(state.id)}` +
+        (lastStudiedCardId
+          ? `&cardId=${encodeURIComponent(lastStudiedCardId)}`
+          : ""),
     });
   },
 
@@ -248,14 +336,16 @@ Page({
     const state = this.data as any;
     const id = String(event.currentTarget.dataset.id ?? "");
     if (!id) return;
-    if (!state.canStudy) {
+    const card = (state.catalogue as CardCatalogue[]).find((item) => item.id === id);
+    if (!state.canStudy && !card?.isPreview) {
       this.confirmUnlock();
       return;
     }
     wx.navigateTo({
       url:
         `/package-cards/pages/study/index?packId=${encodeURIComponent(state.id)}` +
-        `&cardId=${encodeURIComponent(id)}`,
+        `&cardId=${encodeURIComponent(id)}` +
+        (!state.canStudy ? "&preview=1" : ""),
     });
   },
   openTeacher() {

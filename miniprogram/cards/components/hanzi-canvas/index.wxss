@@ -1,7 +1,7 @@
 :host { display:block; width:100%; height:100%; }
-.hanzi-target { position:relative; width:100%; height:100%; overflow:hidden; border:3rpx solid #d9e5cf; border-radius:24rpx; background:#ffffff; box-sizing:border-box; }
+.hanzi-target { position:relative; width:100%; height:100%; overflow:hidden; border:3rpx solid #d9e5cf; border-radius:24rpx; background:var(--color-card); box-sizing:border-box; }
 .canvas { position:absolute; z-index:2; inset:0; width:100%; height:100%; }
 .grid { position:absolute; z-index:1; opacity:.58; }
 .horizontal { left:0; right:0; top:50%; border-top:2rpx dashed #d0d9c8; }
 .vertical { top:0; bottom:0; left:50%; border-left:2rpx dashed #d0d9c8; }
-.error { position:absolute; z-index:3; inset:0; display:flex; align-items:center; justify-content:center; color:#a54343; font-size:24rpx; background:rgba(255,255,255,.92); }
+.error { position:absolute; z-index:3; inset:0; display:flex; align-items:center; justify-content:center; color:#a54343; font-size:24rpx; background: var(--color-surface-translucent); }

@@ -17,18 +17,18 @@
       <view class="purchase-header">
         <view class="purchase-heading">
           <view class="purchase-heading-icon">
-            <ui-icon name="crown" size="{{44}}" color="#f39a13" />
+            <ui-icon name="crown" size="{{44}}" color="var(--color-warning)" />
           </view>
           <view class="purchase-heading-copy">
             <text class="purchase-title">{{mode === 'vip' ? (isVip ? 'VIP 会员' : '开通 VIP 会员') : '会员与咔豆'}}</text>
             <text class="purchase-subtitle">{{mode === 'vip' ? (isVip ? '会员权益已生效，VIP 商品不再重复展示' : '解锁卡包免费看、每日咔豆领取、专属 AI 模板') : '固定时长 VIP 与咔豆购买，权益发放至当前账号'}}</text>
           </view>
           <button class="purchase-close" bindtap="close" disabled="{{submittingId}}" aria-label="关闭">
-            <ui-icon name="close" size="{{31}}" color="#69726b" />
+            <ui-icon name="close" size="{{31}}" color="var(--color-text-secondary)" />
           </button>
         </view>
         <view class="balance-row">
-          <ui-icon name="wallet" size="{{31}}" color="#529917" />
+          <ui-icon name="wallet" size="{{31}}" color="var(--color-primary)" />
           <text>当前余额 {{balance || 0}} 咔豆</text>
         </view>
       </view>
@@ -38,12 +38,12 @@
       <view wx:if="{{reason}}" class="purchase-reason">{{reason}}</view>
 
       <view wx:if="{{isVip}}" class="vip-current-card">
-        <view class="vip-current-icon"><ui-icon name="check-circle" size="{{36}}" color="#529917" /></view>
+        <view class="vip-current-icon"><ui-icon name="check-circle" size="{{36}}" color="var(--color-primary)" /></view>
         <view class="vip-current-copy">
           <text class="vip-current-title">当前账号已开通 VIP</text>
           <text class="vip-current-subtitle">{{vipStatusText}}</text>
         </view>
-        <view class="vip-current-badge"><ui-icon name="crown" size="{{22}}" color="#ffffff" /><text>VIP</text></view>
+        <view class="vip-current-badge"><ui-icon name="crown" size="{{22}}" color="var(--color-text-inverse)" /><text>VIP</text></view>
       </view>
 
       <view wx:if="{{mode === 'vip' || isVip}}" class="vip-benefits-section">
@@ -52,15 +52,15 @@
           <text class="vip-benefits-hint">支付并发放成功后生效</text>
         </view>
         <view class="vip-benefits-grid">
-          <view class="vip-benefit-item"><ui-icon name="cards-outline" size="{{27}}" color="#f39a13" /><text>卡包免费观看</text></view>
-          <view class="vip-benefit-item"><ui-icon name="gift-outline" size="{{27}}" color="#f39a13" /><text>{{dailyRewardAmount > 0 ? '每日领取 ' + dailyRewardAmount + ' 咔豆' : '每日咔豆领取'}}</text></view>
-          <view class="vip-benefit-item"><ui-icon name="star-four-points" size="{{27}}" color="#f39a13" /><text>专属 AI 模板</text></view>
-          <view class="vip-benefit-item"><ui-icon name="robot-outline" size="{{27}}" color="#f39a13" /><text>AI 制卡助手</text></view>
+          <view class="vip-benefit-item"><ui-icon name="cards-outline" size="{{27}}" color="var(--color-warning)" /><text>卡包免费观看</text></view>
+          <view class="vip-benefit-item"><ui-icon name="gift-outline" size="{{27}}" color="var(--color-warning)" /><text>{{dailyRewardAmount > 0 ? '每日领取 ' + dailyRewardAmount + ' 咔豆' : '每日咔豆领取'}}</text></view>
+          <view class="vip-benefit-item"><ui-icon name="star-four-points" size="{{27}}" color="var(--color-warning)" /><text>专属 AI 模板</text></view>
+          <view class="vip-benefit-item"><ui-icon name="robot-outline" size="{{27}}" color="var(--color-warning)" /><text>AI 制卡助手</text></view>
         </view>
       </view>
 
       <view wx:if="{{!capabilitySupported}}" class="purchase-state unsupported-state">
-        <ui-icon name="alert-circle-outline" size="{{52}}" color="#d17b20" />
+        <ui-icon name="alert-circle-outline" size="{{52}}" color="var(--color-warning)" />
         <text class="state-title">当前设备暂不支持</text>
         <text class="state-copy">{{capabilityReason}}</text>
         <button class="state-action" bindtap="explainUnsupported">查看说明</button>
@@ -141,18 +141,18 @@
 
     <view wx:if="{{capabilitySupported && (products.length || identityStatus !== 'ready')}}" class="purchase-footer safe-bottom">
       <view wx:if="{{identityStatus === 'checking' || identityStatus === 'idle'}}" class="payment-identity-notice checking">
-        <ui-icon name="shield-account-outline" size="{{29}}" color="#6d786f" />
+        <ui-icon name="shield-account-outline" size="{{29}}" color="var(--color-text-secondary)" />
         <text>正在验证当前微信支付账号…</text>
       </view>
       <view wx:elif="{{identityStatus === 'conflict'}}" class="payment-identity-notice conflict">
-        <ui-icon name="alert-circle-outline" size="{{31}}" color="#bd554f" />
+        <ui-icon name="alert-circle-outline" size="{{31}}" color="var(--color-error)" />
         <view class="identity-notice-content">
           <text class="identity-notice-title">微信账号与当前登录账号不一致</text>
           <text class="identity-notice-copy">{{identityMessage}}</text>
         </view>
       </view>
       <view wx:elif="{{identityStatus === 'error'}}" class="payment-identity-notice error">
-        <ui-icon name="alert-circle-outline" size="{{31}}" color="#b57819" />
+        <ui-icon name="alert-circle-outline" size="{{31}}" color="var(--color-warning)" />
         <view class="identity-notice-content">
           <text class="identity-notice-title">微信支付账号验证失败</text>
           <text class="identity-notice-copy">{{identityMessage}}</text>
@@ -165,8 +165,8 @@
         loading="{{submittingId !== '' || identityStatus === 'checking'}}"
         disabled="{{identityStatus !== 'ready' || !selectedProductId || submittingId}}"
       >
-        <ui-icon wx:if="{{!submittingId && identityStatus === 'ready' && selectedKind === 'vip'}}" name="crown" size="{{34}}" color="#ffffff" />
-        <ui-icon wx:elif="{{!submittingId && identityStatus === 'ready'}}" name="wallet" size="{{34}}" color="#ffffff" />
+        <ui-icon wx:if="{{!submittingId && identityStatus === 'ready' && selectedKind === 'vip'}}" name="crown" size="{{34}}" color="var(--color-text-inverse)" />
+        <ui-icon wx:elif="{{!submittingId && identityStatus === 'ready'}}" name="wallet" size="{{34}}" color="var(--color-text-inverse)" />
         <text>{{submittingId ? '正在处理…' : identityStatus === 'checking' || identityStatus === 'idle' ? '正在验证微信支付账号…' : identityStatus === 'conflict' ? '请切换到微信账号进行支付' : identityStatus === 'error' ? '微信支付账号验证失败' : primaryLabel}}</text>
       </button>
       <text class="purchase-kind-note">

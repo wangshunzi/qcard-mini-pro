@@ -3,14 +3,14 @@
   <view class="selection-panel safe-bottom" catchtap="preventClose">
     <view class="selection-header" style="padding-top:{{safeTopPx}}px;">
       <view class="selection-mark">
-        <ui-icon name="{{triggerIcon}}" size="{{40}}" color="#529917" />
+        <ui-icon name="{{triggerIcon}}" size="{{40}}" color="var(--color-primary)" />
       </view>
       <view class="selection-copy">
         <text class="selection-title">{{title}}</text>
         <text class="selection-subtitle">{{subtitle}}</text>
       </view>
       <button class="selection-close" bindtap="close" aria-label="关闭选择面板">
-        <ui-icon name="close" size="{{35}}" color="#687169" />
+        <ui-icon name="close" size="{{35}}" color="var(--color-text-secondary)" />
       </button>
     </view>
 
@@ -23,11 +23,11 @@
         hover-class="selection-hover"
       >
         <view class="selection-item-icon">
-          <ui-icon name="view-grid-outline" size="{{31}}" color="{{!selectedId ? '#529917' : '#687169'}}" />
+          <ui-icon name="view-grid-outline" size="{{31}}" color="{{!selectedId ? 'var(--color-primary)' : 'var(--color-text-secondary)'}}" />
         </view>
         <text class="selection-item-label">{{allLabel}}</text>
         <view class="selection-check {{!selectedId ? 'selected' : ''}}">
-          <ui-icon wx:if="{{!selectedId}}" name="check" size="{{24}}" color="#ffffff" />
+          <ui-icon wx:if="{{!selectedId}}" name="check" size="{{24}}" color="var(--color-text-inverse)" />
         </view>
       </button>
 
@@ -41,11 +41,11 @@
       >
         <view class="selection-item-icon">
           <image wx:if="{{item.icon}}" class="selection-item-image" src="{{item.icon}}" mode="aspectFit" />
-          <ui-icon wx:else name="{{triggerIcon}}" size="{{29}}" color="{{selectedId === item.id ? '#529917' : '#687169'}}" />
+          <ui-icon wx:else name="{{triggerIcon}}" size="{{29}}" color="{{selectedId === item.id ? 'var(--color-primary)' : 'var(--color-text-secondary)'}}" />
         </view>
         <text class="selection-item-label">{{item.name}}</text>
         <view class="selection-check {{selectedId === item.id ? 'selected' : ''}}">
-          <ui-icon wx:if="{{selectedId === item.id}}" name="check" size="{{24}}" color="#ffffff" />
+          <ui-icon wx:if="{{selectedId === item.id}}" name="check" size="{{24}}" color="var(--color-text-inverse)" />
         </view>
       </button>
       <view class="selection-bottom-space"></view>

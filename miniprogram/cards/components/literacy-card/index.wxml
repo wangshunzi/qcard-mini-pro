@@ -12,7 +12,7 @@
       >{{item.pinyin}}</view>
     </view>
     <view wx:if="{{variant.conversation && variant.conversation.length && !preview}}" class="conversation-button" bindtap="openConversation">
-      <ui-icon name="message-text-outline" size="{{32}}" color="#ffffff"></ui-icon>
+      <ui-icon name="message-text-outline" size="{{32}}" color="var(--color-text-inverse)"></ui-icon>
     </view>
   </view>
 
@@ -82,10 +82,10 @@
         <view class="meaning-card {{playingSource === variant.meaning_audio ? 'speaking-card' : ''}}" bindtap="playMeaning">
           <view class="meaning-heading">
             <view class="meaning-heading-left">
-              <ui-icon name="school-outline" size="{{26}}" color="#529917"></ui-icon>
+              <ui-icon name="school-outline" size="{{26}}" color="var(--color-primary)"></ui-icon>
               <text>释义</text>
             </view>
-            <ui-icon wx:if="{{variant.meaning_audio}}" class="{{playingSource === variant.meaning_audio ? 'speaking' : ''}}" name="volume-high" size="{{28}}" color="#529917"></ui-icon>
+            <ui-icon wx:if="{{variant.meaning_audio}}" class="{{playingSource === variant.meaning_audio ? 'speaking' : ''}}" name="volume-high" size="{{28}}" color="var(--color-primary)"></ui-icon>
           </view>
           <text class="meaning">{{variant.meaning}}</text>
         </view>
@@ -105,7 +105,7 @@
                   <text class="phrase-character">{{segment.character}}</text>
                 </view>
               </view>
-              <ui-icon wx:if="{{item.audio_url}}" name="volume-high" size="{{26}}" color="#529917"></ui-icon>
+              <ui-icon wx:if="{{item.audio_url}}" name="volume-high" size="{{26}}" color="var(--color-primary)"></ui-icon>
             </view>
           </view>
         </view>
@@ -130,7 +130,7 @@
             <view wx:if="{{index % 2 === 0}}" class="conversation-avatar-column">
               <image class="conversation-avatar" src="{{conversationAssets.child}}" mode="aspectFill"></image>
               <view wx:if="{{item.audio_url}}" class="conversation-audio">
-                <ui-icon name="volume-high" size="{{25}}" color="#529917"></ui-icon>
+                <ui-icon name="volume-high" size="{{25}}" color="var(--color-primary)"></ui-icon>
               </view>
             </view>
             <view class="conversation-bubble">
@@ -149,7 +149,7 @@
             <view wx:if="{{index % 2 !== 0}}" class="conversation-avatar-column">
               <image class="conversation-avatar" src="{{conversationAssets.mama}}" mode="aspectFill"></image>
               <view wx:if="{{item.audio_url}}" class="conversation-audio">
-                <ui-icon name="volume-high" size="{{25}}" color="#ffffff"></ui-icon>
+                <ui-icon name="volume-high" size="{{25}}" color="var(--color-text-inverse)"></ui-icon>
               </view>
             </view>
           </view>

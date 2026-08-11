@@ -175,6 +175,11 @@ export interface CardPackReview {
   rating: number;
   comment: string;
   studiedCards?: number;
+  likesCount: number;
+  dislikesCount: number;
+  isCurrentUserReview: boolean;
+  isLikedByCurrentUser: boolean;
+  isDislikedByCurrentUser: boolean;
   createdAt: string;
   createdAtText?: string;
   user: {
@@ -214,6 +219,38 @@ export function createCardPackReview(id: string, rating: number, comment: string
     path: `/api/client/card-packs/${encodeURIComponent(id)}/reviews`,
     method: "POST",
     data: { rating, comment },
+  });
+}
+
+export function likeReview(reviewId: string) {
+  return request<{ success?: boolean; message?: string }, Record<string, never>>({
+    path: `/api/client/card-packs/reviews/${encodeURIComponent(reviewId)}/like`,
+    method: "POST",
+    data: {},
+  });
+}
+
+export function unlikeReview(reviewId: string) {
+  return request<{ success?: boolean; message?: string }, Record<string, never>>({
+    path: `/api/client/card-packs/reviews/${encodeURIComponent(reviewId)}/like`,
+    method: "DELETE",
+    data: {},
+  });
+}
+
+export function dislikeReview(reviewId: string) {
+  return request<{ success?: boolean; message?: string }, Record<string, never>>({
+    path: `/api/client/card-packs/reviews/${encodeURIComponent(reviewId)}/dislike`,
+    method: "POST",
+    data: {},
+  });
+}
+
+export function undislikeReview(reviewId: string) {
+  return request<{ success?: boolean; message?: string }, Record<string, never>>({
+    path: `/api/client/card-packs/reviews/${encodeURIComponent(reviewId)}/dislike`,
+    method: "DELETE",
+    data: {},
   });
 }
 

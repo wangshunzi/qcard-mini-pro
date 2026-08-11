@@ -3,6 +3,7 @@ import {
   createRenderRows,
   initializeFormData,
   resolveExpression,
+  shouldApplyDefaultsForSync,
   validateRows,
   type FormSchema,
 } from "../miniprogram/components/schema-form/runtime";
@@ -115,6 +116,22 @@ describe("native schema form compatibility", () => {
       count: 2,
       sound: true,
     });
+  });
+
+  it("applies defaults once without restoring values that the user clears", () => {
+    expect(shouldApplyDefaultsForSync(true, true, undefined)).toBe(true);
+    expect(shouldApplyDefaultsForSync(true, false, true)).toBe(false);
+    expect(shouldApplyDefaultsForSync(false, false, true)).toBe(false);
+    expect(shouldApplyDefaultsForSync(true, false, false)).toBe(true);
+
+    const initial = initializeFormData(clientSchema, {}, true);
+    expect(initial.prompt).toBe("童趣风格");
+
+    const cleared = { ...initial };
+    delete cleared.prompt;
+    expect(initializeFormData(clientSchema, cleared, false)).not.toHaveProperty(
+      "prompt",
+    );
   });
 
   it("matches Client required, max-length, hidden and disabled behavior", () => {

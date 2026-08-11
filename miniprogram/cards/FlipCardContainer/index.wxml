@@ -34,7 +34,7 @@
     </view>
   </view>
   <button wx:if="{{hasBack && !hideFlipButton}}" class="flip-button" bindtap="flip" aria-label="{{isFlipped ? '显示正面' : '显示背面'}}">
-    <ui-icon name="swap-horizontal" size="{{38}}" color="#333333"></ui-icon>
+    <ui-icon name="swap-horizontal" size="{{38}}" color="var(--color-text)"></ui-icon>
   </button>
 </view>
 </view>

@@ -32,3 +32,14 @@ export function updateChallengeConfig(data: ChallengeConfig) {
     return config;
   });
 }
+
+export function resetChallengeConfig() {
+  return request<ChallengeConfig, Record<string, never>>({
+    path: "/api/client/challenge-config/reset",
+    method: "POST",
+    data: {},
+  }).then((config) => {
+    invalidateData("challenge");
+    return config;
+  });
+}

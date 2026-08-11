@@ -22,6 +22,7 @@ import {
   shouldRefreshData,
   type DataDomain,
 } from "../../stores/dataInvalidation";
+import { bindThemeBackgrounds } from "../../design-system/themeBackground";
 
 const PROFILE_DATA_DOMAINS: DataDomain[] = [
   "account",
@@ -39,6 +40,7 @@ interface ProfileCardFace extends PrivateCardFace {
 
 interface DisplayFavoriteCard extends FavoriteCard {
   previewCard: CardData;
+  sourcePage: number;
 }
 
 interface DisplayFavoritePack extends CardPackSummary {
@@ -84,7 +86,7 @@ function privateFaceActionId(event: PrivateFaceActionEvent) {
   );
 }
 
-function withFavoritePreview(card: FavoriteCard): DisplayFavoriteCard | null {
+function withFavoritePreview(card: FavoriteCard, sourcePage = 1): DisplayFavoriteCard | null {
   if (
     !isMiniProgramCardType(card.frontFace.type) ||
     !validateCardData(card.frontFace.type, card.frontFace.data)
@@ -95,6 +97,7 @@ function withFavoritePreview(card: FavoriteCard): DisplayFavoriteCard | null {
       type: card.frontFace.type as CardData["type"],
       data: card.frontFace.data,
     },
+    sourcePage,
   };
 }
 
@@ -140,6 +143,7 @@ function formatStudyTime(seconds: number) {
 Page({
   data: {
     navScrollTop: 0,
+    profileHeaderTop: 72,
     profile: null as UserProfile | null,
     recentCards: [] as ProfileCardFace[],
     loading: true,
@@ -157,7 +161,17 @@ Page({
     favoritesMode: "packs" as "packs" | "cards",
     favoritePacks: [] as DisplayFavoritePack[],
     favoriteCards: [] as DisplayFavoriteCard[],
+    feedbackPage: 1,
+    feedbackTotalPages: 1,
+    feedbackTotal: 0,
+    favoritePacksPage: 1,
+    favoritePacksTotalPages: 1,
+    favoritePacksTotal: 0,
+    favoriteCardsPage: 1,
+    favoriteCardsTotalPages: 1,
+    favoriteCardsTotal: 0,
     panelLoading: false,
+    panelLoadingMore: false,
     claimingDailyReward: false,
     coinHistoryOpen: false,
     unlockPanelOpen: false,
@@ -170,6 +184,22 @@ Page({
 
   onPageScroll(event: { scrollTop: number }) {
     syncNavigationScroll(this, event.scrollTop);
+  },
+
+  onNavigationMetrics(
+    event: WechatMiniprogram.CustomEvent<{ totalHeight?: number }>,
+  ) {
+    this.setData({
+      profileHeaderTop: Math.max(64, Math.ceil(Number(event.detail?.totalHeight || 64) + 8)),
+    });
+  },
+
+  onReachBottom() {
+    if (this.data.activeTab === "feedback") {
+      void this.loadFeedbackCards(false);
+    } else if (this.data.activeTab === "favorited") {
+      void this.loadFavorites(false);
+    }
   },
 
   onShow() {
@@ -200,8 +230,8 @@ Page({
 
   async load() {
     markDataFresh(this as any, PROFILE_DATA_DOMAINS);
-    (this as any)._loadedFeedbackStatuses = new Set<string>();
-    (this as any)._loadedFavoriteModes = new Set<string>();
+    (this as any)._feedbackPanelCache = {};
+    (this as any)._favoritePanelCache = {};
     this.clearPrivateFacePolling();
     this.setData({ loading: true, error: "" });
     try {
@@ -210,12 +240,14 @@ Page({
         getRecentPrivateCardFaces(),
       ]);
       const recentCards = (privateFaces.items ?? []).map(withPrivatePreview);
+      bindThemeBackgrounds(this, profile.currentTheme?.config, {
+        profileBackground: "profile_bg",
+      });
       this.setData({
         profile,
         recentCards,
         studyTimeText: formatStudyTime(profile.totalStudyTime),
         isVip: profile.vip?.isVip === true,
-        profileBackground: profile.currentTheme?.config?.profile_bg || "",
       }, () => this.schedulePrivateFacePolling());
       if (this.data.activeTab === "feedback" || this.data.activeTab === "favorited") {
         await this.loadPanel();
@@ -360,70 +392,174 @@ Page({
 
   async loadPanel() {
     if (this.data.activeTab === "feedback") {
-      const loaded = ((this as any)._loadedFeedbackStatuses as Set<string> | undefined)
-        ?.has(this.data.feedbackStatus);
-      if (!loaded) await this.loadFeedbackCards();
+      const cache = (this as any)._feedbackPanelCache?.[this.data.feedbackStatus];
+      if (cache) {
+        this.setData({
+          feedbackCards: cache.items,
+          feedbackPage: cache.page,
+          feedbackTotalPages: cache.totalPages,
+          feedbackTotal: cache.total,
+        });
+      } else {
+        await this.loadFeedbackCards(true);
+      }
     }
     if (this.data.activeTab === "favorited") {
-      const loaded = ((this as any)._loadedFavoriteModes as Set<string> | undefined)
-        ?.has(this.data.favoritesMode);
-      if (!loaded) await this.loadFavorites();
+      const cache = (this as any)._favoritePanelCache?.[this.data.favoritesMode];
+      if (cache) {
+        this.setData(this.data.favoritesMode === "packs"
+          ? {
+              favoritePacks: cache.items,
+              favoritePacksPage: cache.page,
+              favoritePacksTotalPages: cache.totalPages,
+              favoritePacksTotal: cache.total,
+            }
+          : {
+              favoriteCards: cache.items,
+              favoriteCardsPage: cache.page,
+              favoriteCardsTotalPages: cache.totalPages,
+              favoriteCardsTotal: cache.total,
+            });
+      } else {
+        await this.loadFavorites(true);
+      }
     }
   },
 
-  async loadFeedbackCards() {
-    this.setData({ panelLoading: true });
+  async loadFeedbackCards(reset = true) {
+    if (this.data.panelLoading || this.data.panelLoadingMore) return;
+    if (!reset && this.data.feedbackPage >= this.data.feedbackTotalPages) return;
+    const page = reset ? 1 : this.data.feedbackPage + 1;
+    const status = this.data.feedbackStatus;
+    this.setData(reset ? { panelLoading: true } : { panelLoadingMore: true });
     try {
       const result = await getRecentPrivateCardFaces(20, {
         hasFeedback: true,
         feedbackStatus:
-          this.data.feedbackStatus === "all" ? undefined : this.data.feedbackStatus,
-      });
-      const loaded = ((this as any)._loadedFeedbackStatuses as Set<string> | undefined)
-        ?? new Set<string>();
-      loaded.add(this.data.feedbackStatus);
-      (this as any)._loadedFeedbackStatuses = loaded;
-      this.setData({ feedbackCards: (result.items ?? []).map(withPrivatePreview) });
+          status === "all" ? undefined : status,
+      }, page);
+      const incoming = (result.items ?? []).map(withPrivatePreview);
+      const previous = (this as any)._feedbackPanelCache?.[status]?.items ?? [];
+      const existingIds = new Set(previous.map((item: ProfileCardFace) => item.id));
+      const items = reset
+        ? incoming
+        : [...previous, ...incoming.filter((item) => !existingIds.has(item.id))];
+      const cache = (this as any)._feedbackPanelCache ?? {};
+      cache[status] = {
+        items,
+        page: Math.max(1, Number(result.page) || page),
+        totalPages: Math.max(1, Number(result.totalPages) || 1),
+        total: Math.max(items.length, Number(result.total) || 0),
+      };
+      (this as any)._feedbackPanelCache = cache;
+      if (this.data.feedbackStatus === status) {
+        this.setData({
+          feedbackCards: items,
+          feedbackPage: cache[status].page,
+          feedbackTotalPages: cache[status].totalPages,
+          feedbackTotal: cache[status].total,
+        });
+      }
     } catch (error) {
       wx.showToast({
         title: error instanceof Error ? error.message : "反馈记录加载失败",
         icon: "none",
       });
     } finally {
-      this.setData({ panelLoading: false });
+      this.setData({ panelLoading: false, panelLoadingMore: false });
+      if (
+        this.data.activeTab === "feedback" &&
+        this.data.feedbackStatus !== status
+      ) void this.loadPanel();
     }
   },
 
-  async loadFavorites() {
-    this.setData({ panelLoading: true });
+  loadMoreFeedbackCards() {
+    void this.loadFeedbackCards(false);
+  },
+
+  async loadFavorites(reset = true) {
+    if (this.data.panelLoading || this.data.panelLoadingMore) return;
+    const mode = this.data.favoritesMode;
+    const currentPage = mode === "packs"
+      ? this.data.favoritePacksPage
+      : this.data.favoriteCardsPage;
+    const totalPages = mode === "packs"
+      ? this.data.favoritePacksTotalPages
+      : this.data.favoriteCardsTotalPages;
+    if (!reset && currentPage >= totalPages) return;
+    const page = reset ? 1 : currentPage + 1;
+    this.setData(reset ? { panelLoading: true } : { panelLoadingMore: true });
     try {
-      if (this.data.favoritesMode === "packs") {
-        const result = await getFavoriteCardPacks(1, 20);
-        this.setData({
-          favoritePacks: (result.items ?? []).map((pack) =>
-            withFavoritePackDisplay(pack, this.data.isVip),
-          ),
-        });
+      if (mode === "packs") {
+        const result = await getFavoriteCardPacks(page, 20);
+        const incoming = (result.items ?? []).map((pack) =>
+          withFavoritePackDisplay(pack, this.data.isVip),
+        );
+        const cache = (this as any)._favoritePanelCache ?? {};
+        const previous = cache.packs?.items ?? [];
+        const existingIds = new Set(previous.map((item: DisplayFavoritePack) => item.id));
+        const items = reset
+          ? incoming
+          : [...previous, ...incoming.filter((item) => !existingIds.has(item.id))];
+        cache.packs = {
+          items,
+          page: Math.max(1, Number(result.page) || page),
+          totalPages: Math.max(1, Number(result.totalPages) || 1),
+          total: Math.max(items.length, Number(result.total) || 0),
+        };
+        (this as any)._favoritePanelCache = cache;
+        if (this.data.favoritesMode === mode) {
+          this.setData({
+            favoritePacks: items,
+            favoritePacksPage: cache.packs.page,
+            favoritePacksTotalPages: cache.packs.totalPages,
+            favoritePacksTotal: cache.packs.total,
+          });
+        }
       } else {
-        const result = await getFavoriteCards(1, 20);
-        this.setData({
-          favoriteCards: (result.items ?? [])
-            .map(withFavoritePreview)
-            .filter((item): item is DisplayFavoriteCard => item !== null),
-        });
+        const result = await getFavoriteCards(page, 20);
+        const incoming = (result.items ?? [])
+          .map((item) => withFavoritePreview(item, page))
+          .filter((item): item is DisplayFavoriteCard => item !== null);
+        const cache = (this as any)._favoritePanelCache ?? {};
+        const previous = cache.cards?.items ?? [];
+        const existingIds = new Set(previous.map((item: DisplayFavoriteCard) => item.id));
+        const items = reset
+          ? incoming
+          : [...previous, ...incoming.filter((item) => !existingIds.has(item.id))];
+        cache.cards = {
+          items,
+          page: Math.max(1, Number(result.page) || page),
+          totalPages: Math.max(1, Number(result.totalPages) || 1),
+          total: Math.max(items.length, Number(result.total) || 0),
+        };
+        (this as any)._favoritePanelCache = cache;
+        if (this.data.favoritesMode === mode) {
+          this.setData({
+            favoriteCards: items,
+            favoriteCardsPage: cache.cards.page,
+            favoriteCardsTotalPages: cache.cards.totalPages,
+            favoriteCardsTotal: cache.cards.total,
+          });
+        }
       }
-      const loaded = ((this as any)._loadedFavoriteModes as Set<string> | undefined)
-        ?? new Set<string>();
-      loaded.add(this.data.favoritesMode);
-      (this as any)._loadedFavoriteModes = loaded;
     } catch (error) {
       wx.showToast({
         title: error instanceof Error ? error.message : "收藏加载失败",
         icon: "none",
       });
     } finally {
-      this.setData({ panelLoading: false });
+      this.setData({ panelLoading: false, panelLoadingMore: false });
+      if (
+        this.data.activeTab === "favorited" &&
+        this.data.favoritesMode !== mode
+      ) void this.loadPanel();
     }
+  },
+
+  loadMoreFavorites() {
+    void this.loadFavorites(false);
   },
 
   copyId() {
@@ -452,6 +588,7 @@ Page({
     const payload: CardTransferPayload = {
       front: { type: card.type, data: card.data! },
       title: card.name,
+      genParams: card.genParams,
       privateFace: {
         id: card.id,
         templateId: card.templateId,
@@ -470,7 +607,11 @@ Page({
       return;
     }
     wx.navigateTo({
-      url: `/package-cards/pages/ai-generate/index?templateId=${encodeURIComponent(card.templateId)}`,
+      url:
+        `/package-cards/pages/ai-generate/index?templateId=${encodeURIComponent(card.templateId)}` +
+        (card.genParams
+          ? `&genParams=${encodeURIComponent(JSON.stringify(card.genParams))}`
+          : ""),
     });
   },
 
@@ -500,7 +641,11 @@ Page({
       return;
     }
     wx.navigateTo({
-      url: `/package-cards/pages/study/index?packId=${encodeURIComponent(id)}`,
+      url:
+        `/package-cards/pages/study/index?packId=${encodeURIComponent(id)}` +
+        (pack.userStudyProgress?.lastStudiedCardId
+          ? `&cardId=${encodeURIComponent(pack.userStudyProgress.lastStudiedCardId)}`
+          : ""),
     });
   },
 
@@ -554,11 +699,11 @@ Page({
       wx.showToast({ title: "该收藏卡片暂不支持预览", icon: "none" });
       return;
     }
-    const payload: CardTransferPayload = {
-      front: { type: card.frontFace.type, data: card.frontFace.data },
-      title: card.name,
-    };
-    this.setData({ cardPreviewOpen: true, cardPreviewPayload: payload });
+    wx.navigateTo({
+      url:
+        `/package-cards/pages/study/index?favorite=1&favoritePage=${card.sourcePage}` +
+        `&cardId=${encodeURIComponent(card.id)}`,
+    });
   },
 
   onCardPreviewShown() {

@@ -6,6 +6,7 @@ export interface ChallengeCard {
   id: string;
   name: string;
   isCompleted: boolean;
+  isFavorited: boolean;
   cardPack: {
     id: string;
     title: string;

@@ -8,12 +8,12 @@
       hover-class="drawer-selector-trigger-hover"
       aria-label="选择模板分类"
     >
-      <ui-icon name="clipboard-text-outline" size="{{27}}" color="#4f3218" />
+      <ui-icon name="clipboard-text-outline" size="{{27}}" color="var(--color-text)" />
       <text class="drawer-selector-trigger-label">{{selectedTemplateName}}</text>
-      <ui-icon class="drawer-selector-trigger-chevron" name="chevron-down" size="{{26}}" color="#303630" />
+      <ui-icon class="drawer-selector-trigger-chevron" name="chevron-down" size="{{26}}" color="var(--color-text)" />
     </button>
     <button slot="action" class="header-pill my-card-button" bindtap="openMyCards" hover-class="header-pill-hover">
-      <ui-icon name="cards-outline" size="{{29}}" color="#529917" />
+      <ui-icon name="cards-outline" size="{{29}}" color="var(--color-primary)" />
       <text>我的卡面</text>
     </button>
   </immersive-nav>
@@ -27,17 +27,17 @@
       <text class="header-subheading">优秀卡面案例，一键做同款</text>
     </view>
     <view class="search">
-      <ui-icon name="magnify" size="{{37}}" color="#5d5d5d" />
+      <ui-icon name="magnify" size="{{37}}" color="var(--color-text-secondary)" />
       <input value="{{query}}" bindinput="onInput" placeholder="搜索灵感卡面..." confirm-type="search" />
       <view wx:if="{{query}}" class="clear" bindtap="clearSearch" aria-label="清空搜索">
-        <ui-icon name="close-circle" size="{{34}}" color="#a9a9a9" />
+        <ui-icon name="close-circle" size="{{34}}" color="var(--color-text-muted)" />
       </view>
     </view>
   </view>
 
   <view class="content">
     <view wx:if="{{error && !loading}}" class="state">
-      <ui-icon name="alert-circle-outline" size="{{88}}" color="#eb711b" />
+      <ui-icon name="alert-circle-outline" size="{{88}}" color="var(--color-error)" />
       <text class="state-title">灵感加载失败</text>
       <text>{{error}}</text>
       <button bindtap="load" data-reset="{{true}}">重新加载</button>
@@ -76,8 +76,8 @@
               <view>{{item.previewQuestionCount || 3}} 题</view>
             </view>
             <view class="listening-thumbnail-title">{{item.previewTitle || item.name}}</view>
-            <view class="listening-thumbnail-play" style="background:#6f9b7b">
-              <ui-icon name="play" size="{{28}}" color="#ffffff" />
+            <view class="listening-thumbnail-play" style="background:var(--color-primary)">
+              <ui-icon name="play" size="{{28}}" color="var(--color-text-inverse)" />
             </view>
           </view>
         </view>
@@ -86,7 +86,7 @@
         </view>
         <view class="make-similar-mask">
           <button data-template-id="{{item.templateId}}" data-gen-params="{{item.genParams}}" catchtap="makeSimilar">
-            <ui-icon name="star-four-points" size="{{26}}" color="#27533b" />
+            <ui-icon name="star-four-points" size="{{26}}" color="var(--color-primary)" />
             <text>做同款</text>
           </button>
         </view>
@@ -94,7 +94,7 @@
     </view>
 
     <view wx:else class="state">
-      <ui-icon name="lightbulb-on-outline" size="{{88}}" color="#3f3f3f" />
+      <ui-icon name="lightbulb-on-outline" size="{{88}}" color="var(--color-text)" />
       <text class="state-title">{{query ? '没有找到相关卡片' : '暂时没有公开卡片'}}</text>
       <text>换个关键词或模板试试</text>
     </view>

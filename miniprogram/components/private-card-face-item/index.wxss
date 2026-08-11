@@ -14,7 +14,7 @@
   border: 1rpx solid var(--color-border);
   border-radius: 18rpx;
   box-sizing: border-box;
-  background: #ffffff;
+  background: var(--color-card);
   box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, .07);
   transition: transform .16s ease, opacity .16s ease;
 }
@@ -52,7 +52,7 @@
   align-items: center;
   justify-content: center;
   gap: 10rpx;
-  color: #ffffff;
+  color: var(--color-text-inverse);
   background: linear-gradient(145deg, #397054, #6d9c80);
   font-size: 19rpx;
 }
@@ -71,7 +71,7 @@
   justify-content: center;
   border: 0;
   border-radius: 50%;
-  color: #ffffff;
+  color: var(--color-text-inverse);
   background: var(--color-error);
   box-shadow: 0 5rpx 15rpx rgba(0, 0, 0, .2);
   line-height: 54rpx;
@@ -104,8 +104,8 @@
   align-items: center;
   justify-content: center;
   gap: 8rpx;
-  color: #27533b;
-  background: #d9efdf;
+  color:var(--color-primary);
+  background: var(--color-primary-soft);
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, .16);
   font-size: 22rpx;
   font-weight: 800;

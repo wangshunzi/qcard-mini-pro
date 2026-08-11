@@ -19,6 +19,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
+import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
 
 const MY_LEARNING_DATA_DOMAINS = [
   "account",
@@ -70,8 +71,10 @@ Page({
     void this.load(true);
     void getProfile()
       .then((profile) => {
+        bindThemeBackgrounds(this, profile.currentTheme?.config, {
+          heroBackground: "learning_bg",
+        });
         this.setData({
-          heroBackground: profile.currentTheme?.config?.learning_bg || "",
           userAvatar: profile.avatar || "",
         });
       })
@@ -90,8 +93,10 @@ Page({
       void this.load(true);
       void getProfile()
         .then((profile) => {
+          bindThemeBackgrounds(this, profile.currentTheme?.config, {
+            heroBackground: "learning_bg",
+          });
           this.setData({
-            heroBackground: profile.currentTheme?.config?.learning_bg || "",
             userAvatar: profile.avatar || "",
           });
         })
@@ -323,7 +328,15 @@ Page({
 
   startPublic(event: WechatMiniprogram.TouchEvent) {
     const id = String(event.currentTarget.dataset.id || "");
-    if (id) wx.navigateTo({ url: `/package-cards/pages/study/index?packId=${encodeURIComponent(id)}` });
+    const pack = this.data.publicItems.find((item) => item.id === id);
+    if (!pack) return;
+    wx.navigateTo({
+      url:
+        `/package-cards/pages/study/index?packId=${encodeURIComponent(id)}` +
+        (pack.userStudyProgress?.lastStudiedCardId
+          ? `&cardId=${encodeURIComponent(pack.userStudyProgress.lastStudiedCardId)}`
+          : ""),
+    });
   },
 
   goResource() {

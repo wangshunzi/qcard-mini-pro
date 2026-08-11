@@ -1,0 +1,26 @@
+<view class="study-card" bindtap="open" hover-class="study-card-hover">
+  <view wx:if="{{isPrivate}}" class="study-cover private-study-component">
+    <private-pack-cover avatar="{{privateCover}}" variant="home" />
+  </view>
+  <image wx:elif="{{item.cover}}" class="study-cover" src="{{item.cover}}" mode="aspectFill" />
+  <image wx:else class="study-cover fallback-image" src="{{appIcon}}" mode="aspectFit" />
+  <view class="study-copy">
+    <text class="study-title">{{item.title || '学习卡包'}}</text>
+    <view class="study-tags">
+      <text class="study-tag study-subject">{{item.subject.name || '综合'}}</text><text class="study-tag study-separator">·</text><text class="study-tag study-knowledge">{{item.knowledgePoint.name || '通识学习'}}</text>
+    </view>
+    <view class="study-meta">
+      <view class="study-meta-item"><ui-icon name="clipboard-text-outline" size="{{24}}" color="var(--color-text-secondary)" /><text>{{item.cardCount || 0}}张</text></view>
+      <view class="study-meta-item"><ui-icon name="clock-outline" size="{{24}}" color="var(--color-text-secondary)" /><text>{{timeAgo}}</text></view>
+    </view>
+    <view
+      class="study-start"
+      style="background:conic-gradient(var(--color-primary) {{progressPercent}}%,var(--color-progress-track) 0)"
+      catchtap="start"
+      hover-class="study-start-hover"
+      aria-label="{{progressPercent > 0 ? '继续学习' : '开始学习'}}"
+    >
+      <view class="study-start-inner"><ui-icon name="arrow-right" size="{{29}}" color="var(--color-primary)" /></view>
+    </view>
+  </view>
+</view>

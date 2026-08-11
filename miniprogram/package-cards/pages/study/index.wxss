@@ -75,8 +75,8 @@
   flex: none;
   padding: 2rpx 10rpx;
   border-radius: 999rpx;
-  color: #fff;
-  background: #ff9800;
+  color: var(--color-text-inverse);
+  background:var(--color-warning);
   font-size: 19rpx;
   font-weight: 700;
 }
@@ -131,9 +131,14 @@
 }
 
 .icon-button.unlock {
-  color: #27533b;
-  background: #d9efdf;
+  color:var(--color-primary);
+  background: var(--color-primary-soft);
   font-size: 30rpx;
+}
+
+.favorite-control {
+  border-color: rgba(235, 113, 27, .2);
+  background: var(--color-surface-translucent);
 }
 
 .icon-placeholder {
@@ -195,7 +200,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--color-text-inverse);
   background: var(--color-primary-20);
   font-size: 44rpx;
 }
@@ -214,7 +219,7 @@
   margin: 16rpx 0 0;
   padding: 0 40rpx;
   border-radius: 999rpx;
-  color: #fff;
+  color: var(--color-text-inverse);
   background: var(--color-primary-20);
   font-size: 26rpx;
   line-height: 72rpx;
@@ -224,7 +229,7 @@
   width: 120rpx;
   height: 18rpx;
   border-radius: 999rpx;
-  background: linear-gradient(90deg, #edf1ed, #dbe5dd, #edf1ed);
+  background: linear-gradient(90deg, var(--color-skeleton-base), var(--color-skeleton-highlight), var(--color-skeleton-base));
   animation: shimmer 1.2s ease-in-out infinite;
 }
 
@@ -253,7 +258,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--color-text-inverse);
   background: #ce665f;
   font-size: 56rpx;
   font-weight: 700;
@@ -314,7 +319,7 @@
 }
 
 .icon-button.control {
-  color: #fff;
+  color: var(--color-text-inverse);
   background: var(--color-primary-20);
   box-shadow: none;
 }

@@ -60,7 +60,7 @@
           range="{{item.options}}" range-key="label" data-path="{{item.pathJson}}" bindchange="pickerInput">
           <view class="control picker">
             <text class="{{item.selectedLabel ? '' : 'placeholder'}}">{{item.selectedLabel || item.placeholderValue || '请选择'}}</text>
-            <ui-icon name="chevron-down" size="{{30}}" color="#657065"></ui-icon>
+            <ui-icon name="chevron-down" size="{{30}}" color="var(--color-text-secondary)"></ui-icon>
           </view>
         </picker>
 
@@ -77,14 +77,14 @@
             disabled="{{disabled || item.controlDisabled}}" data-path="{{item.pathJson}}" bindchange="dateInput">
             <view class="control picker date-control">
               <text class="{{item.dateValue ? '' : 'placeholder'}}">{{item.dateValue || item.placeholderValue || '请选择日期'}}</text>
-              <ui-icon name="calendar" size="{{30}}" color="#657065"></ui-icon>
+              <ui-icon name="calendar" size="{{30}}" color="var(--color-text-secondary)"></ui-icon>
             </view>
           </picker>
           <picker wx:if="{{item.isDateTime}}" mode="time" value="{{item.timeValue}}"
             disabled="{{disabled || item.controlDisabled}}" data-path="{{item.pathJson}}" bindchange="timeInput">
             <view class="control picker time-control">
               <text class="{{item.timeValue ? '' : 'placeholder'}}">{{item.timeValue || '选择时间'}}</text>
-              <ui-icon name="clock" size="{{30}}" color="#657065"></ui-icon>
+              <ui-icon name="clock" size="{{30}}" color="var(--color-text-secondary)"></ui-icon>
             </view>
           </picker>
         </view>

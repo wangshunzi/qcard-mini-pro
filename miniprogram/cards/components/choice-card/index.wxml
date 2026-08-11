@@ -10,7 +10,7 @@
               src="{{data.question.image}}" mode="aspectFill" />
             <text wx:else class="question-text" style="color:{{primary}}">{{data.question.text}}</text>
             <view wx:if="{{data.question.audio && !preview}}" class="audio-badge" style="background:{{primary}}">
-              <ui-icon name="{{questionPlaying ? 'pause' : 'volume-high'}}" size="{{26}}" color="#ffffff" />
+              <ui-icon name="{{questionPlaying ? 'pause' : 'volume-high'}}" size="{{26}}" color="var(--color-text-inverse)" />
             </view>
           </view>
         </view>
@@ -33,7 +33,7 @@
         <image wx:if="{{item.mode === 'image'}}" class="option-image" src="{{item.image}}" mode="aspectFill" />
         <text wx:else class="option-text">{{item.text}}</text>
         <ui-icon wx:if="{{selected === item.id && phase === 'answered'}}" class="status-icon" name="check-circle" size="{{30}}" color="{{primary}}" />
-        <ui-icon wx:if="{{selected === item.id && phase === 'wrong'}}" class="status-icon" name="close-circle" size="{{30}}" color="#E04F5F" />
+        <ui-icon wx:if="{{selected === item.id && phase === 'wrong'}}" class="status-icon" name="close-circle" size="{{30}}" color="var(--color-error)" />
       </view>
     </view>
   </view>

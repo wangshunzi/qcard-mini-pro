@@ -3,7 +3,7 @@
 .matching {
   position: relative;
   overflow: hidden;
-  background-color: #dbeeff;
+  background-color:var(--color-info-soft);
   background-position: center;
   background-size: cover;
 }
@@ -84,7 +84,7 @@
   transform: translateX(-50%);
   border: 2px solid rgba(255, 255, 255, .9);
   border-radius: 13px;
-  color: #fff;
+  color: var(--color-text-inverse);
   font-size: 12px;
   font-weight: 900;
   line-height: 16px;
@@ -149,7 +149,7 @@
   height: 20px;
   border: 2px solid #fff;
   border-radius: 50%;
-  color: #fff;
+  color: var(--color-text-inverse);
   font-size: 12px;
   font-weight: 900;
   line-height: 18px;

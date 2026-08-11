@@ -108,9 +108,14 @@ Page({
 
   startStudy(event: WechatMiniprogram.TouchEvent) {
     const id = String(event.currentTarget.dataset.id || "");
-    if (!id) return;
+    const pack = this.data.cardPacks.find((item) => item.id === id);
+    if (!pack) return;
     wx.navigateTo({
-      url: `/package-cards/pages/study/index?packId=${encodeURIComponent(id)}`,
+      url:
+        `/package-cards/pages/study/index?packId=${encodeURIComponent(id)}` +
+        (pack.userStudyProgress?.lastStudiedCardId
+          ? `&cardId=${encodeURIComponent(pack.userStudyProgress.lastStudiedCardId)}`
+          : ""),
     });
   },
 

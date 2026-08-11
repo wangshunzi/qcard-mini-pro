@@ -105,7 +105,7 @@
       <view class="player-controls">
         <view class="rate" bindtap="cycleRate">{{playbackRate}}x</view>
         <view class="play-button" bindtap="togglePlay">
-          <ui-icon name="{{playing ? 'pause' : 'play'}}" size="{{48}}" color="#ffffff"></ui-icon>
+          <ui-icon name="{{playing ? 'pause' : 'play'}}" size="{{48}}" color="var(--color-text-inverse)"></ui-icon>
         </view>
         <view class="control-spacer"></view>
       </view>

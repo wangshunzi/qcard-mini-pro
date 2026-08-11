@@ -2,7 +2,7 @@
   min-height: 100vh;
   padding: 34rpx 32rpx 48rpx;
   box-sizing: border-box;
-  background: #f7f8f6;
+  background: var(--color-surface-soft);
 }
 
 .current-theme {
@@ -66,7 +66,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 20rpx;
-  border-bottom: 1rpx solid #e1e5e1;
+  border-bottom: 1rpx solid var(--color-border);
   border-radius: 0;
   color: inherit;
   background: var(--color-backdrop);
@@ -78,7 +78,7 @@
 }
 
 .theme-row.selected {
-  background: #f4f8f1;
+  background:var(--color-surface-soft);
 }
 
 .row-main {
@@ -116,7 +116,7 @@
 }
 
 .theme-hover {
-  background: #eef2ed;
+  background: var(--color-surface-soft);
 }
 
 .state {
@@ -145,7 +145,7 @@
   border: 1rpx solid var(--color-primary);
   border-radius: 999rpx;
   color: var(--color-primary);
-  background: #fff;
+  background: var(--color-card);
   font-size: 22rpx;
   line-height: 58rpx;
 }

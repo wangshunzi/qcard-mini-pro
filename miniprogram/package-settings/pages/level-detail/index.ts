@@ -37,6 +37,10 @@ Page({
     profile: null as UserProfile | null,
     levels: [] as ExperienceLevel[],
     histories: [] as Array<ExperienceHistory & { dateText: string }>,
+    historyPage: 1,
+    historyTotalPages: 1,
+    historyTotal: 0,
+    historyLoadingMore: false,
     discountText: "暂无等级折扣",
     tab: "history" as "history" | "benefits",
     progress: 0,
@@ -58,6 +62,10 @@ Page({
     void this.load();
   },
 
+  onReachBottom() {
+    if (this.data.tab === "history") void this.loadMoreHistory();
+  },
+
   async onPullDownRefresh() {
     await this.load();
     wx.stopPullDownRefresh();
@@ -69,7 +77,7 @@ Page({
       const [profile, levels, history, discount] = await Promise.all([
         getProfile(),
         getExperienceLevels(),
-        getExperienceHistory(),
+        getExperienceHistory(1, 50),
         getUnlockDiscount(),
       ]);
       const current = profile.experience?.experience ?? 0;
@@ -89,6 +97,9 @@ Page({
         profile,
         levels: displayLevels,
         histories: (history.items ?? []).map((item) => ({ ...item, dateText: formatDate(item.createdAt) })),
+        historyPage: Math.max(1, Number(history.page) || 1),
+        historyTotalPages: Math.max(1, Number(history.totalPages) || 1),
+        historyTotal: Math.max(history.items?.length || 0, Number(history.total) || 0),
         discountText: rate > 0 ? `当前等级解锁卡包优惠 ${rate}%` : "当前等级暂无额外折扣",
         progress: Math.max(0, Math.min(100, current * 100 / next)),
         currentLevelInfo: displayLevels.find((level) => level.level === currentLevel) || {
@@ -114,5 +125,37 @@ Page({
 
   switchTab(event: WechatMiniprogram.TouchEvent) {
     this.setData({ tab: String(event.currentTarget.dataset.tab) as "history" | "benefits" });
+  },
+
+  async loadMoreHistory() {
+    if (
+      this.data.historyLoadingMore ||
+      this.data.historyPage >= this.data.historyTotalPages
+    ) return;
+    this.setData({ historyLoadingMore: true });
+    try {
+      const page = this.data.historyPage + 1;
+      const result = await getExperienceHistory(page, 50);
+      const histories = [
+        ...this.data.histories,
+        ...(result.items ?? []).map((item) => ({
+          ...item,
+          dateText: formatDate(item.createdAt),
+        })),
+      ];
+      this.setData({
+        histories,
+        historyPage: Math.max(page, Number(result.page) || page),
+        historyTotalPages: Math.max(1, Number(result.totalPages) || 1),
+        historyTotal: Math.max(histories.length, Number(result.total) || 0),
+      });
+    } catch (error) {
+      wx.showToast({
+        title: error instanceof Error ? error.message : "更多记录加载失败",
+        icon: "none",
+      });
+    } finally {
+      this.setData({ historyLoadingMore: false });
+    }
   },
 });

@@ -3,6 +3,7 @@ import { mediaCoordinator } from "./services/MediaCoordinator";
 import { logger } from "./utils/logger";
 import { flushStudyReports } from "./stores/studyReportQueue";
 import { trackDayBoundary } from "./stores/dataInvalidation";
+import { refreshThemeBackgrounds } from "./design-system/themeBackground";
 import {
   claimVirtualFulfillmentNotification,
   getPendingVirtualPaymentRecoveryDelay,
@@ -145,6 +146,9 @@ App({
     appVisible = false;
     stopVirtualPaymentRecovery();
     mediaCoordinator.pauseAll();
+  },
+  onThemeChange({ theme }) {
+    refreshThemeBackgrounds(theme === "dark" ? "dark" : "light");
   },
   onUnload() {
     unsubscribePending?.();

@@ -23,6 +23,7 @@ import {
   shouldRefreshData,
   type DataDomain,
 } from "../../stores/dataInvalidation";
+import { bindThemeBackgrounds } from "../../design-system/themeBackground";
 
 const HOME_DATA_DOMAINS: DataDomain[] = [
   "account",
@@ -36,13 +37,15 @@ interface HomeSection {
   key: string;
   title: string;
   subtitle: string;
-  items: CardPackSummary[];
+  items: HomeCardPack[];
 }
 
 interface HomeCardPack extends CardPackSummary {
   progressPercent: number;
   progressValue: number;
   timeAgo: string;
+  isPrivate: boolean;
+  privateCover?: string;
 }
 
 interface HomeCardFace extends PrivateCardFace {
@@ -79,13 +82,32 @@ function formatTimeAgo(value?: string, prefix = "学习") {
   return `${date.getMonth() + 1}月${date.getDate()}日`;
 }
 
-function withProgress(cardPack: CardPackSummary): HomeCardPack {
+function withProgress(
+  cardPack: CardPackSummary,
+  currentUserId = "",
+  currentUserAvatar = "",
+): HomeCardPack {
   const raw = Number(cardPack.userStudyProgress?.progress ?? 0);
   const progressPercent = Math.max(0, Math.min(100, raw <= 1 ? raw * 100 : raw));
+  const isOwnedByCurrentUser = Boolean(
+    currentUserId && cardPack.author?.id === currentUserId,
+  );
+  const hasPrivatePackShape = Boolean(
+    !cardPack.cover &&
+    !cardPack.subject?.id &&
+    !cardPack.knowledgePoint?.id &&
+    Number(cardPack.basePrice || 0) === 0 &&
+    cardPack.isUnlocked,
+  );
+  const isPrivate = isOwnedByCurrentUser || hasPrivatePackShape;
   return {
     ...cardPack,
     progressPercent,
     progressValue: progressPercent / 100,
+    isPrivate,
+    privateCover: isPrivate
+      ? currentUserAvatar || cardPack.author?.avatar
+      : undefined,
     timeAgo: formatTimeAgo(
       cardPack.userStudyProgress?.lastStudiedAt,
       progressPercent > 0 ? "学习" : "解锁",
@@ -176,11 +198,16 @@ Page({
           key: promotion.id,
           title: promotion.name,
           subtitle: promotion.description || "精选学习内容",
-          items: promotion.cardPacks.map(withProgress),
+          items: promotion.cardPacks.map((pack) => withProgress(pack)),
         }));
       const recentCards = (privateFaces.items ?? []).map(withCardPreview);
+      bindThemeBackgrounds(this, profile.currentTheme?.config, {
+        homeBackground: "home_bg",
+      });
       this.setData({
-        recentStudy: (data.recentStudy ?? []).map(withProgress),
+        recentStudy: (data.recentStudy ?? []).map((pack) =>
+          withProgress(pack, profile.id, profile.avatar || ""),
+        ),
         recentCards,
         dailyChallenge: data.dailyChallenge ?? null,
         challengeCards: (data.dailyChallenge?.cards ?? [])
@@ -215,7 +242,6 @@ Page({
         sections: promotions,
         profile,
         userName: profile.nickname || (this.data as any).userName,
-        homeBackground: profile.currentTheme?.config?.home_bg || "",
       }, () => this.schedulePrivateFacePolling());
     } catch (error) {
       this.setData({ error: error instanceof Error ? error.message : "首页加载失败" });
@@ -267,23 +293,24 @@ Page({
       return;
     }
     wx.navigateTo({
-      url: `/package-cards/pages/ai-generate/index?templateId=${encodeURIComponent(card.templateId)}`,
+      url:
+        `/package-cards/pages/ai-generate/index?templateId=${encodeURIComponent(card.templateId)}` +
+        (card.genParams
+          ? `&genParams=${encodeURIComponent(JSON.stringify(card.genParams))}`
+          : ""),
     });
   },
 
   openStudy() {
-    const recent = (this.data as any).recentStudy as CardPackSummary[];
+    const recent = (this.data as any).recentStudy as HomeCardPack[];
     const pack = recent[0];
     if (!pack) {
       wx.switchTab({ url: "/pages/resource/index" });
       return;
     }
-    const isPrivate = Boolean(
-      pack.author?.id && pack.author.id === sessionStore.getState()?.user.id,
-    );
     wx.navigateTo({
       url: `/package-cards/pages/study/index?packId=${encodeURIComponent(pack.id)}${
-        isPrivate ? "&private=1" : ""
+        pack.isPrivate ? "&private=1" : ""
       }${
         pack.userStudyProgress?.lastStudiedCardId
           ? `&cardId=${encodeURIComponent(pack.userStudyProgress.lastStudiedCardId)}`
@@ -298,12 +325,9 @@ Page({
       (item) => item.id === id,
     );
     if (!pack) return;
-    const isPrivate = Boolean(
-      pack.author?.id && pack.author.id === sessionStore.getState()?.user.id,
-    );
     wx.navigateTo({
       url: `/package-cards/pages/study/index?packId=${encodeURIComponent(pack.id)}${
-        isPrivate ? "&private=1" : ""
+        pack.isPrivate ? "&private=1" : ""
       }${
         pack.userStudyProgress?.lastStudiedCardId
           ? `&cardId=${encodeURIComponent(pack.userStudyProgress.lastStudiedCardId)}`
@@ -316,11 +340,10 @@ Page({
     const id = String(event.currentTarget.dataset.id ?? "");
     if (!id) return;
     const pack = [
-      ...((this.data as any).recentStudy as CardPackSummary[]),
+      ...((this.data as any).recentStudy as HomeCardPack[]),
       ...((this.data as any).sections as HomeSection[]).flatMap((section) => section.items),
     ].find((item) => item.id === id);
-    const currentUserId = sessionStore.getState()?.user.id;
-    if (pack?.author?.id && pack.author.id === currentUserId) {
+    if (pack?.isPrivate) {
       wx.navigateTo({
         url: `/package-cards/pages/private-pack/index?id=${encodeURIComponent(id)}`,
       });
@@ -337,7 +360,11 @@ Page({
       wx.showToast({ title: "今日暂无挑战卡片", icon: "none" });
       return;
     }
-    const cardId = String(event?.currentTarget?.dataset?.id ?? "");
+    const requestedCardId = String(event?.currentTarget?.dataset?.id ?? "");
+    const cardId = requestedCardId ||
+      challenge.cards.find((item) => !item.isCompleted)?.id ||
+      challenge.cards[0]?.id ||
+      "";
     saveChallengeTransfer(challenge);
     wx.navigateTo({
       url:
@@ -422,6 +449,7 @@ Page({
     const payload: CardTransferPayload = {
       front: { type: card.type, data: card.data! },
       title: card.name,
+      genParams: card.genParams,
       privateFace: {
         id: card.id,
         templateId: card.templateId,

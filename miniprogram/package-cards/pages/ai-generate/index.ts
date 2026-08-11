@@ -12,6 +12,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
+import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
 
 const AI_ACCESS_DOMAINS = ["account", "wallet"] as const;
 import { getImmersiveNavigationMetrics } from "../../../utils/navigationMetrics";
@@ -109,10 +110,12 @@ Page({
     markDataFresh(this as any, AI_ACCESS_DOMAINS);
     try {
       const profile = await getProfile();
+      bindThemeBackgrounds(this, profile.currentTheme?.config, {
+        pageBackground: "gen_bg",
+      });
       this.setData({
         userBalance: Number(profile.balance || 0),
         isVip: profile.vip?.isVip === true,
-        pageBackground: profile.currentTheme?.config?.gen_bg || "",
       });
       this.updateAccessState();
     } catch {
@@ -168,6 +171,9 @@ Page({
         ),
       );
       const currentSummary = templates[initialIndex] ?? null;
+      bindThemeBackgrounds(this, profile.currentTheme?.config, {
+        pageBackground: "gen_bg",
+      });
       this.setData({
         templates,
         loading: false,
@@ -176,7 +182,6 @@ Page({
         currentSummary,
         userBalance: Number(profile.balance || 0),
         isVip: profile.vip?.isVip === true,
-        pageBackground: profile.currentTheme?.config?.gen_bg || "",
         loadError: "",
         empty: templates.length === 0,
       });

@@ -837,4 +837,34 @@ historical result: blocked by required iOS/Android physical-device comparison
 - P3: verify the smallest Android font renderer does not clip long knowledge-point
   names; current truncation protects the grid width.
 
+## Dark-mode contrast and portal drawer pass — 2026-08-11
+
+### Evidence and comparison
+
+- User references:
+  - `/var/folders/qg/nksqszv52xd_n_lftjc7rlsm0000gn/T/codex-clipboard-3206b293-a08e-4ca2-b867-9b9843fe498a.png`
+  - `/var/folders/qg/nksqszv52xd_n_lftjc7rlsm0000gn/T/codex-clipboard-9e446818-03d9-44e0-9058-eb575e6315dc.png`
+  - `/var/folders/qg/nksqszv52xd_n_lftjc7rlsm0000gn/T/codex-clipboard-0b578f7c-e424-4ffc-b0b9-cbeb8f770961.png`
+- Runtime target: authenticated dark-mode home, coin drawer, and profile side drawer
+  in the official WeChat Developer Tools iPhone simulator.
+- Home media copy now keeps both “欢迎回来” and the user name on an inverse
+  foreground. The user name remains a transparent text layer without a pill or
+  background; a multi-directional dark outline and long-name truncation keep it
+  readable across both bright foam and dark water regions of the ocean artwork.
+- The yellow purchase action now uses a semantic warning foreground for both icon
+  and label, preserving contrast in light and dark appearances.
+- The profile drawer is mounted through `root-portal` and owns an explicit opaque
+  panel surface. Since WeChat detaches portal content from page custom properties,
+  its compact light/dark token contract is declared on the portaled root itself.
+- Post-fix simulator inspection shows one solid `#141821` drawer panel, a separate
+  dimmed backdrop, legible profile/VIP/menu copy, and no duplicated page content
+  bleeding through the drawer.
+
+### Regression coverage
+
+- The dark-mode suite asserts inverse media copy, semantic warning-action
+  foregrounds, portal mounting, and an explicit dark elevated drawer surface.
+- TypeScript, the complete Vitest suite, and whitespace validation are required for
+  this pass.
+
 final result: passed

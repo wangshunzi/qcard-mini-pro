@@ -2,7 +2,7 @@
   <immersive-nav title="购买记录" back="{{true}}" border="{{true}}" />
 
   <view class="notice">
-    <ui-icon name="shield-key-outline" size="{{31}}" color="#529917" />
+    <ui-icon name="shield-key-outline" size="{{31}}" color="var(--color-primary)" />
     <text>支付成功且权益发放成功，才表示咔豆或 VIP 已到账</text>
   </view>
 
@@ -12,14 +12,14 @@
   </view>
 
   <view wx:elif="{{error && !items.length}}" class="state error-state">
-    <ui-icon name="alert-circle-outline" size="{{66}}" color="#d46e34" />
+    <ui-icon name="alert-circle-outline" size="{{66}}" color="var(--color-error)" />
     <text class="state-title">加载失败</text>
     <text>{{error}}</text>
     <button data-reset="{{true}}" bindtap="retryLoad">重试</button>
   </view>
 
   <view wx:elif="{{!items.length}}" class="state">
-    <ui-icon name="file-document-outline" size="{{74}}" color="#79847b" />
+    <ui-icon name="file-document-outline" size="{{74}}" color="var(--color-text-secondary)" />
     <text class="state-title">暂无购买记录</text>
     <text>购买咔豆或 VIP 后，订单与到账状态会显示在这里</text>
   </view>

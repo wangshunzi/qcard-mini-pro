@@ -3,14 +3,14 @@
   <view class="study-header" style="padding-top:{{controlRowTop}}px">
     <view class="header-row" style="height:{{controlRowHeight}}px;--immersive-control-height:{{controlRowHeight}}px;">
       <view class="study-nav-controls">
-        <button class="icon-button light" bindtap="exit" aria-label="返回"><ui-icon name="chevron-left" size="{{44}}" color="#0f0f0f" /></button>
-        <button wx:if="{{pack && !pack.isUnlocked && packId}}" class="icon-button unlock" bindtap="confirmUnlock" loading="{{unlocking}}" aria-label="解锁"><ui-icon name="lock-open-outline" size="{{35}}" color="#27533b" /></button>
+        <button class="icon-button light" bindtap="exit" aria-label="返回"><ui-icon name="chevron-left" size="{{44}}" color="var(--color-text)" /></button>
+        <button wx:if="{{pack && !pack.isUnlocked && packId}}" class="icon-button unlock" bindtap="confirmUnlock" loading="{{unlocking}}" aria-label="解锁"><ui-icon name="lock-open-outline" size="{{35}}" color="var(--color-primary)" /></button>
       </view>
       <view class="pack-info">
         <view class="title-row">
           <image wx:if="{{pack.cover}}" class="cover" src="{{pack.cover}}" mode="aspectFill" />
           <text class="pack-title">{{pack.title || '开始学习'}}</text>
-          <text wx:if="{{previewOnly || challengeMode}}" class="preview-badge">{{challengeMode ? '挑战' : '预览'}}</text>
+          <text wx:if="{{previewOnly || challengeMode || favoriteMode}}" class="preview-badge">{{challengeMode ? '挑战' : favoriteMode ? '收藏' : '预览'}}</text>
         </view>
       </view>
     </view>
@@ -23,7 +23,7 @@
     <text>加载卡片中...</text>
   </view>
   <view wx:elif="{{error}}" class="state-view error-view">
-    <ui-icon name="alert-circle-outline" size="{{88}}" color="#eb711b" />
+    <ui-icon name="alert-circle-outline" size="{{88}}" color="var(--color-error)" />
     <text class="state-title">{{error}}</text>
     <view class="state-actions">
       <button class="text-button primary" bindtap="retryLoad">重新加载</button>
@@ -31,7 +31,7 @@
     </view>
   </view>
   <view wx:elif="{{!cards.length}}" class="state-view">
-    <ui-icon name="cards-outline" size="{{88}}" color="#3f3f3f" />
+    <ui-icon name="cards-outline" size="{{88}}" color="var(--color-text)" />
     <text class="state-title">暂无卡片数据</text>
     <button class="text-button primary" bindtap="exit">返回</button>
   </view>
@@ -41,7 +41,7 @@
       <swiper class="swiper" current="{{activeIndex}}" bindchange="onSlide" duration="300" disable-touch="{{true}}">
         <swiper-item wx:for="{{cards}}" wx:key="id" class="slide">
           <view wx:if="{{item.locked}}" class="locked-card">
-            <view class="lock-circle"><ui-icon name="lock" size="{{54}}" color="#5d5d5d" /></view>
+            <view class="lock-circle"><ui-icon name="lock" size="{{54}}" color="var(--color-text-secondary)" /></view>
             <text class="locked-title">解锁后学习此卡片</text>
             <text class="locked-copy">完整卡包包含 {{pack.cardCount || cards.length}} 张互动卡片</text>
             <button class="unlock-card-button" bindtap="confirmUnlock">立即解锁</button>
@@ -51,7 +51,7 @@
             <text>正在加载卡片...</text>
           </view>
           <view wx:elif="{{item.loadError}}" class="placeholder-card error-card">
-            <ui-icon name="alert-circle-outline" size="{{58}}" color="#eb711b" />
+            <ui-icon name="alert-circle-outline" size="{{58}}" color="var(--color-error)" />
             <text>{{item.loadError}}</text>
             <button wx:if="{{activeIndex === index}}" class="text-button primary" bindtap="retryCard">重试</button>
           </view>
@@ -64,12 +64,16 @@
     </view>
 
     <view class="study-controls safe-bottom">
-      <view class="controls-spacer"></view>
+      <view class="controls-spacer">
+        <button wx:if="{{!privateMode && cards[activeIndex] && (cards[activeIndex].cardPackId || packId)}}" class="icon-button control favorite-control {{favoriteActionLoading ? 'disabled' : ''}}" bindtap="toggleFavorite" disabled="{{favoriteActionLoading}}" aria-label="{{cards[activeIndex].isFavorited ? '取消收藏' : '收藏'}}">
+          <ui-icon name="{{cards[activeIndex].isFavorited ? 'heart' : 'heart-outline'}}" size="{{38}}" color="{{cards[activeIndex].isFavorited ? 'var(--color-error)' : 'var(--color-text)'}}" />
+        </button>
+      </view>
       <view class="control-group">
-        <button class="icon-button control {{activeIndex === 0 ? 'disabled' : ''}}" bindtap="previous" disabled="{{activeIndex === 0}}" aria-label="上一张"><ui-icon name="chevron-left" size="{{46}}" color="#0f0f0f" /></button>
-        <button class="icon-button control {{!cards[activeIndex].back ? 'disabled' : ''}}" bindtap="flip" disabled="{{!cards[activeIndex].back}}" aria-label="翻面"><ui-icon name="swap-horizontal" size="{{42}}" color="#0f0f0f" /></button>
+        <button class="icon-button control {{activeIndex === 0 ? 'disabled' : ''}}" bindtap="previous" disabled="{{activeIndex === 0}}" aria-label="上一张"><ui-icon name="chevron-left" size="{{46}}" color="var(--color-text)" /></button>
+        <button class="icon-button control {{!cards[activeIndex].back ? 'disabled' : ''}}" bindtap="flip" disabled="{{!cards[activeIndex].back}}" aria-label="翻面"><ui-icon name="swap-horizontal" size="{{42}}" color="var(--color-text)" /></button>
         <button class="icon-button control {{activeIndex === cards.length - 1 ? 'finish' : ''}}" bindtap="nextOrComplete" aria-label="{{activeIndex === cards.length - 1 ? '完成' : '下一张'}}">
-          <ui-icon name="{{activeIndex === cards.length - 1 ? 'check' : 'chevron-right'}}" size="{{44}}" color="{{activeIndex === cards.length - 1 ? '#ffffff' : '#0f0f0f'}}" />
+          <ui-icon name="{{activeIndex === cards.length - 1 ? 'check' : 'chevron-right'}}" size="{{44}}" color="{{activeIndex === cards.length - 1 ? 'var(--color-text-inverse)' : 'var(--color-text)'}}" />
         </button>
       </view>
     </view>
@@ -77,7 +81,7 @@
 
   <view wx:if="{{completionVisible}}" class="modal-overlay" bindtap="closeCompletion">
     <view class="completion-modal" catchtap="noop">
-      <view class="complete-icon"><ui-icon name="check" size="{{58}}" color="#ffffff" /></view>
+      <view class="complete-icon"><ui-icon name="check" size="{{58}}" color="var(--color-text-inverse)" /></view>
       <text class="complete-title">学习完成</text>
       <text class="complete-subtitle">恭喜你完成了本次学习</text>
       <view class="stats">
@@ -85,8 +89,8 @@
         <view class="stat-row"><text>学习时长</text><text class="stat-value">{{studyDuration}}</text></view>
       </view>
       <view class="modal-actions">
-        <button class="modal-button secondary" bindtap="restart"><ui-icon name="restart" size="{{30}}" color="#5d5d5d" />重新学习</button>
-        <button class="modal-button primary-outline" bindtap="exit"><ui-icon name="close" size="{{30}}" color="#529917" />退出</button>
+        <button class="modal-button secondary" bindtap="restart"><ui-icon name="restart" size="{{30}}" color="var(--color-text-secondary)" />重新学习</button>
+        <button class="modal-button primary-outline" bindtap="exit"><ui-icon name="close" size="{{30}}" color="var(--color-primary)" />退出</button>
       </view>
     </view>
   </view>

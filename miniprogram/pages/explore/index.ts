@@ -15,6 +15,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../stores/dataInvalidation";
+import { bindThemeBackgrounds } from "../../design-system/themeBackground";
 
 const EXPLORE_CONTEXT_DOMAINS = ["account"] as const;
 
@@ -63,9 +64,11 @@ Page({
         getMiniProgramTemplates(),
         getProfile(),
       ]);
+      bindThemeBackgrounds(this, profile.currentTheme?.config, {
+        exploreBackground: "explore_bg",
+      });
       this.setData({
         templates,
-        exploreBackground: profile.currentTheme?.config?.explore_bg || "",
       });
     } catch {
       // 列表仍可独立加载，辅助筛选或主题失败不阻断核心浏览。

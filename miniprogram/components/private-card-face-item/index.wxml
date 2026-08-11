@@ -9,7 +9,7 @@
     catchtap="deleteItem"
     aria-label="删除卡面"
   >
-    <ui-icon name="delete-outline" size="{{28}}" color="#ffffff" />
+    <ui-icon name="delete-outline" size="{{28}}" color="var(--color-text-inverse)" />
   </button>
 
   <private-card-status
@@ -37,7 +37,7 @@
     mode="aspectFill"
   />
   <view wx:else class="face-renderer fallback">
-    <ui-icon name="alert-circle-outline" size="{{56}}" color="#ffffff" />
+    <ui-icon name="alert-circle-outline" size="{{56}}" color="var(--color-text-inverse)" />
     <text>卡面暂不可用</text>
   </view>
 
@@ -46,7 +46,7 @@
     class="make-similar-mask"
   >
     <button catchtap="makeSimilar">
-      <ui-icon name="star-four-points" size="{{26}}" color="#27533b" />
+      <ui-icon name="star-four-points" size="{{26}}" color="var(--color-primary)" />
       <text>做同款</text>
     </button>
   </view>

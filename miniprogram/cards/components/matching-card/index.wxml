@@ -34,7 +34,7 @@
         <text wx:else class="node-text">{{item.item.text}}</text>
         <text wx:if="{{preview && item.item.mode === 'image' && item.item.text}}" class="node-label">{{item.item.text}}</text>
         <view wx:if="{{matchedMap[item.id] && !incorrectMap[item.id] && !preview}}" class="check" style="background:{{primary}}">
-          <ui-icon name="check" size="{{20}}" color="#ffffff"></ui-icon>
+          <ui-icon name="check" size="{{20}}" color="var(--color-text-inverse)"></ui-icon>
         </view>
       </view>
 
@@ -51,7 +51,7 @@
         <text wx:else class="node-text">{{item.item.text}}</text>
         <text wx:if="{{preview && item.item.mode === 'image' && item.item.text}}" class="node-label">{{item.item.text}}</text>
         <view wx:if="{{matchedMap[item.id] && !incorrectMap[item.id] && !preview}}" class="check" style="background:{{primary}}">
-          <ui-icon name="check" size="{{20}}" color="#ffffff"></ui-icon>
+          <ui-icon name="check" size="{{20}}" color="var(--color-text-inverse)"></ui-icon>
         </view>
       </view>
     </view>

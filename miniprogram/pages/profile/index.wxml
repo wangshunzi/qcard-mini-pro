@@ -1,9 +1,9 @@
 <page-meta page-style="{{purchaseGuideOpen || coinHistoryOpen || unlockPanelOpen || cardPreviewVisible ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="profile-page safe-bottom tab-page">
-  <immersive-nav overlay="{{true}}" scroll-top="{{navScrollTop}}">
+  <immersive-nav overlay="{{true}}" scroll-top="{{navScrollTop}}" bind:metrics="onNavigationMetrics">
     <side-drawer-menu wx:if="{{profile}}" slot="leading" profile="{{profile}}" bind:wallet="openCoinHistory" bind:vip="openVipGuide" />
     <view slot="action"><button wx:if="{{profile}}" class="settings-button" bindtap="openSettings" aria-label="打开设置" hover-class="soft-hover">
-      <ui-icon name="cog" size="{{35}}" color="#3f3f3f" />
+      <ui-icon name="cog" size="{{35}}" color="var(--color-text)" />
     </button></view>
   </immersive-nav>
 
@@ -14,7 +14,7 @@
   </view>
 
   <view wx:elif="{{error && !profile}}" class="state error-state">
-    <ui-icon name="alert-circle-outline" size="{{88}}" color="#eb711b" />
+    <ui-icon name="alert-circle-outline" size="{{88}}" color="var(--color-error)" />
     <text class="state-title">个人信息加载失败</text>
     <text class="state-description">{{error}}</text>
     <button class="state-button" bindtap="load">重试</button>
@@ -23,7 +23,7 @@
   <block wx:elif="{{profile}}">
     <view
       class="profile-header"
-      style="{{profileBackground ? 'background-image:url(' + profileBackground + ')' : ''}}"
+      style="{{profileBackground ? 'background-image:url(' + profileBackground + ');' : ''}}padding-top:{{profileHeaderTop}}px;"
     >
       <view class="profile-shade"></view>
       <view class="profile-main">
@@ -35,12 +35,12 @@
           <view class="name-row">
             <text class="name">{{profile.nickname || '叩咔用户'}}</text>
             <view wx:if="{{isVip}}" class="vip-badge" bindtap="openVipGuide" hover-class="vip-badge-hover">
-              <ui-icon name="crown" size="{{21}}" color="#ffffff" /><text>VIP</text>
+              <ui-icon name="crown" size="{{21}}" color="var(--color-text-inverse)" /><text>VIP</text>
             </view>
           </view>
           <view class="id-row" bindtap="copyId" hover-class="soft-hover">
             <text class="id-text"><text class="id-label">ID</text>: {{profile.shortId || '--'}}</text>
-            <ui-icon name="content-copy" size="{{25}}" color="#6d776f" />
+            <ui-icon name="content-copy" size="{{25}}" color="var(--color-text-secondary)" />
           </view>
         </view>
       </view>
@@ -78,7 +78,7 @@
 
     <view class="profile-content">
       <view wx:if="{{!isVip}}" class="vip-upsell-banner" bindtap="openVipGuide" hover-class="quick-hover">
-        <view class="vip-upsell-icon"><ui-icon name="crown" size="{{36}}" color="#f39a13" /></view>
+        <view class="vip-upsell-icon"><ui-icon name="crown" size="{{36}}" color="var(--color-warning)" /></view>
         <view class="vip-upsell-copy">
           <text class="vip-upsell-title">开通 VIP 会员</text>
           <text class="vip-upsell-subtitle">解锁全部卡包 · 每日咔豆领取 · 专属特权</text>
@@ -121,7 +121,7 @@
           />
         </view>
         <view wx:else class="empty-state">
-          <ui-icon name="auto-fix" size="{{76}}" color="#3f3f3f" />
+          <ui-icon name="auto-fix" size="{{76}}" color="var(--color-text)" />
           <text class="empty-title">还没有生成过卡面</text>
           <button class="empty-button" bindtap="openAi">立即生成</button>
         </view>
@@ -151,7 +151,7 @@
               read-only="{{true}}" hide-flip-button="{{true}}" is-visible="{{true}}" />
             <image wx:elif="{{item.thumbnailUrl}}" class="face-preview" src="{{item.thumbnailUrl}}" mode="aspectFill" />
             <view wx:else class="face-preview face-fallback">
-              <ui-icon name="message-text-outline" size="{{54}}" color="#ffffff" />
+              <ui-icon name="message-text-outline" size="{{54}}" color="var(--color-text-inverse)" />
               <text class="face-state">查看反馈</text>
             </view>
             <block wx:if="{{item.status === 'success'}}">
@@ -162,16 +162,20 @@
             </block>
           </view>
         </view>
+        <view wx:if="{{feedbackCards.length}}" class="panel-pager">
+          <button wx:if="{{feedbackPage < feedbackTotalPages}}" bindtap="loadMoreFeedbackCards" loading="{{panelLoadingMore}}" disabled="{{panelLoadingMore}}">{{panelLoadingMore ? '加载中...' : '加载更多'}}</button>
+          <text wx:else>已显示全部 {{feedbackTotal}} 条</text>
+        </view>
         <view wx:else class="empty-state">
-          <ui-icon name="message-text-outline" size="{{76}}" color="#6d776f" />
+          <ui-icon name="message-text-outline" size="{{76}}" color="var(--color-text-secondary)" />
           <text class="empty-title">暂无符合条件的反馈记录</text>
         </view>
       </view>
 
       <view wx:elif="{{activeTab === 'favorited'}}" class="panel favorites-panel">
         <view class="subtabs">
-          <view class="subtab {{favoritesMode === 'packs' ? 'active' : ''}}" data-mode="packs" bindtap="switchFavoritesMode">卡包 {{favoritePacks.length || '-'}}</view>
-          <view class="subtab {{favoritesMode === 'cards' ? 'active' : ''}}" data-mode="cards" bindtap="switchFavoritesMode">卡片 {{favoriteCards.length || '-'}}</view>
+          <view class="subtab {{favoritesMode === 'packs' ? 'active' : ''}}" data-mode="packs" bindtap="switchFavoritesMode">卡包 {{favoritePacksTotal || '-'}}</view>
+          <view class="subtab {{favoritesMode === 'cards' ? 'active' : ''}}" data-mode="cards" bindtap="switchFavoritesMode">卡片 {{favoriteCardsTotal || '-'}}</view>
         </view>
         <view wx:if="{{panelLoading}}" class="panel-loading"><view class="loading-dot"></view><text>加载中...</text></view>
         <view wx:elif="{{favoritesMode === 'packs' && favoritePacks.length}}" class="favorite-pack-list">
@@ -199,8 +203,8 @@
               </view>
               <view class="favorite-pack-foot">
                 <block wx:if="{{item.canStudy}}">
-                  <view class="favorite-study-meta"><ui-icon name="cards-outline" size="{{24}}" color="#737c75" /><text>{{item.cardCount || 0}}张</text></view>
-                  <view class="favorite-study-meta"><ui-icon name="clock-outline" size="{{24}}" color="#737c75" /><text>{{item.unlockType === 'vip_free' ? 'VIP 免费' : item.timeAgo}}</text></view>
+                  <view class="favorite-study-meta"><ui-icon name="cards-outline" size="{{24}}" color="var(--color-text-secondary)" /><text>{{item.cardCount || 0}}张</text></view>
+                  <view class="favorite-study-meta"><ui-icon name="clock-outline" size="{{24}}" color="var(--color-text-secondary)" /><text>{{item.unlockType === 'vip_free' ? 'VIP 免费' : item.timeAgo}}</text></view>
                 </block>
                 <block wx:else>
                   <text wx:if="{{item.displayPrice === 0}}" class="favorite-free">免费领取</text>
@@ -212,14 +216,14 @@
               </view>
               <view
                 class="favorite-pack-action {{item.canStudy ? 'study-action' : 'unlock-action'}}"
-                style="{{item.canStudy ? 'background:conic-gradient(#529917 ' + item.progressPercent + '%,#e4e9e4 0)' : ''}}"
+                style="{{item.canStudy ? 'background:conic-gradient(var(--color-primary) ' + item.progressPercent + '%,var(--color-progress-track) 0)' : ''}}"
                 data-id="{{item.id}}"
                 catchtap="useFavoritePack"
                 hover-class="favorite-action-hover"
                 aria-label="{{item.canStudy ? (item.progressPercent > 0 ? '继续学习' : '开始学习') : '解锁卡包'}}"
               >
                 <view>
-                  <ui-icon name="{{item.canStudy ? 'arrow-right' : 'lock-open-outline'}}" size="{{29}}" color="{{item.canStudy ? '#529917' : '#7b5305'}}" />
+                  <ui-icon name="{{item.canStudy ? 'arrow-right' : 'lock-open-outline'}}" size="{{29}}" color="{{item.canStudy ? 'var(--color-primary)' : 'var(--color-warning)'}}" />
                 </view>
               </view>
             </view>
@@ -232,15 +236,19 @@
               hide-flip-button="{{true}}" is-visible="{{true}}" />
           </view>
         </view>
+        <view wx:if="{{favoritesMode === 'packs' && favoritePacks.length || favoritesMode === 'cards' && favoriteCards.length}}" class="panel-pager">
+          <button wx:if="{{favoritesMode === 'packs' ? favoritePacksPage < favoritePacksTotalPages : favoriteCardsPage < favoriteCardsTotalPages}}" bindtap="loadMoreFavorites" loading="{{panelLoadingMore}}" disabled="{{panelLoadingMore}}">{{panelLoadingMore ? '加载中...' : '加载更多'}}</button>
+          <text wx:else>已显示全部 {{favoritesMode === 'packs' ? favoritePacksTotal : favoriteCardsTotal}} 条</text>
+        </view>
         <view wx:else class="empty-state">
-          <ui-icon name="star" size="{{76}}" color="#6d776f" />
+          <ui-icon name="star" size="{{76}}" color="var(--color-text-secondary)" />
           <text class="empty-title">{{favoritesMode === 'packs' ? '还没有收藏的卡包' : '还没有收藏的卡片'}}</text>
         </view>
       </view>
 
       <view wx:else class="panel benefits-panel">
         <view wx:if="{{isVip}}" class="reward-card">
-          <view class="reward-icon"><ui-icon name="star-four-points" size="{{42}}" color="#f39a13" /></view>
+          <view class="reward-icon"><ui-icon name="star-four-points" size="{{42}}" color="var(--color-warning)" /></view>
           <view class="reward-copy">
             <text class="reward-title">VIP 每日咔豆</text>
             <text class="reward-subtitle">今日可领取 {{profile.vip.dailyRewardAmount || 0}} 咔豆</text>
@@ -250,7 +258,7 @@
           </button>
         </view>
         <view wx:else class="subscribe-card" bindtap="openVipGuide" hover-class="quick-hover">
-          <ui-icon name="star-four-points" size="{{44}}" color="#f39a13" />
+          <ui-icon name="star-four-points" size="{{44}}" color="var(--color-warning)" />
           <view class="reward-copy">
             <text class="reward-title">订阅后可每日领取咔豆</text>
             <text class="reward-subtitle">开通 VIP 后可在当前账号领取</text>
@@ -258,10 +266,10 @@
           <text class="subscribe-link">去订阅</text>
         </view>
         <view class="benefit-grid">
-          <view class="benefit-item"><ui-icon name="cards-outline" size="{{34}}" color="#f39a13" /><text>卡包免费观看</text></view>
-          <view class="benefit-item"><ui-icon name="gift-outline" size="{{34}}" color="#f39a13" /><text>每日咔豆领取</text></view>
-          <view class="benefit-item"><ui-icon name="star-four-points" size="{{34}}" color="#f39a13" /><text>专属 AI 模板</text></view>
-          <view class="benefit-item"><ui-icon name="robot-outline" size="{{34}}" color="#f39a13" /><text>AI 制卡助手</text></view>
+          <view class="benefit-item"><ui-icon name="cards-outline" size="{{34}}" color="var(--color-warning)" /><text>卡包免费观看</text></view>
+          <view class="benefit-item"><ui-icon name="gift-outline" size="{{34}}" color="var(--color-warning)" /><text>每日咔豆领取</text></view>
+          <view class="benefit-item"><ui-icon name="star-four-points" size="{{34}}" color="var(--color-warning)" /><text>专属 AI 模板</text></view>
+          <view class="benefit-item"><ui-icon name="robot-outline" size="{{34}}" color="var(--color-warning)" /><text>AI 制卡助手</text></view>
         </view>
       </view>
     </view>

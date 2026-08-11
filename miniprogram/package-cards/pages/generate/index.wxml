@@ -6,18 +6,18 @@
       <view class="slot-card back-slot {{currentSlot === 'back' ? 'slot-active' : ''}}" bindtap="chooseSlot" data-slot="back">
         <flip-card wx:if="{{backFace}}" class="slot-renderer" front-card-data="{{backFace.cardData}}" back-card-data="{{emptyCardData}}" preview="{{true}}" read-only="{{true}}" hide-flip-button="{{true}}" />
         <view wx:else class="empty-card">
-          <ui-icon name="cards-outline" size="{{50}}" color="#8b978e" />
+          <ui-icon name="cards-outline" size="{{50}}" color="var(--color-text-muted)" />
           <text>选择背面</text>
         </view>
         <button wx:if="{{cardCount === 2}}" class="remove-back" catchtap="removeBack" aria-label="移除背面">
-          <ui-icon name="close" size="{{26}}" color="#ffffff" />
+          <ui-icon name="close" size="{{26}}" color="var(--color-text-inverse)" />
         </button>
       </view>
 
       <view class="slot-card front-slot {{currentSlot === 'front' ? 'slot-active' : ''}}" bindtap="chooseSlot" data-slot="front">
         <flip-card wx:if="{{frontFace}}" class="slot-renderer" front-card-data="{{frontFace.cardData}}" back-card-data="{{emptyCardData}}" preview="{{true}}" read-only="{{true}}" hide-flip-button="{{true}}" />
         <view wx:else class="empty-card">
-          <ui-icon name="cards-outline" size="{{52}}" color="#6f7c72" />
+          <ui-icon name="cards-outline" size="{{52}}" color="var(--color-text-secondary)" />
           <text>选择正面</text>
         </view>
         <view class="slot-label">正面</view>
@@ -26,24 +26,24 @@
 
     <view class="hero-actions">
       <button class="pack-button {{selectedPack ? '' : 'missing'}}" bindtap="openPackPicker" hover-class="soft-hover">
-        <ui-icon name="view-grid-outline" size="{{28}}" color="{{selectedPack ? '#529917' : '#d64f45'}}" />
+        <ui-icon name="view-grid-outline" size="{{28}}" color="{{selectedPack ? 'var(--color-primary)' : 'var(--color-error)'}}" />
         <text>{{selectedPack ? selectedPack.title : '选择归属卡包'}}</text>
       </button>
       <button class="round-button" bindtap="openPreview" hover-class="soft-hover" aria-label="预览卡片">
-        <ui-icon name="{{frontFace ? 'eye-outline' : 'eye-off-outline'}}" size="{{29}}" color="{{frontFace ? '#529917' : '#8b978e'}}" />
+        <ui-icon name="{{frontFace ? 'eye-outline' : 'eye-off-outline'}}" size="{{29}}" color="{{frontFace ? 'var(--color-primary)' : 'var(--color-text-muted)'}}" />
       </button>
       <button class="round-button" bindtap="resetSelection" hover-class="soft-hover" aria-label="重置选择">
-        <ui-icon name="restart" size="{{28}}" color="#529917" />
+        <ui-icon name="restart" size="{{28}}" color="var(--color-primary)" />
       </button>
     </view>
   </view>
 
   <view class="content">
     <view class="search">
-      <ui-icon name="magnify" size="{{33}}" color="#657065" />
+      <ui-icon name="magnify" size="{{33}}" color="var(--color-text-secondary)" />
       <input class="search-input" value="{{query}}" bindinput="onInput" placeholder="搜索卡面名称..." />
       <button wx:if="{{query}}" class="clear-search" bindtap="clearSearch" aria-label="清除搜索">
-        <ui-icon name="close-circle" size="{{30}}" color="#89928b" />
+        <ui-icon name="close-circle" size="{{30}}" color="var(--color-text-muted)" />
       </button>
     </view>
 
@@ -53,7 +53,7 @@
         <text class="subtitle">选择卡面，组建卡片</text>
       </view>
       <button class="ai-button" bindtap="openAi" hover-class="soft-hover">
-        <ui-icon name="auto-fix" size="{{27}}" color="#ffffff" />
+        <ui-icon name="auto-fix" size="{{27}}" color="var(--color-text-inverse)" />
         <text>生成卡面</text>
       </button>
     </view>
@@ -62,7 +62,7 @@
       <view wx:for="{{[1,2,3,4]}}" wx:key="*this" class="face-card skeleton"></view>
     </view>
     <view wx:elif="{{error}}" class="state">
-      <ui-icon name="alert-circle-outline" size="{{78}}" color="#eb711b" />
+      <ui-icon name="alert-circle-outline" size="{{78}}" color="var(--color-error)" />
       <text>{{error}}</text>
       <button class="state-button" bindtap="loadFaces">重新加载</button>
     </view>
@@ -76,7 +76,7 @@
             preview="{{true}}" read-only="{{true}}" hide-flip-button="{{true}}" is-visible="{{true}}" />
           <image wx:elif="{{item.thumbnailUrl}}" class="face-thumbnail" src="{{item.thumbnailUrl}}" mode="aspectFill" />
           <view wx:else class="face-fallback">
-            <ui-icon name="alert-circle-outline" size="{{48}}" color="#ffffff" />
+            <ui-icon name="alert-circle-outline" size="{{48}}" color="var(--color-text-inverse)" />
             <text>卡面暂不可用</text>
           </view>
           <view wx:if="{{item.selectedAs}}" class="selected-badge">
@@ -90,7 +90,7 @@
       </view>
     </view>
     <view wx:else class="state">
-      <ui-icon name="auto-fix" size="{{80}}" color="#657065" />
+      <ui-icon name="auto-fix" size="{{80}}" color="var(--color-text-secondary)" />
       <text>还没有可用卡面</text>
       <button class="state-button" bindtap="openAi">立即生成</button>
     </view>
@@ -102,7 +102,7 @@
       <ui-icon
         name="{{!frontFace ? 'cards-outline' : (cardCount === 2 && !backFace ? 'cards-outline' : (!selectedPack ? 'view-grid-outline' : 'check-circle'))}}"
         size="{{30}}"
-        color="{{frontFace && (cardCount === 1 || backFace) && selectedPack ? '#ffffff' : '#657065'}}"
+        color="{{frontFace && (cardCount === 1 || backFace) && selectedPack ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)'}}"
       />
     </view>
     <view class="selection-copy">
@@ -117,7 +117,7 @@
     <view class="modal-mask" bindtap="closePreview"></view>
     <view class="preview-dialog">
       <button class="modal-close" bindtap="closePreview" aria-label="关闭预览">
-        <ui-icon name="close" size="{{32}}" color="#ffffff" />
+        <ui-icon name="close" size="{{32}}" color="var(--color-text-inverse)" />
       </button>
       <flip-card id="full-preview" class="full-preview" style="width:100%;height:100%;" front-card-data="{{frontFace.cardData}}"
         back-card-data="{{cardCount === 2 && backFace ? backFace.cardData : emptyCardData}}"
@@ -136,32 +136,32 @@
             <text class="drawer-subtitle">卡片将保存到所选私有卡包</text>
           </view>
           <button class="drawer-close" bindtap="closePackPicker">
-            <ui-icon name="close" size="{{32}}" color="#566058" />
+            <ui-icon name="close" size="{{32}}" color="var(--color-text-secondary)" />
           </button>
         </view>
       </view>
       <scroll-view class="pack-list" scroll-y="{{true}}">
         <button class="quick-create-pack" bindtap="openPackCreator" hover-class="soft-hover">
           <view class="quick-create-icon">
-            <ui-icon name="plus" size="{{34}}" color="#ffffff" />
+            <ui-icon name="plus" size="{{34}}" color="var(--color-text-inverse)" />
           </view>
           <view class="pack-copy">
             <text class="pack-title">快速创建卡包</text>
             <text class="pack-meta">创建成功后自动选中，无需离开组卡页</text>
           </view>
-          <ui-icon name="chevron-right" size="{{31}}" color="#529917" />
+          <ui-icon name="chevron-right" size="{{31}}" color="var(--color-primary)" />
         </button>
         <view wx:for="{{packs}}" wx:key="id" class="pack-row {{selectedPack.id === item.id ? 'pack-selected' : ''}}"
           data-id="{{item.id}}" bindtap="choosePack" hover-class="soft-hover">
           <image wx:if="{{item.author.avatar || userAvatar}}" class="pack-cover" src="{{item.author.avatar || userAvatar}}" mode="aspectFill" />
           <view wx:else class="pack-cover pack-cover-fallback">
-            <ui-icon name="account-outline" size="{{36}}" color="#529917" />
+            <ui-icon name="account-outline" size="{{36}}" color="var(--color-primary)" />
           </view>
           <view class="pack-copy">
             <text class="pack-title">{{item.title}}</text>
             <text class="pack-meta">{{item.cardCount || 0}} 张卡片</text>
           </view>
-          <ui-icon name="{{selectedPack.id === item.id ? 'check-circle' : 'chevron-right'}}" size="{{31}}" color="{{selectedPack.id === item.id ? '#529917' : '#9aa29c'}}" />
+          <ui-icon name="{{selectedPack.id === item.id ? 'check-circle' : 'chevron-right'}}" size="{{31}}" color="{{selectedPack.id === item.id ? 'var(--color-primary)' : 'var(--color-text-muted)'}}" />
         </view>
         <view wx:if="{{!packs.length}}" class="empty-packs">还没有专属卡包，可直接在上方快速创建</view>
       </scroll-view>

@@ -24,6 +24,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
+import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
 
 const CARD_BUILDER_DATA_DOMAINS = ["account", "content"] as const;
 
@@ -115,8 +116,10 @@ Page({
       this.loadPacks(privatePackId),
       getProfile()
         .then((profile) => {
+          bindThemeBackgrounds(this, profile.currentTheme?.config, {
+            heroBackground: "gen_bg",
+          });
           this.setData({
-            heroBackground: profile.currentTheme?.config?.gen_bg || "",
             userAvatar: profile.avatar || "",
           });
         })
@@ -146,8 +149,10 @@ Page({
         this.loadPacks(this.data.selectedPack?.id || ""),
         getProfile()
           .then((profile) => {
+            bindThemeBackgrounds(this, profile.currentTheme?.config, {
+              heroBackground: "gen_bg",
+            });
             this.setData({
-              heroBackground: profile.currentTheme?.config?.gen_bg || "",
               userAvatar: profile.avatar || "",
             });
           })

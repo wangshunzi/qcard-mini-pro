@@ -152,6 +152,17 @@ export function createPrivateCard(data: {
   });
 }
 
+export function deletePrivateCard(id: string) {
+  return request<{ success?: boolean; message?: string }, Record<string, never>>({
+    path: `/api/client/user-private-cards/${encodeURIComponent(id)}`,
+    method: "DELETE",
+    data: {},
+  }).then((result) => {
+    invalidateData("content", "learning");
+    return result;
+  });
+}
+
 export function getPrivateCardFaces(params: {
   page?: number;
   limit?: number;

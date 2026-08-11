@@ -14,7 +14,7 @@
         <text wx:if="{{lastLoginMethod === 'phone'}}" class="recent-tag">最近登录</text>
       </view>
       <view class="field-control">
-        <ui-icon name="cellphone" size="{{42}}" color="#a9a9a9" />
+        <ui-icon name="cellphone" size="{{42}}" color="var(--color-text-muted)" />
       <input
         class="field-input"
         type="number"
@@ -28,7 +28,7 @@
     <view class="field">
       <text class="field-label">验证码</text>
       <view class="field-control code-control">
-        <ui-icon name="shield-key-outline" size="{{40}}" color="#a9a9a9" />
+        <ui-icon name="shield-key-outline" size="{{40}}" color="var(--color-text-muted)" />
       <input
         class="field-input"
         type="number"
@@ -81,7 +81,7 @@
         aria-checked="{{agreed}}"
         aria-label="同意用户协议和隐私政策"
       >
-        <ui-icon wx:if="{{agreed}}" name="check" size="{{21}}" color="#ffffff" />
+        <ui-icon wx:if="{{agreed}}" name="check" size="{{21}}" color="var(--color-text-inverse)" />
       </view>
       <text class="agreement-copy" bindtap="toggleAgreement">我已阅读并同意</text>
       <text class="agreement-link" catchtap="openAgreement">《用户协议》</text>

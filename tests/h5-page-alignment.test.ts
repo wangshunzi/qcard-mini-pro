@@ -14,16 +14,17 @@ describe("H5-aligned product surfaces", () => {
     const metrics = read("miniprogram/utils/navigationMetrics.ts");
     expect(logic).toContain("multipleSlots: true");
     expect(logic).toContain("getImmersiveNavigationMetrics");
-    expect(logic).toContain('"scrollTop, overlay"');
-    expect(logic).toContain("navBackground");
-    expect(logic).toContain('navTitleColor: "#172019"');
+    expect(logic).toContain('"scrollTop, overlay, light"');
+    expect(logic).toContain("navSurfaceOpacity");
+    expect(logic).toContain('navForeground: "var(--color-text)"');
     expect(logic).toContain("(progress - 0.48) / 0.42");
     expect(metrics).toContain("const controlRowTop = capsuleTop");
     expect(metrics).toContain("capsule?.left");
     expect(metrics).toContain("controlsMaxWidth");
     expect(template).toContain("margin-top:{{controlRowTop}}px");
     expect(template).toContain("height:{{totalHeight}}px");
-    expect(template).toContain("color:{{navTitleColor}}");
+    expect(template).toContain("color:{{navForeground}}");
+    expect(template).toContain('class="nav-surface"');
     expect(template).toContain('class="nav-back-icon"');
     expect(read("miniprogram/components/immersive-nav/index.wxss")).toContain(
       ".nav-back-icon { width:100%; height:100%; display:flex; align-items:center; justify-content:center;",
@@ -334,7 +335,9 @@ describe("H5-aligned product surfaces", () => {
     expect(template).toContain("favorite-marketing-tag");
     expect(template).toContain("favorite-taxonomy");
     expect(template).toContain("favorite-pack-action");
-    expect(template).toContain("background:conic-gradient(#529917");
+    expect(template).toContain(
+      "background:conic-gradient(var(--color-primary)",
+    );
     expect(styles).toContain(".favorite-pack-action");
     expect(styles).toContain(".favorite-difficulty");
     expect(config).toContain('"/components/coin-history-drawer/index"');
@@ -366,8 +369,11 @@ describe("H5-aligned product surfaces", () => {
     expect(template).toContain('bindtap="toggleManage"');
     expect(template).toContain('catchtap="deletePack"');
     expect(template).toContain("item.author.avatar || userAvatar");
-    expect(template).toContain('class="private-cover-avatar"');
-    expect(template).toContain('wx:else name="account-outline"');
+    expect(template).toContain("<private-pack-cover");
+    expect(template).toContain('variant="list"');
+    expect(read("miniprogram/components/private-pack-cover/index.wxml")).toContain(
+      'wx:else class="private-avatar avatar-fallback"',
+    );
     expect(logic).toContain('userAvatar: profile.avatar || ""');
     expect(generateTemplate).toContain("item.author.avatar || userAvatar");
     expect(generateTemplate).toContain('name="account-outline"');
@@ -622,8 +628,10 @@ describe("H5-aligned product surfaces", () => {
   it("renders recent learning as an in-flow study list with a tall empty state", () => {
     const template = read("miniprogram/pages/home/index.wxml");
     const styles = read("miniprogram/pages/home/index.wxss");
+    const itemTemplate = read("miniprogram/components/study-pack-list-item/index.wxml");
     expect(template).toContain('class="study-list"');
-    expect(template).toContain('class="study-start"');
+    expect(template).toContain("<study-pack-list-item");
+    expect(itemTemplate).toContain('class="study-start"');
     expect(styles).toContain(".compact-empty { min-height:480rpx;");
     expect(styles).toContain(".compact-empty.recent-empty { min-height:480rpx;");
     expect(styles).not.toMatch(/\.compact-empty\s*\{[^}]*border:/s);

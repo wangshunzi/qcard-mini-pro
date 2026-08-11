@@ -9,7 +9,12 @@ import {
   type CardCatalogue,
   type CardPackDetail,
 } from "../../../services/cardPack";
-import { getProfile } from "../../../services/profile";
+import {
+  favoriteCard,
+  getFavoriteCards,
+  getProfile,
+  unfavoriteCard,
+} from "../../../services/profile";
 import { readCardTransfer } from "../../services/cardTransfer";
 import { readChallengeTransfer } from "../../../stores/challengeTransfer";
 import { enqueueStudyReport } from "../../../stores/studyReportQueue";
@@ -76,6 +81,11 @@ Page({
     purchaseGuideReason: "",
     challengeMode: false,
     privateMode: false,
+    favoriteMode: false,
+    favoritePage: 1,
+    favoriteTotalPages: 1,
+    favoriteLoadingMore: false,
+    favoriteActionLoading: false,
     emptyCardData: {},
     emptyCardPack: {},
   },
@@ -89,6 +99,8 @@ Page({
       previewOnly: query.preview === "1",
       challengeMode: query.challenge === "1",
       privateMode: query.private === "1",
+      favoriteMode: query.favorite === "1",
+      favoritePage: Math.max(1, Number(query.favoritePage) || 1),
       controlRowTop,
       controlRowHeight,
     });
@@ -101,6 +113,8 @@ Page({
       void this.loadChallenge();
     } else if (query.private === "1") {
       void this.loadPrivate();
+    } else if (query.favorite === "1") {
+      void this.loadFavoriteStudy();
     } else {
       void this.load();
     }
@@ -187,7 +201,7 @@ Page({
         sort: index,
         isStudied: item.isCompleted,
         isPreview: true,
-        isFavorited: false,
+        isFavorited: item.isFavorited,
         frontFace: item.frontFace,
         front: isValidCard(front) ? front : undefined,
         cardPackId: item.cardPack.id,
@@ -215,6 +229,116 @@ Page({
     (this as any)._currentCardPackId = cards[activeIndex]?.cardPackId ?? "";
     (this as any)._cardStartedAt = Date.now();
     await this.preloadAround(activeIndex);
+  },
+
+  async loadFavoriteStudy() {
+    const page = Math.max(1, Number((this.data as any).favoritePage) || 1);
+    this.setData({ loading: true, error: "" });
+    try {
+      const result = await getFavoriteCards(page, 20);
+      const cards: StudyCard[] = (result.items ?? []).map((item, index) => {
+        const frontFace = {
+          ...item.frontFace,
+          id: item.frontFace.id || `${item.id}-front`,
+          name: item.frontFace.name || item.name,
+        };
+        const front = toCardData(frontFace);
+        return {
+          id: item.id,
+          name: item.name,
+          sort: index,
+          isStudied: false,
+          isPreview: true,
+          isFavorited: true,
+          frontFace,
+          front: isValidCard(front) ? front : undefined,
+          cardPackId: item.cardPack.id,
+          detailsLoaded: false,
+        };
+      });
+      const initialCardId = String((this as any)._initialCardId ?? "");
+      const initialIndex = cards.findIndex((item) => item.id === initialCardId);
+      const activeIndex = initialIndex >= 0 ? initialIndex : 0;
+      const progressPercent = cards.length
+        ? ((activeIndex + 1) / cards.length) * 100
+        : 0;
+      this.setData({
+        pack: {
+          id: "",
+          title: "收藏卡片",
+          cardCount: Math.max(cards.length, Number(result.total) || 0),
+          isUnlocked: true,
+        },
+        cards,
+        activeIndex,
+        favoritePage: Math.max(1, Number(result.page) || page),
+        favoriteTotalPages: Math.max(1, Number(result.totalPages) || 1),
+        loading: false,
+        progressPercent,
+        progressLabel: progressPercent.toFixed(1),
+      });
+      (this as any)._currentCardId = cards[activeIndex]?.id ?? "";
+      (this as any)._currentCardPackId = cards[activeIndex]?.cardPackId ?? "";
+      (this as any)._cardStartedAt = Date.now();
+      await this.preloadAround(activeIndex);
+      void this.loadMoreFavoriteStudyIfNeeded(activeIndex);
+    } catch (error) {
+      this.setData({
+        loading: false,
+        error: error instanceof Error ? error.message : "收藏卡片加载失败",
+      });
+    }
+  },
+
+  async loadMoreFavoriteStudyIfNeeded(index: number) {
+    const state = this.data as any;
+    const cards = state.cards as StudyCard[];
+    if (
+      !state.favoriteMode ||
+      state.favoriteLoadingMore ||
+      Number(state.favoritePage) >= Number(state.favoriteTotalPages) ||
+      index < Math.max(0, cards.length - 3)
+    ) return;
+    this.setData({ favoriteLoadingMore: true });
+    try {
+      const nextPage = Number(state.favoritePage) + 1;
+      const result = await getFavoriteCards(nextPage, 20);
+      const existingIds = new Set(cards.map((item) => item.id));
+      const appended: StudyCard[] = (result.items ?? [])
+        .filter((item) => !existingIds.has(item.id))
+        .map((item, offset) => {
+          const frontFace = {
+            ...item.frontFace,
+            id: item.frontFace.id || `${item.id}-front`,
+            name: item.frontFace.name || item.name,
+          };
+          const front = toCardData(frontFace);
+          return {
+            id: item.id,
+            name: item.name,
+            sort: cards.length + offset,
+            isStudied: false,
+            isPreview: true,
+            isFavorited: true,
+            frontFace,
+            front: isValidCard(front) ? front : undefined,
+            cardPackId: item.cardPack.id,
+            detailsLoaded: false,
+          };
+        });
+      this.setData({
+        cards: [...cards, ...appended],
+        favoritePage: Math.max(nextPage, Number(result.page) || nextPage),
+        favoriteTotalPages: Math.max(1, Number(result.totalPages) || 1),
+      });
+    } catch (error) {
+      wx.showToast({
+        title: error instanceof Error ? error.message : "更多收藏加载失败",
+        icon: "none",
+      });
+    } finally {
+      this.setData({ favoriteLoadingMore: false });
+    }
   },
 
   async load() {
@@ -276,6 +400,8 @@ Page({
       void this.loadChallenge();
     } else if ((this.data as any).privateMode) {
       void this.loadPrivate();
+    } else if ((this.data as any).favoriteMode) {
+      void this.loadFavoriteStudy();
     } else {
       void this.load();
     }
@@ -422,6 +548,7 @@ Page({
       (this.selectComponent(`#study-card-${current}`) as any)?.showFront?.();
     }, 0);
     void this.preloadAround(current);
+    void this.loadMoreFavoriteStudyIfNeeded(current);
   },
 
   onCardEvent(event: WechatMiniprogram.CustomEvent) {
@@ -443,6 +570,21 @@ Page({
       this.setData({ activeIndex: current + 1 });
       return;
     }
+    if (
+      state.favoriteMode &&
+      Number(state.favoritePage) < Number(state.favoriteTotalPages)
+    ) {
+      if (state.favoriteLoadingMore) {
+        wx.showToast({ title: "正在加载更多收藏", icon: "none" });
+      } else {
+        void this.loadMoreFavoriteStudyIfNeeded(current).then(() => {
+          if (Number((this.data as any).activeIndex) < (this.data as any).cards.length - 1) {
+            this.setData({ activeIndex: Number((this.data as any).activeIndex) + 1 });
+          }
+        });
+      }
+      return;
+    }
     this.reportCurrentCard();
     (this as any)._trackingPaused = true;
     this.setData({
@@ -454,6 +596,52 @@ Page({
   flip() {
     const index = Number((this.data as any).activeIndex);
     (this.selectComponent(`#study-card-${index}`) as any)?.flip?.();
+  },
+
+  async toggleFavorite() {
+    const state = this.data as any;
+    if (state.favoriteActionLoading || state.privateMode) return;
+    const index = Number(state.activeIndex);
+    const card = (state.cards as StudyCard[])[index];
+    const cardPackId = String(card?.cardPackId || state.packId || "");
+    if (!card?.id || !cardPackId) return;
+    this.setData({ favoriteActionLoading: true });
+    try {
+      if (card.isFavorited) {
+        this.reportCurrentCard();
+        await unfavoriteCard(card.id);
+        if (state.favoriteMode) {
+          const cards = (state.cards as StudyCard[]).filter((item) => item.id !== card.id);
+          const nextIndex = Math.min(index, Math.max(0, cards.length - 1));
+          this.setData({
+            cards,
+            "pack.cardCount": Math.max(0, Number(state.pack?.cardCount || cards.length) - 1),
+            activeIndex: nextIndex,
+            progressPercent: cards.length ? ((nextIndex + 1) / cards.length) * 100 : 0,
+            progressLabel: cards.length
+              ? (((nextIndex + 1) / cards.length) * 100).toFixed(1)
+              : "0.0",
+          });
+          (this as any)._currentCardId = cards[nextIndex]?.id ?? "";
+          (this as any)._currentCardPackId = cards[nextIndex]?.cardPackId ?? "";
+          void this.preloadAround(nextIndex);
+        } else {
+          this.setData({ [`cards[${index}].isFavorited`]: false });
+        }
+        wx.showToast({ title: "已取消收藏", icon: "success" });
+      } else {
+        await favoriteCard(card.id, cardPackId);
+        this.setData({ [`cards[${index}].isFavorited`]: true });
+        wx.showToast({ title: "已收藏", icon: "success" });
+      }
+    } catch (error) {
+      wx.showToast({
+        title: error instanceof Error ? error.message : "收藏操作失败",
+        icon: "none",
+      });
+    } finally {
+      this.setData({ favoriteActionLoading: false });
+    }
   },
 
   retryCard() {
@@ -585,6 +773,8 @@ Page({
       }
       return;
     }
+    const currentCard = (state.cards as StudyCard[])[Number(state.activeIndex)];
+    if (state.favoriteMode && (currentCard?.locked || currentCard?.loadError)) return;
     if (!cardPackId || (!pack?.isUnlocked && !state.challengeMode) || !cardId) return;
     const seconds = Math.max(1, (Date.now() - Number((this as any)._cardStartedAt)) / 1000);
     (this as any)._cardStartedAt = Date.now();
@@ -611,7 +801,7 @@ Page({
   async refreshVipAccess() {
     markDataFresh(this as any, STUDY_ACCESS_DOMAINS);
     const state = this.data as any;
-    if (state.privateMode || state.challengeMode || !state.packId) return;
+    if (state.privateMode || state.challengeMode || state.favoriteMode || !state.packId) return;
     try {
       const profile = await getProfile();
       const isVip = profile.vip?.isVip === true;

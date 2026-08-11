@@ -22,6 +22,7 @@ import {
   shouldRefreshData,
   type DataDomain,
 } from "../../stores/dataInvalidation";
+import { bindThemeBackgrounds } from "../../design-system/themeBackground";
 
 const RESOURCE_DATA_DOMAINS: DataDomain[] = ["account", "wallet", "learning"];
 
@@ -185,6 +186,9 @@ Page({
         (this.data as any).subjectIndex,
         Math.max(0, subjects.length - 1),
       );
+      bindThemeBackgrounds(this, profile.currentTheme?.config, {
+        resourceBackground: "resource_bg",
+      });
       this.setData({
         grades,
         gradeIndex,
@@ -197,7 +201,6 @@ Page({
           profile.vip?.isVip === true,
         ),
         collapsedKnowledgePoints: {},
-        resourceBackground: profile.currentTheme?.config?.resource_bg || "",
         userBalance: Math.max(0, Number(profile.balance || 0)),
         isVip: profile.vip?.isVip === true,
       });

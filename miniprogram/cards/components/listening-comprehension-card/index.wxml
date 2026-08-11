@@ -12,7 +12,7 @@
         <view class="header-title">{{content.titleText}}</view>
       </view>
       <view class="preview-play" style="background:{{primary}}">
-        <ui-icon name="play" size="{{30}}" color="#ffffff" />
+        <ui-icon name="play" size="{{30}}" color="var(--color-text-inverse)" />
       </view>
     </view>
   </block>
@@ -33,7 +33,7 @@
         bindtap="togglePassage"
       >
         <view class="glass-play-inner">
-          <ui-icon name="{{passagePlaying ? 'pause' : 'play'}}" size="{{60}}" color="#ffffff" />
+          <ui-icon name="{{passagePlaying ? 'pause' : 'play'}}" size="{{60}}" color="var(--color-text-inverse)" />
         </view>
       </view>
       <scroll-view wx:if="{{content.transcriptText}}" class="transcript-overlay {{transcriptExpanded ? 'transcript-visible' : ''}}" scroll-y>
@@ -48,7 +48,7 @@
     <view class="listen-actions">
       <view class="round-action" bindtap="cycleRate">{{playbackRate}}x</view>
       <view class="round-action {{transcriptExpanded ? 'action-active' : ''}}" bindtap="toggleTranscript" aria-label="{{transcriptExpanded ? '收起听力文稿' : '展开听力文稿'}}">
-        <ui-icon name="file-document-outline" size="{{34}}" color="#ffffff" />
+        <ui-icon name="file-document-outline" size="{{34}}" color="var(--color-text-inverse)" />
       </view>
       <view class="start-answer {{requireListen && !hasListenedOnce ? '' : 'start-ready'}}" bindtap="startAnswering">
         <ui-icon name="{{requireListen && !hasListenedOnce ? 'lock' : 'rocket-launch-outline'}}" size="{{30}}" color="currentColor" />
@@ -60,7 +60,7 @@
   <view wx:else class="answer-content">
     <view class="answer-topbar">
       <view class="answer-back" bindtap="backToListening">
-        <ui-icon name="chevron-left" size="{{38}}" color="#ffffff" />
+        <ui-icon name="chevron-left" size="{{38}}" color="var(--color-text-inverse)" />
         <text>听力</text>
       </view>
       <view class="answer-stepper">
@@ -84,7 +84,7 @@
         <block wx:else>
           <text class="question-copy">{{question.text || '暂无题目'}}</text>
           <view wx:if="{{question.audio}}" class="question-audio" bindtap="playQuestionAudio">
-            <ui-icon name="volume-high" size="{{28}}" color="#244d3f" />
+            <ui-icon name="volume-high" size="{{28}}" color="var(--color-primary)" />
           </view>
         </block>
       </view>
@@ -107,10 +107,10 @@
 
     <view class="answer-controls">
       <view class="answer-play" bindtap="togglePassage">
-        <ui-icon name="{{passagePlaying ? 'pause' : 'play'}}" size="{{34}}" color="#ffffff" />
+        <ui-icon name="{{passagePlaying ? 'pause' : 'play'}}" size="{{34}}" color="var(--color-text-inverse)" />
       </view>
       <view wx:if="{{phase === 'completed'}}" class="restart-answer" bindtap="restart">
-        <ui-icon name="restart" size="{{30}}" color="#ffffff" />
+        <ui-icon name="restart" size="{{30}}" color="var(--color-text-inverse)" />
         <text>再来一次</text>
       </view>
       <view wx:else class="answer-nav">

@@ -1,0 +1,25 @@
+:host { display:block; width:100%; height:100%; }
+.private-pack-cover { position:relative; width:100%; height:100%; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; box-sizing:border-box; color:var(--color-primary-30); background:linear-gradient(145deg,#fff 0%,var(--color-secondary-10) 100%); }
+.private-tag { position:absolute; border-radius:999rpx; color:var(--color-text-inverse); background:var(--color-primary-20); line-height:1.2; }
+.private-avatar { overflow:hidden; flex:none; border-radius:50%; background:var(--color-card); }
+.avatar-fallback { display:flex; align-items:center; justify-content:center; background: var(--color-glass); }
+.private-title { color:var(--color-primary-30); font-weight:750; line-height:1.2; white-space:nowrap; }
+.private-en { color:var(--color-primary-20); line-height:1.2; letter-spacing:.16em; }
+
+.detail { border-radius:30rpx; box-shadow:0 18rpx 42rpx rgba(26,46,32,.17); }
+.detail .private-tag { top:18rpx; left:18rpx; padding:5rpx 15rpx; font-size:18rpx; }
+.detail .private-avatar { width:150rpx; height:150rpx; }
+.detail .private-title { margin-top:22rpx; font-size:27rpx; }
+.detail .private-en { margin-top:8rpx; font-size:19rpx; }
+
+.home { border-radius:12rpx; }
+.home .private-tag { top:7rpx; left:7rpx; padding:3rpx 8rpx; font-size:11rpx; }
+.home .private-avatar { width:62rpx; height:62rpx; }
+.home .private-title { margin-top:10rpx; font-size:14rpx; }
+.home .private-en { margin-top:5rpx; font-size:9rpx; }
+
+.list { border-radius:18rpx; }
+.list .private-tag { top:8rpx; left:8rpx; padding:3rpx 9rpx; font-size:12rpx; }
+.list .private-avatar { width:72rpx; height:72rpx; }
+.list .private-title { margin-top:11rpx; font-size:16rpx; }
+.list .private-en { margin-top:5rpx; font-size:10rpx; }

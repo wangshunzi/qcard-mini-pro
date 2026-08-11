@@ -1,7 +1,11 @@
 {
   "navigationStyle": "custom",
+  "initialRenderingCache": "static",
+  "backgroundColor": "@backgroundColor",
+  "backgroundColorTop": "@backgroundColorTop",
+  "backgroundColorBottom": "@backgroundColorBottom",
   "enablePullDownRefresh": true,
-  "backgroundTextStyle": "dark",
+  "backgroundTextStyle": "@backgroundTextStyle",
   "usingComponents": {
     "card-preview-modal": "/components/card-preview-modal/index",
     "coin-history-drawer": "/components/coin-history-drawer/index",
@@ -9,6 +13,7 @@
     "flip-card": "/cards/FlipCardContainer/index",
     "immersive-nav": "/components/immersive-nav/index",
     "private-card-face-item": "/components/private-card-face-item/index",
+    "study-pack-list-item": "/components/study-pack-list-item/index",
     "ui-icon": "/components/ui-icon/index"
   }
 }

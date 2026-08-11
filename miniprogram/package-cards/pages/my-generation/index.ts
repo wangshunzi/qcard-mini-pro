@@ -12,6 +12,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
+import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
 
 const GENERATED_CONTENT_DOMAINS = ["account", "content"] as const;
 
@@ -71,7 +72,9 @@ Page({
     void this.load(true);
     void getProfile()
       .then((profile) => {
-        this.setData({ heroBackground: profile.currentTheme?.config?.explore_bg || "" });
+        bindThemeBackgrounds(this, profile.currentTheme?.config, {
+          heroBackground: "explore_bg",
+        });
       })
       .catch(() => undefined);
   },
@@ -87,7 +90,9 @@ Page({
       void this.refreshPrivateFaces(true);
       void getProfile()
         .then((profile) => {
-          this.setData({ heroBackground: profile.currentTheme?.config?.explore_bg || "" });
+          bindThemeBackgrounds(this, profile.currentTheme?.config, {
+            heroBackground: "explore_bg",
+          });
         })
         .catch(() => undefined);
     } else if (hasGeneratingFaces(this.data.items)) {
@@ -224,7 +229,11 @@ Page({
       return;
     }
     wx.navigateTo({
-      url: `/package-cards/pages/ai-generate/index?templateId=${encodeURIComponent(card.templateId)}`,
+      url:
+        `/package-cards/pages/ai-generate/index?templateId=${encodeURIComponent(card.templateId)}` +
+        (card.genParams
+          ? `&genParams=${encodeURIComponent(JSON.stringify(card.genParams))}`
+          : ""),
     });
   },
 
@@ -274,6 +283,7 @@ Page({
     const payload: CardTransferPayload = {
       front: { type: card.type, data: card.data! },
       title: card.name,
+      genParams: card.genParams,
       privateFace: {
         id: card.id,
         templateId: card.templateId,

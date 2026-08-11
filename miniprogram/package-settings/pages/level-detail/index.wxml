@@ -21,7 +21,7 @@
       </view>
 
       <view class="level-summary current-summary">
-        <ui-icon name="trophy-outline" size="{{48}}" color="#529917" />
+        <ui-icon name="trophy-outline" size="{{48}}" color="var(--color-primary)" />
         <view class="summary-copy">
           <text>当前等级：{{currentLevelInfo.name}}</text>
           <text>{{currentLevelInfo.description}}</text>
@@ -30,7 +30,7 @@
       </view>
 
       <view class="level-summary next-summary">
-        <ui-icon name="gift-outline" size="{{48}}" color="#f2ae25" />
+        <ui-icon name="gift-outline" size="{{48}}" color="var(--color-warning)" />
         <view class="summary-copy">
           <text>下一级奖励</text>
           <text>{{nextLevelInfo ? nextLevelInfo.name : '已达到最高级别'}}</text>
@@ -51,14 +51,16 @@
 
       <view wx:if="{{tab === 'history'}}" class="history-list">
         <view wx:for="{{histories}}" wx:key="id" class="history-item">
-          <view class="history-icon"><ui-icon name="star-four-points" size="{{32}}" color="#529917" /></view>
+          <view class="history-icon"><ui-icon name="star-four-points" size="{{32}}" color="var(--color-primary)" /></view>
           <view class="history-copy"><text>{{item.description || item.reason || '学习经验'}}</text><text>{{item.dateText}}</text></view>
           <text class="history-amount">{{item.amount > 0 ? '+' : ''}}{{item.amount}} 经验</text>
         </view>
         <view wx:if="{{!histories.length}}" class="empty">
-          <ui-icon name="school-outline" size="{{74}}" color="#777d79" />
+          <ui-icon name="school-outline" size="{{74}}" color="var(--color-text-secondary)" />
           <text>暂无经验记录</text>
         </view>
+        <view wx:elif="{{historyLoadingMore}}" class="history-more">加载更多记录…</view>
+        <view wx:elif="{{historyPage >= historyTotalPages}}" class="history-more">已显示全部 {{historyTotal}} 条</view>
       </view>
 
       <view wx:else class="benefit-list">

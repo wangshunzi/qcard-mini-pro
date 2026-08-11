@@ -1,1 +1,1 @@
-page { background:#fff; }
+page { background:var(--color-card); }

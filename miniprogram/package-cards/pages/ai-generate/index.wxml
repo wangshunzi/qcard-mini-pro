@@ -11,10 +11,10 @@
     <view slot="action" class="header-action">
       <view wx:if="{{stepIndex === 0}}" class="app-segmented nav-segmented icon-segmented" aria-role="tablist">
         <button class="app-segmented-option {{viewMode === 'carousel' ? 'active' : ''}}" data-mode="carousel" bindtap="switchViewMode" hover-class="app-segmented-option-hover" aria-label="轮播模式" aria-role="tab" aria-checked="{{viewMode === 'carousel'}}">
-          <ui-icon name="view-carousel" size="{{35}}" color="{{viewMode === 'carousel' ? '#ffffff' : '#748077'}}" />
+          <ui-icon name="view-carousel" size="{{35}}" color="{{viewMode === 'carousel' ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)'}}" />
         </button>
         <button class="app-segmented-option {{viewMode === 'grid' ? 'active' : ''}}" data-mode="grid" bindtap="switchViewMode" hover-class="app-segmented-option-hover" aria-label="列表模式" aria-role="tab" aria-checked="{{viewMode === 'grid'}}">
-          <ui-icon name="view-grid-outline" size="{{34}}" color="{{viewMode === 'grid' ? '#ffffff' : '#748077'}}" />
+          <ui-icon name="view-grid-outline" size="{{34}}" color="{{viewMode === 'grid' ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)'}}" />
         </button>
       </view>
       <view wx:else class="template-badge">{{currentSummary.name}}</view>
@@ -28,13 +28,13 @@
     </view>
 
     <view wx:elif="{{loadError}}" class="state">
-      <ui-icon name="alert-circle-outline" size="{{88}}" color="#c85d55" />
+      <ui-icon name="alert-circle-outline" size="{{88}}" color="var(--color-error)" />
       <text class="state-title">{{loadError}}</text>
       <button class="retry-button" bindtap="retryLoad">重试</button>
     </view>
 
     <view wx:elif="{{empty}}" class="state">
-      <ui-icon name="auto-fix" size="{{88}}" color="#748077" />
+      <ui-icon name="auto-fix" size="{{88}}" color="var(--color-text-secondary)" />
       <text class="state-title">暂无可用模板</text>
     </view>
 
@@ -54,7 +54,7 @@
           <view class="carousel-item {{selectedIndex === index ? 'active' : 'inactive'}}">
             <view class="template-card">
               <view wx:if="{{item.vipRequired}}" class="vip-badge">
-                <ui-icon name="crown" size="{{25}}" color="#ffffff" /><text>VIP</text>
+                <ui-icon name="crown" size="{{25}}" color="var(--color-text-inverse)" /><text>VIP</text>
               </view>
               <flip-card
                 wx:if="{{item.previewCard}}"
@@ -66,7 +66,7 @@
                 is-visible="{{selectedIndex === index}}"
               />
               <view wx:elif="{{item.detailError}}" class="card-state">
-                <ui-icon name="alert-circle-outline" size="{{54}}" color="#c85d55" />
+                <ui-icon name="alert-circle-outline" size="{{54}}" color="var(--color-error)" />
                 <text>{{item.detailError}}</text>
               </view>
               <view wx:else class="card-state">
@@ -86,15 +86,15 @@
             data-index="{{index}}" bindtap="chooseGridTemplate">
             <view class="grid-card-preview {{selectedIndex === index ? 'selected' : ''}}">
               <view wx:if="{{selectedIndex === index}}" class="selected-icon">
-                <ui-icon name="check-circle" size="{{42}}" color="#529917" />
+                <ui-icon name="check-circle" size="{{42}}" color="var(--color-primary)" />
               </view>
-              <view wx:if="{{item.vipRequired}}" class="grid-vip-badge"><ui-icon name="crown" size="{{25}}" color="#ffffff" /></view>
+              <view wx:if="{{item.vipRequired}}" class="grid-vip-badge"><ui-icon name="crown" size="{{25}}" color="var(--color-text-inverse)" /></view>
               <flip-card wx:if="{{item.previewCard}}" front-card-data="{{item.previewCard}}"
                 aspect-ratio="portrait" hide-flip-button="{{true}}" preview="{{true}}"
                 read-only="{{true}}" is-visible="{{viewMode === 'grid'}}" />
               <view wx:else class="card-state grid-state">
                 <view wx:if="{{!item.detailError}}" class="spinner small"></view>
-                <ui-icon wx:else name="alert-circle-outline" size="{{42}}" color="#c85d55" />
+                <ui-icon wx:else name="alert-circle-outline" size="{{42}}" color="var(--color-error)" />
                 <text>{{item.detailError || '加载中...'}}</text>
               </view>
             </view>
@@ -112,7 +112,7 @@
         <view class="spinner"></view><text>正在准备参数...</text>
       </view>
       <view wx:elif="{{templateError}}" class="state form-state">
-        <ui-icon name="alert-circle-outline" size="{{76}}" color="#c85d55" />
+        <ui-icon name="alert-circle-outline" size="{{76}}" color="var(--color-error)" />
         <text class="state-title">模板暂时不可用</text>
         <text class="state-copy">{{templateError}}</text>
         <button class="retry-button" bindtap="retryTemplate">重试</button>
@@ -133,21 +133,21 @@
           <text class="template-info-price">◆ {{currentSummary.price}} 咔豆</text>
         </view>
         <button wx:else class="text-action back-action" disabled="{{submitting}}" bindtap="previousStep">
-          <ui-icon name="chevron-left" size="{{32}}" color="#529917" /><text>上一步</text>
+          <ui-icon name="chevron-left" size="{{32}}" color="var(--color-primary)" /><text>上一步</text>
         </button>
       </view>
 
       <view class="bottom-right">
         <view wx:if="{{stepIndex === 0 && vipBlocked}}" class="blocked-action">
           <button class="primary-action vip-action" bindtap="openVipGuide">开通 VIP</button>
-          <view class="action-warning"><ui-icon name="crown" size="{{22}}" color="#f39a13" /><text>该模板仅限 VIP 使用</text></view>
+          <view class="action-warning"><ui-icon name="crown" size="{{22}}" color="var(--color-warning)" /><text>该模板仅限 VIP 使用</text></view>
         </view>
         <view wx:elif="{{stepIndex === 0 && !canAfford}}" class="blocked-action">
           <button class="primary-action" bindtap="openRechargeGuide">购买咔豆</button>
           <text class="action-warning error">◆ 余额不足，还需 {{needBalance}} 咔豆</text>
         </view>
         <button wx:elif="{{stepIndex === 0}}" class="text-action" disabled="{{templateLoading || templateError}}" bindtap="nextStep">
-          <text>下一步</text><ui-icon name="chevron-right" size="{{32}}" color="#529917" />
+          <text>下一步</text><ui-icon name="chevron-right" size="{{32}}" color="var(--color-primary)" />
         </button>
         <button wx:else class="primary-action generate-action" loading="{{submitting}}"
           disabled="{{submitting || !valid || vipBlocked || !canAfford}}" bindtap="generate">生成</button>

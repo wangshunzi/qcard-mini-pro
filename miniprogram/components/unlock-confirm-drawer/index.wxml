@@ -6,7 +6,7 @@
       <view class="unlock-heading">
         <view class="unlock-heading-main">
           <view class="unlock-heading-icon">
-            <ui-icon name="lock-open-outline" size="{{39}}" color="#529917" />
+            <ui-icon name="lock-open-outline" size="{{39}}" color="var(--color-primary)" />
           </view>
           <view class="unlock-heading-copy">
             <text class="unlock-title">{{canAfford ? '解锁确认' : '余额不足'}}</text>
@@ -27,7 +27,7 @@
       <view class="unlock-pack-row">
         <image wx:if="{{cardPackInfo.cover}}" class="unlock-cover" src="{{cardPackInfo.cover}}" mode="aspectFill" />
         <view wx:else class="unlock-cover unlock-cover-fallback">
-          <ui-icon name="cards-outline" size="{{46}}" color="#ffffff" />
+          <ui-icon name="cards-outline" size="{{46}}" color="var(--color-text-inverse)" />
         </view>
         <view class="unlock-pack-copy">
           <view class="unlock-pack-title-row">
@@ -37,12 +37,12 @@
           <view wx:if="{{cardPackInfo.author && cardPackInfo.author.name}}" class="unlock-author">
             <image wx:if="{{cardPackInfo.author.avatar}}" class="unlock-author-avatar" src="{{cardPackInfo.author.avatar}}" mode="aspectFill" />
             <view wx:else class="unlock-author-avatar unlock-author-fallback">
-              <ui-icon name="account-outline" size="{{20}}" color="#6f776f" />
+              <ui-icon name="account-outline" size="{{20}}" color="var(--color-text-secondary)" />
             </view>
             <text>{{cardPackInfo.author.name}}</text>
           </view>
           <view class="unlock-count">
-            <ui-icon name="lock" size="{{23}}" color="#6f776f" />
+            <ui-icon name="lock" size="{{23}}" color="var(--color-text-secondary)" />
             <text>{{cardPackInfo.cardCount || 0}} 张卡片</text>
           </view>
         </view>
@@ -60,7 +60,7 @@
           </view>
           <view wx:if="{{hasDiscount}}" class="unlock-price-row">
             <view class="unlock-price-label-with-icon">
-              <ui-icon name="gift-outline" size="{{25}}" color="#c95752" />
+              <ui-icon name="gift-outline" size="{{25}}" color="var(--color-error)" />
               <text>活动折扣</text>
             </view>
             <view class="unlock-discount">
@@ -70,7 +70,7 @@
           </view>
           <view wx:if="{{hasLevelDiscount}}" class="unlock-price-row">
             <view class="unlock-price-label-with-icon">
-              <ui-icon name="crown" size="{{25}}" color="#c95752" />
+              <ui-icon name="crown" size="{{25}}" color="var(--color-error)" />
               <text>等级折扣</text>
             </view>
             <view class="unlock-discount">
@@ -92,11 +92,11 @@
     <view class="unlock-actions">
       <button class="unlock-action cancel {{isLoading ? 'disabled' : ''}}" bindtap="close" disabled="{{isLoading}}">取消</button>
       <button wx:if="{{canAfford}}" class="unlock-action confirm {{isLoading ? 'disabled' : ''}}" bindtap="confirm" loading="{{isLoading}}" disabled="{{isLoading}}">
-        <ui-icon wx:if="{{!isLoading}}" name="lock-open-outline" size="{{30}}" color="#3e2a05" />
+        <ui-icon wx:if="{{!isLoading}}" name="lock-open-outline" size="{{30}}" color="var(--color-text)" />
         <text>{{isLoading ? '解锁中…' : '立即解锁'}}</text>
       </button>
       <button wx:else class="unlock-action recharge {{isLoading ? 'disabled' : ''}}" bindtap="recharge" disabled="{{isLoading}}">
-        <ui-icon name="wallet" size="{{29}}" color="#ffffff" />
+        <ui-icon name="wallet" size="{{29}}" color="var(--color-text-inverse)" />
         <text>立即充值</text>
       </button>
     </view>

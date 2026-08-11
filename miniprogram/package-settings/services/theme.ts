@@ -1,17 +1,12 @@
 import { request } from "../../services/http";
 import { invalidateData } from "../../stores/dataInvalidation";
+import type { ThemeConfig } from "../../design-system/theme";
 
 export interface Theme {
   id: string;
   name: string;
   description?: string;
-  config: {
-    home_bg?: string;
-    explore_bg?: string;
-    resource_bg?: string;
-    profile_bg?: string;
-    login_bg?: string;
-  };
+  config: ThemeConfig;
   isDefault: boolean;
   sort: number;
 }

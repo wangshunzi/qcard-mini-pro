@@ -1,7 +1,7 @@
 {
   "navigationStyle": "custom",
   "enablePullDownRefresh": true,
-  "backgroundTextStyle": "dark",
+  "backgroundTextStyle": "@backgroundTextStyle",
   "usingComponents": {
     "card-preview-modal": "/components/card-preview-modal/index",
     "coin-history-drawer": "/components/coin-history-drawer/index",

@@ -9,9 +9,9 @@
       aria-label="选择年级"
     >
       <image wx:if="{{grades[gradeIndex].icon}}" class="drawer-selector-trigger-icon" src="{{grades[gradeIndex].icon}}" mode="aspectFit" />
-      <ui-icon wx:else name="book-open-outline" size="{{27}}" color="#4f3218" />
+      <ui-icon wx:else name="book-open-outline" size="{{27}}" color="var(--color-text)" />
       <text class="drawer-selector-trigger-label">{{selectedGradeName}}</text>
-      <ui-icon class="drawer-selector-trigger-chevron" name="chevron-down" size="{{26}}" color="#303630" />
+      <ui-icon class="drawer-selector-trigger-chevron" name="chevron-down" size="{{26}}" color="var(--color-text)" />
     </button>
     <view slot="action" class="app-segmented nav-segmented" aria-role="tablist">
       <button class="app-segmented-option {{mode === 'cardpack' ? 'active' : ''}}" data-mode="cardpack" bindtap="switchMode" hover-class="app-segmented-option-hover" aria-role="tab" aria-checked="{{mode === 'cardpack'}}">卡包</button>
@@ -28,17 +28,17 @@
       <text class="header-subheading">{{mode === 'cardpack' ? '按年级和学科查找卡包' : '查看卡片预览，先看效果再选卡包'}}</text>
     </view>
     <view class="search">
-      <ui-icon name="magnify" size="{{37}}" color="#5d5d5d" />
+      <ui-icon name="magnify" size="{{37}}" color="var(--color-text-secondary)" />
       <input class="search-input" value="{{query}}" placeholder="{{mode === 'preview' ? '搜索预览卡片...' : '搜索卡包名称...'}}" bindinput="onInput" confirm-type="search" />
       <view wx:if="{{query}}" class="clear" bindtap="clearSearch">
-        <ui-icon name="close-circle" size="{{34}}" color="#a9a9a9" />
+        <ui-icon name="close-circle" size="{{34}}" color="var(--color-text-muted)" />
       </view>
     </view>
   </view>
 
   <view class="resource-content">
     <view wx:if="{{error && !loading}}" class="state error-state">
-      <ui-icon name="alert-circle-outline" size="{{88}}" color="#eb711b" />
+      <ui-icon name="alert-circle-outline" size="{{88}}" color="var(--color-error)" />
       <text class="state-title">资源加载失败</text>
       <text>{{error}}</text>
       <button class="state-button" bindtap="load">重新加载</button>
@@ -78,7 +78,7 @@
               </view>
             </view>
             <view class="preview-pack-status">
-              <ui-icon wx:if="{{item.cardPack.isUnlocked}}" name="lock-open-outline" size="{{27}}" color="#529917" />
+              <ui-icon wx:if="{{item.cardPack.isUnlocked}}" name="lock-open-outline" size="{{27}}" color="var(--color-primary)" />
               <text wx:elif="{{item.packDisplayPrice > 0}}">{{item.packDisplayPrice}}咔豆</text>
               <text wx:else>免费</text>
             </view>
@@ -86,7 +86,7 @@
         </view>
       </view>
       <view wx:else class="state">
-        <ui-icon name="magnify" size="{{88}}" color="#3f3f3f" />
+        <ui-icon name="magnify" size="{{88}}" color="var(--color-text)" />
         <text class="state-title">暂无预览卡片</text>
       </view>
       <view wx:if="{{previewLoadingMore}}" class="load-more">正在加载更多…</view>
@@ -103,13 +103,13 @@
             <view class="pack-footer">
               <text wx:if="{{item.isUnlocked}}" class="unlocked">已解锁</text>
               <text wx:else>{{item.priceInfo.finalPrice || item.basePrice || 0}} 咔豆</text>
-              <ui-icon name="chevron-right" size="{{27}}" color="#a9a9a9" />
+              <ui-icon name="chevron-right" size="{{27}}" color="var(--color-text-muted)" />
             </view>
           </view>
         </view>
       </view>
       <view wx:else class="state">
-        <ui-icon name="magnify" size="{{88}}" color="#3f3f3f" />
+        <ui-icon name="magnify" size="{{88}}" color="var(--color-text)" />
         <text class="state-title">没有找到相关卡包</text>
       </view>
       <view wx:if="{{loadingMore}}" class="load-more">正在加载更多…</view>
@@ -127,11 +127,11 @@
         <view wx:for="{{knowledgePoints}}" wx:key="id" class="knowledge-item">
           <view class="knowledge-heading" data-id="{{item.id}}" bindtap="toggleKnowledge">
             <view class="knowledge-heading-left">
-              <view class="knowledge-icon"><ui-icon name="book-open-outline" size="{{24}}" color="#529917" /></view>
+              <view class="knowledge-icon"><ui-icon name="book-open-outline" size="{{24}}" color="var(--color-primary)" /></view>
               <text>{{item.name}}</text>
             </view>
             <view class="knowledge-chevron {{item.collapsed ? '' : 'expanded'}}">
-              <ui-icon name="chevron-down" size="{{34}}" color="#777d79" />
+              <ui-icon name="chevron-down" size="{{34}}" color="var(--color-text-secondary)" />
             </view>
           </view>
           <view wx:if="{{!item.collapsed}}" class="knowledge-panel">
@@ -170,19 +170,19 @@
                       </view>
                     </block>
                     <view wx:else class="last-study">
-                      <ui-icon name="clock-outline" size="{{25}}" color="#858b87" />
+                      <ui-icon name="clock-outline" size="{{25}}" color="var(--color-text-secondary)" />
                       <text>{{pack.unlockType === 'vip_free' ? 'VIP 免费' : pack.timeAgo}}</text>
                     </view>
                   </view>
                   <view
                     class="pack-action {{pack.canStudy ? 'study-action' : 'unlock-action'}}"
-                    style="{{pack.canStudy ? 'background:conic-gradient(#529917 ' + pack.progressPercent + '%,#e4e9e4 0)' : ''}}"
+                    style="{{pack.canStudy ? 'background:conic-gradient(var(--color-primary) ' + pack.progressPercent + '%,var(--color-progress-track) 0)' : ''}}"
                     data-id="{{pack.id}}"
                     catchtap="startPack"
                     hover-class="pack-action-hover"
                   >
                     <view>
-                      <ui-icon name="{{pack.canStudy ? 'arrow-right' : 'lock-open-outline'}}" size="{{29}}" color="{{pack.canStudy ? '#529917' : '#7b5305'}}" />
+                      <ui-icon name="{{pack.canStudy ? 'arrow-right' : 'lock-open-outline'}}" size="{{29}}" color="{{pack.canStudy ? 'var(--color-primary)' : 'var(--color-warning)'}}" />
                     </view>
                   </view>
                 </view>
@@ -193,7 +193,7 @@
         </view>
       </view>
       <view wx:if="{{!knowledgePoints.length}}" class="state">
-        <ui-icon name="book-open-outline" size="{{88}}" color="#3f3f3f" />
+        <ui-icon name="book-open-outline" size="{{88}}" color="var(--color-text)" />
         <text class="state-title">当前学科暂无资源</text>
       </view>
     </block>

@@ -4,6 +4,8 @@
   "onReachBottomDistance": 120,
   "usingComponents": {
     "immersive-nav": "/components/immersive-nav/index",
+    "private-pack-cover": "/components/private-pack-cover/index",
+    "study-pack-list-item": "/components/study-pack-list-item/index",
     "ui-icon": "/components/ui-icon/index"
   }
 }

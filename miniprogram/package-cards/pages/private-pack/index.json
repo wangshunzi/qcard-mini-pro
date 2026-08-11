@@ -3,6 +3,7 @@
   "enablePullDownRefresh": true,
   "usingComponents": {
     "immersive-nav": "/components/immersive-nav/index",
+    "private-pack-cover": "/components/private-pack-cover/index",
     "ui-icon": "/components/ui-icon/index",
     "flip-card": "/cards/FlipCardContainer/index"
   }

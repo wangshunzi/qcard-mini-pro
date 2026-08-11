@@ -1,4 +1,5 @@
 import {
+  deletePrivateCard,
   getPrivateCardCatalogue,
   getPrivateCardPack,
   type PrivateCard,
@@ -10,6 +11,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
+import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
 
 const PRIVATE_PACK_DATA_DOMAINS = ["account", "learning", "content"] as const;
 
@@ -29,6 +31,8 @@ Page({
     completedCards: 0,
     studyTimeText: "0分钟",
     lastStudiedText: "从未学习",
+    editMode: false,
+    deletingId: "",
   },
 
   onPageScroll(event: { scrollTop: number }) {
@@ -40,8 +44,10 @@ Page({
     void this.load();
     void getProfile()
       .then((profile) => {
+        bindThemeBackgrounds(this, profile.currentTheme?.config, {
+          heroBackground: "detail_bg",
+        });
         this.setData({
-          heroBackground: profile.currentTheme?.config?.detail_bg || "",
           authorName: profile.nickname || "叩咔用户",
           authorAvatar: profile.avatar || "",
         });
@@ -57,8 +63,10 @@ Page({
       void this.load();
       void getProfile()
         .then((profile) => {
+          bindThemeBackgrounds(this, profile.currentTheme?.config, {
+            heroBackground: "detail_bg",
+          });
           this.setData({
-            heroBackground: profile.currentTheme?.config?.detail_bg || "",
             authorName: profile.nickname || "叩咔用户",
             authorAvatar: profile.avatar || "",
           });
@@ -118,6 +126,7 @@ Page({
   },
 
   openCard(event: WechatMiniprogram.TouchEvent) {
+    if (this.data.editMode) return;
     const id = String(event.currentTarget.dataset.id || "");
     if (!id) return;
     wx.navigateTo({
@@ -132,8 +141,45 @@ Page({
       wx.showToast({ title: "请先添加卡片", icon: "none" });
       return;
     }
+    const lastStudiedCardId = this.data.pack?.userStudyProgress?.lastStudiedCardId;
     wx.navigateTo({
-      url: `/package-cards/pages/study/index?private=1&packId=${encodeURIComponent(this.data.id)}`,
+      url:
+        `/package-cards/pages/study/index?private=1&packId=${encodeURIComponent(this.data.id)}` +
+        (lastStudiedCardId
+          ? `&cardId=${encodeURIComponent(lastStudiedCardId)}`
+          : ""),
+    });
+  },
+
+  toggleEditMode() {
+    this.setData({ editMode: !this.data.editMode });
+  },
+
+  deleteCard(event: WechatMiniprogram.TouchEvent) {
+    const id = String(event.currentTarget.dataset.id || "");
+    const card = this.data.cards.find((item) => item.id === id);
+    if (!card || this.data.deletingId) return;
+    wx.showModal({
+      title: "删除卡片",
+      content: `确认从该卡包中删除「${card.name || "这张卡片"}」？`,
+      confirmText: "删除",
+      confirmColor: "#bd554f",
+      success: (result) => {
+        if (!result.confirm) return;
+        this.setData({ deletingId: id });
+        void deletePrivateCard(id)
+          .then(async () => {
+            await this.load();
+            wx.showToast({ title: "卡片已删除", icon: "success" });
+          })
+          .catch((error) => {
+            wx.showToast({
+              title: error instanceof Error ? error.message : "删除失败",
+              icon: "none",
+            });
+          })
+          .finally(() => this.setData({ deletingId: "" }));
+      },
     });
   },
 

@@ -6,6 +6,7 @@ import {
   invalidateData,
   trackVipExpiry,
 } from "../stores/dataInvalidation";
+import type { ThemeConfig } from "../design-system/theme";
 
 export interface UserProfile {
   id: string;
@@ -31,16 +32,7 @@ export interface UserProfile {
   currentTheme?: {
     id?: string;
     name?: string;
-    config?: {
-      home_bg?: string;
-      explore_bg?: string;
-      resource_bg?: string;
-      profile_bg?: string;
-      login_bg?: string;
-      learning_bg?: string;
-      detail_bg?: string;
-      gen_bg?: string;
-    };
+    config?: ThemeConfig;
   };
   vip?: {
     isVip: boolean;
@@ -51,6 +43,17 @@ export interface UserProfile {
 }
 
 export type FeedbackStatus = "processing" | "resolved" | "rejected";
+
+function resolveThemeConfig(config: Record<string, unknown>) {
+  return Object.fromEntries(
+    Object.entries(config).map(([key, value]) => [
+      key,
+      /_bg(?:_dark)?$/.test(key) && typeof value === "string" && value
+        ? resolveApiMediaUrl(value)
+        : value,
+    ]),
+  ) as ThemeConfig;
+}
 
 export interface PrivateCardFaceFeedback {
   status: FeedbackStatus;
@@ -66,6 +69,7 @@ export interface PrivateCardFace {
   status: "pending" | "processing" | "success" | "failed";
   thumbnailUrl?: string | null;
   templateId?: string;
+  genParams?: Record<string, unknown>;
   feedback?: PrivateCardFaceFeedback | null;
   displayFeedbackStatus?: FeedbackStatus;
   createdAt: string;
@@ -83,14 +87,7 @@ export function getProfile() {
       currentTheme: profile.currentTheme
         ? {
             ...profile.currentTheme,
-            config: Object.fromEntries(
-              Object.entries(profile.currentTheme.config ?? {}).map(([key, value]) => [
-                key,
-                key.endsWith("_bg") && typeof value === "string" && value
-                  ? resolveApiMediaUrl(value)
-                  : value,
-              ]),
-            ),
+            config: resolveThemeConfig(profile.currentTheme.config ?? {}),
           }
         : undefined,
     };
@@ -145,6 +142,7 @@ export function getRecentPrivateCardFaces(
     hasFeedback?: boolean;
     feedbackStatus?: FeedbackStatus;
   } = {},
+  page = 1,
 ) {
   return request<Paginated<PrivateCardFace>, {
     page: number;
@@ -153,7 +151,7 @@ export function getRecentPrivateCardFaces(
     feedbackStatus?: FeedbackStatus;
   }>({
     path: "/api/client/user-private-card-faces",
-    data: { page: 1, limit, ...filters },
+    data: { page, limit, ...filters },
   }).then((result) => ({
     ...result,
     items: (result.items ?? []).map((item) => ({
@@ -171,6 +169,8 @@ export interface FavoriteCard {
   name: string;
   isFavorited: boolean;
   frontFace: {
+    id?: string;
+    name?: string;
     type: string;
     data: Record<string, unknown>;
   };
@@ -180,6 +180,28 @@ export interface FavoriteCard {
     cover?: string;
     subject?: { id: string; name: string };
   };
+}
+
+export function favoriteCard(cardId: string, cardPackId: string) {
+  return request<unknown, { cardId: string; cardPackId: string }>({
+    path: "/api/client/card-favorites",
+    method: "POST",
+    data: { cardId, cardPackId },
+  }).then((result) => {
+    invalidateData("favorites");
+    return result;
+  });
+}
+
+export function unfavoriteCard(cardId: string) {
+  return request<{ success?: boolean; message?: string }, Record<string, never>>({
+    path: `/api/client/card-favorites/${encodeURIComponent(cardId)}`,
+    method: "DELETE",
+    data: {},
+  }).then((result) => {
+    invalidateData("favorites");
+    return result;
+  });
 }
 
 export function getFavoriteCards(page = 1, limit = 10) {

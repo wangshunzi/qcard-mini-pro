@@ -11,12 +11,12 @@
             <text class="drawer-level">Lv.{{profile.experience.level || 1}}</text>
           </view>
           <view class="drawer-balance">
-            <ui-icon name="wallet" size="{{32}}" color="#f4aa22" />
+            <ui-icon name="wallet" size="{{32}}" color="var(--color-warning)" />
             <text>余额: {{profile.balance || 0}}</text>
           </view>
         </view>
         <button class="recharge-button" bindtap="recharge" hover-class="recharge-hover">
-          <ui-icon name="plus" size="{{35}}" color="#3e2a05" />
+          <ui-icon name="plus" size="{{35}}" color="var(--color-text-on-warning)" />
           <text>购买</text>
         </button>
       </view>
@@ -42,7 +42,7 @@
         <view class="loading-ring"></view><text>加载中...</text>
       </view>
       <view wx:elif="{{!items.length}}" class="drawer-state">
-        <ui-icon name="history" size="{{80}}" color="#8a918c" />
+        <ui-icon name="history" size="{{80}}" color="var(--color-text-muted)" />
         <text>暂无消费记录</text>
       </view>
       <view wx:else class="history-list">
@@ -59,7 +59,7 @@
             <view wx:if="{{item.cardPack}}" class="history-pack" data-id="{{item.cardPack.id}}" bindtap="openPack">
               <image src="{{item.cardPack.cover || assets.appIcon}}" mode="aspectFill" />
               <view><text>{{item.cardPack.title}}</text><text>{{item.cardPack.subject || '综合'}} · {{item.cardPack.knowledgePoint || '卡包'}}</text></view>
-              <ui-icon name="chevron-right" size="{{28}}" color="#a1a5a2" />
+              <ui-icon name="chevron-right" size="{{28}}" color="var(--color-text-muted)" />
             </view>
             <view class="history-foot"><text>{{item.timeText}}</text><text>余额: {{item.balanceAfter}} 咔豆</text></view>
           </view>

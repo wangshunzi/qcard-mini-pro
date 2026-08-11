@@ -3,7 +3,7 @@
 .classification {
   position: relative;
   overflow: hidden;
-  background-color: #dbeeff;
+  background-color:var(--color-info-soft);
   background-position: center;
   background-size: cover;
 }
@@ -93,7 +93,7 @@
   box-sizing: border-box;
   transform: translateX(-50%);
   border-radius: 12px;
-  background: rgba(255, 255, 255, .9);
+  background: var(--color-surface-translucent);
   box-shadow: 0 2px 7px rgba(0, 0, 0, .08);
   font-size: 11px;
   font-weight: 900;
@@ -150,7 +150,7 @@
   padding: 5px 8px;
   box-sizing: border-box;
   overflow: hidden;
-  color: #fff;
+  color: var(--color-text-inverse);
   font-size: 14px;
   font-weight: 900;
   line-height: 18px;

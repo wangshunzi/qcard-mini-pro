@@ -1,0 +1,9 @@
+<view class="private-pack-cover {{variant}}">
+  <text class="private-tag">专属</text>
+  <image wx:if="{{avatar}}" class="private-avatar" src="{{avatar}}" mode="aspectFill" />
+  <view wx:else class="private-avatar avatar-fallback">
+    <ui-icon name="account-outline" size="{{variant === 'detail' ? 62 : (variant === 'list' ? 34 : 30)}}" color="var(--color-primary)" />
+  </view>
+  <text class="private-title">专属卡包</text>
+  <text class="private-en">PRIVATE</text>
+</view>

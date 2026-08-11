@@ -2,13 +2,13 @@
   <immersive-nav title="主题设置" back="{{true}}" border="{{true}}" />
   <view wx:if="{{loading}}" class="state">加载中...</view>
   <view wx:elif="{{error}}" class="state">
-    <ui-icon name="alert-circle-outline" size="{{76}}" color="#eb711b" />
+    <ui-icon name="alert-circle-outline" size="{{76}}" color="var(--color-error)" />
     <text>{{error}}</text>
     <button bindtap="load">重新加载</button>
   </view>
   <block wx:else>
     <view wx:if="{{currentTheme}}" class="current-theme">
-      <view class="current-icon"><ui-icon name="palette-outline" size="{{34}}" color="#529917" /></view>
+      <view class="current-icon"><ui-icon name="palette-outline" size="{{34}}" color="var(--color-primary)" /></view>
       <view class="current-copy">
         <text class="current-title">当前主题：{{currentTheme.name}}</text>
         <text class="current-description">{{currentTheme.description || '叩咔主题背景'}}</text>
@@ -18,7 +18,7 @@
       <button wx:for="{{themes}}" wx:key="id" class="theme-row {{currentThemeId === item.id ? 'selected' : ''}}"
         data-id="{{item.id}}" bindtap="chooseTheme" hover-class="theme-hover" disabled="{{selectingId}}">
         <view class="row-main">
-          <ui-icon name="palette-outline" size="{{34}}" color="#657065" />
+          <ui-icon name="palette-outline" size="{{34}}" color="var(--color-text-secondary)" />
           <view class="theme-copy">
             <view class="theme-name-line">
               <text class="theme-name">{{item.name}}</text>
@@ -27,12 +27,12 @@
             <text class="theme-description">{{item.description || '叩咔主题背景'}}</text>
           </view>
         </view>
-        <ui-icon wx:if="{{currentThemeId === item.id}}" name="check" size="{{32}}" color="#529917" />
+        <ui-icon wx:if="{{currentThemeId === item.id}}" name="check" size="{{32}}" color="var(--color-primary)" />
         <text wx:elif="{{selectingId === item.id}}" class="switching">切换中</text>
       </button>
     </view>
     <view wx:else class="state">
-      <ui-icon name="palette-outline" size="{{78}}" color="#657065" />
+      <ui-icon name="palette-outline" size="{{78}}" color="var(--color-text-secondary)" />
       <text class="empty-title">暂无可用主题</text>
       <text>请联系管理员添加更多主题选项</text>
     </view>

@@ -9,10 +9,10 @@
     <view class="hero-title">我的卡包</view>
     <view class="hero-subtitle">管理你的所有卡包</view>
     <view class="search">
-      <ui-icon name="magnify" size="{{36}}" color="#6d776f" />
+      <ui-icon name="magnify" size="{{36}}" color="var(--color-text-secondary)" />
       <input class="search-input" value="{{query}}" bindinput="onInput" placeholder="搜索卡包名称..." />
       <button wx:if="{{mode === 'unlocked'}}" class="filter-trigger {{filterCount ? 'has-filter' : ''}}" bindtap="toggleFilter" aria-label="筛选卡包">
-        <ui-icon name="filter-variant" size="{{35}}" color="{{filterCount ? '#ffffff' : '#657065'}}" />
+        <ui-icon name="filter-variant" size="{{35}}" color="{{filterCount ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)'}}" />
         <text wx:if="{{filterCount}}" class="filter-count">{{filterCount}}</text>
       </button>
     </view>
@@ -52,12 +52,12 @@
     </view>
   </view>
 
-  <view class="content {{filterOpen ? 'filter-open-content' : ''}}">
+  <view class="content {{filterOpen ? 'filter-open-content' : ''}} {{mode === 'unlocked' ? 'unlocked-study-content' : ''}}">
     <view wx:if="{{loading}}" class="loading">
       <view wx:for="{{[1,2,3]}}" wx:key="*this" class="skeleton"></view>
     </view>
     <view wx:elif="{{error}}" class="state">
-      <ui-icon name="alert-circle-outline" size="{{78}}" color="#eb711b" />
+      <ui-icon name="alert-circle-outline" size="{{78}}" color="var(--color-error)" />
       <text>{{error}}</text>
       <button bindtap="load" data-reset="{{true}}">重新加载</button>
     </view>
@@ -65,20 +65,20 @@
       <view wx:if="{{(mode === 'unlocked' && publicItems.length) || (mode === 'private' && privateItems.length)}}" class="list-header">
         <text>共 {{mode === 'unlocked' ? publicItems.length : privateItems.length}} 个卡包</text>
         <button wx:if="{{mode === 'private'}}" class="manage-button" bindtap="toggleManage">
-          <ui-icon name="{{editMode ? 'close' : 'cog'}}" size="{{24}}" color="#529917" />
+          <ui-icon name="{{editMode ? 'close' : 'cog'}}" size="{{24}}" color="var(--color-primary)" />
           <text>{{editMode ? '取消' : '管理'}}</text>
         </button>
       </view>
       <view wx:if="{{mode === 'unlocked' && publicItems.length}}" class="pack-list">
-        <view wx:for="{{publicItems}}" wx:key="id" class="pack" data-id="{{item.id}}" bindtap="openPublic" hover-class="pack-hover">
-          <image class="cover" src="{{item.cover || assets.appIcon}}" mode="aspectFill" />
-          <view class="copy">
-            <text class="title">{{item.title}}</text>
-            <text class="meta">{{item.cardCount || 0}} 张 · {{item.subject.name || '综合'}}</text>
-            <view class="progress"><view class="progress-fill" style="width:{{item.userStudyProgress.progress || 0}}%"></view></view>
-          </view>
-          <button class="study" catchtap="startPublic" data-id="{{item.id}}">学习</button>
-        </view>
+        <study-pack-list-item
+          wx:for="{{publicItems}}"
+          wx:key="id"
+          item="{{item}}"
+          app-icon="{{assets.appIcon}}"
+          data-id="{{item.id}}"
+          bind:open="openPublic"
+          bind:start="startPublic"
+        />
       </view>
       <view wx:if="{{mode === 'private' && privateItems.length}}" class="pack-list">
         <view wx:if="{{editMode}}" class="create-placeholder" bindtap="createPack" hover-class="pack-hover">
@@ -86,22 +86,21 @@
         </view>
         <view wx:for="{{privateItems}}" wx:key="id" class="pack private-pack {{editMode ? 'editing' : ''}}" data-id="{{item.id}}" bindtap="openPrivate" hover-class="pack-hover">
           <button wx:if="{{editMode}}" class="delete-pack" data-id="{{item.id}}" catchtap="deletePack" aria-label="删除卡包">
-            <ui-icon name="delete-outline" size="{{27}}" color="#ffffff" />
+            <ui-icon name="delete-outline" size="{{27}}" color="var(--color-text-inverse)" />
           </button>
-          <view class="cover private-cover">
-            <image wx:if="{{item.author.avatar || userAvatar}}" class="private-cover-avatar" src="{{item.author.avatar || userAvatar}}" mode="aspectFill" />
-            <ui-icon wx:else name="account-outline" size="{{64}}" color="#ffffff" />
+          <view class="cover private-cover-component">
+            <private-pack-cover avatar="{{item.author.avatar || userAvatar}}" variant="list" />
           </view>
           <view class="copy">
             <text class="title">{{item.title}}</text>
             <text class="meta">{{item.cardCount || 0}} 张 · 专属卡包</text>
             <text class="description">{{item.description || '点击管理卡片与开始学习'}}</text>
           </view>
-          <ui-icon wx:if="{{!editMode}}" name="chevron-right" size="{{32}}" color="#a9a9a9" />
+          <ui-icon wx:if="{{!editMode}}" name="chevron-right" size="{{32}}" color="var(--color-text-muted)" />
         </view>
       </view>
       <view wx:if="{{(mode === 'unlocked' && !publicItems.length) || (mode === 'private' && !privateItems.length)}}" class="state">
-        <ui-icon name="book-open-outline" size="{{82}}" color="#3f3f3f" />
+        <ui-icon name="book-open-outline" size="{{82}}" color="var(--color-text)" />
         <text>没有找到匹配的卡包</text>
         <button wx:if="{{mode === 'unlocked'}}" bindtap="goResource">去解锁</button>
         <button wx:else bindtap="createPack">创建卡包</button>

@@ -294,6 +294,22 @@ export function initializeFormData(
   );
 }
 
+/**
+ * `applyDefaults` is an initialization request, not a rule that should run on
+ * every controlled-value update. Otherwise clearing a field removes its key,
+ * then the value observer immediately restores the schema default.
+ */
+export function shouldApplyDefaultsForSync(
+  applyDefaults: boolean,
+  schemaChanged: boolean,
+  previousApplyDefaults: boolean | undefined,
+) {
+  return (
+    applyDefaults &&
+    (schemaChanged || previousApplyDefaults !== true)
+  );
+}
+
 function optionKey(value: unknown) {
   return typeof value === "string" ? value : JSON.stringify(value);
 }

@@ -1,5 +1,6 @@
 import {
   getChallengeConfig,
+  resetChallengeConfig,
   updateChallengeConfig,
   type ChallengeConfig,
   type LearningIntensity,
@@ -16,6 +17,7 @@ Page({
   data: {
     loading: true,
     saving: false,
+    resetting: false,
     config: null as ChallengeConfig | null,
     intensities: Object.entries(INTENSITIES).map(([value, item]) => ({ value, ...item })),
     strategies: [
@@ -148,5 +150,31 @@ Page({
     } finally {
       this.setData({ saving: false });
     }
+  },
+
+  reset() {
+    if (this.data.resetting || this.data.saving) return;
+    wx.showModal({
+      title: "恢复默认计划",
+      content: "将学习强度、策略和高级参数恢复为系统推荐值，是否继续？",
+      confirmText: "恢复默认",
+      confirmColor: "#529917",
+      success: ({ confirm }) => {
+        if (!confirm) return;
+        this.setData({ resetting: true });
+        void resetChallengeConfig()
+          .then((config) => {
+            this.setData({ config }, () => this.refreshPreview());
+            wx.showToast({ title: "已恢复默认计划", icon: "success" });
+          })
+          .catch((error) => {
+            wx.showToast({
+              title: error instanceof Error ? error.message : "恢复失败",
+              icon: "none",
+            });
+          })
+          .finally(() => this.setData({ resetting: false }));
+      },
+    });
   },
 });

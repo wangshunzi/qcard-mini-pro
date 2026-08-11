@@ -5,6 +5,7 @@ import {
   initializeFormData,
   removeAtPath,
   setAtPath,
+  shouldApplyDefaultsForSync,
   validateRows,
   type FormSchema,
   type PathPart,
@@ -55,11 +56,23 @@ Component({
       applyDefaults: boolean,
     ) {
       const schemaSignature = JSON.stringify(schema ?? {});
-      if ((this as any)._lastSchemaSignature !== schemaSignature) {
+      const schemaChanged =
+        (this as any)._lastSchemaSignature !== schemaSignature;
+      const shouldApplyDefaults = shouldApplyDefaultsForSync(
+        applyDefaults,
+        schemaChanged,
+        (this as any)._lastApplyDefaults,
+      );
+      (this as any)._lastApplyDefaults = applyDefaults;
+      if (schemaChanged) {
         (this as any)._lastSchemaSignature = schemaSignature;
         (this as any)._lastChangeSignature = "";
       }
-      const formData = initializeFormData(schema ?? {}, value ?? {}, applyDefaults);
+      const formData = initializeFormData(
+        schema ?? {},
+        value ?? {},
+        shouldApplyDefaults,
+      );
       const fields = createRenderRows(schema ?? {}, formData);
       this.setData({ fields, formData, errors: {} }, () => this.emitChange(formData));
     },

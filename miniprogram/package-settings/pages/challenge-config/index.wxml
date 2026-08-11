@@ -4,20 +4,20 @@
   </immersive-nav>
   <view wx:if="{{loading}}" class="state">正在读取学习计划…</view>
   <view wx:elif="{{config}}" class="content">
-    <view class="intro"><ui-icon name="target" size="{{48}}" color="#529917" /><view><text>今日挑战计划</text><text>选择适合你的学习节奏，之后可以随时调整</text></view></view>
+    <view class="intro"><ui-icon name="target" size="{{48}}" color="var(--color-primary)" /><view><text>今日挑战计划</text><text>选择适合你的学习节奏，之后可以随时调整</text></view></view>
     <text class="section-title">学习强度</text>
     <view class="options">
       <view wx:for="{{intensities}}" wx:key="value" class="option {{config.learningIntensity === item.value ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="chooseIntensity">
-        <view class="icon"><ui-icon name="{{item.value === 'light' ? 'leaf' : item.value === 'moderate' ? 'scale-balance' : 'rocket-launch-outline'}}" size="{{36}}" color="{{config.learningIntensity === item.value ? '#ffffff' : '#529917'}}" /></view>
+        <view class="icon"><ui-icon name="{{item.value === 'light' ? 'leaf' : item.value === 'moderate' ? 'scale-balance' : 'rocket-launch-outline'}}" size="{{36}}" color="{{config.learningIntensity === item.value ? 'var(--color-text-inverse)' : 'var(--color-primary)'}}" /></view>
         <view class="copy"><text>{{item.label}}</text><text>{{item.detail}}</text><text>{{item.cards}} 张/天 · 新卡 {{item.percent}}%</text></view>
-        <ui-icon name="{{config.learningIntensity === item.value ? 'check-circle' : 'circle-outline'}}" size="{{34}}" color="{{config.learningIntensity === item.value ? '#529917' : '#c8cec9'}}" />
+        <ui-icon name="{{config.learningIntensity === item.value ? 'check-circle' : 'circle-outline'}}" size="{{34}}" color="{{config.learningIntensity === item.value ? 'var(--color-primary)' : 'var(--color-border)'}}" />
       </view>
     </view>
     <text class="section-title second">学习策略</text>
     <view class="options">
       <view wx:for="{{strategies}}" wx:key="value" class="option compact {{config.learningStrategy === item.value ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="chooseStrategy">
         <view class="copy"><text>{{item.label}}</text><text>{{item.detail}}</text></view>
-        <ui-icon name="{{config.learningStrategy === item.value ? 'check-circle' : 'circle-outline'}}" size="{{34}}" color="{{config.learningStrategy === item.value ? '#529917' : '#c8cec9'}}" />
+        <ui-icon name="{{config.learningStrategy === item.value ? 'check-circle' : 'circle-outline'}}" size="{{34}}" color="{{config.learningStrategy === item.value ? 'var(--color-primary)' : 'var(--color-border)'}}" />
       </view>
     </view>
     <view class="auto-row"><view><text>智能调整</text><text>根据学习完成情况自动微调每日数量</text></view><app-toggle checked="{{config.autoAdjust}}" label="智能调整" bind:change="toggleAuto" /></view>
@@ -71,7 +71,7 @@
           <view class="fill-options">
             <view wx:for="{{fillStrategies}}" wx:key="value" class="fill-option {{config.systemConfig.fillStrategy === item.value ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="chooseFillStrategy">
               <view><text>{{item.label}}</text><text>{{item.detail}}</text></view>
-              <ui-icon name="{{config.systemConfig.fillStrategy === item.value ? 'check-circle' : 'circle-outline'}}" size="{{32}}" color="{{config.systemConfig.fillStrategy === item.value ? '#529917' : '#c8cec9'}}" />
+              <ui-icon name="{{config.systemConfig.fillStrategy === item.value ? 'check-circle' : 'circle-outline'}}" size="{{32}}" color="{{config.systemConfig.fillStrategy === item.value ? 'var(--color-primary)' : 'var(--color-border)'}}" />
             </view>
           </view>
         </view>
@@ -83,5 +83,6 @@
         </view>
       </view>
     </view>
+    <button class="reset-button" bindtap="reset" loading="{{resetting}}" disabled="{{resetting || saving}}">恢复系统默认计划</button>
   </view>
 </view>
