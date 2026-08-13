@@ -5,7 +5,10 @@
   <image wx:elif="{{item.cover}}" class="study-cover" src="{{item.cover}}" mode="aspectFill" />
   <image wx:else class="study-cover fallback-image" src="{{appIcon}}" mode="aspectFit" />
   <view class="study-copy">
-    <text class="study-title">{{item.title || '学习卡包'}}</text>
+    <view class="study-title-row">
+      <text class="study-title">{{item.title || '学习卡包'}}</text>
+      <text wx:if="{{locked}}" class="vip-expired-badge">VIP免费·已到期</text>
+    </view>
     <view class="study-tags">
       <text class="study-tag study-subject">{{item.subject.name || '综合'}}</text><text class="study-tag study-separator">·</text><text class="study-tag study-knowledge">{{item.knowledgePoint.name || '通识学习'}}</text>
     </view>
@@ -13,7 +16,10 @@
       <view class="study-meta-item"><ui-icon name="clipboard-text-outline" size="{{24}}" color="var(--color-text-secondary)" /><text>{{item.cardCount || 0}}张</text></view>
       <view class="study-meta-item"><ui-icon name="clock-outline" size="{{24}}" color="var(--color-text-secondary)" /><text>{{timeAgo}}</text></view>
     </view>
-    <view
+    <view wx:if="{{locked}}" class="study-start locked" catchtap="start" hover-class="study-start-hover" aria-label="VIP 免费权益已到期，恢复后继续学习">
+      <view class="study-start-inner"><ui-icon name="lock" size="27" color="var(--color-warning)" /></view>
+    </view>
+    <view wx:else
       class="study-start"
       style="background:conic-gradient(var(--color-primary) {{progressPercent}}%,var(--color-progress-track) 0)"
       catchtap="start"

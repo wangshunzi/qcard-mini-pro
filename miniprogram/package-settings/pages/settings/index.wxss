@@ -89,3 +89,23 @@
   text-align: center;
   font-size: 18rpx;
 }
+
+.filing-link {
+  width: auto;
+  height: auto;
+  margin: 8rpx auto 0;
+  padding: 6rpx 10rpx;
+  border: 0;
+  color: var(--color-muted);
+  background: transparent;
+  font-size: 18rpx;
+  line-height: 1.5;
+}
+
+.filing-link::after {
+  border: 0;
+}
+
+.filing-link-hover {
+  opacity: .68;
+}

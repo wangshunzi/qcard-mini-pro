@@ -9,13 +9,13 @@
 .source-status { flex:none; margin-left:10rpx; display:flex; align-items:center; gap:4rpx; color:var(--color-primary); font-size:19rpx; font-weight:650; }
 .source-pack-hover { opacity:.78; transform:scale(.99); }
 .preview-actions { min-height:74rpx; margin-top:14rpx; display:flex; align-items:center; gap:12rpx; }
-.preview-actions button { height:68rpx; margin:0; padding:0 22rpx; display:flex; align-items:center; justify-content:center; gap:9rpx; border:0; border-radius:17rpx; color:var(--color-text-secondary); background: var(--color-surface-translucent); box-shadow:0 5rpx 16rpx rgba(41,62,47,.08); font-size:22rpx; font-weight:650; line-height:68rpx; }
+.preview-actions button { height:68rpx; margin:0; padding:0 22rpx; display:flex; align-items:center; justify-content:center; gap:9rpx; box-sizing:border-box; border:1rpx solid var(--color-border); border-radius:17rpx; color:var(--color-text); background:var(--color-card); box-shadow:0 5rpx 16rpx rgba(0,0,0,.12); font-size:22rpx; font-weight:700; line-height:68rpx; }
 .preview-actions .feedback-entry { width:68rpx; padding:0; color:var(--color-error); }
 .preview-actions .feedback-entry.processing { color:var(--color-warning); background:var(--color-warning-soft); }
 .preview-actions .feedback-entry.resolved { color:var(--color-primary); background:var(--color-primary-soft); }
 .preview-actions .feedback-entry.rejected { color:var(--color-error); background:var(--color-error-soft); }
-.preview-actions .group-entry { min-width:0; flex:1; }
-.preview-actions .similar-entry { min-width:0; flex:1; color:var(--color-text-secondary); background:var(--color-warning); }
+.preview-actions .group-entry { min-width:0; flex:1; color:var(--color-primary); border-color:var(--color-primary); }
+.preview-actions .similar-entry { min-width:0; flex:1; color:var(--color-text-inverse); border-color:var(--color-primary); background:var(--color-primary); }
 .feedback-root { position:fixed; z-index:999; inset:0; }
 .feedback-backdrop { position:absolute; inset:0; background:rgba(13,32,23,.5); backdrop-filter:blur(7rpx); animation:feedback-fade-in .22s ease-out both; }
 .feedback-sheet { position:absolute; right:0; bottom:0; left:0; padding:20rpx 32rpx 34rpx; border-radius:28rpx 28rpx 0 0; background:var(--color-card); box-shadow:0 -12rpx 36rpx rgba(0,0,0,.18); animation:feedback-in .22s ease-out; }

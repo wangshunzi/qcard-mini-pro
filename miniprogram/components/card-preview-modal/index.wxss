@@ -16,13 +16,14 @@
 .preview-source-status { margin-left:8rpx; flex:none; display:flex; align-items:center; gap:2rpx; color:var(--color-primary); font-size:17rpx; font-weight:700; }
 .preview-modal-actions { min-height:68rpx; display:flex; align-items:stretch; gap:10rpx; }
 .preview-source-pack + .preview-modal-actions { margin-top:10rpx; }
-.preview-icon-action,.preview-text-action { height:66rpx; margin:0; padding:0 19rpx; display:flex; align-items:center; justify-content:center; gap:7rpx; border:0; border-radius:17rpx; color:var(--color-text-secondary); background:rgba(238,244,236,.76); font-size:20rpx; font-weight:750; line-height:1; backdrop-filter:blur(16rpx); }
+.preview-icon-action,.preview-text-action { height:66rpx; margin:0; padding:0 19rpx; display:flex; align-items:center; justify-content:center; gap:7rpx; box-sizing:border-box; border:1rpx solid var(--color-border); border-radius:17rpx; color:var(--color-text); background:var(--color-card); box-shadow:0 5rpx 14rpx rgba(0,0,0,.12); font-size:20rpx; font-weight:750; line-height:1; backdrop-filter:blur(16rpx); }
 .preview-icon-action { width:66rpx; min-width:66rpx; padding:0 !important; flex:none; }
 .preview-icon-action.feedback { color:var(--color-error); }
 .preview-icon-action.feedback.processing { color:var(--color-warning); background:var(--color-warning-soft); }
 .preview-icon-action.feedback.resolved { color:var(--color-primary); background:var(--color-primary-soft); }
 .preview-icon-action.feedback.rejected { color:var(--color-error); background:var(--color-error-soft); }
 .preview-text-action { min-width:0; flex:1; }
+.preview-text-action.group-card { color:var(--color-primary); border-color:var(--color-primary); background:var(--color-card); }
 .preview-text-action.primary { color:var(--color-text-inverse); background:linear-gradient(145deg,#65aa2e,#478b13); box-shadow:0 5rpx 14rpx rgba(82,153,23,.2); }
 .preview-action-hover { opacity:.76; transform:scale(.98); }
 .preview-modal-root.closing .preview-modal-panel { animation:preview-panel-out .22s ease-in both; }

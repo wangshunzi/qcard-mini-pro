@@ -1,9 +1,14 @@
 import { sessionStore } from "../../../stores/session";
+import {
+  MINI_PROGRAM_FILING,
+  openMiniProgramFilingQuery,
+} from "../../../config/filing";
 
 Page({
   data: {
     soundEnabled: wx.getStorageSync("qcard.sound-enabled") !== false,
     version: "",
+    filingNumber: MINI_PROGRAM_FILING.number,
   },
   onLoad() {
     const account = wx.getAccountInfoSync?.();
@@ -36,6 +41,9 @@ Page({
   },
   openPrivacy() {
     wx.navigateTo({ url: "/package-settings/pages/web-doc/index?doc=privacy_policy" });
+  },
+  openFilingQuery() {
+    openMiniProgramFilingQuery();
   },
   openAccount() {
     wx.navigateTo({ url: "/package-settings/pages/account/index" });

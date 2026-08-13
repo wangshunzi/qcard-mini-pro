@@ -6,6 +6,17 @@ import {
 } from "../../services/auth";
 import { sessionStore } from "../../stores/session";
 import { UI_ASSETS } from "../../config/uiAssets";
+import { getCachedLoginThemeConfig } from "../../design-system/loginTheme";
+import {
+  bindThemeBackgrounds,
+  refreshThemeBackgrounds,
+  resolveThemeBackground,
+} from "../../design-system/themeBackground";
+import { readSystemThemeMode } from "../../design-system/theme";
+import {
+  MINI_PROGRAM_FILING,
+  openMiniProgramFilingQuery,
+} from "../../config/filing";
 import { logger } from "../../utils/logger";
 
 const LAST_LOGIN_METHOD_KEY = "qcard.lastLoginMethod";
@@ -22,11 +33,20 @@ Page({
     agreed: false,
     canSendCode: false,
     canPhoneLogin: false,
+    agreementPromptOpen: false,
+    loginMode: "choice" as "choice" | "phone",
     lastLoginMethod: "",
     assets: UI_ASSETS,
+    loginBackground: resolveThemeBackground(
+      getCachedLoginThemeConfig(),
+      "login_bg",
+      readSystemThemeMode(),
+    ),
+    filingNumber: MINI_PROGRAM_FILING.number,
   },
 
   timer: 0 as number,
+  pendingAgreementResolve: null as ((agreed: boolean) => void) | null,
 
   onLoad() {
     this.setData({
@@ -38,8 +58,16 @@ Page({
     });
   },
 
+  onShow() {
+    refreshThemeBackgrounds(readSystemThemeMode());
+    bindThemeBackgrounds(this, getCachedLoginThemeConfig(), {
+      loginBackground: "login_bg",
+    });
+  },
+
   onUnload() {
     if (this.timer) clearInterval(this.timer);
+    this.finishAgreementPrompt(false);
   },
 
   onPhoneInput(event: WechatMiniprogram.Input) {
@@ -103,6 +131,17 @@ Page({
     await this.performLogin(loginWithWechat, "wechat");
   },
 
+  showPhoneLogin() {
+    if (this.data.loggingIn) return;
+    this.setData({ loginMode: "phone", error: "" });
+  },
+
+  showLoginChoices() {
+    if (this.data.loggingIn) return;
+    wx.hideKeyboard();
+    this.setData({ loginMode: "choice", error: "" });
+  },
+
   onAgreementChange(event: WechatMiniprogram.CheckboxGroupChange) {
     this.setData({ agreed: event.detail.value.includes("agreed") });
   },
@@ -119,20 +158,35 @@ Page({
     wx.navigateTo({ url: "/package-settings/pages/web-doc/index?doc=privacy_policy" });
   },
 
+  openFilingQuery() {
+    openMiniProgramFilingQuery();
+  },
+
+  noop() {},
+
+  cancelAgreementPrompt() {
+    this.finishAgreementPrompt(false);
+  },
+
+  confirmAgreementAndLogin() {
+    this.setData({ agreed: true });
+    this.finishAgreementPrompt(true);
+  },
+
+  finishAgreementPrompt(agreed: boolean) {
+    const resolve = this.pendingAgreementResolve;
+    this.pendingAgreementResolve = null;
+    if (this.data.agreementPromptOpen) {
+      this.setData({ agreementPromptOpen: false });
+    }
+    if (resolve) resolve(agreed);
+  },
+
   ensureAgreement(): Promise<boolean> {
     if (this.data.agreed) return Promise.resolve(true);
     return new Promise((resolve) => {
-      wx.showModal({
-        title: "请阅读并同意协议",
-        content: "继续登录前，请阅读并同意《用户协议》和《隐私政策》。",
-        confirmText: "同意并继续",
-        cancelText: "取消",
-        success: (result) => {
-          if (result.confirm) this.setData({ agreed: true });
-          resolve(result.confirm);
-        },
-        fail: () => resolve(false),
-      });
+      this.pendingAgreementResolve = resolve;
+      this.setData({ agreementPromptOpen: true });
     });
   },
 

@@ -24,6 +24,7 @@ import {
   type DataDomain,
 } from "../../stores/dataInvalidation";
 import { bindThemeBackgrounds } from "../../design-system/themeBackground";
+import { isExpiredVipStudyAccess } from "../../utils/recentStudyAccess";
 
 const HOME_DATA_DOMAINS: DataDomain[] = [
   "account",
@@ -45,6 +46,7 @@ interface HomeCardPack extends CardPackSummary {
   progressValue: number;
   timeAgo: string;
   isPrivate: boolean;
+  isVipAccessExpired: boolean;
   privateCover?: string;
 }
 
@@ -100,11 +102,13 @@ function withProgress(
     cardPack.isUnlocked,
   );
   const isPrivate = isOwnedByCurrentUser || hasPrivatePackShape;
+  const isVipAccessExpired = isExpiredVipStudyAccess(cardPack, isPrivate);
   return {
     ...cardPack,
     progressPercent,
     progressValue: progressPercent / 100,
     isPrivate,
+    isVipAccessExpired,
     privateCover: isPrivate
       ? currentUserAvatar || cardPack.author?.avatar
       : undefined,
@@ -204,10 +208,11 @@ Page({
       bindThemeBackgrounds(this, profile.currentTheme?.config, {
         homeBackground: "home_bg",
       });
-      this.setData({
-        recentStudy: (data.recentStudy ?? []).map((pack) =>
+      const recentStudy = (data.recentStudy ?? []).map((pack) =>
           withProgress(pack, profile.id, profile.avatar || ""),
-        ),
+        );
+      this.setData({
+        recentStudy,
         recentCards,
         dailyChallenge: data.dailyChallenge ?? null,
         challengeCards: (data.dailyChallenge?.cards ?? [])
@@ -308,6 +313,10 @@ Page({
       wx.switchTab({ url: "/pages/resource/index" });
       return;
     }
+    if (pack.isVipAccessExpired) {
+      this.openExpiredVipGuide(pack);
+      return;
+    }
     wx.navigateTo({
       url: `/package-cards/pages/study/index?packId=${encodeURIComponent(pack.id)}${
         pack.isPrivate ? "&private=1" : ""
@@ -325,6 +334,10 @@ Page({
       (item) => item.id === id,
     );
     if (!pack) return;
+    if (pack.isVipAccessExpired) {
+      this.openExpiredVipGuide(pack);
+      return;
+    }
     wx.navigateTo({
       url: `/package-cards/pages/study/index?packId=${encodeURIComponent(pack.id)}${
         pack.isPrivate ? "&private=1" : ""
@@ -416,6 +429,18 @@ Page({
       purchaseGuideMode: "recharge",
       purchaseGuideReason: "咔豆余额不足，可选择咔豆包购买后继续使用。",
     });
+  },
+
+  openExpiredVipGuide(pack?: HomeCardPack | WechatMiniprogram.TouchEvent) {
+    const selectedPack = pack && "id" in pack ? pack : undefined;
+    this.setData({
+      purchaseGuideOpen: true,
+      purchaseGuideMode: "vip",
+      purchaseGuideReason: selectedPack?.title
+        ? `《${selectedPack.title}》曾通过 VIP 免费权益学习。当前权益已到期，恢复 VIP 后即可继续学习，原进度仍会保留。`
+        : "部分最近学习卡包来自已到期的 VIP 免费权益。恢复 VIP 后即可继续学习，原学习记录和进度仍会保留。",
+    });
+    wx.hideTabBar({ animation: false });
   },
 
   closePurchaseGuide() {

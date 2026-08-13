@@ -4,6 +4,7 @@ import { logger } from "./utils/logger";
 import { flushStudyReports } from "./stores/studyReportQueue";
 import { trackDayBoundary } from "./stores/dataInvalidation";
 import { refreshThemeBackgrounds } from "./design-system/themeBackground";
+import { readSystemThemeMode } from "./design-system/theme";
 import {
   claimVirtualFulfillmentNotification,
   getPendingVirtualPaymentRecoveryDelay,
@@ -138,6 +139,7 @@ App({
   },
   onShow() {
     appVisible = true;
+    refreshThemeBackgrounds(readSystemThemeMode());
     trackDayBoundary();
     void flushStudyReports();
     startVirtualPaymentRecovery();

@@ -38,6 +38,10 @@ Component({
       type: String,
       value: "",
     },
+    locked: {
+      type: Boolean,
+      value: false,
+    },
   },
 
   data: {
@@ -46,14 +50,14 @@ Component({
   },
 
   observers: {
-    item(value: StudyPackItem) {
+    "item, locked"(value: StudyPackItem, locked: boolean) {
       const raw = Number(value?.userStudyProgress?.progress ?? 0);
       const progressPercent = Math.max(
         0,
         Math.min(100, raw <= 1 ? raw * 100 : raw),
       );
       this.setData({
-        progressPercent,
+        progressPercent: locked ? 0 : progressPercent,
         timeAgo: formatTimeAgo(
           value?.userStudyProgress?.lastStudiedAt,
           progressPercent > 0 ? "学习" : "解锁",

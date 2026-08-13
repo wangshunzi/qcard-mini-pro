@@ -1,3 +1,4 @@
+<page-meta page-style="{{purchaseGuideOpen ? 'overflow: hidden;' : ''}}"></page-meta>
 <view class="page safe-bottom">
   <immersive-nav back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <view slot="action" class="app-segmented nav-segmented" aria-role="tablist">
@@ -74,6 +75,7 @@
           wx:for="{{publicItems}}"
           wx:key="id"
           item="{{item}}"
+          locked="{{item.isVipAccessExpired}}"
           app-icon="{{assets.appIcon}}"
           data-id="{{item.id}}"
           bind:open="openPublic"
@@ -157,4 +159,15 @@
       </view>
     </view>
   </view>
+  <app-purchase-guide
+    open="{{purchaseGuideOpen}}"
+    mode="vip"
+    reason="{{purchaseGuideReason}}"
+    balance="{{profile && profile.balance || 0}}"
+    is-vip="{{profile && profile.vip && profile.vip.isVip}}"
+    vip-expire-at="{{profile && profile.vip && profile.vip.vipExpireAt}}"
+    daily-reward-amount="{{profile && profile.vip && profile.vip.dailyRewardAmount || 0}}"
+    bind:close="closePurchaseGuide"
+    bind:success="onVirtualPaymentFulfilled"
+  />
 </view>

@@ -110,6 +110,71 @@ describe("mini program dark mode architecture", () => {
     );
   });
 
+  it("keeps preview actions legible on dark surfaces", () => {
+    const modalTemplate = readFileSync(
+      "miniprogram/components/card-preview-modal/index.wxml",
+      "utf8",
+    );
+    const modalStyles = readFileSync(
+      "miniprogram/components/card-preview-modal/index.wxss",
+      "utf8",
+    );
+    const previewTemplate = readFileSync(
+      "miniprogram/package-cards/pages/preview/index.wxml",
+      "utf8",
+    );
+    const previewStyles = readFileSync(
+      "miniprogram/package-cards/pages/preview/index.wxss",
+      "utf8",
+    );
+
+    expect(modalTemplate).toContain(
+      'class="preview-text-action group-card"',
+    );
+    expect(modalTemplate).toContain(
+      'name="view-grid-outline" size="{{28}}" color="currentColor"',
+    );
+    expect(modalStyles).toMatch(
+      /\.preview-text-action\.group-card\s*\{[^}]*color:var\(--color-primary\)[^}]*background:var\(--color-card\)/,
+    );
+    expect(previewTemplate).toContain(
+      'name="view-grid-outline" size="{{29}}" color="currentColor"',
+    );
+    expect(previewStyles).toMatch(
+      /\.preview-actions \.group-entry\s*\{[^}]*color:var\(--color-primary\)[^}]*border-color:var\(--color-primary\)/,
+    );
+  });
+
+  it("preserves theme artwork proportions at every mini program slot", () => {
+    const coverStyleFiles = [
+      "miniprogram/pages/home/index.wxss",
+      "miniprogram/pages/explore/index.wxss",
+      "miniprogram/pages/resource/index.wxss",
+      "miniprogram/pages/profile/index.wxss",
+      "miniprogram/package-cards/pages/my-learning/index.wxss",
+      "miniprogram/package-cards/pages/my-generation/index.wxss",
+      "miniprogram/package-cards/pages/pack-detail/index.wxss",
+      "miniprogram/package-cards/pages/private-pack/index.wxss",
+      "miniprogram/package-cards/pages/generate/index.wxss",
+    ];
+
+    coverStyleFiles.forEach((file) => {
+      expect(readFileSync(file, "utf8"), file).toMatch(
+        /background-size:\s*cover/,
+      );
+    });
+
+    expect(
+      readFileSync(
+        "miniprogram/package-cards/pages/ai-generate/index.wxml",
+        "utf8",
+      ),
+    ).toContain('class="page-background" src="{{pageBackground}}" mode="aspectFill"');
+    expect(
+      readFileSync("miniprogram/pages/login/index.wxml", "utf8"),
+    ).toContain('class="login-background" src="{{loginBackground}}" mode="aspectFill"');
+  });
+
   it("themes native and immersive navigation without fixed light colors", () => {
     const theme = readJson("miniprogram/theme.json");
     const navTs = readFileSync(
@@ -238,5 +303,31 @@ describe("mini program dark mode architecture", () => {
 
     refreshThemeBackgrounds("light");
     expect(page.data.heroBackground).toBe("light.jpg");
+  });
+
+  it("caches selected login artwork and falls back to the default light/dark pair", async () => {
+    let stored: unknown;
+    vi.stubGlobal("wx", {
+      getStorageSync: () => stored,
+      setStorageSync: (_key: string, value: unknown) => {
+        stored = value;
+      },
+    });
+    const {
+      DEFAULT_LOGIN_THEME_CONFIG,
+      cacheLoginThemeConfig,
+      getCachedLoginThemeConfig,
+    } = await import("../miniprogram/design-system/loginTheme");
+
+    expect(getCachedLoginThemeConfig()).toEqual(DEFAULT_LOGIN_THEME_CONFIG);
+
+    cacheLoginThemeConfig({
+      login_bg: "https://assets.example/light.jpg",
+      login_bg_dark: "https://assets.example/dark.jpg",
+    });
+    expect(getCachedLoginThemeConfig()).toEqual({
+      login_bg: "https://assets.example/light.jpg",
+      login_bg_dark: "https://assets.example/dark.jpg",
+    });
   });
 });

@@ -32,4 +32,10 @@
     <button bindtap="openPrivacy">《隐私政策》</button>
   </view>
   <view class="version">叩咔 AI · {{version}}</view>
+  <button
+    class="filing-link"
+    bindtap="openFilingQuery"
+    aria-label="查询小程序备案信息 {{filingNumber}}"
+    hover-class="filing-link-hover"
+  >{{filingNumber}}</button>
 </view>

@@ -35,8 +35,8 @@
           <ui-icon wx:elif="{{cardPayload.privateFace.feedback.status === 'processing'}}" name="timer-outline" size="{{30}}" color="currentColor" />
           <ui-icon wx:else name="alert-circle-outline" size="{{30}}" color="currentColor" />
         </button>
-        <button wx:if="{{cardPayload.privateFace}}" class="preview-text-action" catchtap="openGroupCard" hover-class="preview-action-hover">
-          <ui-icon name="view-grid-outline" size="{{28}}" color="var(--color-text-secondary)" /><text>去组卡</text>
+        <button wx:if="{{cardPayload.privateFace}}" class="preview-text-action group-card" catchtap="openGroupCard" hover-class="preview-action-hover">
+          <ui-icon name="view-grid-outline" size="{{28}}" color="currentColor" /><text>去组卡</text>
         </button>
         <button wx:if="{{cardPayload.templateId || cardPayload.privateFace.templateId}}" class="preview-text-action primary" catchtap="makeSimilar" hover-class="preview-action-hover">
           <ui-icon name="auto-fix" size="{{28}}" color="var(--color-text-inverse)" /><text>做同款</text>

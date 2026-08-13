@@ -608,33 +608,85 @@ describe("H5-aligned product surfaces", () => {
     }
   });
 
-  it("keeps login validation and agreement states aligned", () => {
+  it("keeps text-button login choices, phone fallback, and agreement states aligned", () => {
     const logic = read("miniprogram/pages/login/index.ts");
     const template = read("miniprogram/pages/login/index.wxml");
     const styles = read("miniprogram/pages/login/index.wxss");
     expect(logic).toContain('const LAST_LOGIN_METHOD_KEY = "qcard.lastLoginMethod"');
     expect(logic).toContain("code.length === 6");
-    expect(template).toContain("agreement-disabled");
-    expect(template).toContain("最近登录");
-    expect(template).toContain('class="wechat-login-option"');
-    expect(template).toMatch(
-      /<\/button>\s*<text wx:if="\{\{lastLoginMethod === 'wechat'\}\}" class="recent-tag social-recent">最近登录<\/text>/,
-    );
+    expect(logic).toContain('loginMode: "choice"');
+    expect(logic).toContain('loginMode: "phone"');
+    expect(logic).toContain("agreementPromptOpen: false");
+    expect(logic).toContain("pendingAgreementResolve");
+    expect(logic).toContain("confirmAgreementAndLogin");
+    expect(logic).not.toContain('confirmText: "同意并继续"');
+    expect(template).not.toContain("agreement-disabled");
+    expect(template).not.toContain("aria-disabled");
+    expect(template).toContain('wx:if="{{loginMode === \'choice\'}}"');
+    expect(template).toContain('class="login-options"');
+    expect(template).toContain('aria-label="微信登录"');
+    expect(template).toContain('aria-label="手机号登录"');
+    expect(template).toContain("继续你的学习旅程");
+    expect(template).toContain("同步卡包、学习进度与记录");
+    expect(template).toContain('class="login-method-button wechat-login-button');
+    expect(template).toContain('class="login-method-button phone-login-button"');
+    expect(template).toContain("微信登录");
+    expect(template).toContain("手机号登录");
+    expect(template).toContain('bindtap="showPhoneLogin"');
+    expect(template).toContain('bindtap="showLoginChoices"');
+    expect(template).toContain('wx:if="{{agreementPromptOpen}}"');
+    expect(template).toContain("同意并登录");
+    expect(template).toContain("暂不登录");
+    expect(template).not.toContain('class="brand-name"');
+    expect(template).not.toContain('class="brand-subtitle"');
+    expect(template).not.toContain("assets.loginWechat");
+    expect(template).not.toContain('class="login-icon-button');
+    expect(template).not.toContain("推荐方式");
+    expect(template).not.toContain("微信一键登录");
     expect(styles).toMatch(
-      /\.wechat-login-option\s*\{[^}]*overflow:\s*visible;/s,
+      /\.login-options\s*\{[^}]*flex-direction:column;/s,
     );
+    expect(styles).toContain(".choice-mode { padding-top:118rpx;");
+    expect(styles).toContain(".login-method-button { width:100%; height:92rpx;");
+    expect(styles).toContain("gap:32rpx;");
+    expect(styles).toContain(".agreement-row { margin-top:46rpx;");
+    expect(styles).toContain(".wechat-login-button { border:0; color:#fff; background:#07c160;");
+    expect(styles).toContain(".phone-login-button { border:1rpx solid var(--color-border);");
+    expect(styles).toContain(".agreement-modal-card {");
+    expect(styles).toContain("@media (max-height:720px)");
+    expect(styles).toContain("@keyframes login-mode-in");
   });
 
   it("renders recent learning as an in-flow study list with a tall empty state", () => {
     const template = read("miniprogram/pages/home/index.wxml");
+    const logic = read("miniprogram/pages/home/index.ts");
     const styles = read("miniprogram/pages/home/index.wxss");
     const itemTemplate = read("miniprogram/components/study-pack-list-item/index.wxml");
+    const itemLogic = read("miniprogram/components/study-pack-list-item/index.ts");
+    const itemStyles = read("miniprogram/components/study-pack-list-item/index.wxss");
     expect(template).toContain('class="study-list"');
     expect(template).toContain("<study-pack-list-item");
+    expect(template).toContain('locked="{{item.isVipAccessExpired}}"');
+    expect(template).not.toContain("部分卡包的 VIP 免费权益已到期");
     expect(itemTemplate).toContain('class="study-start"');
+    expect(itemTemplate).toContain("VIP免费·已到期");
+    expect(itemTemplate).toContain('name="lock"');
+    expect(itemLogic).toContain('"item, locked"');
+    expect(itemStyles).toContain(".vip-expired-badge {");
+    expect(logic).toContain("isVipAccessExpired");
+    expect(logic).toContain("openExpiredVipGuide");
+    expect(logic).toContain('purchaseGuideMode: "vip"');
+    expect(logic).toContain("原学习记录和进度仍会保留");
+    expect(styles).not.toContain(".vip-expired-tip {");
     expect(styles).toContain(".compact-empty { min-height:480rpx;");
     expect(styles).toContain(".compact-empty.recent-empty { min-height:480rpx;");
     expect(styles).not.toMatch(/\.compact-empty\s*\{[^}]*border:/s);
+    const allPacksTemplate = read("miniprogram/package-cards/pages/my-learning/index.wxml");
+    const allPacksLogic = read("miniprogram/package-cards/pages/my-learning/index.ts");
+    expect(allPacksTemplate).toContain('locked="{{item.isVipAccessExpired}}"');
+    expect(allPacksTemplate).toContain("<app-purchase-guide");
+    expect(allPacksLogic).toContain("isExpiredVipStudyAccess(pack, false)");
+    expect(allPacksLogic).toContain("this.openExpiredVipGuide(pack)");
   });
 
   it("renders home challenge cards with the shared native preview renderer", () => {

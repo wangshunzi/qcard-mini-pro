@@ -7,6 +7,7 @@ import {
   trackVipExpiry,
 } from "../stores/dataInvalidation";
 import type { ThemeConfig } from "../design-system/theme";
+import { cacheLoginThemeConfig } from "../design-system/loginTheme";
 
 export interface UserProfile {
   id: string;
@@ -78,7 +79,7 @@ export interface PrivateCardFace {
 export function getProfile() {
   return request<UserProfile>({ path: "/api/client/profile" }).then((profile) => {
     trackVipExpiry(profile.vip?.isVip === true, profile.vip?.vipExpireAt);
-    return {
+    const resolvedProfile = {
       ...profile,
       avatar: profile.avatar ? resolveApiMediaUrl(profile.avatar) : undefined,
       grade: profile.grade
@@ -91,6 +92,8 @@ export function getProfile() {
           }
         : undefined,
     };
+    cacheLoginThemeConfig(resolvedProfile.currentTheme?.config);
+    return resolvedProfile;
   });
 }
 

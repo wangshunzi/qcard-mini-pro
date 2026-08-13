@@ -20,6 +20,11 @@ import {
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
 import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
+import { isExpiredVipStudyAccess } from "../../../utils/recentStudyAccess";
+
+interface LearningCardPack extends CardPackSummary {
+  isVipAccessExpired: boolean;
+}
 
 const MY_LEARNING_DATA_DOMAINS = [
   "account",
@@ -38,11 +43,14 @@ Page({
     error: "",
     page: 1,
     totalPages: 1,
-    publicItems: [] as CardPackSummary[],
+    publicItems: [] as LearningCardPack[],
     privateItems: [] as PrivateCardPack[],
     assets: UI_ASSETS,
     heroBackground: "",
     userAvatar: "",
+    profile: null as Awaited<ReturnType<typeof getProfile>> | null,
+    purchaseGuideOpen: false,
+    purchaseGuideReason: "",
     categories: [] as Grade[],
     subjects: [] as Subject[],
     knowledgePoints: [] as KnowledgePoint[],
@@ -76,6 +84,7 @@ Page({
         });
         this.setData({
           userAvatar: profile.avatar || "",
+          profile,
         });
       })
       .catch(() => undefined);
@@ -98,6 +107,7 @@ Page({
           });
           this.setData({
             userAvatar: profile.avatar || "",
+            profile,
           });
         })
         .catch(() => undefined);
@@ -180,8 +190,12 @@ Page({
           subjectId: this.data.selectedSubjectId,
           knowledgePointId: this.data.selectedKnowledgePointId,
         });
+        const items = (result.items ?? []).map((pack) => ({
+          ...pack,
+          isVipAccessExpired: isExpiredVipStudyAccess(pack, false),
+        }));
         this.setData({
-          publicItems: reset ? result.items ?? [] : [...this.data.publicItems, ...(result.items ?? [])],
+          publicItems: reset ? items : [...this.data.publicItems, ...items],
           page: result.page ?? page,
           totalPages: result.totalPages ?? page,
         });
@@ -330,6 +344,10 @@ Page({
     const id = String(event.currentTarget.dataset.id || "");
     const pack = this.data.publicItems.find((item) => item.id === id);
     if (!pack) return;
+    if (pack.isVipAccessExpired) {
+      this.openExpiredVipGuide(pack);
+      return;
+    }
     wx.navigateTo({
       url:
         `/package-cards/pages/study/index?packId=${encodeURIComponent(id)}` +
@@ -337,6 +355,26 @@ Page({
           ? `&cardId=${encodeURIComponent(pack.userStudyProgress.lastStudiedCardId)}`
           : ""),
     });
+  },
+
+  openExpiredVipGuide(pack: LearningCardPack) {
+    this.setData({
+      purchaseGuideOpen: true,
+      purchaseGuideReason: `《${pack.title}》曾通过 VIP 免费权益学习。当前权益已到期，恢复 VIP 后即可继续学习，原进度仍会保留。`,
+    });
+  },
+
+  closePurchaseGuide() {
+    this.setData({ purchaseGuideOpen: false });
+  },
+
+  async onVirtualPaymentFulfilled() {
+    this.setData({ purchaseGuideOpen: false });
+    await this.load(true);
+    const profile = await getProfile().catch(() => null);
+    if (profile) {
+      this.setData({ profile, userAvatar: profile.avatar || "" });
+    }
   },
 
   goResource() {

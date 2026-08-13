@@ -21,10 +21,10 @@
       <ui-icon wx:else name="alert-circle-outline" size="{{30}}" color="currentColor" />
     </button>
     <button class="group-entry" bindtap="openGroupCard">
-      <ui-icon name="view-grid-outline" size="{{29}}" color="var(--color-text)" />去组卡
+      <ui-icon name="view-grid-outline" size="{{29}}" color="currentColor" />去组卡
     </button>
     <button wx:if="{{payload.privateFace.templateId}}" class="similar-entry" bindtap="makeSimilar">
-      <ui-icon name="auto-fix" size="{{29}}" color="var(--color-text)" />做同款
+      <ui-icon name="auto-fix" size="{{29}}" color="currentColor" />做同款
     </button>
   </view>
 

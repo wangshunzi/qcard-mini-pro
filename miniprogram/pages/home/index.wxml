@@ -102,6 +102,7 @@
             wx:key="id"
             item="{{item}}"
             is-private="{{item.isPrivate}}"
+            locked="{{item.isVipAccessExpired}}"
             private-cover="{{item.privateCover}}"
             app-icon="{{assets.appIcon}}"
             data-id="{{item.id}}"

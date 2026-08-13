@@ -1,6 +1,7 @@
 import { request } from "../../services/http";
 import { invalidateData } from "../../stores/dataInvalidation";
 import type { ThemeConfig } from "../../design-system/theme";
+import { cacheLoginThemeConfig } from "../../design-system/loginTheme";
 
 export interface Theme {
   id: string;
@@ -24,6 +25,7 @@ export function selectTheme(themeId: string) {
     path: `/api/client/themes/select/${encodeURIComponent(themeId)}`,
     method: "POST",
   }).then((theme) => {
+    cacheLoginThemeConfig(theme.config);
     invalidateData("account");
     return theme;
   });
