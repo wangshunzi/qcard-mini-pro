@@ -92,11 +92,11 @@
     <view class="unlock-actions">
       <button class="unlock-action cancel {{isLoading ? 'disabled' : ''}}" bindtap="close" disabled="{{isLoading}}">取消</button>
       <button wx:if="{{canAfford}}" class="unlock-action confirm {{isLoading ? 'disabled' : ''}}" bindtap="confirm" loading="{{isLoading}}" disabled="{{isLoading}}">
-        <ui-icon wx:if="{{!isLoading}}" name="lock-open-outline" size="{{30}}" color="var(--color-text)" />
+        <ui-icon wx:if="{{!isLoading}}" name="lock-open-outline" size="{{30}}" color="var(--color-text-on-warning)" />
         <text>{{isLoading ? '解锁中…' : '立即解锁'}}</text>
       </button>
       <button wx:else class="unlock-action recharge {{isLoading ? 'disabled' : ''}}" bindtap="recharge" disabled="{{isLoading}}">
-        <ui-icon name="wallet" size="{{29}}" color="var(--color-text-inverse)" />
+        <ui-icon name="wallet" size="{{29}}" color="var(--color-text-on-accent)" />
         <text>立即充值</text>
       </button>
     </view>

@@ -921,6 +921,23 @@ describe("H5-aligned product surfaces", () => {
     expect(template).toContain("/assets/icons/coins.png");
   });
 
+  it("explains feedback minimum length and preserves detail image proportions", () => {
+    const logic = read("miniprogram/package-settings/pages/feedback/index.ts");
+    const template = read("miniprogram/package-settings/pages/feedback/index.wxml");
+    const styles = read("miniprogram/package-settings/pages/feedback/index.wxss");
+
+    expect(logic).toContain("contentRemaining: Math.max(0, 5 - validLength)");
+    expect(template).toContain("至少填写 5 个字");
+    expect(template).toContain("还需填写 ' + contentRemaining + ' 个字");
+    expect(template).toContain('class="content-requirement {{canSubmit ? \'met\' : \'warning\'}}"');
+    expect(styles).toMatch(
+      /\.content-requirement\.warning\s*\{[^}]*color:\s*var\(--color-warning\)[^}]*background:\s*var\(--color-warning-soft\)/,
+    );
+    expect(template).toContain('class="detail-image" src="{{selected.imageUrl}}" mode="widthFix"');
+    expect(styles).toMatch(/\.detail-image\s*\{[^}]*width:\s*100%/);
+    expect(styles).not.toMatch(/\.detail-image\s*\{[^}]*max-height:/);
+  });
+
   it("keeps subpackage-only services outside the main package", () => {
     for (const service of [
       "challengeConfig",

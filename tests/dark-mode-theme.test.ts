@@ -145,6 +145,47 @@ describe("mini program dark mode architecture", () => {
     );
   });
 
+  it("keeps commerce drawer footers and primary actions legible in dark mode", () => {
+    const purchaseTemplate = readFileSync(
+      "miniprogram/components/app-purchase-guide/index.wxml",
+      "utf8",
+    );
+    const purchaseStyles = readFileSync(
+      "miniprogram/components/app-purchase-guide/index.wxss",
+      "utf8",
+    );
+    const unlockTemplate = readFileSync(
+      "miniprogram/components/unlock-confirm-drawer/index.wxml",
+      "utf8",
+    );
+    const unlockStyles = readFileSync(
+      "miniprogram/components/unlock-confirm-drawer/index.wxss",
+      "utf8",
+    );
+
+    expect(purchaseStyles).toMatch(
+      /\.purchase-footer\s*\{[^}]*border-top:1rpx solid var\(--color-border\)[^}]*background:var\(--color-card-elevated\)/,
+    );
+    expect(purchaseStyles).toMatch(
+      /\.vip-primary\s*\{[^}]*color:var\(--color-text-on-warning\)[^}]*background:var\(--color-warning\)/,
+    );
+    expect(purchaseStyles).toMatch(
+      /\.coin-primary\s*\{[^}]*color:var\(--color-text-on-accent\)[^}]*background:var\(--color-primary\)/,
+    );
+    expect(purchaseTemplate).toContain(
+      'name="crown" size="{{34}}" color="var(--color-text-on-warning)"',
+    );
+    expect(unlockStyles).toMatch(
+      /\.unlock-action\.confirm\s*\{[^}]*color:var\(--color-text-on-warning\)[^}]*background:var\(--color-warning\)/,
+    );
+    expect(unlockTemplate).toContain(
+      'name="lock-open-outline" size="{{30}}" color="var(--color-text-on-warning)"',
+    );
+    expect(`${purchaseStyles}\n${unlockStyles}`).not.toMatch(
+      /background:\s*rgba\(248,250,248,\.98\)|border(?:-top|-color)?:\s*[^;]*(?:#e3e8e3|#e0e7df|#dde3dd|#dde2dd)/,
+    );
+  });
+
   it("preserves theme artwork proportions at every mini program slot", () => {
     const coverStyleFiles = [
       "miniprogram/pages/home/index.wxss",

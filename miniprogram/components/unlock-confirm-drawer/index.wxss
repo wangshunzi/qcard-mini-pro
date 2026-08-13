@@ -5,7 +5,7 @@
 .unlock-panel.dragging { animation:none; transform:translateY(var(--unlock-drag-offset)); transition:none; }
 .unlock-panel.drag-settling { animation:none; transform:translateY(var(--unlock-drag-offset)); transition:transform .22s ease-in-out; }
 .unlock-drag-area { margin:0 -36rpx; padding:0 36rpx; }
-.unlock-handle { width:92rpx; height:8rpx; margin:18rpx auto 22rpx; border-radius:999rpx; background:var(--color-surface-soft); }
+.unlock-handle { width:92rpx; height:8rpx; margin:18rpx auto 22rpx; border-radius:999rpx; background:var(--color-border-strong); }
 .unlock-heading { display:flex; align-items:center; justify-content:space-between; gap:24rpx; }
 .unlock-heading-main { min-width:0; display:flex; align-items:center; gap:16rpx; }
 .unlock-heading-icon { width:76rpx; height:76rpx; flex:none; display:flex; align-items:center; justify-content:center; border-radius:50%; background:var(--color-primary-10); }
@@ -31,7 +31,7 @@
 .unlock-author-avatar { width:32rpx; height:32rpx; flex:none; overflow:hidden; border:1rpx solid var(--color-border); border-radius:50%; background:var(--color-card); }
 .unlock-author-fallback { display:flex; align-items:center; justify-content:center; }
 .unlock-count { margin-top:12rpx; display:flex; align-items:center; gap:7rpx; color:var(--color-text-secondary); font-size:21rpx; }
-.unlock-price-section { margin-top:26rpx; padding-top:23rpx; border-top:1rpx solid #dde2dd; }
+.unlock-price-section { margin-top:26rpx; padding-top:23rpx; border-top:1rpx solid var(--color-border); }
 .unlock-price-heading { display:flex; align-items:center; gap:8rpx; color:var(--color-text); font-size:25rpx; font-weight:700; }
 .unlock-price-list { margin-top:17rpx; display:flex; flex-direction:column; gap:15rpx; }
 .unlock-price-row { min-height:34rpx; display:flex; align-items:center; justify-content:space-between; gap:18rpx; color:var(--color-text-secondary); font-size:22rpx; }
@@ -44,9 +44,9 @@
 .unlock-shortage { margin-top:18rpx; padding:14rpx 16rpx; border:1rpx solid var(--color-error); border-radius:14rpx; color:var(--color-error); background:var(--color-error-soft); font-size:21rpx; }
 .unlock-actions { margin-top:28rpx; display:flex; gap:20rpx; }
 .unlock-action { height:82rpx; margin:0; padding:0 20rpx; flex:1; display:flex; align-items:center; justify-content:center; gap:10rpx; border:0; border-radius:20rpx; box-sizing:border-box; font-size:25rpx; font-weight:750; line-height:82rpx; }
-.unlock-action.cancel { color:var(--color-text-secondary); background:var(--color-surface-soft); }
-.unlock-action.confirm { color:var(--color-text-secondary); background:var(--color-warning); box-shadow:0 8rpx 20rpx rgba(184,125,11,.18); }
-.unlock-action.recharge { color:var(--color-text-inverse); background:var(--color-primary-20); box-shadow:0 8rpx 20rpx rgba(82,153,23,.18); }
+.unlock-action.cancel { border:1rpx solid var(--color-border); color:var(--color-text-secondary); background:var(--color-card); }
+.unlock-action.confirm { color:var(--color-text-on-warning); background:var(--color-warning); box-shadow:0 8rpx 20rpx rgba(184,125,11,.18); }
+.unlock-action.recharge { color:var(--color-text-on-accent); background:var(--color-primary-20); box-shadow:0 8rpx 20rpx rgba(82,153,23,.18); }
 .unlock-action.disabled { opacity:.58; }
 .unlock-note { margin-top:18rpx; display:block; color:var(--color-text-secondary); font-size:20rpx; line-height:1.45; text-align:center; }
 .unlock-drawer.closing .unlock-backdrop { animation:unlock-fade-out .22s ease-in both; }

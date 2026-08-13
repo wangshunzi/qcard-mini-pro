@@ -165,8 +165,8 @@
         loading="{{submittingId !== '' || identityStatus === 'checking'}}"
         disabled="{{identityStatus !== 'ready' || !selectedProductId || submittingId}}"
       >
-        <ui-icon wx:if="{{!submittingId && identityStatus === 'ready' && selectedKind === 'vip'}}" name="crown" size="{{34}}" color="var(--color-text-inverse)" />
-        <ui-icon wx:elif="{{!submittingId && identityStatus === 'ready'}}" name="wallet" size="{{34}}" color="var(--color-text-inverse)" />
+        <ui-icon wx:if="{{!submittingId && identityStatus === 'ready' && selectedKind === 'vip'}}" name="crown" size="{{34}}" color="var(--color-text-on-warning)" />
+        <ui-icon wx:elif="{{!submittingId && identityStatus === 'ready'}}" name="wallet" size="{{34}}" color="var(--color-text-on-accent)" />
         <text>{{submittingId ? '正在处理…' : identityStatus === 'checking' || identityStatus === 'idle' ? '正在验证微信支付账号…' : identityStatus === 'conflict' ? '请切换到微信账号进行支付' : identityStatus === 'error' ? '微信支付账号验证失败' : primaryLabel}}</text>
       </button>
       <text class="purchase-kind-note">

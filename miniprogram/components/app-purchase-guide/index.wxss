@@ -5,8 +5,8 @@
 .purchase-panel.dragging { animation:none; transform:translateY(var(--purchase-drag-offset)); transition:none; }
 .purchase-panel.drag-settling { animation:none; transform:translateY(var(--purchase-drag-offset)); transition:transform .22s ease-in-out; }
 .purchase-drag-area { flex:none; }
-.purchase-handle { width:92rpx; height:8rpx; margin:18rpx auto 18rpx; flex:none; border-radius:999rpx; background:var(--color-surface-soft); }
-.purchase-header { padding:0 36rpx 22rpx; flex:none; border-bottom:1rpx solid #e3e8e3; }
+.purchase-handle { width:92rpx; height:8rpx; margin:18rpx auto 18rpx; flex:none; border-radius:999rpx; background:var(--color-border-strong); }
+.purchase-header { padding:0 36rpx 22rpx; flex:none; border-bottom:1rpx solid var(--color-border); }
 .purchase-heading { display:flex; align-items:center; gap:17rpx; }
 .purchase-heading-icon { width:84rpx; height:84rpx; flex:none; display:flex; align-items:center; justify-content:center; border-radius:50%; background:var(--color-warning-soft); }
 .purchase-heading-copy { min-width:0; flex:1; display:flex; flex-direction:column; }
@@ -42,7 +42,7 @@
 .section-title { color:var(--color-text); font-size:25rpx; font-weight:800; }
 .section-hint { color:var(--color-text-muted); font-size:18rpx; text-align:right; }
 .product-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14rpx; }
-.product-card { width:auto; min-width:0; max-width:100%; min-height:176rpx; margin:0; padding:20rpx; display:flex; align-items:flex-start; flex-direction:column; border:2rpx solid #e0e7df; border-radius:20rpx; color:var(--color-text-secondary); background:var(--color-card); box-sizing:border-box; line-height:1.35; text-align:left; transition:opacity .15s ease,transform .15s ease,border-color .15s ease,background .15s ease; }
+.product-card { width:auto; min-width:0; max-width:100%; min-height:176rpx; margin:0; padding:20rpx; display:flex; align-items:flex-start; flex-direction:column; border:2rpx solid var(--color-border); border-radius:20rpx; color:var(--color-text-secondary); background:var(--color-card); box-sizing:border-box; line-height:1.35; text-align:left; transition:opacity .15s ease,transform .15s ease,border-color .15s ease,background .15s ease; }
 .vip-card { min-height:190rpx; align-items:center; justify-content:center; text-align:center; }
 .vip-card .product-title-row { justify-content:center; }
 .vip-card .product-detail,.vip-card .product-benefit,.vip-card .product-pending { width:100%; text-align:center; }
@@ -66,17 +66,17 @@
 .inline-error button { width:auto; height:50rpx; margin:0; padding:0 20rpx; flex:none; border-radius:999rpx; color:var(--color-primary); background:var(--color-card); font-size:20rpx; line-height:50rpx; }
 .payment-status { margin:0 36rpx 26rpx; padding:17rpx 20rpx; display:flex; align-items:center; gap:14rpx; border-radius:16rpx; color:var(--color-text-secondary); background:var(--color-primary-soft); font-size:21rpx; line-height:1.45; }
 .status-pulse { width:14rpx; height:14rpx; flex:none; }
-.purchase-footer { padding:20rpx 36rpx calc(22rpx + env(safe-area-inset-bottom)); flex:none; box-sizing:border-box; border-top:1rpx solid #e3e8e3; background:rgba(248,250,248,.98); }
-.payment-identity-notice { margin-bottom:15rpx; padding:15rpx 17rpx; display:flex; align-items:flex-start; gap:11rpx; box-sizing:border-box; border:1rpx solid #dde3dd; border-radius:16rpx; color:var(--color-text-secondary); background:var(--color-surface-soft); font-size:20rpx; line-height:1.45; }
+.purchase-footer { padding:20rpx 36rpx calc(22rpx + env(safe-area-inset-bottom)); flex:none; box-sizing:border-box; border-top:1rpx solid var(--color-border); background:var(--color-card-elevated); box-shadow:0 -10rpx 28rpx rgba(0,0,0,.12); }
+.payment-identity-notice { margin-bottom:15rpx; padding:15rpx 17rpx; display:flex; align-items:flex-start; gap:11rpx; box-sizing:border-box; border:1rpx solid var(--color-border); border-radius:16rpx; color:var(--color-text-secondary); background:var(--color-surface-soft); font-size:20rpx; line-height:1.45; }
 .identity-notice-content { min-width:0; flex:1; display:flex; flex-direction:column; }
 .payment-identity-notice.conflict { border-color:var(--color-error); color:var(--color-error); background:var(--color-error-soft); }
-.payment-identity-notice.error { border-color:#ecdcbf; color:var(--color-warning); background:var(--color-warning-soft); }
+.payment-identity-notice.error { border-color:var(--color-warning); color:var(--color-warning); background:var(--color-warning-soft); }
 .identity-notice-title { color:var(--color-text-secondary); font-size:21rpx; font-weight:750; }
 .identity-notice-copy { margin-top:3rpx; font-size:19rpx; }
 .identity-retry { width:auto; height:46rpx; margin:0; padding:0 15rpx; flex:none; border:1rpx solid rgba(147,104,25,.28); border-radius:999rpx; color:var(--color-warning); background:var(--color-card); font-size:18rpx; line-height:44rpx; }
-.purchase-primary { width:100%; height:88rpx; margin:0; padding:0 30rpx; display:flex; align-items:center; justify-content:center; gap:11rpx; border:0; border-radius:999rpx; color:var(--color-text-inverse); font-size:25rpx; font-weight:750; line-height:88rpx; }
-.vip-primary { background:var(--color-warning); box-shadow:0 10rpx 24rpx rgba(243,154,19,.2); }
-.coin-primary { background:var(--color-primary); box-shadow:0 10rpx 24rpx rgba(82,153,23,.2); }
+.purchase-primary { width:100%; height:88rpx; margin:0; padding:0 30rpx; display:flex; align-items:center; justify-content:center; gap:11rpx; border:0; border-radius:999rpx; font-size:25rpx; font-weight:750; line-height:88rpx; }
+.vip-primary { color:var(--color-text-on-warning); background:var(--color-warning); box-shadow:0 10rpx 24rpx rgba(243,154,19,.2); }
+.coin-primary { color:var(--color-text-on-accent); background:var(--color-primary); box-shadow:0 10rpx 24rpx rgba(82,153,23,.2); }
 .purchase-primary[disabled] { opacity:.52; }
 .purchase-kind-note { display:block; margin-top:12rpx; color:var(--color-text-muted); font-size:18rpx; line-height:1.4; text-align:center; }
 .order-link { width:100%; height:54rpx; margin:5rpx 0 0; padding:0; color:var(--color-primary); background:transparent; font-size:20rpx; font-weight:650; line-height:54rpx; }

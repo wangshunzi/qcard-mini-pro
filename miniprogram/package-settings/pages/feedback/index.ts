@@ -25,6 +25,7 @@ Page({
     submitting: false,
     type: "product" as FeedbackType,
     contentLength: 0,
+    contentRemaining: 5,
     canSubmit: false,
     types: [
       { value: "account", label: "账号" },
@@ -79,10 +80,12 @@ Page({
 
   onContent(event: WechatMiniprogram.Input) {
     const content = event.detail.value;
+    const validLength = content.trim().length;
     this.setData({
       content,
       contentLength: content.length,
-      canSubmit: content.trim().length >= 5,
+      contentRemaining: Math.max(0, 5 - validLength),
+      canSubmit: validLength >= 5,
     });
   },
 
@@ -205,6 +208,7 @@ Page({
         contact: "",
         imagePath: "",
         contentLength: 0,
+        contentRemaining: 5,
         canSubmit: false,
       });
       await this.load(true);

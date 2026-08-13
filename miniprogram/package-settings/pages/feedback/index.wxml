@@ -22,16 +22,26 @@
       <text>添加截图</text>
     </view>
 
-    <text class="label block-label">反馈内容</text>
+    <view class="feedback-label-row block-label">
+      <text class="label">反馈内容</text>
+      <text class="content-requirement {{canSubmit ? 'met' : 'warning'}}">
+        {{canSubmit ? '已满足最低字数' : '至少填写 5 个字'}}
+      </text>
+    </view>
     <view class="textarea-wrap">
       <textarea class="textarea" value="{{content}}" bindinput="onContent" maxlength="2000" placeholder="请尽量具体地描述遇到的问题或建议" />
-      <text class="counter">{{contentLength}} / 2000</text>
+      <view class="content-guidance">
+        <text class="content-hint {{canSubmit ? 'met' : 'warning'}}">
+          {{canSubmit ? '已达到提交要求' : '还需填写 ' + contentRemaining + ' 个字'}}
+        </text>
+        <text class="counter">{{contentLength}} / 2000</text>
+      </view>
     </view>
 
     <text class="label block-label">联系方式（选填）</text>
     <input class="input" value="{{contact}}" bindinput="onContact" maxlength="255" placeholder="手机号、微信或邮箱" />
     <button class="submit" loading="{{submitting}}" disabled="{{submitting || !canSubmit}}" bindtap="submit" hover-class="submit-hover">
-      {{submitting ? '提交中...' : '提交反馈'}}
+      {{submitting ? '提交中...' : (canSubmit ? '提交反馈' : '还需填写 ' + contentRemaining + ' 个字')}}
     </button>
   </view>
 
