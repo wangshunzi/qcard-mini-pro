@@ -25,7 +25,6 @@ Page({
     submitting: false,
     type: "product" as FeedbackType,
     contentLength: 0,
-    contentRemaining: 5,
     canSubmit: false,
     types: [
       { value: "account", label: "账号" },
@@ -84,7 +83,6 @@ Page({
     this.setData({
       content,
       contentLength: content.length,
-      contentRemaining: Math.max(0, 5 - validLength),
       canSubmit: validLength >= 5,
     });
   },
@@ -208,7 +206,6 @@ Page({
         contact: "",
         imagePath: "",
         contentLength: 0,
-        contentRemaining: 5,
         canSubmit: false,
       });
       await this.load(true);

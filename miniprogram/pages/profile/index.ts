@@ -326,7 +326,7 @@ Page({
     this.setData({
       purchaseGuideOpen: true,
       purchaseGuideMode: "vip",
-      purchaseGuideReason: "选择固定时长 VIP，权益会发放至当前叩咔账号。",
+      purchaseGuideReason: "",
     });
   },
 

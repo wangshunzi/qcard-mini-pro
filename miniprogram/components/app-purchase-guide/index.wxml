@@ -22,13 +22,13 @@
           </view>
           <view class="purchase-heading-copy">
             <text class="purchase-title">{{mode === 'vip' ? (isVip ? 'VIP 会员' : '开通 VIP 会员') : '咔豆充值'}}</text>
-            <text class="purchase-subtitle">{{mode === 'vip' ? (isVip ? '会员权益已生效，VIP 商品不再重复展示' : '解锁卡包免费看、每日咔豆领取、专属 AI 模板') : '选择充值额度，支付成功后立即到账'}}</text>
+            <text wx:if="{{mode === 'recharge'}}" class="purchase-subtitle">选择适合你的充值额度</text>
           </view>
           <button class="purchase-close" bindtap="close" disabled="{{submittingId}}" aria-label="关闭">
             <ui-icon name="close" size="{{31}}" color="var(--color-text-secondary)" />
           </button>
         </view>
-        <view class="balance-row">
+        <view wx:if="{{mode === 'recharge'}}" class="balance-row">
           <ui-icon name="wallet" size="{{31}}" color="var(--color-primary)" />
           <text>当前余额 {{balance || 0}} 咔豆</text>
         </view>
@@ -50,7 +50,6 @@
       <view wx:if="{{mode === 'vip' || isVip}}" class="vip-benefits-section">
         <view class="vip-benefits-heading">
           <text class="vip-benefits-title">会员权益</text>
-          <text class="vip-benefits-hint">支付并发放成功后生效</text>
         </view>
         <view class="vip-benefits-grid">
           <view class="vip-benefit-item"><ui-icon name="cards-outline" size="{{27}}" color="var(--color-warning)" /><text>卡包免费观看</text></view>
@@ -76,7 +75,6 @@
         <view wx:if="{{mode === 'vip' && subscriptionProducts.length}}" class="product-section vip-section">
           <view class="section-heading">
             <text class="section-title">VIP 会员</text>
-            <text class="section-hint">固定时长 · 一次性购买 · 不自动续费</text>
           </view>
           <view class="product-grid">
             <button
@@ -93,10 +91,6 @@
                 <text wx:if="{{item.badge}}" class="product-badge">{{item.badge}}</text>
               </view>
               <view class="product-price"><text class="currency">¥</text><text>{{item.displayPrice}}</text></view>
-              <text class="product-detail">{{item.detailText}}</text>
-              <text class="product-benefit">{{item.benefitText}}</text>
-              <text wx:if="{{item.purchaseState === 'confirming'}}" class="product-pending">上一笔订单确认中，点击可立即查询状态</text>
-              <text wx:elif="{{item.purchaseState === 'continue'}}" class="product-pending">继续上次未完成的订单</text>
             </button>
           </view>
         </view>
@@ -104,7 +98,6 @@
         <view wx:if="{{mode === 'recharge' && coinProducts.length}}" class="product-section coin-section">
           <view class="section-heading">
             <text class="section-title">选择充值额度</text>
-            <text class="section-hint">到账后与现有咔豆余额统一使用</text>
           </view>
           <view class="product-grid">
             <button
@@ -123,10 +116,7 @@
               <view class="coin-bonus-slot">
                 <text wx:if="{{item.bonusLabel}}" class="coin-bonus-tag">{{item.bonusLabel}}</text>
               </view>
-              <text class="product-detail coin-arrival">{{item.detailText}}</text>
               <view class="product-price coin-price"><text class="currency">¥</text><text>{{item.displayPrice}}</text></view>
-              <text wx:if="{{item.purchaseState === 'confirming'}}" class="product-pending">上一笔订单确认中，点击可立即查询状态</text>
-              <text wx:elif="{{item.purchaseState === 'continue'}}" class="product-pending">继续上次未完成的订单</text>
             </button>
           </view>
         </view>
@@ -172,11 +162,8 @@
         <ui-icon wx:elif="{{!submittingId && identityStatus === 'ready'}}" name="wallet" size="{{34}}" color="var(--color-text-on-accent)" />
         <text>{{submittingId ? '正在处理…' : identityStatus === 'checking' || identityStatus === 'idle' ? '正在验证微信支付账号…' : identityStatus === 'conflict' ? '请切换到微信账号进行支付' : identityStatus === 'error' ? '微信支付账号验证失败' : primaryLabel}}</text>
       </button>
-      <text class="purchase-kind-note">
-        {{selectedKind === 'vip' ? '固定时长权益，一次性支付，不自动续费' : '通过微信虚拟支付安全购买，咔豆立即发放'}}
-      </text>
+      <text wx:if="{{selectedKind === 'coin'}}" class="purchase-kind-note">通过微信虚拟支付安全购买</text>
       <button class="order-link" bindtap="openOrders" disabled="{{submittingId}}">查看购买记录与到账状态</button>
-      <text class="purchase-note">由微信虚拟支付安全处理；咔豆和 VIP 在同一账号内统一使用</text>
     </view>
   </view>
 </view>

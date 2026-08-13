@@ -239,8 +239,8 @@ describe("H5-aligned product surfaces", () => {
       "miniprogram/package-cards/pages/ai-generate/index.wxml",
     ];
 
-    expect(guide).toContain("由微信虚拟支付安全处理");
-    expect(guide).toContain("咔豆和 VIP 在同一账号内统一使用");
+    expect(guide).not.toContain("由微信虚拟支付安全处理");
+    expect(guide).not.toContain("咔豆和 VIP 在同一账号内统一使用");
     expect(guide).not.toContain("下载");
     expect(guide).not.toContain('open-type="contact"');
     expect(guideLogic).toContain("startVirtualPurchase");
@@ -921,18 +921,17 @@ describe("H5-aligned product surfaces", () => {
     expect(template).toContain("/assets/icons/coins.png");
   });
 
-  it("explains feedback minimum length and preserves detail image proportions", () => {
+  it("keeps feedback validation quiet and preserves detail image proportions", () => {
     const logic = read("miniprogram/package-settings/pages/feedback/index.ts");
     const template = read("miniprogram/package-settings/pages/feedback/index.wxml");
     const styles = read("miniprogram/package-settings/pages/feedback/index.wxss");
 
-    expect(logic).toContain("contentRemaining: Math.max(0, 5 - validLength)");
-    expect(template).toContain("至少填写 5 个字");
-    expect(template).toContain("还需填写 ' + contentRemaining + ' 个字");
-    expect(template).toContain('class="content-requirement {{canSubmit ? \'met\' : \'warning\'}}"');
-    expect(styles).toMatch(
-      /\.content-requirement\.warning\s*\{[^}]*color:\s*var\(--color-warning\)[^}]*background:\s*var\(--color-warning-soft\)/,
-    );
+    expect(logic).not.toContain("contentRemaining");
+    expect(logic).toContain('wx.showToast({ title: "请至少输入 5 个字"');
+    expect(template).not.toContain("至少填写 5 个字");
+    expect(template).not.toContain("还需填写");
+    expect(template).not.toContain("content-requirement");
+    expect(template).toContain('disabled="{{submitting}}" bindtap="submit"');
     expect(template).toContain('class="detail-image" src="{{selected.imageUrl}}" mode="widthFix"');
     expect(styles).toMatch(/\.detail-image\s*\{[^}]*width:\s*100%/);
     expect(styles).not.toMatch(/\.detail-image\s*\{[^}]*max-height:/);

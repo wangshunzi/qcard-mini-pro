@@ -22,9 +22,7 @@ type PaymentIdentityStatus =
   | "error";
 
 interface ProductView extends VirtualPaymentProduct {
-  benefitText: string;
   bonusLabel: string;
-  detailText: string;
   totalCoinAmount: number;
   durationLabel: string;
   purchaseState: "" | "continue" | "confirming";
@@ -66,14 +64,6 @@ function toProductView(product: VirtualPaymentProduct): ProductView {
     // coinAmount 是商品标注与实际到账的完整数量；奖励文案仅用于展示，不能重复累加。
     totalCoinAmount: isCoin ? coinAmount : 0,
     bonusLabel: isCoin ? product.bonusCoinDescription || "" : "",
-    benefitText: isCoin
-      ? product.bonusCoinDescription || "支付成功后立即到账"
-      : `${product.vipDurationDays || 0} 天固定权益`,
-    detailText: isCoin
-      ? `支付成功后到账 ${coinAmount} 咔豆`
-      : product.dailyRewardAmount
-        ? `每日可领取 ${product.dailyRewardAmount} 咔豆`
-        : "一次性购买，不自动续费",
   };
 }
 
