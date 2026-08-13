@@ -78,6 +78,8 @@ describe("cross-client behavior parity", () => {
     expect(profileTemplate).toContain('bind:metrics="onNavigationMetrics"');
     expect(profileLogic).toContain("profileHeaderTop");
     expect(profileLogic).toContain("event.detail?.totalHeight");
+    expect(profileLogic).toContain("PROFILE_HEADER_CONTENT_OFFSET_PX = 20");
+    expect(read("miniprogram/pages/profile/index.wxss")).toContain("min-height: 596rpx");
     expect(homeTemplate).toContain("<study-pack-list-item");
     expect(homeTemplate).toContain('is-private="{{item.isPrivate}}"');
     const studyPackItem = read("miniprogram/components/study-pack-list-item/index.wxml");

@@ -140,10 +140,12 @@ function formatStudyTime(seconds: number) {
   return `${Math.round((safe / 86400) * 10) / 10}天`;
 }
 
+const PROFILE_HEADER_CONTENT_OFFSET_PX = 20;
+
 Page({
   data: {
     navScrollTop: 0,
-    profileHeaderTop: 72,
+    profileHeaderTop: 84,
     profile: null as UserProfile | null,
     recentCards: [] as ProfileCardFace[],
     loading: true,
@@ -190,7 +192,10 @@ Page({
     event: WechatMiniprogram.CustomEvent<{ totalHeight?: number }>,
   ) {
     this.setData({
-      profileHeaderTop: Math.max(64, Math.ceil(Number(event.detail?.totalHeight || 64) + 8)),
+      profileHeaderTop: Math.max(
+        64 + PROFILE_HEADER_CONTENT_OFFSET_PX,
+        Math.ceil(Number(event.detail?.totalHeight || 64) + PROFILE_HEADER_CONTENT_OFFSET_PX),
+      ),
     });
   },
 

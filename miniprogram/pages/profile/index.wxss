@@ -5,7 +5,7 @@
 
 .profile-header {
   position: relative;
-  min-height: 572rpx;
+  min-height: 596rpx;
   padding: var(--immersive-content-safe-top) 32rpx 44rpx;
   box-sizing: border-box;
   color: var(--color-tertiary-30);
