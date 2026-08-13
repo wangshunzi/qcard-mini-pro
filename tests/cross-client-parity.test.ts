@@ -80,9 +80,14 @@ describe("cross-client behavior parity", () => {
     expect(profileLogic).toContain("event.detail?.totalHeight");
     expect(profileLogic).toContain("PROFILE_HEADER_CONTENT_OFFSET_PX = 20");
     const profileStyles = read("miniprogram/pages/profile/index.wxss");
-    expect(profileStyles).toContain("min-height: 596rpx");
     expect(profileStyles).toMatch(
-      /\.profile-content\s*\{[^}]*min-height:\s*100vh;[^}]*margin-top:\s*-52rpx;/s,
+      /\.profile-page\s*\{[^}]*--profile-content-overlap:\s*32rpx;[^}]*--profile-menu-edge-gap:\s*20rpx;/s,
+    );
+    expect(profileStyles).toMatch(
+      /\.profile-header\s*\{[^}]*min-height:\s*0;[^}]*padding:\s*var\(--immersive-content-safe-top\) 32rpx calc\(var\(--profile-content-overlap\) \+ var\(--profile-menu-edge-gap\)\);/s,
+    );
+    expect(profileStyles).toMatch(
+      /\.profile-content\s*\{[^}]*min-height:\s*100vh;[^}]*margin-top:\s*calc\(0rpx - var\(--profile-content-overlap\)\);/s,
     );
     expect(profileStyles).toMatch(
       /\.profile-page\s*\{[^}]*background:\s*var\(--color-card\);/s,

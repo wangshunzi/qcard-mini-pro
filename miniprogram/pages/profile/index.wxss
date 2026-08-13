@@ -1,12 +1,14 @@
 .profile-page {
+  --profile-content-overlap: 32rpx;
+  --profile-menu-edge-gap: 20rpx;
   min-height: 100vh;
   background: var(--color-card);
 }
 
 .profile-header {
   position: relative;
-  min-height: 596rpx;
-  padding: var(--immersive-content-safe-top) 32rpx 44rpx;
+  min-height: 0;
+  padding: var(--immersive-content-safe-top) 32rpx calc(var(--profile-content-overlap) + var(--profile-menu-edge-gap));
   box-sizing: border-box;
   color: var(--color-tertiary-30);
   background: linear-gradient(145deg, #dcecd9, #f2e6b7);
@@ -156,7 +158,7 @@
   position: relative;
   z-index: 3;
   min-height: 100vh;
-  margin-top: -52rpx;
+  margin-top: calc(0rpx - var(--profile-content-overlap));
   padding-bottom: 24rpx;
   box-sizing: border-box;
   border-radius: 32rpx 32rpx 0 0;
