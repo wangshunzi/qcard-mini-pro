@@ -223,7 +223,7 @@
                 aria-label="{{item.canStudy ? (item.progressPercent > 0 ? '继续学习' : '开始学习') : '解锁卡包'}}"
               >
                 <view>
-                  <ui-icon name="{{item.canStudy ? 'arrow-right' : 'lock-open-outline'}}" size="{{29}}" color="{{item.canStudy ? 'var(--color-primary)' : 'var(--color-warning)'}}" />
+                  <ui-icon name="{{item.canStudy ? 'arrow-right' : 'lock-open-outline'}}" size="{{29}}" color="{{item.canStudy ? 'var(--color-primary)' : 'var(--color-text-on-warning)'}}" />
                 </view>
               </view>
             </view>

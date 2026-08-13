@@ -16,12 +16,13 @@
 
       <view class="purchase-header">
         <view class="purchase-heading">
-          <view class="purchase-heading-icon">
-            <ui-icon name="crown" size="{{44}}" color="var(--color-warning)" />
+          <view class="purchase-heading-icon {{mode === 'recharge' ? 'coin-mode' : 'vip-mode'}}">
+            <ui-icon wx:if="{{mode === 'recharge'}}" name="wallet" size="{{44}}" color="var(--color-primary)" />
+            <ui-icon wx:else name="crown" size="{{44}}" color="var(--color-warning)" />
           </view>
           <view class="purchase-heading-copy">
-            <text class="purchase-title">{{mode === 'vip' ? (isVip ? 'VIP 会员' : '开通 VIP 会员') : '会员与咔豆'}}</text>
-            <text class="purchase-subtitle">{{mode === 'vip' ? (isVip ? '会员权益已生效，VIP 商品不再重复展示' : '解锁卡包免费看、每日咔豆领取、专属 AI 模板') : '固定时长 VIP 与咔豆购买，权益发放至当前账号'}}</text>
+            <text class="purchase-title">{{mode === 'vip' ? (isVip ? 'VIP 会员' : '开通 VIP 会员') : '咔豆充值'}}</text>
+            <text class="purchase-subtitle">{{mode === 'vip' ? (isVip ? '会员权益已生效，VIP 商品不再重复展示' : '解锁卡包免费看、每日咔豆领取、专属 AI 模板') : '选择充值额度，支付成功后立即到账'}}</text>
           </view>
           <button class="purchase-close" bindtap="close" disabled="{{submittingId}}" aria-label="关闭">
             <ui-icon name="close" size="{{31}}" color="var(--color-text-secondary)" />
@@ -72,7 +73,7 @@
       </view>
 
       <block wx:else>
-        <view wx:if="{{subscriptionProducts.length}}" class="product-section vip-section">
+        <view wx:if="{{mode === 'vip' && subscriptionProducts.length}}" class="product-section vip-section">
           <view class="section-heading">
             <text class="section-title">VIP 会员</text>
             <text class="section-hint">固定时长 · 一次性购买 · 不自动续费</text>
@@ -100,9 +101,9 @@
           </view>
         </view>
 
-        <view wx:if="{{coinProducts.length}}" class="product-section coin-section">
+        <view wx:if="{{mode === 'recharge' && coinProducts.length}}" class="product-section coin-section">
           <view class="section-heading">
-            <text class="section-title">咔豆充值</text>
+            <text class="section-title">选择充值额度</text>
             <text class="section-hint">到账后与现有咔豆余额统一使用</text>
           </view>
           <view class="product-grid">
@@ -116,11 +117,13 @@
               hover-class="product-card-hover"
             >
               <view class="product-title-row">
-                <text class="product-title">{{item.coinAmount || 0}} 咔豆</text>
+                <view class="coin-amount"><text>{{item.totalCoinAmount || item.coinAmount || 0}}</text><text class="coin-unit">咔豆</text></view>
                 <text wx:if="{{item.badge}}" class="product-badge coin-badge">{{item.badge}}</text>
               </view>
-              <text wx:if="{{item.bonusCoinAmount}}" class="coin-bonus-tag">{{item.benefitText}}</text>
-              <text class="product-detail">{{item.detailText}}</text>
+              <view class="coin-bonus-slot">
+                <text wx:if="{{item.bonusLabel}}" class="coin-bonus-tag">{{item.bonusLabel}}</text>
+              </view>
+              <text class="product-detail coin-arrival">{{item.detailText}}</text>
               <view class="product-price coin-price"><text class="currency">¥</text><text>{{item.displayPrice}}</text></view>
               <text wx:if="{{item.purchaseState === 'confirming'}}" class="product-pending">上一笔订单确认中，点击可立即查询状态</text>
               <text wx:elif="{{item.purchaseState === 'continue'}}" class="product-pending">继续上次未完成的订单</text>

@@ -40,20 +40,18 @@ describe("WeChat virtual payment", () => {
     );
   });
 
-  it("keeps the configured coin bonus used by the App UI", () => {
+  it("keeps only the display copy for the included coin reward", () => {
     expect(
       normalizeVirtualProduct({
         id: "coin-60",
         type: "coin_package",
         price: 600,
-        coinAmount: 60,
-        bonusCoinAmount: 2,
-        bonusCoinDescription: "限时额外赠送 2 咔豆",
+        coinAmount: 62,
+        bonusCoinDescription: "+2 咔豆",
       }),
     ).toMatchObject({
-      coinAmount: 60,
-      bonusCoinAmount: 2,
-      bonusCoinDescription: "限时额外赠送 2 咔豆",
+      coinAmount: 62,
+      bonusCoinDescription: "+2 咔豆",
     });
   });
 

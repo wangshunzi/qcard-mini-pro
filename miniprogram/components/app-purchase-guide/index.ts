@@ -23,6 +23,7 @@ type PaymentIdentityStatus =
 
 interface ProductView extends VirtualPaymentProduct {
   benefitText: string;
+  bonusLabel: string;
   detailText: string;
   totalCoinAmount: number;
   durationLabel: string;
@@ -56,23 +57,20 @@ function toProductView(product: VirtualPaymentProduct): ProductView {
       : "continue"
     : "";
   const isCoin = product.kind === "coin";
-  const baseCoinAmount = product.coinAmount || 0;
-  const bonusCoinAmount = product.bonusCoinAmount || 0;
+  const coinAmount = product.coinAmount || 0;
   return {
     ...product,
     purchaseState,
     purchaseLocked: purchaseState === "confirming",
     durationLabel: isCoin ? "" : getDurationLabel(product.vipDurationDays),
-    totalCoinAmount: isCoin ? baseCoinAmount + bonusCoinAmount : 0,
+    // coinAmount 是商品标注与实际到账的完整数量；奖励文案仅用于展示，不能重复累加。
+    totalCoinAmount: isCoin ? coinAmount : 0,
+    bonusLabel: isCoin ? product.bonusCoinDescription || "" : "",
     benefitText: isCoin
-      ? bonusCoinAmount
-        ? product.bonusCoinDescription || `额外赠送 ${bonusCoinAmount} 咔豆`
-        : "支付成功后立即到账"
+      ? product.bonusCoinDescription || "支付成功后立即到账"
       : `${product.vipDurationDays || 0} 天固定权益`,
     detailText: isCoin
-      ? bonusCoinAmount
-        ? `合计到账 ${baseCoinAmount + bonusCoinAmount} 咔豆`
-        : "支付成功后发放到统一咔豆余额"
+      ? `支付成功后到账 ${coinAmount} 咔豆`
       : product.dailyRewardAmount
         ? `每日可领取 ${product.dailyRewardAmount} 咔豆`
         : "一次性购买，不自动续费",
@@ -89,9 +87,9 @@ function productSelectionState(
   selectedId: string,
   isVip: boolean,
 ) {
-  const availableProducts = isVip
-    ? products.filter((item) => item.kind !== "vip")
-    : products;
+  const availableProducts = products.filter(
+    (item) => item.kind === preferredKind && !(isVip && item.kind === "vip"),
+  );
   const subscriptionProducts = availableProducts.filter(
     (item) => item.kind === "vip",
   );

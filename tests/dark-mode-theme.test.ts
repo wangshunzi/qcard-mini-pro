@@ -186,6 +186,23 @@ describe("mini program dark mode architecture", () => {
     );
   });
 
+  it("keeps card-pack unlock icons legible on warning actions", () => {
+    const resourceTemplate = readFileSync(
+      "miniprogram/pages/resource/index.wxml",
+      "utf8",
+    );
+    const profileTemplate = readFileSync(
+      "miniprogram/pages/profile/index.wxml",
+      "utf8",
+    );
+
+    for (const template of [resourceTemplate, profileTemplate]) {
+      expect(template).toContain(
+        "var(--color-text-on-warning)",
+      );
+    }
+  });
+
   it("preserves theme artwork proportions at every mini program slot", () => {
     const coverStyleFiles = [
       "miniprogram/pages/home/index.wxss",

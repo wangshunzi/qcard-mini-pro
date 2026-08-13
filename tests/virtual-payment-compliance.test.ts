@@ -56,7 +56,7 @@ describe("virtual-payment compliance", () => {
     }
   });
 
-  it("shows fixed-duration VIP and coin products in one H5-aligned drawer", () => {
+  it("focuses the shared drawer by entry and keeps H5-aligned coin bonuses", () => {
     const logic = read(
       "miniprogram/components/app-purchase-guide/index.ts",
     );
@@ -65,18 +65,26 @@ describe("virtual-payment compliance", () => {
     );
     expect(logic).toContain('item.kind === "vip"');
     expect(logic).toContain('item.kind === "coin"');
-    expect(logic).not.toContain(".filter((item) => item.kind === expectedKind)");
-    expect(template).toContain("会员与咔豆");
+    expect(logic).toContain("item.kind === preferredKind");
+    expect(template).toContain("咔豆充值");
+    expect(template).toContain("选择充值额度，支付成功后立即到账");
     expect(template).toContain('wx:for="{{subscriptionProducts}}"');
     expect(template).toContain('wx:for="{{coinProducts}}"');
+    expect(template).toContain("mode === 'vip' && subscriptionProducts.length");
+    expect(template).toContain("mode === 'recharge' && coinProducts.length");
     expect(template).toContain("固定时长 · 一次性购买 · 不自动续费");
     expect(template).toContain('bindtap="selectProduct"');
     expect(template).toContain('bindtap="purchase"');
-    expect(logic).toContain("baseCoinAmount + bonusCoinAmount");
+    expect(logic).toContain("totalCoinAmount: isCoin ? coinAmount : 0");
     expect(logic).toContain("bonusCoinDescription");
+    expect(logic).toContain('product.bonusCoinDescription || ""');
+    expect(logic).toContain("支付成功后到账 ${coinAmount} 咔豆");
+    expect(logic).not.toContain("baseCoinAmount + bonus" + "CoinAmount");
     expect(logic).toContain("selectedProduct.totalCoinAmount");
     expect(template).toContain("coin-bonus-tag");
-    expect(template).toContain("item.bonusCoinAmount");
+    expect(template).toContain("item.bonusLabel");
+    expect(template).not.toContain("item.bonus" + "CoinAmount");
+    expect(template).toContain("item.totalCoinAmount || item.coinAmount");
   });
 
   it("removes VIP products from the selectable state for active members", () => {
@@ -87,8 +95,7 @@ describe("virtual-payment compliance", () => {
       "miniprogram/components/app-purchase-guide/index.wxml",
     );
 
-    expect(logic).toContain("const availableProducts = isVip");
-    expect(logic).toContain('products.filter((item) => item.kind !== "vip")');
+    expect(logic).toContain('!(isVip && item.kind === "vip")');
     expect(logic).toContain("products: availableProducts");
     expect(template).toContain("VIP 商品不再重复展示");
     expect(template).toContain(

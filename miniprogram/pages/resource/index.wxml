@@ -182,7 +182,7 @@
                     hover-class="pack-action-hover"
                   >
                     <view>
-                      <ui-icon name="{{pack.canStudy ? 'arrow-right' : 'lock-open-outline'}}" size="{{29}}" color="{{pack.canStudy ? 'var(--color-primary)' : 'var(--color-warning)'}}" />
+                      <ui-icon name="{{pack.canStudy ? 'arrow-right' : 'lock-open-outline'}}" size="{{29}}" color="{{pack.canStudy ? 'var(--color-primary)' : 'var(--color-text-on-warning)'}}" />
                     </view>
                   </view>
                 </view>
