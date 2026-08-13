@@ -1,6 +1,6 @@
 .profile-page {
   min-height: 100vh;
-  background: var(--color-background);
+  background: var(--color-card);
 }
 
 .profile-header {
@@ -155,9 +155,10 @@
 .profile-content {
   position: relative;
   z-index: 3;
-  min-height: 600rpx;
-  margin-top: -32rpx;
+  min-height: 100vh;
+  margin-top: -52rpx;
   padding-bottom: 24rpx;
+  box-sizing: border-box;
   border-radius: 32rpx 32rpx 0 0;
   background: var(--color-card);
   overflow: hidden;

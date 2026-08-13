@@ -79,7 +79,14 @@ describe("cross-client behavior parity", () => {
     expect(profileLogic).toContain("profileHeaderTop");
     expect(profileLogic).toContain("event.detail?.totalHeight");
     expect(profileLogic).toContain("PROFILE_HEADER_CONTENT_OFFSET_PX = 20");
-    expect(read("miniprogram/pages/profile/index.wxss")).toContain("min-height: 596rpx");
+    const profileStyles = read("miniprogram/pages/profile/index.wxss");
+    expect(profileStyles).toContain("min-height: 596rpx");
+    expect(profileStyles).toMatch(
+      /\.profile-content\s*\{[^}]*min-height:\s*100vh;[^}]*margin-top:\s*-52rpx;/s,
+    );
+    expect(profileStyles).toMatch(
+      /\.profile-page\s*\{[^}]*background:\s*var\(--color-card\);/s,
+    );
     expect(homeTemplate).toContain("<study-pack-list-item");
     expect(homeTemplate).toContain('is-private="{{item.isPrivate}}"');
     const studyPackItem = read("miniprogram/components/study-pack-list-item/index.wxml");
