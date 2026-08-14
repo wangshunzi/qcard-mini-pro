@@ -12,6 +12,8 @@
     <ui-icon name="delete-outline" size="{{28}}" color="var(--color-text-inverse)" />
   </button>
 
+  <view wx:if="{{item.status === 'success'}}" class="ai-generated-badge">AI 生成</view>
+
   <private-card-status
     wx:if="{{item.status !== 'success'}}"
     class="face-renderer private-status-host"

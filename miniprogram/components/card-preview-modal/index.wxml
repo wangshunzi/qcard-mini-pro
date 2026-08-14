@@ -2,6 +2,7 @@
   <button class="preview-modal-backdrop" aria-label="关闭卡片详情" bindtap="close"></button>
   <view class="preview-modal-panel" style="top: {{modalTop}}px; width: {{modalWidth}}px;" bindtap="close">
     <view class="preview-card-stage" catchtap="preventClose">
+      <view wx:if="{{cardPayload.privateFace}}" class="ai-generated-badge">AI 生成</view>
       <flip-card
         id="preview-modal-card"
         class="preview-modal-card"
