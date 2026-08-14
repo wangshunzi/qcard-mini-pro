@@ -69,7 +69,7 @@ Page({
       success: (result) => {
         if (!result.confirm) return;
         sessionStore.clear();
-        wx.reLaunch({ url: "/pages/login/index" });
+        wx.switchTab({ url: "/pages/home/index" });
       },
     });
   },

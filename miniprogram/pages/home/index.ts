@@ -25,6 +25,16 @@ import {
 } from "../../stores/dataInvalidation";
 import { bindThemeBackgrounds } from "../../design-system/themeBackground";
 import { isExpiredVipStudyAccess } from "../../utils/recentStudyAccess";
+import {
+  getPublicCardFace,
+  getPublicCardFaces,
+  type PublicCardFaceSummary,
+} from "../../services/exploration";
+import {
+  isAuthenticated,
+  openLogin,
+  requireLogin,
+} from "../../utils/authGate";
 
 const HOME_DATA_DOMAINS: DataDomain[] = [
   "account",
@@ -60,6 +70,10 @@ interface HomeChallengeCard extends ChallengeCard {
     type: string;
     data: Record<string, unknown>;
   };
+}
+
+interface GuestFeaturedCard extends PublicCardFaceSummary {
+  previewCard?: CardData;
 }
 
 const PRIVATE_FACE_POLL_MS = 3000;
@@ -133,6 +147,24 @@ function withCardPreview(face: PrivateCardFace): HomeCardFace {
   };
 }
 
+function withGuestCardPreview(
+  face: PublicCardFaceSummary,
+): GuestFeaturedCard | null {
+  if (
+    !isMiniProgramCardType(face.type) ||
+    (face.schemaVersion ?? 1) > 1 ||
+    (face.supportedPlatforms?.length &&
+      !face.supportedPlatforms.includes("wechat_miniprogram"))
+  ) return null;
+  return {
+    ...face,
+    previewCard:
+      face.data && validateCardData(face.type, face.data)
+        ? { type: face.type as CardData["type"], data: face.data }
+        : undefined,
+  };
+}
+
 Page({
   data: {
     navScrollTop: 0,
@@ -145,6 +177,9 @@ Page({
     challengeCards: [] as HomeChallengeCard[],
     challengeProgress: 0,
     sections: [] as HomeSection[],
+    featuredPacks: [] as HomeCardPack[],
+    guestFeaturedCards: [] as GuestFeaturedCard[],
+    guestCardOpeningId: "",
     profile: null as Awaited<ReturnType<typeof getProfile>> | null,
     homeBackground: "",
     assets: UI_ASSETS,
@@ -155,20 +190,50 @@ Page({
     purchaseGuideOpen: false,
     purchaseGuideMode: "recharge",
     purchaseGuideReason: "",
+    isGuest: true,
   },
 
   onPageScroll(event: { scrollTop: number }) {
     syncNavigationScroll(this, event.scrollTop);
   },
 
-  onShow() {
-    const session = sessionStore.getState();
-    if (!session) {
-      wx.reLaunch({ url: "/pages/login/index" });
-      return;
+  onLoad() {
+    const launchPath = wx.getLaunchOptionsSync?.().path;
+    if (
+      isAuthenticated() &&
+      launchPath === "pages/home/index" &&
+      getCurrentPages().length === 1
+    ) {
+      (this as any)._redirectingAuthenticatedEntry = true;
+      wx.switchTab({
+        url: "/pages/explore/index",
+        success: () => {
+          (this as any)._redirectingAuthenticatedEntry = false;
+        },
+        fail: () => {
+          (this as any)._redirectingAuthenticatedEntry = false;
+          void this.load();
+        },
+      });
     }
-    this.setData({ userName: session.user.nickname || "同学" });
-    if (shouldRefreshData(this as any, HOME_DATA_DOMAINS)) void this.load();
+  },
+
+  onShow() {
+    if ((this as any)._redirectingAuthenticatedEntry) return;
+    const session = sessionStore.getState();
+    const authenticated = Boolean(session);
+    const authenticationChanged =
+      (this as any)._lastAuthenticated !== authenticated;
+    (this as any)._lastAuthenticated = authenticated;
+    this.setData({
+      isGuest: !authenticated,
+      userName: session?.user.nickname || (authenticated ? "同学" : "访客"),
+    });
+    if (
+      !(this as any)._loaded ||
+      authenticationChanged ||
+      shouldRefreshData(this as any, HOME_DATA_DOMAINS)
+    ) void this.load();
     else this.schedulePrivateFacePolling();
   },
 
@@ -191,10 +256,18 @@ Page({
     this.clearPrivateFacePolling();
     this.setData({ loading: true, error: "" });
     try {
-      const [data, profile, privateFaces] = await Promise.all([
+      const session = sessionStore.getState();
+      const [data, profile, privateFaces, publicFaces] = await Promise.all([
         getHomeData(),
-        getProfile(),
-        getRecentPrivateCardFaces(6),
+        getProfile().catch(() => null),
+        session
+          ? getRecentPrivateCardFaces(6).catch(() => ({ items: [] as PrivateCardFace[] }))
+          : Promise.resolve({ items: [] as PrivateCardFace[] }),
+        session
+          ? Promise.resolve({ items: [] as PublicCardFaceSummary[] })
+          : getPublicCardFaces({ page: 1, limit: 6 }).catch(() => ({
+              items: [] as PublicCardFaceSummary[],
+            })),
       ]);
       const promotions = (data.promotions ?? [])
         .filter((promotion) => promotion.cardPacks?.length)
@@ -204,12 +277,33 @@ Page({
           subtitle: promotion.description || "精选学习内容",
           items: promotion.cardPacks.map((pack) => withProgress(pack)),
         }));
+      const featured = (data.featuredCardPacks ?? []).map((pack) =>
+        withProgress(pack, profile?.id, profile?.avatar || ""),
+      );
+      const sections: HomeSection[] = [
+        ...(featured.length
+          ? [{
+              key: "featured-card-packs",
+              title: sessionStore.getState() ? "为你推荐" : "精选卡包",
+              subtitle: sessionStore.getState()
+                ? "继续发现适合你的学习内容"
+                : "挑一组感兴趣的内容开始看看",
+              items: featured,
+            }]
+          : []),
+        ...promotions,
+      ];
       const recentCards = (privateFaces.items ?? []).map(withCardPreview);
-      bindThemeBackgrounds(this, profile.currentTheme?.config, {
-        homeBackground: "home_bg",
-      });
+      const guestFeaturedCards = (publicFaces.items ?? [])
+        .map(withGuestCardPreview)
+        .filter((item): item is GuestFeaturedCard => Boolean(item));
+      if (profile) {
+        bindThemeBackgrounds(this, profile.currentTheme?.config, {
+          homeBackground: "home_bg",
+        });
+      }
       const recentStudy = (data.recentStudy ?? []).map((pack) =>
-          withProgress(pack, profile.id, profile.avatar || ""),
+          withProgress(pack, profile?.id, profile?.avatar || ""),
         );
       this.setData({
         recentStudy,
@@ -244,10 +338,17 @@ Page({
               ),
             )
           : 0,
-        sections: promotions,
+        sections,
+        featuredPacks: featured,
+        guestFeaturedCards,
         profile,
-        userName: profile.nickname || (this.data as any).userName,
+        isGuest: !sessionStore.getState(),
+        userName:
+          profile?.nickname ||
+          sessionStore.getState()?.user.nickname ||
+          "访客",
       }, () => this.schedulePrivateFacePolling());
+      (this as any)._loaded = true;
     } catch (error) {
       this.setData({ error: error instanceof Error ? error.message : "首页加载失败" });
     } finally {
@@ -271,6 +372,7 @@ Page({
   },
 
   async refreshPrivateFaces() {
+    if (!isAuthenticated()) return;
     if ((this as any)._privateFacePollBusy) return;
     (this as any)._privateFacePollBusy = true;
     try {
@@ -284,11 +386,12 @@ Page({
     }
   },
 
-  openAi() {
+  async openAi() {
+    if (!(await requireLogin("generate"))) return;
     wx.navigateTo({ url: "/package-cards/pages/ai-generate/index" });
   },
 
-  makeSimilar(event: WechatMiniprogram.CustomEvent<{ id: string }>) {
+  async makeSimilar(event: WechatMiniprogram.CustomEvent<{ id: string }>) {
     const id = String(event.detail.id ?? "");
     const card = (this.data.recentCards as HomeCardFace[]).find(
       (item) => item.id === id,
@@ -297,6 +400,7 @@ Page({
       wx.showToast({ title: "该卡面缺少模板信息", icon: "none" });
       return;
     }
+    if (!(await requireLogin("generate"))) return;
     wx.navigateTo({
       url:
         `/package-cards/pages/ai-generate/index?templateId=${encodeURIComponent(card.templateId)}` +
@@ -306,7 +410,8 @@ Page({
     });
   },
 
-  openStudy() {
+  async openStudy() {
+    if (!(await requireLogin("study"))) return;
     const recent = (this.data as any).recentStudy as HomeCardPack[];
     const pack = recent[0];
     if (!pack) {
@@ -328,7 +433,8 @@ Page({
     });
   },
 
-  startStudy(event: WechatMiniprogram.TouchEvent) {
+  async startStudy(event: WechatMiniprogram.TouchEvent) {
+    if (!(await requireLogin("study"))) return;
     const id = String(event.currentTarget.dataset.id ?? "");
     const pack = ((this.data as any).recentStudy as HomeCardPack[]).find(
       (item) => item.id === id,
@@ -367,7 +473,8 @@ Page({
     });
   },
 
-  openChallenge(event?: WechatMiniprogram.TouchEvent) {
+  async openChallenge(event?: WechatMiniprogram.TouchEvent) {
+    if (!(await requireLogin("study"))) return;
     const challenge = (this.data as any).dailyChallenge as DailyChallenge | null;
     if (!challenge?.cards?.length) {
       wx.showToast({ title: "今日暂无挑战卡片", icon: "none" });
@@ -390,21 +497,67 @@ Page({
     wx.switchTab({ url: "/pages/resource/index" });
   },
 
-  openMyLearning() {
+  openExplore() {
+    wx.switchTab({ url: "/pages/explore/index" });
+  },
+
+  async openGuestFeaturedCard(event: WechatMiniprogram.TouchEvent) {
+    const id = String(event.currentTarget.dataset.id ?? "");
+    if (!id || this.data.guestCardOpeningId) return;
+    this.setData({ guestCardOpeningId: id });
+    wx.showLoading({ title: "加载卡片", mask: true });
+    try {
+      const face = await getPublicCardFace(id);
+      if (!isMiniProgramCardType(face.type)) throw new Error("该卡片暂不支持小程序");
+      if ((face.schemaVersion ?? 1) > 1) throw new Error("请升级小程序后查看此卡片");
+      if (
+        face.supportedPlatforms?.length &&
+        !face.supportedPlatforms.includes("wechat_miniprogram")
+      ) throw new Error("该卡片暂不支持小程序");
+      if (!validateCardData(face.type, face.data)) throw new Error("卡片内容暂不可用");
+      this.setData({
+        cardPreviewOpen: true,
+        cardPreviewPayload: {
+          front: {
+            type: face.type,
+            data: face.data,
+            schemaVersion: face.schemaVersion,
+          },
+          title: face.name,
+          templateId: face.templateId,
+          genParams: face.genParams,
+        } as CardTransferPayload,
+      });
+    } catch (error) {
+      wx.showToast({
+        title: error instanceof Error ? error.message : "卡片加载失败",
+        icon: "none",
+      });
+    } finally {
+      wx.hideLoading();
+      this.setData({ guestCardOpeningId: "" });
+    }
+  },
+
+  async openMyLearning() {
+    if (!(await requireLogin("profile"))) return;
     wx.navigateTo({ url: "/package-cards/pages/my-learning/index" });
   },
 
-  createPrivatePack() {
+  async createPrivatePack() {
+    if (!(await requireLogin("generate"))) return;
     wx.navigateTo({
       url: "/package-cards/pages/my-learning/index?mode=private&create=true",
     });
   },
 
-  openMyCards() {
+  async openMyCards() {
+    if (!(await requireLogin("profile"))) return;
     wx.navigateTo({ url: "/package-cards/pages/my-generation/index" });
   },
 
-  openLevel() {
+  async openLevel() {
+    if (!(await requireLogin("asset"))) return;
     wx.navigateTo({ url: "/package-settings/pages/level-detail/index" });
   },
 
@@ -412,7 +565,8 @@ Page({
     wx.switchTab({ url: "/pages/profile/index" });
   },
 
-  openCoinHistory() {
+  async openCoinHistory() {
+    if (!(await requireLogin("asset"))) return;
     this.setData({ coinHistoryOpen: true });
     wx.hideTabBar({ animation: false });
   },
@@ -422,7 +576,8 @@ Page({
     wx.showTabBar({ animation: false });
   },
 
-  openRechargeGuide() {
+  async openRechargeGuide() {
+    if (!(await requireLogin("purchase"))) return;
     this.setData({ coinHistoryOpen: false });
     this.setData({
       purchaseGuideOpen: true,
@@ -431,7 +586,8 @@ Page({
     });
   },
 
-  openExpiredVipGuide(pack?: HomeCardPack | WechatMiniprogram.TouchEvent) {
+  async openExpiredVipGuide(pack?: HomeCardPack | WechatMiniprogram.TouchEvent) {
+    if (!(await requireLogin("purchase"))) return;
     const selectedPack = pack && "id" in pack ? pack : undefined;
     this.setData({
       purchaseGuideOpen: true,
@@ -496,5 +652,9 @@ Page({
       cardPreviewPayload: null,
     });
     wx.showTabBar({ animation: false });
+  },
+
+  openGuestLogin() {
+    openLogin("profile");
   },
 });

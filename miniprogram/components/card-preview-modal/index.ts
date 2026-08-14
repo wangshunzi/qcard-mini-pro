@@ -8,6 +8,7 @@ import {
   resetBottomSheetGesture,
   startBottomSheetDrag,
 } from "../../utils/bottomSheetGesture";
+import { requireLogin } from "../../utils/authGate";
 import { getImmersiveNavigationMetrics } from "../../utils/navigationMetrics";
 
 Component({
@@ -133,9 +134,10 @@ Component({
       });
     },
 
-    openGroupCard() {
+    async openGroupCard() {
       const frontFaceId = String(this.data.cardPayload?.privateFace?.id || "");
       if (!frontFaceId) return;
+      if (!(await requireLogin("generate"))) return;
       this.closeAndThen(() => {
         wx.navigateTo({
           url: `/package-cards/pages/generate/index?frontFaceId=${encodeURIComponent(frontFaceId)}`,
@@ -143,12 +145,13 @@ Component({
       });
     },
 
-    makeSimilar() {
+    async makeSimilar() {
       const payload = this.data.cardPayload;
       const templateId = String(
         payload?.templateId || payload?.privateFace?.templateId || "",
       );
       if (!templateId) return;
+      if (!(await requireLogin("generate"))) return;
       const params = payload?.genParams;
       this.closeAndThen(() => {
         wx.navigateTo({
@@ -161,8 +164,9 @@ Component({
       });
     },
 
-    openFeedback() {
+    async openFeedback() {
       if (!this.data.cardPayload?.privateFace?.id) return;
+      if (!(await requireLogin("feedback"))) return;
       resetBottomSheetGesture(this, "feedback");
       this.setData({ feedbackOpen: true });
     },
@@ -211,6 +215,7 @@ Component({
       const privateFace = this.data.cardPayload?.privateFace;
       const content = this.data.feedbackContent.trim();
       if (!privateFace?.id || !content || this.data.submittingFeedback) return;
+      if (!(await requireLogin("feedback"))) return;
       this.setData({ submittingFeedback: true });
       try {
         const result = await submitPrivateCardFaceFeedback(privateFace.id, content);

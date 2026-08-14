@@ -17,11 +17,6 @@ export class ApiError extends Error {
 }
 
 const SESSION_ERROR_CODES = new Set([4001, 4104, 4105]);
-let redirectingToLogin = false;
-
-sessionStore.subscribe((session) => {
-  if (session) redirectingToLogin = false;
-});
 
 interface RequestOptions<TBody> {
   path: string;
@@ -128,14 +123,12 @@ export async function request<T, TBody = unknown>({
     response.statusCode === 401 ||
     (typeof payload?.code === "number" && SESSION_ERROR_CODES.has(payload.code))
   ) {
-    sessionStore.clear();
-    const pages = getCurrentPages();
-    const currentRoute = pages[pages.length - 1]?.route;
-    if (currentRoute !== "pages/login/index" && !redirectingToLogin) {
-      redirectingToLogin = true;
-      setTimeout(() => wx.reLaunch({ url: "/pages/login/index" }), 0);
-    }
-    throw new ApiError("登录已过期，请重新登录", payload?.code ?? 4001);
+    const hadSession = Boolean(sessionStore.getState());
+    if (hadSession) sessionStore.clear();
+    throw new ApiError(
+      hadSession ? "登录已过期，请重新登录" : "请先登录",
+      payload?.code ?? 4001,
+    );
   }
   if (response.statusCode < 200 || response.statusCode >= 300) {
     const message =

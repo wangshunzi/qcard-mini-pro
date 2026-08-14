@@ -7,6 +7,7 @@ import {
   shouldRefreshData,
   type DataDomain,
 } from "../../../stores/dataInvalidation";
+import { isAuthenticated, requireLogin } from "../../../utils/authGate";
 
 const TEACHER_DATA_DOMAINS: DataDomain[] = ["wallet", "learning"];
 
@@ -31,6 +32,7 @@ Page({
     purchaseGuideMode: "vip",
     purchaseGuideReason: "",
     assets: UI_ASSETS,
+    isGuest: true,
   },
 
   onLoad(options: Record<string, string>) {
@@ -50,6 +52,14 @@ Page({
   },
 
   async loadUnlockProfile() {
+    if (!isAuthenticated()) {
+      this.setData({
+        isGuest: true,
+        userBalance: 0,
+        isVip: false,
+      });
+      return;
+    }
     try {
       const profile = await getProfile();
       this.setData({
@@ -62,6 +72,7 @@ Page({
             (pack.unlockType === "vip_free" && profile.vip?.isVip === true),
           ),
         })),
+        isGuest: false,
       });
     } catch {
       // The drawer remains usable with a zero balance and exposes the recharge path.
@@ -106,10 +117,11 @@ Page({
     if (id) wx.navigateTo({ url: `/package-cards/pages/pack-detail/index?id=${encodeURIComponent(id)}` });
   },
 
-  startStudy(event: WechatMiniprogram.TouchEvent) {
+  async startStudy(event: WechatMiniprogram.TouchEvent) {
     const id = String(event.currentTarget.dataset.id || "");
     const pack = this.data.cardPacks.find((item) => item.id === id);
     if (!pack) return;
+    if (!(await requireLogin("study"))) return;
     wx.navigateTo({
       url:
         `/package-cards/pages/study/index?packId=${encodeURIComponent(id)}` +
@@ -119,10 +131,11 @@ Page({
     });
   },
 
-  unlock(event: WechatMiniprogram.TouchEvent) {
+  async unlock(event: WechatMiniprogram.TouchEvent) {
     const id = String(event.currentTarget.dataset.id || "");
     const pack = this.data.cardPacks.find((item) => item.id === id);
     if (!pack || pack.canStudy || this.data.unlockingId) return;
+    if (!(await requireLogin("unlock"))) return;
     if (pack.unlockType === "vip_free" && !this.data.isVip) {
       this.openVipGuide();
       return;
@@ -138,7 +151,8 @@ Page({
     this.setData({ unlockPanelOpen: false });
   },
 
-  openVipGuide() {
+  async openVipGuide() {
+    if (!(await requireLogin("purchase"))) return;
     this.setData({
       purchaseGuideOpen: true,
       purchaseGuideMode: "vip",
@@ -146,7 +160,8 @@ Page({
     });
   },
 
-  openUnlockRecharge(event?: WechatMiniprogram.CustomEvent<{ shortage?: number }>) {
+  async openUnlockRecharge(event?: WechatMiniprogram.CustomEvent<{ shortage?: number }>) {
+    if (!(await requireLogin("purchase"))) return;
     const shortage = Number(event?.detail?.shortage ?? 0);
     this.setData({
       unlockPanelOpen: false,
@@ -167,6 +182,7 @@ Page({
   },
 
   async confirmUnlock() {
+    if (!(await requireLogin("unlock"))) return;
     const pack = this.data.selectedUnlockPack;
     if (!pack?.id || this.data.unlockingId) return;
     this.setData({ unlockingId: pack.id });

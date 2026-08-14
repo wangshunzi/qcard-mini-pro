@@ -70,7 +70,7 @@ Page({
       await deleteAccount();
       sessionStore.clear();
       wx.showToast({ title: "账号已注销", icon: "success" });
-      setTimeout(() => wx.reLaunch({ url: "/pages/login/index" }), 500);
+      setTimeout(() => wx.switchTab({ url: "/pages/home/index" }), 500);
     } catch (error) {
       this.setData({
         error: error instanceof Error ? error.message : "注销失败，请稍后重试",

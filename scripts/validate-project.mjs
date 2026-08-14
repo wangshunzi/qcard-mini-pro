@@ -48,6 +48,9 @@ if (JSON.stringify(actualTabs) !== JSON.stringify(expectedTabs)) {
 if (appJson.pages?.[0] !== "pages/home/index") {
   fail(appJsonPath, "首页必须作为小程序默认启动页");
 }
+if (appJson.entryPagePath !== "pages/home/index") {
+  fail(appJsonPath, "游客模式必须默认进入首页，再按登录态分流");
+}
 for (const [, , iconPath, selectedIconPath] of expectedTabs) {
   for (const relativePath of [iconPath, selectedIconPath]) {
     const file = path.join(miniRoot, relativePath);

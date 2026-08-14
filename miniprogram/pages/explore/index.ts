@@ -16,6 +16,7 @@ import {
   shouldRefreshData,
 } from "../../stores/dataInvalidation";
 import { bindThemeBackgrounds } from "../../design-system/themeBackground";
+import { isAuthenticated, requireLogin } from "../../utils/authGate";
 
 const EXPLORE_CONTEXT_DOMAINS = ["account"] as const;
 
@@ -47,41 +48,46 @@ Page({
     exploreBackground: "",
     assets: UI_ASSETS,
     listeningBackground: UI_ASSETS.listeningStoryBackground,
+    isGuest: true,
   },
   onPageScroll(event: { scrollTop: number }) {
     syncNavigationScroll(this, event.scrollTop);
   },
   onLoad() {
-    if (sessionStore.getState()) {
-      markDataFresh(this as any, EXPLORE_CONTEXT_DOMAINS);
-      void this.loadContext();
-      void this.load(true);
-    }
+    markDataFresh(this as any, EXPLORE_CONTEXT_DOMAINS);
+    (this as any)._lastAuthenticated = isAuthenticated();
+    this.setData({ isGuest: !isAuthenticated() });
+    void this.loadContext();
+    void this.load(true);
   },
   async loadContext() {
     try {
-      const [templates, profile] = await Promise.all([
-        getMiniProgramTemplates(),
-        getProfile(),
-      ]);
-      bindThemeBackgrounds(this, profile.currentTheme?.config, {
-        exploreBackground: "explore_bg",
-      });
+      const templates = await getMiniProgramTemplates();
+      const profile = await getProfile().catch(() => null);
+      if (profile) {
+        bindThemeBackgrounds(this, profile.currentTheme?.config, {
+          exploreBackground: "explore_bg",
+        });
+      }
       this.setData({
         templates,
+        isGuest: !sessionStore.getState(),
       });
     } catch {
       // 列表仍可独立加载，辅助筛选或主题失败不阻断核心浏览。
     }
   },
   onShow() {
-    if (!sessionStore.getState()) {
-      wx.reLaunch({ url: "/pages/login/index" });
-      return;
-    }
+    const authenticated = isAuthenticated();
+    const authenticationChanged =
+      (this as any)._lastAuthenticated !== authenticated;
+    (this as any)._lastAuthenticated = authenticated;
+    this.setData({ isGuest: !authenticated });
     if (
-      (this as any)._didShow &&
-      shouldRefreshData(this as any, EXPLORE_CONTEXT_DOMAINS)
+      (this as any)._didShow && (
+        authenticationChanged ||
+        shouldRefreshData(this as any, EXPLORE_CONTEXT_DOMAINS)
+      )
     ) {
       markDataFresh(this as any, EXPLORE_CONTEXT_DOMAINS);
       void this.loadContext();
@@ -180,10 +186,11 @@ Page({
       () => void this.load(true),
     );
   },
-  openMyCards() {
+  async openMyCards() {
+    if (!(await requireLogin("profile"))) return;
     wx.navigateTo({ url: "/package-cards/pages/my-generation/index" });
   },
-  makeSimilar(event: WechatMiniprogram.TouchEvent) {
+  async makeSimilar(event: WechatMiniprogram.TouchEvent) {
     const templateId = String(event.currentTarget.dataset.templateId ?? "");
     const genParams = event.currentTarget.dataset.genParams as
       | Record<string, unknown>
@@ -192,6 +199,7 @@ Page({
       wx.showToast({ title: "该卡面暂不支持做同款", icon: "none" });
       return;
     }
+    if (!(await requireLogin("generate"))) return;
     wx.navigateTo({
       url:
         `/package-cards/pages/ai-generate/index?templateId=${encodeURIComponent(templateId)}` +

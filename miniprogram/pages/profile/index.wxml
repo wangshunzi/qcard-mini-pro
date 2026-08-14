@@ -7,7 +7,25 @@
     </button></view>
   </immersive-nav>
 
-  <view wx:if="{{loading && !profile}}" class="state">
+  <view wx:if="{{isGuest}}" class="guest-profile">
+    <view class="guest-profile-visual">
+      <view class="guest-profile-orbit orbit-one"></view>
+      <view class="guest-profile-orbit orbit-two"></view>
+      <view class="guest-profile-icon">
+        <ui-icon name="account-outline" size="{{70}}" color="var(--color-primary)" />
+      </view>
+    </view>
+    <text class="guest-profile-eyebrow">游客模式</text>
+    <text class="guest-profile-title">登录后同步记录</text>
+    <button class="guest-profile-primary" bindtap="openGuestLogin" hover-class="guest-profile-primary-hover">登录 / 注册</button>
+    <view class="guest-profile-benefits">
+      <view><ui-icon name="cards-outline" size="{{30}}" color="var(--color-primary)" /><text>同步卡包与进度</text></view>
+      <view><ui-icon name="star" size="{{30}}" color="var(--color-primary)" /><text>保存收藏与卡面</text></view>
+      <view><ui-icon name="wallet" size="{{30}}" color="var(--color-primary)" /><text>管理咔豆与权益</text></view>
+    </view>
+  </view>
+
+  <view wx:elif="{{loading && !profile}}" class="state">
     <view class="profile-skeleton"></view>
     <view class="content-skeleton"></view>
     <view class="content-skeleton short"></view>

@@ -42,12 +42,14 @@ export interface HomeData {
   dailyChallenge?: DailyChallenge;
   recentStudy: CardPackSummary[];
   promotions: Promotion[];
+  featuredCardPacks: CardPackSummary[];
 }
 
 export function getHomeData() {
   return request<HomeData>({ path: "/api/client/home" }).then((result) => ({
     ...result,
     recentStudy: (result.recentStudy ?? []).map(normalizeCardPack),
+    featuredCardPacks: (result.featuredCardPacks ?? []).map(normalizeCardPack),
     promotions: (result.promotions ?? []).map((promotion) => ({
       ...promotion,
       cardPacks: (promotion.cardPacks ?? []).map(normalizeCardPack),

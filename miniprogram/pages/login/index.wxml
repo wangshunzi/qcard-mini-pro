@@ -1,6 +1,15 @@
 <view class="login-page safe-bottom">
   <image class="login-background" src="{{loginBackground}}" mode="aspectFill" />
   <view class="login-overlay"></view>
+  <button
+    class="login-page-back"
+    style="top:{{loginControlTop}}px;width:{{loginControlHeight}}px;height:{{loginControlHeight}}px;"
+    bindtap="goBack"
+    hover-class="login-page-back-hover"
+    aria-label="关闭登录，返回继续浏览"
+  >
+    <ui-icon name="close" size="{{36}}" color="var(--color-text-inverse)" />
+  </button>
   <view class="brand">
     <image class="brand-mark" src="{{assets.appIcon}}" mode="aspectFit" />
   </view>
@@ -8,8 +17,8 @@
   <view class="login-panel">
     <view wx:if="{{loginMode === 'choice'}}" class="login-mode choice-mode">
       <view class="login-intro">
-        <text class="login-intro-title">继续你的学习旅程</text>
-        <text class="login-intro-subtitle">同步卡包、学习进度与记录</text>
+        <text class="login-intro-title">{{loginIntroTitle || '继续你的学习旅程'}}</text>
+        <text class="login-intro-subtitle">{{loginIntroSubtitle || '同步卡包、学习进度与记录'}}</text>
       </view>
       <view class="login-options" aria-role="group" aria-label="选择登录方式">
         <button

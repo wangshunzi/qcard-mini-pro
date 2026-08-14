@@ -10,6 +10,7 @@ import type { ThemeConfig } from "../design-system/theme";
 import { cacheLoginThemeConfig } from "../design-system/loginTheme";
 
 export interface UserProfile {
+  isGuest?: boolean;
   id: string;
   shortId: string;
   phoneNumber?: string;

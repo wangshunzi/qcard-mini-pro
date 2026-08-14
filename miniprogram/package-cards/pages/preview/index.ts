@@ -8,6 +8,7 @@ import {
   resetBottomSheetGesture,
   startBottomSheetDrag,
 } from "../../../utils/bottomSheetGesture";
+import { requireLogin } from "../../../utils/authGate";
 
 Page({
   data: {
@@ -51,11 +52,12 @@ Page({
     });
   },
 
-  toggleFeedback() {
+  async toggleFeedback() {
     if (this.data.feedbackOpen) {
       this.closeFeedback();
       return;
     }
+    if (!(await requireLogin("feedback"))) return;
     resetBottomSheetGesture(this, "feedback");
     this.setData({ feedbackOpen: true });
   },
@@ -106,6 +108,7 @@ Page({
     const privateFace = this.data.payload?.privateFace;
     const content = this.data.feedbackContent.trim();
     if (!privateFace?.id || !content || this.data.submittingFeedback) return;
+    if (!(await requireLogin("feedback"))) return;
     this.setData({ submittingFeedback: true });
     try {
       const result = await submitPrivateCardFaceFeedback(privateFace.id, content);
@@ -128,8 +131,9 @@ Page({
     }
   },
 
-  openGroupCard() {
+  async openGroupCard() {
     const frontFaceId = String(this.data.payload?.privateFace?.id || "");
+    if (!(await requireLogin("generate"))) return;
     wx.navigateTo({
       url: `/package-cards/pages/generate/index${
         frontFaceId ? `?frontFaceId=${encodeURIComponent(frontFaceId)}` : ""
@@ -137,12 +141,13 @@ Page({
     });
   },
 
-  makeSimilar() {
+  async makeSimilar() {
     const templateId = String(this.data.payload?.privateFace?.templateId || "");
     if (!templateId) {
       wx.showToast({ title: "该卡面缺少模板信息", icon: "none" });
       return;
     }
+    if (!(await requireLogin("generate"))) return;
     wx.navigateTo({
       url: `/package-cards/pages/ai-generate/index?templateId=${encodeURIComponent(templateId)}`,
     });

@@ -23,6 +23,7 @@ import {
   type DataDomain,
 } from "../../stores/dataInvalidation";
 import { bindThemeBackgrounds } from "../../design-system/themeBackground";
+import { isAuthenticated, requireLogin } from "../../utils/authGate";
 
 const RESOURCE_DATA_DOMAINS: DataDomain[] = ["account", "wallet", "learning"];
 
@@ -131,21 +132,27 @@ Page({
     cardPreviewOpen: false,
     cardPreviewVisible: false,
     cardPreviewPayload: null as CardTransferPayload | null,
+    isGuest: true,
   },
   onPageScroll(event: { scrollTop: number }) {
     syncNavigationScroll(this, event.scrollTop);
   },
   onLoad() {
-    if (sessionStore.getState()) void this.load();
+    (this as any)._lastAuthenticated = isAuthenticated();
+    this.setData({ isGuest: !isAuthenticated() });
+    void this.load();
   },
   onShow() {
-    if (!sessionStore.getState()) {
-      wx.reLaunch({ url: "/pages/login/index" });
-      return;
-    }
+    const authenticated = isAuthenticated();
+    const authenticationChanged =
+      (this as any)._lastAuthenticated !== authenticated;
+    (this as any)._lastAuthenticated = authenticated;
+    this.setData({ isGuest: !authenticated });
     if (
-      (this as any)._didShow &&
-      shouldRefreshData(this as any, RESOURCE_DATA_DOMAINS)
+      (this as any)._didShow && (
+        authenticationChanged ||
+        shouldRefreshData(this as any, RESOURCE_DATA_DOMAINS)
+      )
     ) void this.load();
     else (this as any)._didShow = true;
   },
@@ -172,10 +179,8 @@ Page({
     }
     this.setData({ loading: true, error: "" });
     try {
-      const [discovery, profile] = await Promise.all([
-        getDiscoveryData(),
-        getProfile(),
-      ]);
+      const discovery = await getDiscoveryData();
+      const profile = await getProfile().catch(() => null);
       const grades = discovery.grades ?? [];
       const gradeIndex = Math.min(
         (this.data as any).gradeIndex,
@@ -186,9 +191,11 @@ Page({
         (this.data as any).subjectIndex,
         Math.max(0, subjects.length - 1),
       );
-      bindThemeBackgrounds(this, profile.currentTheme?.config, {
-        resourceBackground: "resource_bg",
-      });
+      if (profile) {
+        bindThemeBackgrounds(this, profile.currentTheme?.config, {
+          resourceBackground: "resource_bg",
+        });
+      }
       this.setData({
         grades,
         gradeIndex,
@@ -198,11 +205,12 @@ Page({
         knowledgePoints: toDisplayKnowledgePoints(
           subjects[subjectIndex]?.knowledgePoints ?? [],
           {},
-          profile.vip?.isVip === true,
+          profile?.vip?.isVip === true,
         ),
         collapsedKnowledgePoints: {},
-        userBalance: Math.max(0, Number(profile.balance || 0)),
-        isVip: profile.vip?.isVip === true,
+        userBalance: Math.max(0, Number(profile?.balance || 0)),
+        isVip: profile?.vip?.isVip === true,
+        isGuest: !sessionStore.getState(),
       });
       if ((this.data as any).mode === "preview") await this.loadPreview(true);
     } catch (error) {
@@ -370,11 +378,15 @@ Page({
     });
   },
 
-  startPack(event: WechatMiniprogram.TouchEvent) {
+  async startPack(event: WechatMiniprogram.TouchEvent) {
     const id = String(event.currentTarget.dataset.id || "");
     const points = (this.data as any).knowledgePoints as DisplayKnowledgePoint[];
     const pack = points.flatMap((point) => point.cardPacks).find((item) => item.id === id);
     if (!pack) return;
+    if (!isAuthenticated()) {
+      await requireLogin(pack.canStudy ? "study" : "unlock");
+      return;
+    }
     if (!pack.canStudy) {
       if (pack.unlockType === "vip_free" && !(this.data as any).isVip) {
         this.openVipGuide();
@@ -402,7 +414,8 @@ Page({
     wx.showTabBar({ animation: false });
   },
 
-  openVipGuide() {
+  async openVipGuide() {
+    if (!(await requireLogin("purchase"))) return;
     wx.hideTabBar({ animation: false });
     this.setData({
       purchaseGuideOpen: true,
@@ -411,7 +424,8 @@ Page({
     });
   },
 
-  openUnlockRecharge(event?: WechatMiniprogram.CustomEvent<{ shortage?: number }>) {
+  async openUnlockRecharge(event?: WechatMiniprogram.CustomEvent<{ shortage?: number }>) {
+    if (!(await requireLogin("purchase"))) return;
     const shortage = Number(event?.detail?.shortage ?? 0);
     this.setData({
       unlockPanelOpen: false,
@@ -435,6 +449,7 @@ Page({
   },
 
   async confirmPackUnlock() {
+    if (!(await requireLogin("unlock"))) return;
     const pack = (this.data as any).selectedUnlockPack as CardPackSummary;
     if (!pack?.id || (this.data as any).unlocking) return;
     this.setData({ unlocking: true });

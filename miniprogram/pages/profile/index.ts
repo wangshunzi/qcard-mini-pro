@@ -23,6 +23,7 @@ import {
   type DataDomain,
 } from "../../stores/dataInvalidation";
 import { bindThemeBackgrounds } from "../../design-system/themeBackground";
+import { isAuthenticated, openLogin } from "../../utils/authGate";
 
 const PROFILE_DATA_DOMAINS: DataDomain[] = [
   "account",
@@ -182,6 +183,7 @@ Page({
     purchaseGuideOpen: false,
     purchaseGuideMode: "vip",
     purchaseGuideReason: "",
+    isGuest: true,
   },
 
   onPageScroll(event: { scrollTop: number }) {
@@ -208,10 +210,26 @@ Page({
   },
 
   onShow() {
-    if (!sessionStore.getState()) {
-      wx.reLaunch({ url: "/pages/login/index" });
+    if (!isAuthenticated()) {
+      this.clearPrivateFacePolling();
+      this.setData({
+        isGuest: true,
+        loading: false,
+        error: "",
+        profile: null,
+        recentCards: [],
+        feedbackCards: [],
+        favoritePacks: [],
+        favoriteCards: [],
+      });
+      void getProfile().then((profile) => {
+        bindThemeBackgrounds(this, profile.currentTheme?.config, {
+          profileBackground: "profile_bg",
+        });
+      }).catch(() => undefined);
       return;
     }
+    this.setData({ isGuest: false });
     if (shouldRefreshData(this as any, PROFILE_DATA_DOMAINS)) void this.load();
     else this.schedulePrivateFacePolling();
   },
@@ -229,11 +247,15 @@ Page({
   },
 
   async onPullDownRefresh() {
-    await this.load();
+    if (isAuthenticated()) await this.load();
     wx.stopPullDownRefresh();
   },
 
   async load() {
+    if (!isAuthenticated()) {
+      this.setData({ isGuest: true, loading: false, profile: null });
+      return;
+    }
     markDataFresh(this as any, PROFILE_DATA_DOMAINS);
     (this as any)._feedbackPanelCache = {};
     (this as any)._favoritePanelCache = {};
@@ -253,12 +275,22 @@ Page({
         recentCards,
         studyTimeText: formatStudyTime(profile.totalStudyTime),
         isVip: profile.vip?.isVip === true,
+        isGuest: false,
       }, () => this.schedulePrivateFacePolling());
       if (this.data.activeTab === "feedback" || this.data.activeTab === "favorited") {
         await this.loadPanel();
       }
     } catch (error) {
-      this.setData({ error: error instanceof Error ? error.message : "个人信息加载失败" });
+      if (!isAuthenticated()) {
+        this.setData({
+          isGuest: true,
+          profile: null,
+          recentCards: [],
+          error: "",
+        });
+      } else {
+        this.setData({ error: error instanceof Error ? error.message : "个人信息加载失败" });
+      }
     } finally {
       this.setData({ loading: false });
     }
@@ -756,8 +788,12 @@ Page({
       success: (result) => {
         if (!result.confirm) return;
         sessionStore.clear();
-        wx.reLaunch({ url: "/pages/login/index" });
+        wx.switchTab({ url: "/pages/home/index" });
       },
     });
+  },
+
+  openGuestLogin() {
+    openLogin("profile");
   },
 });

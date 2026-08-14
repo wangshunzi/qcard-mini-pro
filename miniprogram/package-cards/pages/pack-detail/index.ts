@@ -21,6 +21,7 @@ import {
   type DataDomain,
 } from "../../../stores/dataInvalidation";
 import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
+import { isAuthenticated, requireLogin } from "../../../utils/authGate";
 
 const PACK_DETAIL_DATA_DOMAINS: DataDomain[] = [
   "account",
@@ -68,6 +69,7 @@ Page({
       title: string;
       description?: string;
     }>,
+    isGuest: true,
   },
   onPageScroll(event: { scrollTop: number }) {
     syncNavigationScroll(this, event.scrollTop);
@@ -94,24 +96,32 @@ Page({
     }
   },
   async loadUnlockProfile() {
+    const authenticated = isAuthenticated();
     try {
       const profile = await getProfile();
-      const isVip = profile.vip?.isVip === true;
+      const isVip = authenticated && profile.vip?.isVip === true;
       const detail = this.data.detail;
       bindThemeBackgrounds(this, profile.currentTheme?.config, {
         detailBackground: "detail_bg",
       });
       this.setData({
         isVip,
-        userBalance: Math.max(0, Number(profile.balance || 0)),
-        unlockProfileLoaded: true,
+        userBalance: authenticated ? Math.max(0, Number(profile.balance || 0)) : 0,
+        unlockProfileLoaded: authenticated,
         canStudy: Boolean(
           detail?.isUnlocked ||
           (detail?.unlockType === "vip_free" && isVip),
         ),
+        isGuest: !authenticated,
       });
     } catch {
-      this.setData({ unlockProfileLoaded: false });
+      this.setData({
+        isGuest: !authenticated,
+        isVip: false,
+        userBalance: 0,
+        unlockProfileLoaded: false,
+        canStudy: false,
+      });
     }
   },
   switchTab(event: WechatMiniprogram.TouchEvent) {
@@ -155,6 +165,7 @@ Page({
     void this.loadReviews(false);
   },
   async toggleReviewLike(event: WechatMiniprogram.TouchEvent) {
+    if (!(await requireLogin("interaction"))) return;
     const id = String(event.currentTarget.dataset.id ?? "");
     const review = this.data.reviews.find((item) => item.id === id);
     if (!review || this.data.reviewActionId) return;
@@ -183,6 +194,7 @@ Page({
     }
   },
   async toggleReviewDislike(event: WechatMiniprogram.TouchEvent) {
+    if (!(await requireLogin("interaction"))) return;
     const id = String(event.currentTarget.dataset.id ?? "");
     const review = this.data.reviews.find((item) => item.id === id);
     if (!review || this.data.reviewActionId) return;
@@ -221,6 +233,7 @@ Page({
     });
   },
   async submitReview() {
+    if (!(await requireLogin("interaction"))) return;
     const comment = this.data.reviewComment.trim();
     if (comment.length < 3 || this.data.reviewSubmitting) return;
     this.setData({ reviewSubmitting: true });
@@ -240,6 +253,7 @@ Page({
     }
   },
   async toggleFavorite() {
+    if (!(await requireLogin("favorite"))) return;
     const detail = this.data.detail;
     if (!detail) return;
     try {
@@ -303,8 +317,12 @@ Page({
       this.setData({ loading: false });
     }
   },
-  startStudy() {
+  async startStudy() {
     const state = this.data as any;
+    if (!isAuthenticated()) {
+      await requireLogin(state.canStudy ? "study" : "unlock");
+      return;
+    }
     if (!state.canStudy) {
       this.confirmUnlock();
       return;
@@ -319,9 +337,14 @@ Page({
     });
   },
 
-  bottomAction() {
+  async bottomAction() {
     const detail = this.data.detail;
     if (!detail) {
+      return;
+    }
+
+    if (!isAuthenticated()) {
+      await requireLogin((this.data as any).canStudy ? "study" : "unlock");
       return;
     }
 
@@ -356,9 +379,10 @@ Page({
       });
     }
   },
-  confirmUnlock() {
+  async confirmUnlock() {
     const detail = (this.data as any).detail as CardPackDetail | null;
     if (!detail || (this.data as any).unlocking) return;
+    if (!(await requireLogin("unlock"))) return;
     if (detail.unlockType === "vip_free" && !(this.data as any).isVip) {
       this.openVipGuide();
       return;
@@ -370,14 +394,16 @@ Page({
     if ((this.data as any).unlocking) return;
     this.setData({ unlockPanelOpen: false });
   },
-  openVipGuide() {
+  async openVipGuide() {
+    if (!(await requireLogin("purchase"))) return;
     this.setData({
       purchaseGuideOpen: true,
       purchaseGuideMode: "vip",
       purchaseGuideReason: "该卡包为 VIP 免费卡包，开通后即可学习。",
     });
   },
-  openRechargeGuide(event?: WechatMiniprogram.CustomEvent<{ shortage?: number }>) {
+  async openRechargeGuide(event?: WechatMiniprogram.CustomEvent<{ shortage?: number }>) {
+    if (!(await requireLogin("purchase"))) return;
     const shortage = Number(event?.detail?.shortage ?? 0);
     this.setData({
       unlockPanelOpen: false,
@@ -397,6 +423,7 @@ Page({
     await Promise.all([this.load(), this.loadUnlockProfile()]);
   },
   async unlock() {
+    if (!(await requireLogin("unlock"))) return;
     if ((this.data as any).unlocking) return;
     const id = String((this.data as any).id);
     this.setData({ unlocking: true });

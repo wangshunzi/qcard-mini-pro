@@ -18,6 +18,12 @@ import {
   openMiniProgramFilingQuery,
 } from "../../config/filing";
 import { logger } from "../../utils/logger";
+import { getProfile } from "../../services/profile";
+import { getImmersiveNavigationMetrics } from "../../utils/navigationMetrics";
+import {
+  getLoginSceneCopy,
+  type LoginScene,
+} from "../../utils/authGate";
 
 const LAST_LOGIN_METHOD_KEY = "qcard.lastLoginMethod";
 const LEGACY_LAST_LOGIN_METHOD_KEY = "qcard.last-login-method";
@@ -43,26 +49,41 @@ Page({
       readSystemThemeMode(),
     ),
     filingNumber: MINI_PROGRAM_FILING.number,
+    loginIntroTitle: "继续你的学习旅程",
+    loginIntroSubtitle: "同步卡包、学习进度与记录",
+    loginControlTop: 26,
+    loginControlHeight: 32,
   },
 
   timer: 0 as number,
   pendingAgreementResolve: null as ((agreed: boolean) => void) | null,
 
-  onLoad() {
+  onLoad(options: Record<string, string | undefined>) {
+    const scene = String(options.scene || "generic") as LoginScene;
+    const sceneCopy = getLoginSceneCopy(scene);
+    const navigationMetrics = getImmersiveNavigationMetrics();
     this.setData({
       lastLoginMethod: String(
         wx.getStorageSync(LAST_LOGIN_METHOD_KEY)
           || wx.getStorageSync(LEGACY_LAST_LOGIN_METHOD_KEY)
           || "",
       ),
+      loginIntroTitle: sceneCopy.loginTitle,
+      loginIntroSubtitle: sceneCopy.loginSubtitle,
+      loginControlTop: navigationMetrics.controlRowTop,
+      loginControlHeight: navigationMetrics.controlRowHeight,
     });
   },
 
   onShow() {
+    void this.refreshLoginTheme();
+  },
+
+  async refreshLoginTheme() {
+    const profile = await getProfile().catch(() => null);
+    const config = profile?.currentTheme?.config ?? getCachedLoginThemeConfig();
     refreshThemeBackgrounds(readSystemThemeMode());
-    bindThemeBackgrounds(this, getCachedLoginThemeConfig(), {
-      loginBackground: "login_bg",
-    });
+    bindThemeBackgrounds(this, config, { loginBackground: "login_bg" });
   },
 
   onUnload() {
@@ -164,6 +185,17 @@ Page({
 
   noop() {},
 
+  goBack() {
+    if (getCurrentPages().length > 1) {
+      wx.navigateBack({
+        delta: 1,
+        fail: () => wx.switchTab({ url: "/pages/explore/index" }),
+      });
+      return;
+    }
+    wx.switchTab({ url: "/pages/explore/index" });
+  },
+
   cancelAgreementPrompt() {
     this.finishAgreementPrompt(false);
   },
@@ -213,7 +245,9 @@ Page({
       }
       wx.setStorageSync(LAST_LOGIN_METHOD_KEY, method);
       wx.showToast({ title: "登录成功", icon: "success" });
-      wx.switchTab({ url: "/pages/home/index" });
+      const pages = getCurrentPages();
+      if (pages.length > 1) wx.navigateBack();
+      else wx.switchTab({ url: "/pages/explore/index" });
     } catch (error) {
       this.setData({ error: error instanceof Error ? error.message : "登录失败" });
     } finally {

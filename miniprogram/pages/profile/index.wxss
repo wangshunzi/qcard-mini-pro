@@ -5,6 +5,43 @@
   background: var(--color-card);
 }
 
+.guest-profile {
+  min-height: calc(100vh - 120rpx);
+  padding: calc(var(--immersive-content-safe-top) + 84rpx) 72rpx 150rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at 50% 16%, var(--color-primary-10), transparent 34%),
+    var(--color-card);
+  text-align: center;
+}
+
+.guest-profile-visual {
+  position: relative;
+  width: 184rpx;
+  height: 184rpx;
+  margin-bottom: 34rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.guest-profile-orbit { position:absolute; border:1rpx solid var(--color-border); border-radius:50%; }
+.guest-profile-orbit.orbit-one { width:184rpx; height:184rpx; opacity:.72; }
+.guest-profile-orbit.orbit-two { width:144rpx; height:144rpx; border-color:var(--color-primary); opacity:.22; }
+.guest-profile-icon { position:relative; z-index:1; width:112rpx; height:112rpx; display:flex; align-items:center; justify-content:center; border-radius:38rpx; background:var(--color-background-elevated); box-shadow:var(--shadow-card); }
+.guest-profile-eyebrow { color:var(--color-primary); font-size:22rpx; font-weight:750; letter-spacing:3rpx; }
+.guest-profile-title { max-width:570rpx; margin-top:18rpx; font-size:38rpx; font-weight:850; line-height:1.35; }
+.guest-profile-primary { width:100%; height:88rpx; margin:34rpx 0 0; border-radius:24rpx; font-size:27rpx; font-weight:750; line-height:88rpx; }
+.guest-profile-primary { color:var(--color-text-inverse); background:var(--color-primary); box-shadow:0 14rpx 30rpx rgba(82,153,23,.2); }
+.guest-profile-primary::after { border:0; }
+.guest-profile-primary-hover { opacity:.82; transform:scale(.985); }
+.guest-profile-benefits { width:100%; margin-top:44rpx; padding-top:30rpx; display:grid; grid-template-columns:repeat(3,1fr); gap:18rpx; border-top:1rpx solid var(--color-border); }
+.guest-profile-benefits view { min-width:0; display:flex; flex-direction:column; align-items:center; gap:12rpx; color:var(--color-text-secondary); font-size:20rpx; line-height:1.35; }
+
 .profile-header {
   position: relative;
   min-height: 0;

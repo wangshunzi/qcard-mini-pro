@@ -19,7 +19,7 @@
 </view>
 <view class="home-page safe-bottom tab-page">
   <immersive-nav overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
-    <view slot="leading" class="level-entry" bindtap="openLevel" hover-class="soft-hover">
+    <view wx:if="{{!isGuest}}" slot="leading" class="level-entry" bindtap="openLevel" hover-class="soft-hover">
       <image wx:if="{{profile.avatar}}" class="top-avatar" src="{{profile.avatar}}" mode="aspectFill" />
       <image wx:else class="top-avatar" src="{{assets.appIcon}}" mode="aspectFit" />
       <view class="level-copy">
@@ -29,19 +29,27 @@
         </view>
       </view>
     </view>
-    <view slot="action" class="balance-entry" bindtap="openCoinHistory" hover-class="soft-hover">
+    <view wx:else slot="leading" class="level-entry guest-entry" bindtap="openGuestLogin" hover-class="soft-hover">
+      <image class="top-avatar" src="{{assets.appIcon}}" mode="aspectFit" />
+      <view class="level-copy guest-copy"><text>叩咔</text></view>
+    </view>
+    <view wx:if="{{!isGuest}}" slot="action" class="balance-entry" bindtap="openCoinHistory" hover-class="soft-hover">
       <ui-icon name="wallet" size="{{32}}" color="var(--color-warning)" />
       <text>{{profile.balance || 0}}</text>
     </view>
+    <button wx:else slot="action" class="balance-entry guest-login-button" bindtap="openGuestLogin" hover-class="soft-hover">登录</button>
   </immersive-nav>
   <view
     class="welcome-card {{homeBackground ? 'has-theme' : ''}}"
     style="{{homeBackground ? 'background-image:url(' + homeBackground + ')' : ''}}"
   >
     <view class="welcome-shade"></view>
-    <view class="welcome-copy">
-      <text>欢迎回来</text>
-      <text class="welcome-name">{{userName}}</text>
+    <view class="welcome-copy {{isGuest ? 'guest-welcome-copy' : ''}}">
+      <text wx:if="{{isGuest}}" class="guest-welcome-title">随便逛逛</text>
+      <block wx:else>
+        <text>欢迎回来</text>
+        <text class="welcome-name">{{userName}}</text>
+      </block>
     </view>
   </view>
 
@@ -91,7 +99,79 @@
   </view>
 
   <block wx:else>
-    <view class="section">
+    <view wx:if="{{isGuest}}" class="guest-discovery">
+      <view class="section guest-section guest-pack-section">
+        <view class="section-head guest-section-head">
+          <view>
+            <text class="section-title">精选卡包</text>
+            <text class="section-subtitle">从感兴趣的主题开始探索</text>
+          </view>
+          <button class="section-more-button" bindtap="openResources" hover-class="section-more-hover">
+            <text>查看全部</text>
+            <ui-icon name="chevron-right" size="{{25}}" color="var(--color-primary)" />
+          </button>
+        </view>
+        <scroll-view wx:if="{{featuredPacks.length}}" class="card-row" scroll-x enhanced show-scrollbar="{{false}}">
+          <view class="card-row-inner guest-pack-row">
+            <view
+              wx:for="{{featuredPacks}}"
+              wx:key="id"
+              class="promotion-card guest-pack-card pressable"
+              data-id="{{item.id}}"
+              bindtap="openPack"
+              hover-class="pressable-hover"
+            >
+              <image wx:if="{{item.cover}}" class="promotion-cover guest-pack-cover" src="{{item.cover}}" mode="aspectFill" />
+              <image wx:else class="promotion-cover guest-pack-cover fallback-image" src="{{assets.appIcon}}" mode="aspectFit" />
+              <text class="promotion-title">{{item.title || '学习卡包'}}</text>
+              <text class="promotion-meta">{{item.cardCount || 0}} 张卡片</text>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <view class="section guest-section guest-card-section">
+        <view class="section-head guest-section-head">
+          <view>
+            <text class="section-title">精选卡片</text>
+            <text class="section-subtitle">翻一翻大家喜欢的卡面</text>
+          </view>
+          <button class="section-more-button" bindtap="openExplore" hover-class="section-more-hover">
+            <text>查看全部</text>
+            <ui-icon name="chevron-right" size="{{25}}" color="var(--color-primary)" />
+          </button>
+        </view>
+        <view wx:if="{{guestFeaturedCards.length}}" class="guest-face-grid">
+          <view
+            wx:for="{{guestFeaturedCards}}"
+            wx:key="id"
+            class="guest-face-card {{guestCardOpeningId === item.id ? 'opening' : ''}}"
+            data-id="{{item.id}}"
+            bindtap="openGuestFeaturedCard"
+            hover-class="guest-face-card-hover"
+          >
+            <view class="guest-face-visual">
+              <flip-card
+                wx:if="{{item.previewCard}}"
+                class="guest-face-renderer"
+                front-card-data="{{item.previewCard}}"
+                aspect-ratio="portrait"
+                preview="{{true}}"
+                read-only="{{true}}"
+                hide-flip-button="{{true}}"
+                is-visible="{{true}}"
+              />
+              <image wx:elif="{{item.thumbnailUrl}}" class="guest-face-thumbnail" src="{{item.thumbnailUrl}}" mode="aspectFill" />
+              <view wx:else class="guest-face-fallback">
+                <image src="{{assets.appIcon}}" mode="aspectFit" />
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{!isGuest}}" class="section">
       <view class="section-head">
         <text class="section-title">最近学习</text>
         <text class="section-more" bindtap="openMyLearning">全部卡包</text>
@@ -117,7 +197,7 @@
       </view>
     </view>
 
-    <view class="section private-face-section">
+    <view wx:if="{{!isGuest}}" class="section private-face-section">
       <view class="section-head">
         <text class="section-title">最近生成</text>
         <text class="section-more" bindtap="openMyCards">全部卡面</text>
@@ -139,7 +219,7 @@
       </view>
     </view>
 
-    <view wx:for="{{sections}}" wx:key="key" class="section promotion-section">
+    <view wx:if="{{!isGuest}}" wx:for="{{sections}}" wx:key="key" class="section promotion-section">
       <view class="section-head">
         <view>
           <text class="section-title">{{item.title}}</text>

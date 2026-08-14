@@ -30,6 +30,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
+import { isAuthenticated, requireLogin } from "../../../utils/authGate";
 
 const STUDY_ACCESS_DOMAINS = ["wallet"] as const;
 
@@ -121,6 +122,14 @@ Page({
   },
 
   async loadUnlockProfile() {
+    if (!isAuthenticated()) {
+      this.setData({
+        userBalance: 0,
+        isVip: false,
+        unlockProfileLoaded: false,
+      });
+      return;
+    }
     try {
       const profile = await getProfile();
       this.setData({
@@ -599,6 +608,7 @@ Page({
   },
 
   async toggleFavorite() {
+    if (!(await requireLogin("favorite"))) return;
     const state = this.data as any;
     if (state.favoriteActionLoading || state.privateMode) return;
     const index = Number(state.activeIndex);
@@ -692,9 +702,10 @@ Page({
     this.setData({ completionVisible: false });
   },
 
-  confirmUnlock() {
+  async confirmUnlock() {
     const pack = (this.data as any).pack as CardPackDetail | null;
     if (!pack || (this.data as any).unlocking) return;
+    if (!(await requireLogin("unlock"))) return;
     if (pack.unlockType === "vip_free" && !(this.data as any).isVip) {
       this.openVipGuide();
       return;
@@ -708,7 +719,8 @@ Page({
     this.setData({ unlockPanelOpen: false });
   },
 
-  openVipGuide() {
+  async openVipGuide() {
+    if (!(await requireLogin("purchase"))) return;
     this.setData({
       purchaseGuideOpen: true,
       purchaseGuideMode: "vip",
@@ -716,7 +728,8 @@ Page({
     });
   },
 
-  openRechargeGuide(event?: WechatMiniprogram.CustomEvent<{ shortage?: number }>) {
+  async openRechargeGuide(event?: WechatMiniprogram.CustomEvent<{ shortage?: number }>) {
+    if (!(await requireLogin("purchase"))) return;
     const shortage = Number(event?.detail?.shortage ?? 0);
     this.setData({
       unlockPanelOpen: false,
@@ -738,6 +751,7 @@ Page({
   },
 
   async unlock() {
+    if (!(await requireLogin("unlock"))) return;
     if ((this.data as any).unlocking) return;
     const packId = String((this.data as any).packId);
     this.setData({ unlocking: true });
