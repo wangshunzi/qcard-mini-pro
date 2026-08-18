@@ -280,19 +280,7 @@ Page({
       const featured = (data.featuredCardPacks ?? []).map((pack) =>
         withProgress(pack, profile?.id, profile?.avatar || ""),
       );
-      const sections: HomeSection[] = [
-        ...(featured.length
-          ? [{
-              key: "featured-card-packs",
-              title: sessionStore.getState() ? "为你推荐" : "精选卡包",
-              subtitle: sessionStore.getState()
-                ? "继续发现适合你的学习内容"
-                : "挑一组感兴趣的内容开始看看",
-              items: featured,
-            }]
-          : []),
-        ...promotions,
-      ];
+      const sections: HomeSection[] = promotions;
       const recentCards = (privateFaces.items ?? []).map(withCardPreview);
       const guestFeaturedCards = (publicFaces.items ?? [])
         .map(withGuestCardPreview)

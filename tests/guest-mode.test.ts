@@ -60,7 +60,8 @@ describe("小程序游客模式", () => {
     expect(resource).toContain("void this.load()");
     expect(resource).toContain("const discovery = await getDiscoveryData()");
     expect(homeService).toContain("featuredCardPacks");
-    expect(home).toContain('title: sessionStore.getState() ? "为你推荐" : "精选卡包"');
+    expect(home).toContain("const sections: HomeSection[] = promotions");
+    expect(home).not.toContain('"为你推荐"');
   });
 
   it("关键服务通过统一、带场景文案的登录门槛", () => {

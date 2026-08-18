@@ -1,0 +1,71 @@
+{
+  "capturedAt": "2026-08-11T12:20:46.287Z",
+  "themes": {
+    "ocean": {
+      "id": "4d533396-4e15-4bdf-b15d-dad42c95602a",
+      "createdAt": "2026-08-11T03:26:38.188Z",
+      "updatedAt": "2026-08-11T03:26:38.188Z",
+      "createdBy": "467789b5-2234-42da-b5bd-56fa75f20c8d",
+      "updatedBy": null,
+      "isActive": true,
+      "remark": "浅海日光与深海夜色双模式主题，2026-08-11",
+      "sort": 10,
+      "name": "海洋主题",
+      "description": "潜入澄澈海洋，和可爱的海洋朋友一起探索学习",
+      "config": {
+        "gen_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/gen_bg.jpg",
+        "home_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/home_bg.jpg",
+        "login_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/login_bg.jpg",
+        "detail_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/detail_bg.jpg",
+        "search_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/search_bg.jpg",
+        "explore_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/explore_bg.jpg",
+        "profile_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/profile_bg.jpg",
+        "gen_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/gen_bg_dark.jpg",
+        "learning_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/learning_bg.jpg",
+        "resource_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/resource_bg.jpg",
+        "home_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/home_bg_dark.jpg",
+        "login_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/login_bg_dark.jpg",
+        "detail_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/detail_bg_dark.jpg",
+        "search_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/search_bg_dark.jpg",
+        "explore_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/explore_bg_dark.jpg",
+        "profile_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/profile_bg_dark.jpg",
+        "learning_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/learning_bg_dark.jpg",
+        "resource_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-20260811/resource_bg_dark.jpg"
+      },
+      "isDefault": false
+    },
+    "forest": {
+      "id": "d69f4356-2a3a-4284-aa21-5fed55ee7189",
+      "createdAt": "2025-11-04T08:12:00.817Z",
+      "updatedAt": "2025-12-17T08:23:05.000Z",
+      "createdBy": "467789b5-2234-42da-b5bd-56fa75f20c8d",
+      "updatedBy": "467789b5-2234-42da-b5bd-56fa75f20c8d",
+      "isActive": true,
+      "remark": null,
+      "sort": 0,
+      "name": "森林主题",
+      "description": "快和森林的小动物们，一起玩耍吧",
+      "config": {
+        "gen_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1762244791320_q29qyu.jpg",
+        "home_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1762243831562_u5qtmm.jpg",
+        "login_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1762243866507_mdwb41.jpg",
+        "detail_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1762243793959_bd3xw2.jpg",
+        "search_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1762243905647_axvkiq.jpg",
+        "explore_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1762243819294_ggx81e.jpg",
+        "profile_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1762243881175_zb5pws.jpg",
+        "gen_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1765959701679_xjgl8f.png",
+        "learning_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1762243851902_9r5kxj.jpg",
+        "resource_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1762243893175_ikl6i7.jpg",
+        "home_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1765959603280_mraqhy.png",
+        "login_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1765959773123_t76q6f.png",
+        "detail_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1765959618647_cjpcb3.png",
+        "search_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1765959740070_29lrsf.png",
+        "explore_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1765959639046_wa453h.png",
+        "profile_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1765959716969_wis2cf.png",
+        "learning_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1765959650797_jasklv.png",
+        "resource_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/1765959662884_bp0oyo.png"
+      },
+      "isDefault": true
+    }
+  }
+}

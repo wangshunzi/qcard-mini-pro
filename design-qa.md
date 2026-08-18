@@ -258,6 +258,33 @@ After the story stability, radius and native puzzle-image changes, the complete
   the last landing plus the 200 ms pool fade. Pool and board pieces support both
   tap placement and native touch drag/drop; touch coordinates accept client, page,
   and component-local values for real-device compatibility.
+
+## 2026-08-11 极地冰川主题跟进 QA
+
+### Visual source and target
+
+- Reference: `/var/folders/qg/nksqszv52xd_n_lftjc7rlsm0000gn/T/codex-clipboard-5c5e6d21-9230-4a9a-a0bc-1edcb5415906.png`
+- Reference: `/var/folders/qg/nksqszv52xd_n_lftjc7rlsm0000gn/T/codex-clipboard-90c56185-6de6-483b-966d-8f4be1937998.png`
+- Dark generate verification: `qa-artifacts/theme-polar-20260811/verification/generate-dark-v4.png`
+- Dark preview-action verification: `qa-artifacts/theme-polar-20260811/verification/preview-actions-dark.png`
+
+### Comparison result
+
+- `去组卡` now uses semantic card, border, text and icon colors. The official
+  WeChat simulator at 390 × 844 and system theme `dark` shows the icon and label
+  with clear primary-color contrast.
+- The dark group-card background was regenerated as a new native 9:16 composition
+  for this page, then uniformly compressed to 720 × 1280. The page's existing
+  `cover` / `aspectFill` behavior remains unchanged.
+- Every Mini Program theme-artwork slot uses `background-size: cover` or
+  `mode="aspectFill"`; the corresponding H5 slots use `backgroundSize: 'cover'`
+  or `object-cover`, preserving source proportions at runtime.
+- The replacement keeps the card-preview center clear, moves workshop tools and the
+  penguin into the lower side zones, and preserves natural object proportions.
+
+### Final result
+
+Passed for the reported dark-mode action-contrast and theme-image proportion issues.
 - Puzzle completion now follows the H5 state machine instead of replacing the board
   with an immediate modal: sliding mode restores the missing lower-right tile for
   800 ms; both modes then merge seams for 260 ms plus a 220 ms hold, zoom the solved

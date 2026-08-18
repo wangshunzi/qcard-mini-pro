@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>海洋 / 森林主题候选图确认</title>
+  <style>
+    :root { color-scheme: dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #0b1119; color: #eef5ff; }
+    main { width: min(1480px, 100%); margin: auto; padding: 32px 24px 64px; }
+    h1 { margin: 0 0 8px; font-size: 30px; }
+    h2 { margin: 48px 0 18px; font-size: 24px; }
+    p { margin: 0; color: #aebed0; line-height: 1.7; }
+    .notice { margin-top: 16px; padding: 14px 16px; border: 1px solid #334155; border-radius: 12px; background: #111a26; }
+    .pair { display: grid; grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: center; margin-bottom: 18px; }
+    .label { color: #d7e3f4; font-weight: 650; }
+    figure { margin: 0; min-width: 0; overflow: hidden; border: 1px solid #273547; border-radius: 14px; background: #060a10; }
+    img { display: block; width: 100%; height: auto; object-fit: contain; }
+    figcaption { padding: 8px 11px; color: #91a4bc; font-size: 12px; border-top: 1px solid #273547; }
+    .portrait img { height: min(68vh, 760px); object-fit: contain; }
+    @media (max-width: 820px) {
+      main { padding: 22px 14px 48px; }
+      .pair { grid-template-columns: 1fr; }
+      .label { margin-top: 18px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>海洋 / 森林主题候选图确认</h1>
+  <p>每套 9 个页面槽位，浅色与暗色各一张。图片已按页面比例导出，未裁剪、未拉伸。</p>
+  <p class="notice">已于 2026-08-11 上传 OSS，并完成海洋、森林两个线上主题的 18 个图片字段替换与客户端接口验证。</p>
+
+  <section id="ocean"><h2>海洋主题</h2></section>
+  <section id="forest"><h2>森林主题</h2></section>
+</main>
+<script>
+  const assets = [
+    ["home_bg", "首页"], ["explore_bg", "探索"], ["resource_bg", "资源"],
+    ["profile_bg", "个人中心"], ["learning_bg", "学习"], ["detail_bg", "详情"],
+    ["search_bg", "搜索"], ["gen_bg", "组卡"], ["login_bg", "登录"]
+  ];
+  for (const theme of ["ocean", "forest"]) {
+    const section = document.querySelector(`#${theme}`);
+    for (const [key, name] of assets) {
+      const row = document.createElement("div");
+      row.className = "pair";
+      const portrait = key === "gen_bg" || key === "login_bg" ? "portrait" : "";
+      row.innerHTML = `
+        <div class="label">${name}<br><small>${key}</small></div>
+        <figure class="${portrait}"><img loading="lazy" src="${theme}/compressed/${key}.jpg" alt="${theme} ${name} 浅色"><figcaption>浅色</figcaption></figure>
+        <figure class="${portrait}"><img loading="lazy" src="${theme}/compressed/${key}_dark.jpg" alt="${theme} ${name} 暗色"><figcaption>暗色</figcaption></figure>`;
+      section.appendChild(row);
+    }
+  }
+</script>
+</body>
+</html>

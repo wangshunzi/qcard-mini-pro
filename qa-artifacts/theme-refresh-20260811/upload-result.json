@@ -1,0 +1,62 @@
+{
+  "startedAt": "2026-08-11T12:20:46.287Z",
+  "completedAt": "2026-08-11T12:20:57.298Z",
+  "themes": {
+    "ocean": {
+      "id": "4d533396-4e15-4bdf-b15d-dad42c95602a",
+      "name": "海洋主题",
+      "objectPrefix": "theme-images/ocean-creative-20260811-v2",
+      "files": {
+        "detail_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/detail_bg.jpg",
+        "detail_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/detail_bg_dark.jpg",
+        "explore_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/explore_bg.jpg",
+        "explore_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/explore_bg_dark.jpg",
+        "gen_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/gen_bg.jpg",
+        "gen_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/gen_bg_dark.jpg",
+        "home_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/home_bg.jpg",
+        "home_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/home_bg_dark.jpg",
+        "learning_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/learning_bg.jpg",
+        "learning_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/learning_bg_dark.jpg",
+        "login_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/login_bg.jpg",
+        "login_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/login_bg_dark.jpg",
+        "profile_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/profile_bg.jpg",
+        "profile_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/profile_bg_dark.jpg",
+        "resource_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/resource_bg.jpg",
+        "resource_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/resource_bg_dark.jpg",
+        "search_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/search_bg.jpg",
+        "search_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/ocean-creative-20260811-v2/search_bg_dark.jpg"
+      },
+      "verifiedUpdatedAt": "2026-08-11T12:20:57.000Z",
+      "isActive": true,
+      "isDefault": false
+    },
+    "forest": {
+      "id": "d69f4356-2a3a-4284-aa21-5fed55ee7189",
+      "name": "森林主题",
+      "objectPrefix": "theme-images/forest-creative-20260811-v2",
+      "files": {
+        "detail_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/detail_bg.jpg",
+        "detail_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/detail_bg_dark.jpg",
+        "explore_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/explore_bg.jpg",
+        "explore_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/explore_bg_dark.jpg",
+        "gen_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/gen_bg.jpg",
+        "gen_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/gen_bg_dark.jpg",
+        "home_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/home_bg.jpg",
+        "home_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/home_bg_dark.jpg",
+        "learning_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/learning_bg.jpg",
+        "learning_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/learning_bg_dark.jpg",
+        "login_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/login_bg.jpg",
+        "login_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/login_bg_dark.jpg",
+        "profile_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/profile_bg.jpg",
+        "profile_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/profile_bg_dark.jpg",
+        "resource_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/resource_bg.jpg",
+        "resource_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/resource_bg_dark.jpg",
+        "search_bg": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/search_bg.jpg",
+        "search_bg_dark": "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/search_bg_dark.jpg"
+      },
+      "verifiedUpdatedAt": "2026-08-11T12:20:57.000Z",
+      "isActive": true,
+      "isDefault": true
+    }
+  }
+}
