@@ -1,4 +1,5 @@
-<view class="page" wx:if="{{payload}}">
+<page-meta page-style="{{themePageStyle}}"></page-meta>
+<view class="page theme-{{themeMode}}" wx:if="{{payload}}">
   <immersive-nav title="{{payload.title || '卡片预览'}}" back="{{true}}" />
   <flip-card id="card" class="preview-card" front-card-data="{{payload.front}}" back-card-data="{{payload.back || emptyCardData}}"
     preview="{{false}}" read-only="{{false}}" is-visible="{{true}}" />

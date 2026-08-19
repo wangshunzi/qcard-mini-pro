@@ -1,5 +1,5 @@
-<page-meta page-style="{{purchaseGuideOpen || unlockPanelOpen || completionVisible ? 'overflow: hidden;' : ''}}"></page-meta>
-<view class="page">
+<page-meta page-style="{{themePageStyle}}{{purchaseGuideOpen || unlockPanelOpen || completionVisible ? 'overflow: hidden;' : ''}}"></page-meta>
+<view class="page theme-{{themeMode}}">
   <view class="study-header" style="padding-top:{{controlRowTop}}px">
     <view class="header-row" style="height:{{controlRowHeight}}px;--immersive-control-height:{{controlRowHeight}}px;">
       <view class="study-nav-controls">

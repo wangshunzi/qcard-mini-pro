@@ -1,5 +1,5 @@
-<page-meta page-style="{{cardPreviewVisible ? 'overflow: hidden;' : ''}}"></page-meta>
-<view class="page safe-bottom">
+<page-meta page-style="{{themePageStyle}}{{cardPreviewVisible ? 'overflow: hidden;' : ''}}"></page-meta>
+<view class="page safe-bottom theme-{{themeMode}}">
   <immersive-nav back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <button slot="action" class="group-button" bindtap="openGroupCard" hover-class="soft-hover">
       <ui-icon name="view-grid-outline" size="{{28}}" color="var(--color-primary)" />组卡

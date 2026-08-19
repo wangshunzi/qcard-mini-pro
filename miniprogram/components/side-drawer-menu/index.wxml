@@ -15,7 +15,7 @@
 </button>
 
 <root-portal>
-<view wx:if="{{open}}" class="side-menu-root" catchtouchmove="preventClose">
+<view wx:if="{{open}}" class="side-menu-root theme-{{themeMode}}" catchtouchmove="preventClose">
   <view class="side-menu-backdrop" bindtap="closeMenu"></view>
   <view class="side-menu-panel safe-bottom" catchtap="preventClose">
     <block wx:if="{{mode === 'profile'}}">

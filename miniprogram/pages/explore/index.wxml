@@ -1,5 +1,5 @@
-<page-meta page-style="{{templateDrawerOpen || cardPreviewVisible ? 'overflow: hidden;' : ''}}"></page-meta>
-<view class="explore-page safe-bottom tab-page">
+<page-meta page-style="{{themePageStyle}}{{templateDrawerOpen || cardPreviewVisible ? 'overflow: hidden;' : ''}}"></page-meta>
+<view class="explore-page safe-bottom tab-page theme-{{themeMode}}">
   <immersive-nav overlay="{{true}}" scroll-top="{{navScrollTop}}">
     <button
       slot="leading"

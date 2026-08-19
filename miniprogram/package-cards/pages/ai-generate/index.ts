@@ -12,7 +12,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
-import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
+import { bindThemeBackgrounds, getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 
 const AI_ACCESS_DOMAINS = ["account", "wallet"] as const;
 import { getImmersiveNavigationMetrics } from "../../../utils/navigationMetrics";
@@ -55,6 +55,7 @@ function previewCardOf(detail: AiTemplate): CardData | null {
 
 Page({
   data: {
+    ...getThemePageData(),
     loading: true,
     loadError: "",
     empty: false,
@@ -99,6 +100,7 @@ Page({
   },
 
   onShow() {
+    syncThemePreferenceForPage(this);
     if (
       (this as any)._didShow &&
       shouldRefreshData(this as any, AI_ACCESS_DOMAINS)

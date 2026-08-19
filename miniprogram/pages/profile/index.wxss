@@ -47,8 +47,8 @@
   min-height: 0;
   padding: var(--immersive-content-safe-top) 32rpx calc(var(--profile-content-overlap) + var(--profile-menu-edge-gap));
   box-sizing: border-box;
-  color: var(--color-tertiary-30);
-  background: linear-gradient(145deg, #dcecd9, #f2e6b7);
+  color: var(--color-text-inverse);
+  background: linear-gradient(145deg, var(--color-primary-10), var(--color-warning-soft));
   background-size: cover;
   background-position: bottom center;
 }

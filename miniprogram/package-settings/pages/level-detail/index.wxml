@@ -1,4 +1,5 @@
-<view class="page safe-bottom">
+<page-meta page-style="{{themePageStyle}}"></page-meta>
+<view class="page safe-bottom theme-{{themeMode}}">
   <immersive-nav back="{{true}}" overlay="{{true}}" scroll-top="{{navScrollTop}}" />
 
   <view wx:if="{{loading}}" class="state">正在加载成长记录…</view>

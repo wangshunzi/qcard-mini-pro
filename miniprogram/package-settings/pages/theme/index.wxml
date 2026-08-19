@@ -1,5 +1,29 @@
-<view class="page safe-bottom">
+<page-meta page-style="{{themePageStyle}}"></page-meta>
+<view class="page safe-bottom theme-{{themeMode}}">
   <immersive-nav title="主题设置" back="{{true}}" border="{{true}}" />
+  <view class="section-heading">
+    <text class="section-title">主题模式</text>
+    <text class="section-subtitle">切换浅色 / 暗黑，或跟随系统</text>
+  </view>
+  <view class="theme-list appearance-list">
+    <button wx:for="{{appearanceOptions}}" wx:key="key"
+      class="theme-row {{themePreference === item.key ? 'selected' : ''}}"
+      data-mode="{{item.key}}" bindtap="chooseAppearance" hover-class="theme-hover">
+      <view class="row-main">
+        <ui-icon name="{{item.icon}}" size="{{34}}" color="var(--color-text-secondary)" />
+        <view class="theme-copy">
+          <text class="theme-name">{{item.title}}</text>
+          <text class="theme-description">{{item.description}}</text>
+        </view>
+      </view>
+      <ui-icon wx:if="{{themePreference === item.key}}" name="check" size="{{32}}" color="var(--color-primary)" />
+    </button>
+  </view>
+
+  <view class="section-heading application-heading">
+    <text class="section-title">应用主题</text>
+    <text class="section-subtitle">选择卡片与界面的配色风格</text>
+  </view>
   <view wx:if="{{loading}}" class="state">加载中...</view>
   <view wx:elif="{{error}}" class="state">
     <ui-icon name="alert-circle-outline" size="{{76}}" color="var(--color-error)" />

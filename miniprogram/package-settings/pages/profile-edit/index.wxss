@@ -1,11 +1,11 @@
 .page { min-height:100vh; background:var(--color-background); }
 .nav-save { width:auto; height:var(--immersive-control-height); margin:0; padding:0 23rpx; border:1rpx solid rgba(82,153,23,.16); border-radius:999rpx; color:var(--color-primary); background:var(--color-primary-soft); box-shadow:0 5rpx 15rpx rgba(54,91,45,.08); font-size:23rpx; font-weight:700; line-height:var(--immersive-control-height); }
-.nav-save[disabled] { border-color:#e2e6e2; color:var(--color-text-muted); background:var(--color-surface-soft); box-shadow:none; }
+.nav-save[disabled] { border-color:var(--color-border); color:var(--color-text-muted); background:var(--color-surface-soft); box-shadow:none; }
 .avatar-area { padding:44rpx 32rpx 30rpx; display:flex; flex-direction:column; align-items:center; color:var(--color-text-secondary); font-size:21rpx; }
-.avatar { width:156rpx; height:156rpx; margin-bottom:16rpx; border:6rpx solid #fff; border-radius:50%; background:var(--color-card); box-shadow:0 8rpx 24rpx rgba(0,0,0,.12); }
+.avatar { width:156rpx; height:156rpx; margin-bottom:16rpx; border:6rpx solid var(--color-card); border-radius:50%; background:var(--color-card); box-shadow:0 8rpx 24rpx rgba(0,0,0,.12); }
 .change-avatar { width:auto; height:54rpx; margin:0; padding:0 18rpx; border:0; color:var(--color-text-secondary); background:transparent; font-size:22rpx; line-height:54rpx; }
 .form { margin:8rpx 32rpx 0; overflow:hidden; border:1rpx solid var(--color-border); border-radius:24rpx; background:var(--color-card); }
-.row { min-height:100rpx; padding:0 25rpx; display:flex; align-items:center; justify-content:space-between; gap:20rpx; border-bottom:1rpx solid #edf0ed; color:var(--color-text); font-size:25rpx; }
+.row { min-height:100rpx; padding:0 25rpx; display:flex; align-items:center; justify-content:space-between; gap:20rpx; border-bottom:1rpx solid var(--color-divider); color:var(--color-text); font-size:25rpx; }
 .row:last-child { border-bottom:0; }
 .row > text:first-child { font-weight:650; }
 .row input { min-width:0; flex:1; text-align:right; }

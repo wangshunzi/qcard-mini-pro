@@ -22,7 +22,7 @@ import {
   shouldRefreshData,
   type DataDomain,
 } from "../../stores/dataInvalidation";
-import { bindThemeBackgrounds } from "../../design-system/themeBackground";
+import { bindThemeBackgrounds, getThemePageData, syncThemePreferenceForPage } from "../../design-system/themeBackground";
 import { isAuthenticated, openLogin } from "../../utils/authGate";
 
 const PROFILE_DATA_DOMAINS: DataDomain[] = [
@@ -145,6 +145,7 @@ const PROFILE_HEADER_CONTENT_OFFSET_PX = 20;
 
 Page({
   data: {
+    ...getThemePageData(),
     navScrollTop: 0,
     profileHeaderTop: 84,
     profile: null as UserProfile | null,
@@ -210,6 +211,7 @@ Page({
   },
 
   onShow() {
+    syncThemePreferenceForPage(this);
     if (!isAuthenticated()) {
       this.clearPrivateFacePolling();
       this.setData({

@@ -4,6 +4,7 @@ import {
   updateProfile,
 } from "../../../services/profile";
 import { UI_ASSETS } from "../../../config/uiAssets";
+import { getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 import {
   clearBottomSheetGesture,
   closeBottomSheet,
@@ -15,6 +16,7 @@ import {
 
 Page({
   data: {
+    ...getThemePageData(),
     loading: true,
     saving: false,
     nickname: "",
@@ -37,6 +39,10 @@ Page({
 
   onLoad() {
     void this.load();
+  },
+
+  onShow() {
+    syncThemePreferenceForPage(this);
   },
 
   onUnload() {

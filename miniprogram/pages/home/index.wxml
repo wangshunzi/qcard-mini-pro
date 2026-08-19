@@ -1,5 +1,5 @@
-<page-meta page-style="{{purchaseGuideOpen || coinHistoryOpen || cardPreviewVisible ? 'overflow: hidden;' : ''}}"></page-meta>
-<view wx:if="{{loading}}" class="startup-loading-screen" aria-label="首页加载中">
+<page-meta page-style="{{themePageStyle}}{{purchaseGuideOpen || coinHistoryOpen || cardPreviewVisible ? 'overflow: hidden;' : ''}}"></page-meta>
+<view wx:if="{{loading}}" class="startup-loading-screen theme-{{themeMode}}" aria-label="首页加载中">
   <view class="startup-loading-nav">
     <view class="startup-loading-pill short"></view>
     <view class="startup-loading-pill"></view>
@@ -17,7 +17,7 @@
     <view wx:for="{{[1,2,3]}}" wx:key="*this" class="startup-loading-card"></view>
   </view>
 </view>
-<view class="home-page safe-bottom tab-page">
+<view class="home-page safe-bottom tab-page theme-{{themeMode}}">
   <immersive-nav overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <view wx:if="{{!isGuest}}" slot="leading" class="level-entry" bindtap="openLevel" hover-class="soft-hover">
       <image wx:if="{{profile.avatar}}" class="top-avatar" src="{{profile.avatar}}" mode="aspectFill" />

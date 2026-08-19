@@ -24,7 +24,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
-import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
+import { bindThemeBackgrounds, getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 
 const CARD_BUILDER_DATA_DOMAINS = ["account", "content"] as const;
 
@@ -71,6 +71,7 @@ function prepareFace(
 
 Page({
   data: {
+    ...getThemePageData(),
     navScrollTop: 0,
     query: "",
     faces: [] as SelectableCardFace[],
@@ -137,6 +138,7 @@ Page({
   },
 
   onShow() {
+    syncThemePreferenceForPage(this);
     if (!(this as any)._didShow) {
       (this as any)._didShow = true;
       return;

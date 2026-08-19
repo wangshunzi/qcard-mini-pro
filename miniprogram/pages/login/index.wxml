@@ -1,4 +1,5 @@
-<view class="login-page safe-bottom">
+<page-meta page-style="{{themePageStyle}}"></page-meta>
+<view class="login-page safe-bottom theme-{{themeMode}}">
   <image class="login-background" src="{{loginBackground}}" mode="aspectFill" />
   <view class="login-overlay"></view>
   <button

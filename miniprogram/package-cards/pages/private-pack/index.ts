@@ -11,12 +11,13 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
-import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
+import { bindThemeBackgrounds, getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 
 const PRIVATE_PACK_DATA_DOMAINS = ["account", "learning", "content"] as const;
 
 Page({
   data: {
+    ...getThemePageData(),
     navScrollTop: 0,
     id: "",
     pack: null as PrivateCardPack | null,
@@ -56,6 +57,7 @@ Page({
   },
 
   onShow() {
+    syncThemePreferenceForPage(this);
     if (
       (this as any)._didShow &&
       shouldRefreshData(this as any, PRIVATE_PACK_DATA_DOMAINS)

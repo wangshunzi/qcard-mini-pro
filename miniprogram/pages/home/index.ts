@@ -23,7 +23,7 @@ import {
   shouldRefreshData,
   type DataDomain,
 } from "../../stores/dataInvalidation";
-import { bindThemeBackgrounds } from "../../design-system/themeBackground";
+import { bindThemeBackgrounds, getThemePageData, syncThemePreferenceForPage } from "../../design-system/themeBackground";
 import { isExpiredVipStudyAccess } from "../../utils/recentStudyAccess";
 import {
   getPublicCardFace,
@@ -167,6 +167,7 @@ function withGuestCardPreview(
 
 Page({
   data: {
+    ...getThemePageData(),
     navScrollTop: 0,
     loading: true,
     error: "",
@@ -219,6 +220,7 @@ Page({
   },
 
   onShow() {
+    syncThemePreferenceForPage(this);
     if ((this as any)._redirectingAuthenticatedEntry) return;
     const session = sessionStore.getState();
     const authenticated = Boolean(session);

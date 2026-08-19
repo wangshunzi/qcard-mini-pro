@@ -8,6 +8,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
+import { getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 
 const ORDER_DATA_DOMAINS = ["orders"] as const;
 
@@ -47,6 +48,7 @@ function toOrderView(order: VirtualPaymentOrder): OrderView {
 
 Page({
   data: {
+    ...getThemePageData(),
     loading: true,
     loadingMore: false,
     error: "",
@@ -62,6 +64,7 @@ Page({
   },
 
   onShow() {
+    syncThemePreferenceForPage(this);
     (this as any)._pollAttempt = 0;
     if (
       (this as any)._didShow &&

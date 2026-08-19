@@ -19,7 +19,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
-import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
+import { bindThemeBackgrounds, getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 import { isExpiredVipStudyAccess } from "../../../utils/recentStudyAccess";
 
 interface LearningCardPack extends CardPackSummary {
@@ -35,6 +35,7 @@ const MY_LEARNING_DATA_DOMAINS = [
 
 Page({
   data: {
+    ...getThemePageData(),
     navScrollTop: 0,
     mode: "unlocked" as "unlocked" | "private",
     query: "",
@@ -95,6 +96,7 @@ Page({
   },
 
   onShow() {
+    syncThemePreferenceForPage(this);
     if (
       (this as any)._didShow &&
       shouldRefreshData(this as any, MY_LEARNING_DATA_DOMAINS)

@@ -20,7 +20,7 @@ import {
   shouldRefreshData,
   type DataDomain,
 } from "../../../stores/dataInvalidation";
-import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
+import { bindThemeBackgrounds, getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 import { isAuthenticated, requireLogin } from "../../../utils/authGate";
 
 const PACK_DETAIL_DATA_DOMAINS: DataDomain[] = [
@@ -32,6 +32,7 @@ const PACK_DETAIL_DATA_DOMAINS: DataDomain[] = [
 
 Page({
   data: {
+    ...getThemePageData(),
     navScrollTop: 0,
     id: "",
     detail: null as CardPackDetail | null,
@@ -86,6 +87,7 @@ Page({
     void this.loadUnlockProfile();
   },
   onShow() {
+    syncThemePreferenceForPage(this);
     if (
       (this as any)._didShow &&
       shouldRefreshData(this as any, PACK_DETAIL_DATA_DOMAINS)

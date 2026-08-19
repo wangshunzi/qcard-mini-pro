@@ -4,6 +4,36 @@ import {
   selectTheme,
   type Theme,
 } from "../../services/theme";
+import {
+  readThemePreference,
+  type ThemePreference,
+} from "../../../design-system/theme";
+import {
+  applyThemePreference,
+  getThemePageData,
+  syncThemePreferenceForPage,
+} from "../../../design-system/themeBackground";
+
+const appearanceOptions = [
+  {
+    key: "light",
+    title: "浅色模式",
+    description: "始终使用浅色主题",
+    icon: "weather-sunny",
+  },
+  {
+    key: "dark",
+    title: "暗黑模式",
+    description: "始终使用暗黑主题",
+    icon: "weather-night",
+  },
+  {
+    key: "system",
+    title: "跟随系统",
+    description: "根据系统外观自动切换",
+    icon: "theme-light-dark",
+  },
+] as const;
 
 Page({
   data: {
@@ -13,9 +43,16 @@ Page({
     loading: true,
     selectingId: "",
     error: "",
+    appearanceOptions,
+    themePreference: readThemePreference(),
+    ...getThemePageData(),
   },
   onLoad() {
     void this.load();
+  },
+  onShow() {
+    syncThemePreferenceForPage(this);
+    this.setData({ themePreference: readThemePreference() });
   },
   async onPullDownRefresh() {
     await this.load();
@@ -60,5 +97,11 @@ Page({
       this.setData({ selectingId: "" });
       wx.hideNavigationBarLoading();
     }
+  },
+  chooseAppearance(event: WechatMiniprogram.TouchEvent) {
+    const preference = String(event.currentTarget.dataset.mode ?? "system") as ThemePreference;
+    if (!appearanceOptions.some((option) => option.key === preference)) return;
+    applyThemePreference(preference);
+    this.setData({ themePreference: preference, ...getThemePageData() });
   },
 });

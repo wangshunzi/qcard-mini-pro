@@ -14,7 +14,7 @@
 .startup-loading-lines view:last-child { width:62%; }
 .startup-loading-action { width:70rpx; height:70rpx; flex:none; border-radius:50%; background:var(--color-skeleton-highlight); }
 .startup-loading-card { height:150rpx; margin-top:22rpx; border-radius:25rpx; background:linear-gradient(90deg,var(--color-skeleton-base),var(--color-skeleton-highlight),var(--color-skeleton-base)); animation:pulse 1.25s ease-in-out infinite alternate; }
-.welcome-card { position:relative; height:468rpx; overflow:hidden; color:var(--color-text-inverse); background:linear-gradient(155deg,#79a080,#295d44); background-size:cover; background-position:bottom center; }
+.welcome-card { position:relative; height:468rpx; overflow:hidden; color:var(--color-text-inverse); background:linear-gradient(155deg,var(--color-primary-20),var(--color-primary-30)); background-size:cover; background-position:bottom center; }
 .welcome-shade { position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.02) 55%,rgba(0,0,0,.16)); }
 .level-entry,.balance-entry { height:var(--immersive-control-height); box-sizing:border-box; display:flex; align-items:center; border:var(--immersive-control-border); border-radius:999rpx; background:var(--immersive-control-background); box-shadow:var(--immersive-control-shadow); color:var(--color-text); backdrop-filter:blur(18rpx); transition:opacity .15s ease,transform .15s ease,box-shadow .15s ease; }
 .level-entry { padding:7rpx 18rpx 7rpx 7rpx; gap:12rpx; }

@@ -9,9 +9,11 @@ import {
   startBottomSheetDrag,
 } from "../../../utils/bottomSheetGesture";
 import { requireLogin } from "../../../utils/authGate";
+import { getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 
 Page({
   data: {
+    ...getThemePageData(),
     payload: null as any,
     emptyCardData: {},
     feedbackOpen: false,
@@ -50,6 +52,9 @@ Page({
     wx.redirectTo({
       url: `/package-cards/pages/pack-detail/index?id=${encodeURIComponent(id)}`,
     });
+  },
+  onShow() {
+    syncThemePreferenceForPage(this);
   },
 
   async toggleFeedback() {

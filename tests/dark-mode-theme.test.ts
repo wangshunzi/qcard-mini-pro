@@ -72,6 +72,117 @@ describe("mini program dark mode architecture", () => {
     });
   });
 
+  it("injects the resolved palette on the real page node for every styled page", () => {
+    const pageTemplates = listFiles(".wxml")
+      .filter((file) => file.includes("/pages/"))
+      .filter((file) => !file.endsWith("/web-doc/index.wxml"));
+
+    expect(pageTemplates).toHaveLength(22);
+    pageTemplates.forEach((file) => {
+      const template = readFileSync(file, "utf8");
+      const logic = readFileSync(file.replace(/\.wxml$/, ".ts"), "utf8");
+      expect(template, file).toMatch(
+        /^<page-meta page-style="\{\{themePageStyle\}\}/,
+      );
+      expect(logic, file).toContain("...getThemePageData()");
+      expect(logic, file).toContain("syncThemePreferenceForPage(this)");
+    });
+  });
+
+  it("resyncs a stale page instance from the persisted preference on show", async () => {
+    const setTabBarStyle = vi.fn();
+    const setNavigationBarColor = vi.fn();
+    const setBackgroundColor = vi.fn();
+    vi.stubGlobal("wx", {
+      getSystemInfoSync: () => ({ theme: "light" }),
+      getStorageSync: () => "dark",
+      setTabBarStyle,
+      setNavigationBarColor,
+      setBackgroundColor,
+    });
+    const { syncThemePreferenceForPage } = await import(
+      "../miniprogram/design-system/themeBackground"
+    );
+    const setData = vi.fn();
+
+    expect(syncThemePreferenceForPage({ setData })).toBe("dark");
+    expect(setData).toHaveBeenCalledWith(expect.objectContaining({
+      themeMode: "dark",
+      themePageStyle: expect.stringContaining("--color-background:#05060a"),
+    }));
+    expect(setTabBarStyle).toHaveBeenCalledWith(expect.objectContaining({
+      backgroundColor: "#0b0e16",
+    }));
+    expect(setNavigationBarColor).toHaveBeenCalledWith(expect.objectContaining({
+      frontColor: "#ffffff",
+    }));
+    expect(setBackgroundColor).toHaveBeenCalledWith(expect.objectContaining({
+      backgroundColor: "#05060a",
+    }));
+  });
+
+  it("resyncs the active theme artwork together with the page palette", async () => {
+    let preference = "light";
+    vi.stubGlobal("wx", {
+      getSystemInfoSync: () => ({ theme: "light" }),
+      getStorageSync: () => preference,
+    });
+    const { bindThemeBackgrounds, syncThemePreferenceForPage } = await import(
+      "../miniprogram/design-system/themeBackground"
+    );
+    const setData = vi.fn();
+    const page = { setData };
+
+    bindThemeBackgrounds(page, {
+      home_bg: "day-home.webp",
+      home_bg_dark: "night-home.webp",
+    }, { homeBackground: "home_bg" });
+    expect(setData).toHaveBeenLastCalledWith(expect.objectContaining({
+      themeMode: "light",
+      homeBackground: "day-home.webp",
+    }));
+
+    preference = "dark";
+    syncThemePreferenceForPage(page);
+    expect(setData).toHaveBeenLastCalledWith(expect.objectContaining({
+      themeMode: "dark",
+      themePageStyle: expect.stringContaining("--color-background:#05060a"),
+      homeBackground: "night-home.webp",
+    }));
+  });
+
+  it("restores the saved appearance selection whenever theme settings reopens", () => {
+    const source = readFileSync(
+      "miniprogram/package-settings/pages/theme/index.ts",
+      "utf8",
+    );
+
+    expect(source).toMatch(
+      /onShow\(\)\s*\{[\s\S]*?syncThemePreferenceForPage\(this\);[\s\S]*?themePreference:\s*readThemePreference\(\)/,
+    );
+    expect(source).toContain(
+      "this.setData({ themePreference: preference, ...getThemePageData() })",
+    );
+  });
+
+  it("lets a manual light preference override a dark system palette", async () => {
+    vi.stubGlobal("wx", {
+      getSystemInfoSync: () => ({ theme: "dark" }),
+      getStorageSync: () => "light",
+    });
+    const { resolveThemeMode, getThemePageStyle } = await import(
+      "../miniprogram/design-system/theme"
+    );
+
+    const mode = resolveThemeMode();
+    const pageStyle = getThemePageStyle(mode);
+    expect(mode).toBe("light");
+    expect(pageStyle).toContain("--color-background:#ffffff");
+    expect(pageStyle).toContain("--color-card:#ffffff");
+    expect(pageStyle).toContain("--color-text:#0f0f0f");
+    expect(pageStyle).not.toContain("--color-background:#05060a");
+  });
+
   it("keeps media copy, warning actions and portal drawers legible", () => {
     const homeStyles = readFileSync(
       "miniprogram/pages/home/index.wxss",
@@ -267,7 +378,7 @@ describe("mini program dark mode architecture", () => {
       "utf8",
     );
     expect(homeConfig.initialRenderingCache).toBe("static");
-    expect(homeTemplate).toContain('class="startup-loading-screen"');
+    expect(homeTemplate).toContain('class="startup-loading-screen theme-{{themeMode}}"');
 
     const fixedLoadingNeutral =
       /#(?:dce5da|e6eae6|ecefeb|f8f9f7|e8ece8|f6f8f5|edf1ed|dbe5dd|e7ebe8|f5f7f5)\b/i;
@@ -363,7 +474,89 @@ describe("mini program dark mode architecture", () => {
     expect(page.data.heroBackground).toBe("light.jpg");
   });
 
-  it("caches selected login artwork and falls back to the default light/dark pair", async () => {
+  it("keeps background bindings for cached tab pages outside the active stack", async () => {
+    let preference = "dark";
+    let activePages: Array<{
+      data: Record<string, unknown>;
+      setData(update: Record<string, unknown>): void;
+    }> = [];
+    vi.stubGlobal("wx", {
+      getSystemInfoSync: () => ({ theme: "light" }),
+      getStorageSync: () => preference,
+    });
+    vi.stubGlobal("getCurrentPages", () => activePages);
+    const page = {
+      data: {} as Record<string, unknown>,
+      setData(update: Record<string, unknown>) {
+        Object.assign(this.data, update);
+      },
+    };
+    const {
+      bindThemeBackgrounds,
+      refreshThemeBackgrounds,
+      syncThemePreferenceForPage,
+    } = await import("../miniprogram/design-system/themeBackground");
+
+    bindThemeBackgrounds(
+      page,
+      { explore_bg: "day.jpg", explore_bg_dark: "night.jpg" },
+      { exploreBackground: "explore_bg" },
+    );
+    expect(page.data.exploreBackground).toBe("night.jpg");
+
+    // A cached tab is not returned by getCurrentPages() while another tab or
+    // subpackage page is active. Refreshing must not discard its binding.
+    refreshThemeBackgrounds("dark");
+    preference = "light";
+    activePages = [page];
+    syncThemePreferenceForPage(page);
+
+    expect(page.data.themeMode).toBe("light");
+    expect(page.data.exploreBackground).toBe("day.jpg");
+  });
+
+  it("persists manual light, dark and system appearance preferences", async () => {
+    let stored: unknown;
+    const setTabBarStyle = vi.fn();
+    const page = {
+      data: {} as Record<string, unknown>,
+      setData(update: Record<string, unknown>) {
+        Object.assign(this.data, update);
+      },
+    };
+    vi.stubGlobal("getCurrentPages", () => [page]);
+    vi.stubGlobal("wx", {
+      getSystemInfoSync: () => ({ theme: "light" }),
+      getStorageSync: () => stored,
+      setStorageSync: (_key: string, value: unknown) => {
+        stored = value;
+      },
+      setNavigationBarColor: vi.fn(),
+      setBackgroundColor: vi.fn(),
+      setTabBarStyle,
+    });
+    const { applyThemePreference } = await import(
+      "../miniprogram/design-system/themeBackground"
+    );
+
+    expect(applyThemePreference("dark")).toBe("dark");
+    expect(stored).toBe("dark");
+    expect(page.data.themeMode).toBe("dark");
+    expect(page.data.themePageStyle).toContain("--color-card:#141821");
+    expect(setTabBarStyle).toHaveBeenLastCalledWith(
+      expect.objectContaining({ backgroundColor: "#0b0e16" }),
+    );
+
+    expect(applyThemePreference("system")).toBe("light");
+    expect(stored).toBe("system");
+    expect(page.data.themeMode).toBe("light");
+    expect(page.data.themePageStyle).toContain("--color-card:#ffffff");
+    expect(setTabBarStyle).toHaveBeenLastCalledWith(
+      expect.objectContaining({ backgroundColor: "#ffffff" }),
+    );
+  });
+
+  it("caches login artwork only from the active theme config", async () => {
     let stored: unknown;
     vi.stubGlobal("wx", {
       getStorageSync: () => stored,
@@ -371,13 +564,11 @@ describe("mini program dark mode architecture", () => {
         stored = value;
       },
     });
-    const {
-      DEFAULT_LOGIN_THEME_CONFIG,
-      cacheLoginThemeConfig,
-      getCachedLoginThemeConfig,
-    } = await import("../miniprogram/design-system/loginTheme");
+    const { cacheLoginThemeConfig, getCachedLoginThemeConfig } = await import(
+      "../miniprogram/design-system/loginTheme"
+    );
 
-    expect(getCachedLoginThemeConfig()).toEqual(DEFAULT_LOGIN_THEME_CONFIG);
+    expect(getCachedLoginThemeConfig()).toEqual({});
 
     cacheLoginThemeConfig({
       login_bg: "https://assets.example/light.jpg",

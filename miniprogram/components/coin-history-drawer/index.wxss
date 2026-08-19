@@ -4,7 +4,7 @@
 .drawer-panel.dragging { animation:none; transform:translateY(var(--drawer-drag-offset)); transition:none; }
 .drawer-panel.drag-settling { animation:none; transform:translateY(var(--drawer-drag-offset)); transition:transform .22s ease-in-out; }
 .drawer-drag-area { flex:none; }
-.drawer-handle { width:102rpx; height:8rpx; margin:20rpx auto 16rpx; flex:none; border-radius:999rpx; background:#d0d0d0; }
+.drawer-handle { width:102rpx; height:8rpx; margin:20rpx auto 16rpx; flex:none; border-radius:999rpx; background:var(--color-border); }
 .drawer-user { min-height:122rpx; padding:0 34rpx 26rpx; display:flex; align-items:center; gap:22rpx; border-bottom: 1rpx solid var(--color-border); box-shadow:0 4rpx 12rpx rgba(0,0,0,.025); }
 .drawer-avatar { width:96rpx; height:96rpx; flex:none; border:2rpx solid #cce7b8; border-radius:50%; background:var(--color-surface-soft); }
 .drawer-profile { min-width:0; flex:1; }
@@ -20,7 +20,7 @@
 .filter-item.active { padding-right:22rpx; padding-left:22rpx; color:var(--color-primary); background:var(--color-primary-soft); }
 .history-scroll { min-height:0; flex:1; }
 .history-list { padding:28rpx 34rpx 54rpx; display:flex; flex-direction:column; gap:24rpx; }
-.history-card { padding:28rpx; display:flex; align-items:flex-start; gap:22rpx; border:1rpx solid #edf0ed; border-radius:22rpx; background:var(--color-card); box-shadow:0 4rpx 13rpx rgba(0,0,0,.045); }
+.history-card { padding:28rpx; display:flex; align-items:flex-start; gap:22rpx; border:1rpx solid var(--color-divider); border-radius:22rpx; background:var(--color-card); box-shadow:0 4rpx 13rpx rgba(0,0,0,.045); }
 .history-icon { width:64rpx; height:64rpx; flex:none; display:flex; align-items:center; justify-content:center; border-radius:50%; }
 .history-icon.positive { color:var(--color-primary); background:var(--color-success-soft); }
 .history-icon.negative { color:var(--color-error); background:var(--color-error-soft); }

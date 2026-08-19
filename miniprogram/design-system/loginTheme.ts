@@ -2,13 +2,6 @@ import type { ThemeConfig } from "./theme";
 
 const LOGIN_THEME_CACHE_KEY = "qcard.theme.login-backgrounds";
 
-export const DEFAULT_LOGIN_THEME_CONFIG: ThemeConfig = {
-  login_bg:
-    "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/login_bg.jpg",
-  login_bg_dark:
-    "https://kolka-public.oss-cn-shanghai.aliyuncs.com/theme-images/forest-creative-20260811-v2/login_bg_dark.jpg",
-};
-
 function readUrl(value: unknown): string {
   return typeof value === "string" && /^https:\/\//i.test(value)
     ? value
@@ -24,7 +17,7 @@ export function cacheLoginThemeConfig(config: ThemeConfig | undefined) {
   try {
     wx.setStorageSync(LOGIN_THEME_CACHE_KEY, cached);
   } catch {
-    // Storage failure should never block login; the default theme remains usable.
+    // Storage failure should never block login; profile theme can still load online.
   }
 }
 
@@ -34,12 +27,12 @@ export function getCachedLoginThemeConfig(): ThemeConfig {
       | ThemeConfig
       | undefined;
     const light = readUrl(cached?.login_bg);
-    if (!light) return DEFAULT_LOGIN_THEME_CONFIG;
+    if (!light) return {};
     const config: ThemeConfig = { login_bg: light };
     const dark = readUrl(cached?.login_bg_dark);
     if (dark) config.login_bg_dark = dark;
     return config;
   } catch {
-    return DEFAULT_LOGIN_THEME_CONFIG;
+    return {};
   }
 }

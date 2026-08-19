@@ -12,7 +12,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../../stores/dataInvalidation";
-import { bindThemeBackgrounds } from "../../../design-system/themeBackground";
+import { bindThemeBackgrounds, getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 
 const GENERATED_CONTENT_DOMAINS = ["account", "content"] as const;
 
@@ -44,6 +44,7 @@ function toDisplayCardFace(item: PrivateCardFace): DisplayCardFace {
 
 Page({
   data: {
+    ...getThemePageData(),
     navScrollTop: 0,
     query: "",
     type: "",
@@ -80,6 +81,7 @@ Page({
   },
 
   onShow() {
+    syncThemePreferenceForPage(this);
     if (!(this as any)._didShow) {
       (this as any)._didShow = true;
       return;

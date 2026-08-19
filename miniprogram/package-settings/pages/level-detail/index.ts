@@ -8,6 +8,7 @@ import {
 import { syncNavigationScroll } from "../../../utils/navigationScroll";
 import { getProfile, type UserProfile } from "../../../services/profile";
 import { UI_ASSETS } from "../../../config/uiAssets";
+import { getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 
 function formatDate(value: string) {
   if (!value) return "";
@@ -31,6 +32,7 @@ function getLevelDescription(level?: ExperienceLevel) {
 
 Page({
   data: {
+    ...getThemePageData(),
     navScrollTop: 0,
     loading: true,
     error: "",
@@ -60,6 +62,10 @@ Page({
 
   onLoad() {
     void this.load();
+  },
+
+  onShow() {
+    syncThemePreferenceForPage(this);
   },
 
   onReachBottom() {

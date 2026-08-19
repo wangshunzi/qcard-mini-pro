@@ -1,5 +1,5 @@
-<page-meta page-style="{{purchaseGuideOpen ? 'overflow: hidden;' : ''}}"></page-meta>
-<view class="page safe-bottom">
+<page-meta page-style="{{themePageStyle}}{{purchaseGuideOpen ? 'overflow: hidden;' : ''}}"></page-meta>
+<view class="page safe-bottom theme-{{themeMode}}">
   <immersive-nav back="{{true}}" overlay="{{true}}" light="{{true}}" scroll-top="{{navScrollTop}}">
     <view slot="action" class="app-segmented nav-segmented" aria-role="tablist">
       <button class="app-segmented-option {{mode === 'unlocked' ? 'active' : ''}}" data-mode="unlocked" bindtap="switchMode" hover-class="app-segmented-option-hover" aria-role="tab" aria-checked="{{mode === 'unlocked'}}">已解锁</button>

@@ -1,5 +1,5 @@
-<page-meta page-style="{{purchaseGuideOpen || previewOpen ? 'overflow: hidden;' : ''}}"></page-meta>
-<view class="page">
+<page-meta page-style="{{themePageStyle}}{{purchaseGuideOpen || previewOpen ? 'overflow: hidden;' : ''}}"></page-meta>
+<view class="page theme-{{themeMode}}">
   <image wx:if="{{pageBackground}}" class="page-background" src="{{pageBackground}}" mode="aspectFill" />
   <immersive-nav
     title="AI 生成卡面"

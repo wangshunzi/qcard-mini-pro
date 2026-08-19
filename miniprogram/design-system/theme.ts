@@ -11,6 +11,7 @@ export const THEME_BACKGROUND_KEYS = [
 ] as const;
 
 export type ThemeMode = "light" | "dark";
+export type ThemePreference = ThemeMode | "system";
 export type ThemeBackgroundKey = (typeof THEME_BACKGROUND_KEYS)[number];
 export type ThemeBackgroundConfigKey =
   | ThemeBackgroundKey
@@ -19,10 +20,162 @@ export type ThemeBackgroundConfigKey =
 export type ThemeConfig = Partial<Record<ThemeBackgroundConfigKey, string>> &
   Record<string, unknown>;
 
+const THEME_PAGE_TOKENS: Record<ThemeMode, Record<string, string>> = {
+  light: {
+    "--color-brand-10": "#fff7d3",
+    "--color-primary": "#529917",
+    "--color-primary-30": "#162b08",
+    "--color-primary-20": "#529917",
+    "--color-primary-10": "#e5f9ce",
+    "--color-primary-soft": "#e5f9ce",
+    "--color-secondary-30": "#072f45",
+    "--color-secondary-20": "#1ec6f2",
+    "--color-secondary-10": "#baf4ff",
+    "--color-background": "#ffffff",
+    "--color-background-elevated": "#f6f6f6",
+    "--color-surface": "#ffffff",
+    "--color-surface-translucent": "rgba(255,255,255,.94)",
+    "--color-surface-soft": "#f7f8f6",
+    "--color-surface-sunken": "#f1f4f0",
+    "--color-card": "#ffffff",
+    "--color-card-elevated": "#ffffff",
+    "--color-input": "rgba(0,0,0,.05)",
+    "--color-text": "#0f0f0f",
+    "--color-text-secondary": "#5d5d5d",
+    "--color-text-muted": "#8f96a3",
+    "--color-text-inverse": "#ffffff",
+    "--color-text-on-accent": "#ffffff",
+    "--color-text-on-warning": "#462104",
+    "--color-border": "#d2cfcf",
+    "--color-border-soft": "rgba(15,15,15,.08)",
+    "--color-border-strong": "rgba(15,15,15,.16)",
+    "--color-border-on-media": "rgba(255,255,255,.82)",
+    "--color-divider": "#ecefeb",
+    "--color-progress-track": "#e4e9e4",
+    "--color-skeleton-base": "#ecefeb",
+    "--color-skeleton-highlight": "#f8f9f7",
+    "--color-tertiary-10": "#f6f6f6",
+    "--color-disabled": "#808080",
+    "--color-success": "#64b01f",
+    "--color-error": "#eb711b",
+    "--color-warning": "#ffb936",
+    "--color-info": "#3f3f3f",
+    "--color-muted": "#a9a9a9",
+    "--color-success-soft": "#e8f7ee",
+    "--color-error-soft": "#fff0ed",
+    "--color-warning-soft": "#fff7df",
+    "--color-info-soft": "#eef3ef",
+    "--color-overlay": "rgba(15,15,15,.5)",
+    "--color-backdrop": "rgba(255,255,255,.93)",
+    "--color-status-overlay": "rgba(255,255,255,.9)",
+    "--color-glass": "rgba(255,255,255,.92)",
+    "--color-glass-strong": "rgba(255,255,255,.98)",
+    "--color-glass-soft": "rgba(247,250,247,.84)",
+    "--color-scrim": "rgba(0,0,0,.28)",
+    "--color-link": "#007aff",
+    "--shadow-card": "0 10rpx 30rpx rgba(0,0,0,.1)",
+    "--shadow-floating": "0 14rpx 36rpx rgba(0,0,0,.14)",
+    "--shadow-control": "0 7rpx 20rpx rgba(24,45,30,.13),inset 0 1rpx 0 rgba(255,255,255,.95)",
+  },
+  dark: {
+    "--color-brand-10": "#4a3214",
+    "--color-primary": "#4fbf6b",
+    "--color-primary-30": "#0d1f14",
+    "--color-primary-20": "#4fbf6b",
+    "--color-primary-10": "#173626",
+    "--color-primary-soft": "#173626",
+    "--color-secondary-30": "#061c28",
+    "--color-secondary-20": "#35b9e3",
+    "--color-secondary-10": "#102634",
+    "--color-background": "#05060a",
+    "--color-background-elevated": "#0b0e16",
+    "--color-surface": "#0b0e16",
+    "--color-surface-translucent": "rgba(11,14,22,.94)",
+    "--color-surface-soft": "#11141c",
+    "--color-surface-sunken": "#080b14",
+    "--color-card": "#141821",
+    "--color-card-elevated": "#181c24",
+    "--color-input": "rgba(255,255,255,.06)",
+    "--color-text": "#f5f5f7",
+    "--color-text-secondary": "#c1c4cc",
+    "--color-text-muted": "#8f96a3",
+    "--color-text-inverse": "#ffffff",
+    "--color-text-on-accent": "#07120a",
+    "--color-text-on-warning": "#211500",
+    "--color-border": "#262b35",
+    "--color-border-soft": "rgba(255,255,255,.08)",
+    "--color-border-strong": "rgba(255,255,255,.16)",
+    "--color-border-on-media": "rgba(255,255,255,.28)",
+    "--color-divider": "#252a34",
+    "--color-progress-track": "#303642",
+    "--color-skeleton-base": "#151922",
+    "--color-skeleton-highlight": "#252b36",
+    "--color-tertiary-10": "#151821",
+    "--color-disabled": "#5b5f68",
+    "--color-success": "#57c16a",
+    "--color-error": "#ff8a4a",
+    "--color-warning": "#ffc85a",
+    "--color-info": "#8f96a3",
+    "--color-muted": "#8f96a3",
+    "--color-success-soft": "#1f3d2b",
+    "--color-error-soft": "#3d1f1f",
+    "--color-warning-soft": "#3d321f",
+    "--color-info-soft": "#17222a",
+    "--color-overlay": "rgba(3,7,15,.76)",
+    "--color-backdrop": "rgba(8,11,20,.96)",
+    "--color-status-overlay": "rgba(3,7,15,.82)",
+    "--color-glass": "rgba(11,14,22,.9)",
+    "--color-glass-strong": "rgba(20,24,33,.96)",
+    "--color-glass-soft": "rgba(11,14,22,.82)",
+    "--color-scrim": "rgba(0,0,0,.58)",
+    "--color-link": "#56c5ff",
+    "--shadow-card": "0 10rpx 30rpx rgba(0,0,0,.32)",
+    "--shadow-floating": "0 14rpx 36rpx rgba(0,0,0,.42)",
+    "--shadow-control": "0 7rpx 20rpx rgba(0,0,0,.36),inset 0 1rpx 0 rgba(255,255,255,.08)",
+  },
+};
+
+export function getThemePageStyle(mode: ThemeMode): string {
+  return Object.entries(THEME_PAGE_TOKENS[mode])
+    .map(([name, value]) => `${name}:${value}`)
+    .join(";") + ";";
+}
+
 export function readSystemThemeMode(): ThemeMode {
   try {
-    return wx.getSystemInfoSync().theme === "dark" ? "dark" : "light";
+    const theme = typeof wx.getAppBaseInfo === "function"
+      ? wx.getAppBaseInfo().theme
+      : wx.getSystemInfoSync().theme;
+    return theme === "dark" ? "dark" : "light";
   } catch {
     return "light";
+  }
+}
+
+const THEME_PREFERENCE_STORAGE_KEY = "qcard.themePreference";
+
+export function readThemePreference(): ThemePreference {
+  try {
+    const value = wx.getStorageSync(THEME_PREFERENCE_STORAGE_KEY);
+    return value === "light" || value === "dark" || value === "system"
+      ? value
+      : "system";
+  } catch {
+    return "system";
+  }
+}
+
+export function resolveThemeMode(
+  preference: ThemePreference = readThemePreference(),
+  systemMode: ThemeMode = readSystemThemeMode(),
+): ThemeMode {
+  return preference === "system" ? systemMode : preference;
+}
+
+export function saveThemePreference(preference: ThemePreference) {
+  try {
+    wx.setStorageSync(THEME_PREFERENCE_STORAGE_KEY, preference);
+  } catch {
+    // 外观切换仍可在本次运行中生效，存储失败不阻断操作。
   }
 }

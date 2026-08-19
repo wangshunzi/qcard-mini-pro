@@ -1,7 +1,7 @@
-<page-meta page-style="{{purchaseGuideOpen || coinHistoryOpen || unlockPanelOpen || cardPreviewVisible ? 'overflow: hidden;' : ''}}"></page-meta>
-<view class="profile-page safe-bottom tab-page">
+<page-meta page-style="{{themePageStyle}}{{purchaseGuideOpen || coinHistoryOpen || unlockPanelOpen || cardPreviewVisible ? 'overflow: hidden;' : ''}}"></page-meta>
+<view class="profile-page safe-bottom tab-page theme-{{themeMode}}">
   <immersive-nav overlay="{{true}}" scroll-top="{{navScrollTop}}" bind:metrics="onNavigationMetrics">
-    <side-drawer-menu wx:if="{{profile}}" slot="leading" profile="{{profile}}" bind:wallet="openCoinHistory" bind:vip="openVipGuide" />
+    <side-drawer-menu wx:if="{{profile}}" slot="leading" profile="{{profile}}" theme-mode="{{themeMode}}" bind:wallet="openCoinHistory" bind:vip="openVipGuide" />
     <view slot="action"><button wx:if="{{profile}}" class="settings-button" bindtap="openSettings" aria-label="打开设置" hover-class="soft-hover">
       <ui-icon name="cog" size="{{35}}" color="var(--color-text)" />
     </button></view>

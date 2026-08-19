@@ -7,9 +7,11 @@ import {
   type FeedbackType,
   type UserFeedback,
 } from "../../services/feedback";
+import { getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 
 Page({
   data: {
+    ...getThemePageData(),
     mode: "list" as "list" | "submit",
     status: "all" as "all" | FeedbackStatus,
     items: [] as UserFeedback[],
@@ -45,6 +47,10 @@ Page({
 
   onLoad() {
     void this.load(true);
+  },
+
+  onShow() {
+    syncThemePreferenceForPage(this);
   },
 
   async onPullDownRefresh() {

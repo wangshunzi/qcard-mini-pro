@@ -9,10 +9,10 @@ import { UI_ASSETS } from "../../config/uiAssets";
 import { getCachedLoginThemeConfig } from "../../design-system/loginTheme";
 import {
   bindThemeBackgrounds,
-  refreshThemeBackgrounds,
+  getThemePageData,
   resolveThemeBackground,
+  syncThemePreferenceForPage,
 } from "../../design-system/themeBackground";
-import { readSystemThemeMode } from "../../design-system/theme";
 import {
   MINI_PROGRAM_FILING,
   openMiniProgramFilingQuery,
@@ -30,6 +30,7 @@ const LEGACY_LAST_LOGIN_METHOD_KEY = "qcard.last-login-method";
 
 Page({
   data: {
+    ...getThemePageData(),
     phoneNumber: "",
     code: "",
     sending: false,
@@ -46,7 +47,7 @@ Page({
     loginBackground: resolveThemeBackground(
       getCachedLoginThemeConfig(),
       "login_bg",
-      readSystemThemeMode(),
+      getThemePageData().themeMode,
     ),
     filingNumber: MINI_PROGRAM_FILING.number,
     loginIntroTitle: "继续你的学习旅程",
@@ -76,13 +77,13 @@ Page({
   },
 
   onShow() {
+    syncThemePreferenceForPage(this);
     void this.refreshLoginTheme();
   },
 
   async refreshLoginTheme() {
     const profile = await getProfile().catch(() => null);
     const config = profile?.currentTheme?.config ?? getCachedLoginThemeConfig();
-    refreshThemeBackgrounds(readSystemThemeMode());
     bindThemeBackgrounds(this, config, { loginBackground: "login_bg" });
   },
 

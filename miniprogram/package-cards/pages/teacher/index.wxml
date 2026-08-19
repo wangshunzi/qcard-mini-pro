@@ -1,5 +1,5 @@
-<page-meta page-style="{{purchaseGuideOpen || unlockPanelOpen ? 'overflow: hidden;' : ''}}"></page-meta>
-<view class="page safe-bottom">
+<page-meta page-style="{{themePageStyle}}{{purchaseGuideOpen || unlockPanelOpen ? 'overflow: hidden;' : ''}}"></page-meta>
+<view class="page safe-bottom theme-{{themeMode}}">
   <immersive-nav title="{{teacher.name || '老师主页'}}" back="{{true}}" border="{{true}}" />
   <view wx:if="{{loading}}" class="state">
     <view class="loading-orbit"></view><text>正在加载老师主页…</text>

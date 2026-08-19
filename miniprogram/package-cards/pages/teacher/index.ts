@@ -8,6 +8,7 @@ import {
   type DataDomain,
 } from "../../../stores/dataInvalidation";
 import { isAuthenticated, requireLogin } from "../../../utils/authGate";
+import { getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 
 const TEACHER_DATA_DOMAINS: DataDomain[] = ["wallet", "learning"];
 
@@ -17,6 +18,7 @@ interface DisplayTeacherPack extends CardPackSummary {
 
 Page({
   data: {
+    ...getThemePageData(),
     id: "",
     loading: true,
     error: "",
@@ -41,6 +43,7 @@ Page({
     void this.loadUnlockProfile();
   },
   onShow() {
+    syncThemePreferenceForPage(this);
     if (
       (this as any)._didShow &&
       shouldRefreshData(this as any, TEACHER_DATA_DOMAINS)

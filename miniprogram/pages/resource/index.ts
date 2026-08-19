@@ -22,7 +22,7 @@ import {
   shouldRefreshData,
   type DataDomain,
 } from "../../stores/dataInvalidation";
-import { bindThemeBackgrounds } from "../../design-system/themeBackground";
+import { bindThemeBackgrounds, getThemePageData, syncThemePreferenceForPage } from "../../design-system/themeBackground";
 import { isAuthenticated, requireLogin } from "../../utils/authGate";
 
 const RESOURCE_DATA_DOMAINS: DataDomain[] = ["account", "wallet", "learning"];
@@ -96,6 +96,7 @@ function toDisplayDiscoveryCard(item: DiscoveryCard): DisplayDiscoveryCard {
 
 Page({
   data: {
+    ...getThemePageData(),
     navScrollTop: 0,
     query: "",
     loading: true,
@@ -143,6 +144,7 @@ Page({
     void this.load();
   },
   onShow() {
+    syncThemePreferenceForPage(this);
     const authenticated = isAuthenticated();
     const authenticationChanged =
       (this as any)._lastAuthenticated !== authenticated;

@@ -1,4 +1,5 @@
 import { sessionStore } from "../../../stores/session";
+import { getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 import {
   MINI_PROGRAM_FILING,
   openMiniProgramFilingQuery,
@@ -6,6 +7,7 @@ import {
 
 Page({
   data: {
+    ...getThemePageData(),
     soundEnabled: wx.getStorageSync("qcard.sound-enabled") !== false,
     version: "",
     filingNumber: MINI_PROGRAM_FILING.number,
@@ -15,6 +17,9 @@ Page({
     this.setData({
       version: account?.miniProgram?.version || "开发版",
     });
+  },
+  onShow() {
+    syncThemePreferenceForPage(this);
   },
   toggleSound(event: WechatMiniprogram.SwitchChange) {
     wx.setStorageSync("qcard.sound-enabled", event.detail.value);

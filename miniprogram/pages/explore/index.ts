@@ -15,7 +15,7 @@ import {
   markDataFresh,
   shouldRefreshData,
 } from "../../stores/dataInvalidation";
-import { bindThemeBackgrounds } from "../../design-system/themeBackground";
+import { bindThemeBackgrounds, getThemePageData, syncThemePreferenceForPage } from "../../design-system/themeBackground";
 import { isAuthenticated, requireLogin } from "../../utils/authGate";
 
 const EXPLORE_CONTEXT_DOMAINS = ["account"] as const;
@@ -29,6 +29,7 @@ interface ExplorationFace extends PublicCardFaceSummary {
 
 Page({
   data: {
+    ...getThemePageData(),
     navScrollTop: 0,
     query: "",
     items: [] as ExplorationFace[],
@@ -78,6 +79,7 @@ Page({
     }
   },
   onShow() {
+    syncThemePreferenceForPage(this);
     const authenticated = isAuthenticated();
     const authenticationChanged =
       (this as any)._lastAuthenticated !== authenticated;

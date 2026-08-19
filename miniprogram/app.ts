@@ -3,8 +3,11 @@ import { mediaCoordinator } from "./services/MediaCoordinator";
 import { logger } from "./utils/logger";
 import { flushStudyReports } from "./stores/studyReportQueue";
 import { trackDayBoundary } from "./stores/dataInvalidation";
-import { refreshThemeBackgrounds } from "./design-system/themeBackground";
-import { readSystemThemeMode } from "./design-system/theme";
+import {
+  refreshThemeBackgrounds,
+  refreshThemePreference,
+} from "./design-system/themeBackground";
+import { readThemePreference } from "./design-system/theme";
 import {
   claimVirtualFulfillmentNotification,
   getPendingVirtualPaymentRecoveryDelay,
@@ -139,7 +142,7 @@ App({
   },
   onShow() {
     appVisible = true;
-    refreshThemeBackgrounds(readSystemThemeMode());
+    refreshThemePreference();
     trackDayBoundary();
     void flushStudyReports();
     startVirtualPaymentRecovery();
@@ -150,7 +153,9 @@ App({
     mediaCoordinator.pauseAll();
   },
   onThemeChange({ theme }) {
-    refreshThemeBackgrounds(theme === "dark" ? "dark" : "light");
+    if (readThemePreference() === "system") {
+      refreshThemeBackgrounds(theme === "dark" ? "dark" : "light");
+    }
   },
   onUnload() {
     unsubscribePending?.();

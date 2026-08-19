@@ -1,5 +1,6 @@
 import { validateCardData } from "../../../cards/CardTypeConfig";
 import type { CardData } from "../../../cards/types";
+import { getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 import {
   getCardDetails,
   getCardPackCatalogue,
@@ -57,6 +58,7 @@ function formatDuration(seconds: number) {
 
 Page({
   data: {
+    ...getThemePageData(),
     packId: "",
     pack: null as CardPackDetail | null,
     cards: [] as StudyCard[],
@@ -802,6 +804,7 @@ Page({
   },
 
   onShow() {
+    syncThemePreferenceForPage(this);
     if (!(this as any)._pageHidden) return;
     (this as any)._pageHidden = false;
     if (!(this as any)._trackingPaused) {

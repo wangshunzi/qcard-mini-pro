@@ -1,5 +1,6 @@
 import { deleteAccount } from "../../../services/auth";
 import { sessionStore } from "../../../stores/session";
+import { getThemePageData, syncThemePreferenceForPage } from "../../../design-system/themeBackground";
 
 function createProblem() {
   if (Math.random() < 0.5) {
@@ -14,6 +15,7 @@ function createProblem() {
 
 Page({
   data: {
+    ...getThemePageData(),
     expression: "",
     answer: 0,
     input: "",
@@ -24,6 +26,10 @@ Page({
 
   onLoad() {
     this.resetProblem();
+  },
+
+  onShow() {
+    syncThemePreferenceForPage(this);
   },
 
   resetProblem() {

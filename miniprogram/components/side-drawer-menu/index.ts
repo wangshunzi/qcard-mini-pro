@@ -14,6 +14,7 @@ Component({
     mode: { type: String, value: "profile" },
     profile: { type: Object, value: {} },
     light: { type: Boolean, value: false },
+    themeMode: { type: String, value: "light" },
     title: { type: String, value: "" },
     subtitle: { type: String, value: "" },
     items: { type: Array, value: [] },
